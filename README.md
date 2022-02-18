@@ -5,10 +5,6 @@ to create a tool to gauge the employees' skills and motivations
 through a web form, and to make the analyses based on the form
 available for the individual employees and managers.
 
-## API docs
-Documentation for the external API can be found at [this projects
-Github Pages](https://knowit.github.io/kompetansekartlegging-gui/).
-
 ## Dependencies
 
 This project requires [npm](https://www.npmjs.com/get-npm).
@@ -23,5 +19,3 @@ To run the project locally:
 3. Run `$ npm install`
 6. Run `npm start`.
 
-## Contributing
-TODO
