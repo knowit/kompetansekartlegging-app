@@ -33,3 +33,7 @@ typings/
 
 # Yarn Integrity file
 .yarn-integrity
+
+cdk/cdk.context.json
+cdk/.cdk.staging/
+cdk/cdk.out
