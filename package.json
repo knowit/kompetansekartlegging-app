@@ -27,9 +27,8 @@
     },
     "scripts": {
         "start": "react-scripts start",
-        "build": "amplify codegen && react-scripts build",
+        "build": "react-scripts build",
         "test": "react-scripts test",
-	"build-nogen": "react-scripts build",
         "eject": "react-scripts eject"
     },
     "eslintConfig": {
