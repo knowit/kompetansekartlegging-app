@@ -7,7 +7,7 @@ available for the individual employees and managers.
 
 ## API docs
 Documentation for the external API can be found at [this projects
-Github Pages](https://knowit.github.io/kompetansekartlegging-gui/).
+Github Pages](https://knowit.github.io/kompetansekartlegging-app/).
 
 ## Dependencies
 
