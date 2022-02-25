@@ -1,39 +1,26 @@
-name: CI
+name: Deploy Frontend
 on:
-  workflow_dispatch:
-    inputs:
-      AWS_ACCESS_KEY_ID:
-        description: "Access Key ID with Permissions to deploy IAM, and OIDC"
-        required: true
-      AWS_SECRET_ACCESS_KEY:
-        description: "Secret Access Key with Permissions to deploy IAM, and OIDC"
-        required: true
-      AWS_REGION:
-        description: "eu-central-1"
-        required: true
-
+  push:
+    branches:
+      - main
 jobs:
-  deploy:
+  run:
     runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
     steps:
-      - name: Git clone the repository
-        uses: actions/checkout@v1
-
-      - name: Configure aws credentials
-        uses: aws-actions/configure-aws-credentials@master
+      - name: Git checkout
+        uses: actions/checkout@v2
+      - name: Install
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Deploy
+        uses: lbertenasco/s3-deploy@v1
         with:
-          aws-access-key-id: ${{ github.event.inputs.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ github.event.inputs.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ github.event.inputs.AWS_REGION }}
-
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "14"
-
-      - run: yarn install
-
-      - name: Synth stack
-        run: yarn --cwd packages/bootstrap cdk synth
-
-      - name: Deploy stack
-        run: yarn --cwd packages/bootstrap cdk deploy --require-approval never
+          folder: build
+          bucket: ${{ secrets.S3_BUCKET }}
+          dist-id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+          invalidation: / *
