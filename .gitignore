@@ -37,3 +37,6 @@ typings/
 cdk/cdk.context.json
 cdk/.cdk.staging/
 cdk/cdk.out
+
+# DSStore
+.DS_Store

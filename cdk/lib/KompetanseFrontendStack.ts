@@ -1,19 +1,16 @@
 import { Stack, StackProps } from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-import * as s3 from 'aws-cdk-lib/aws-s3';
-import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
-import * as r53 from 'aws-cdk-lib/aws-route53';
-import * as iam from 'aws-cdk-lib/aws-iam';
-import * as path from "path";
-import { Certificate, CertificateValidation } from "aws-cdk-lib/aws-certificatemanager";
 import * as cloudfront from "aws-cdk-lib/aws-cloudfront";
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
+import { Construct } from 'constructs';
+import { KompetanseFrontendDistributionAndCertsStack } from './KompetanseFrontendDistributionAndCertsStaack';
 
 export class KompetanseFrontendStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-//    const domainname = "kompetanse.knowit.no"
+    console.log('DEPLOYMENT_ENV 👉', process.env.DEPLOYMENT_ENV);
 
     const websiteBucket = new s3.Bucket(this, 'KompetanseHostingBucket', {
       websiteIndexDocument: 'index.html',
@@ -32,23 +29,15 @@ export class KompetanseFrontendStack extends Stack {
     });
 
 
-//    const hostedZone = new r53.HostedZone(this, "KompetanseHostedZone", {
-//        zoneName: domainname
-//    });
-
-//    const cert = new Certificate(this, "kompetansecert", {
-//        domainName: "kompetanse.knowit.no",
-//        validation: CertificateValidation.fromDns(hostedZone)
-//    });
-
-//    const cloudFrontDistribution = new cfront.CloudFrontWebDistribution(this, "KompetanseCloudFront", {
-//        originConfigs: [{
-//            behaviors: [{isDefaultBehavior: true}],
-//            s3OriginSource: {s3BucketSource:hostingBucket}
-//        }],
-//        viewerCertificate: cfront.ViewerCertificate.fromAcmCertificate(cert, {
-//            aliases: [domainname]
-//        })
-//    });
+    switch(process.env.DEPLOYMENT_ENV) { 
+      case 'dev': { 
+          new KompetanseFrontendDistributionAndCertsStack('dev.kompetanse.knowit.no', websiteBucket, this);
+          break; 
+      } 
+      case 'prod': { 
+        new KompetanseFrontendDistributionAndCertsStack('kompetanse.knowit.no', websiteBucket, this);
+        break; 
+      } 
+   } 
   }
 }
