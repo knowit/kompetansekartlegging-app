@@ -1,0 +1,116 @@
+{
+    "resource": "/{proxy+}",
+    "path": "/catalogs",
+    "httpMethod": "GET",
+    "headers": {
+        "Accept": "*/*",
+        "Accept-Encoding": "json",
+        "CloudFront-Forwarded-Proto": "https",
+        "CloudFront-Is-Desktop-Viewer": "true",
+        "CloudFront-Is-Mobile-Viewer": "false",
+        "CloudFront-Is-SmartTV-Viewer": "false",
+        "CloudFront-Is-Tablet-Viewer": "false",
+        "CloudFront-Viewer-Country": "NO",
+        "Host": "x0qrgxsiph.execute-api.eu-central-1.amazonaws.com",
+        "User-Agent": "python-requests/2.26.0",
+        "Via": "1.1 410f51195842d9b592b15d6588c36654.cloudfront.net (CloudFront)",
+        "X-Amz-Cf-Id": "iYxjiVmCnRWTUsVoO3ktJDAI_QC7bCoIQ6cKJ6Qs03taUILQq5NSTg==",
+        "X-Amzn-Trace-Id": "Root=1-61f3f340-29e327fb3732f2dd1b2aad8f",
+        "x-api-key": "KimGEuhkyK6LFkKzU7BOc61DVwAbqgOL1jOE0yyt",
+        "X-Forwarded-For": "62.73.201.20, 70.132.12.147",
+        "X-Forwarded-Port": "443",
+        "X-Forwarded-Proto": "https"
+    },
+    "multiValueHeaders": {
+        "Accept": [
+            "*/*"
+        ],
+        "Accept-Encoding": [
+            "json"
+        ],
+        "CloudFront-Forwarded-Proto": [
+            "https"
+        ],
+        "CloudFront-Is-Desktop-Viewer": [
+            "true"
+        ],
+        "CloudFront-Is-Mobile-Viewer": [
+            "false"
+        ],
+        "CloudFront-Is-SmartTV-Viewer": [
+            "false"
+        ],
+        "CloudFront-Is-Tablet-Viewer": [
+            "false"
+        ],
+        "CloudFront-Viewer-Country": [
+            "NO"
+        ],
+        "Host": [
+            "x0qrgxsiph.execute-api.eu-central-1.amazonaws.com"
+        ],
+        "User-Agent": [
+            "python-requests/2.26.0"
+        ],
+        "Via": [
+            "1.1 410f51195842d9b592b15d6588c36654.cloudfront.net (CloudFront)"
+        ],
+        "X-Amz-Cf-Id": [
+            "iYxjiVmCnRWTUsVoO3ktJDAI_QC7bCoIQ6cKJ6Qs03taUILQq5NSTg=="
+        ],
+        "X-Amzn-Trace-Id": [
+            "Root=1-61f3f340-29e327fb3732f2dd1b2aad8f"
+        ],
+        "x-api-key": [
+            "KimGEuhkyK6LFkKzU7BOc61DVwAbqgOL1jOE0yyt"
+        ],
+        "X-Forwarded-For": [
+            "62.73.201.20, 70.132.12.147"
+        ],
+        "X-Forwarded-Port": [
+            "443"
+        ],
+        "X-Forwarded-Proto": [
+            "https"
+        ]
+    },
+    "queryStringParameters": null,
+    "multiValueQueryStringParameters": null,
+    "pathParameters": {
+        "proxy": "catalogs"
+    },
+    "stageVariables": null,
+    "requestContext": {
+        "resourceId": "kutsn4",
+        "resourcePath": "/{proxy+}",
+        "httpMethod": "GET",
+        "extendedRequestId": "MqLyEFIqliAFdrA=",
+        "requestTime": "28/Jan/2022:13:44:32 +0000",
+        "path": "/hakcar/catalogs",
+        "accountId": "137699437089",
+        "protocol": "HTTP/1.1",
+        "stage": "hakcar",
+        "domainPrefix": "x0qrgxsiph",
+        "requestTimeEpoch": 1643377472245,
+        "requestId": "0b442a4b-904e-4073-8fe1-f19ca85c7249",
+        "identity": {
+            "cognitoIdentityPoolId": null,
+            "cognitoIdentityId": null,
+            "apiKey": "59tjlpHjTr6QEN3T79mUI57JQjSpuqLE6iJnFFHB",
+            "principalOrgId": null,
+            "cognitoAuthenticationType": null,
+            "userArn": null,
+            "userAgent": "python-requests/2.26.0",
+            "accountId": null,
+            "caller": null,
+            "sourceIp": "62.73.201.20",
+            "accessKey": null,
+            "cognitoAuthenticationProvider": null,
+            "user": null
+        },
+        "domainName": "x0qrgxsiph.execute-api.eu-central-1.amazonaws.com",
+        "apiId": "x0qrgxsiph"
+    },
+    "body": null,
+    "isBase64Encoded": false
+}

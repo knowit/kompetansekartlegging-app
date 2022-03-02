@@ -1,0 +1,30 @@
+* {
+    box-sizing: border-box;
+}
+
+.App {
+  text-align: center;
+}
+
+body {
+  height: 100%
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #F2F2F2;
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #393939;
+  border-radius: 10px;
+}
+
+

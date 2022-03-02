@@ -1,5 +1,5 @@
 {
-  "app": "npx ts-node --prefer-ts-exts bin/cdk.ts",
+  "app": "npx ts-node --prefer-ts-exts bin/cdk-test.ts",
   "watch": {
     "include": [
       "**"
@@ -27,6 +27,9 @@
     "@aws-cdk/core:target-partitions": [
       "aws",
       "aws-cn"
-    ]
+    ],
+    "DEVELOPMENT_ENV": "dev",
+    "AZURE": "https://login.microsoftonline.com/645152b7-1e59-4dbc-aec9-b418a90db78c/federationmetadata/2007-06/federationmetadata.xml?appid=f0c04a53-e576-4c4b-b9f1-86491313bc2f",
+    "ENV": "ksandbox"
   }
 }

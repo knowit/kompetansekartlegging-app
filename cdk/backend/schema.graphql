@@ -1,0 +1,266 @@
+type APIKeyPermission
+
+    @model
+    @auth(
+        rules:[
+            { allow: groups, groups:["admin"]}
+        ]
+    )
+    @key(
+        name: "byAPIKeyHashed"
+        fields: ["APIKeyHashed"]
+        queryField: "organizationByAPIKeyHashed"
+    ){
+    id: ID!
+    APIKeyHashed: String!
+    organizationID: String!
+}
+
+
+# Private authorization should ideally be replaced
+type Organization
+    @model
+    @auth(
+        rules: [
+            { allow: private, operations: [read]} 
+            { allow: groups, groups: ["admin"] }
+        ]
+    )
+    @key(
+        name: "byIdentifierAttribute"
+        fields: ["identifierAttribute"]
+        queryField: "organizationByIdentifierAttribute"
+    ) {
+    id: ID!
+    createdAt: AWSDateTime!
+    owner: String
+    orgname: String!
+    identifierAttribute: String!
+}
+
+type FormDefinition
+    @model
+    @auth(
+        rules: [
+            { allow: groups, groupsField: "orgAdmins" }
+            { allow: groups, groupsField: "organizationID", operations: [read] }
+        ]
+    )
+    @key(
+        name: "byCreatedAt"
+        fields: ["sortKeyConstant", "createdAt"]
+        queryField: "formByCreatedAt"
+    )
+    @key(
+        name: "byOrganizationByCreatedAt"
+        fields:["organizationID", "createdAt"]
+        queryField: "formByOrganizationByCreatedAt"
+    )
+    @key(
+        name: "byOrganization"
+        fields: ["organizationID"]
+        queryField: "formDefinitionByOrganizationID"
+    ) {
+    id: ID!
+    label: String
+    createdAt: AWSDateTime!
+    sortKeyConstant: String!
+    questions: [Question]
+        @connection(keyName: "byFormDefinition", fields: ["id"])
+    organizationID: ID!
+    organization: Organization @connection(fields:["organizationID"])
+    orgAdmins: String!
+}
+
+type UserForm
+    @model
+    @auth(
+        rules: [
+            { allow: owner }
+            { allow: groups, groupsField: "orgAdmins" }
+            { allow: groups, groupsField: "orgGroupLeaders", operations: [read] }
+        ]
+    )
+    @key(
+        name: "byCreatedAt"
+        fields: ["owner", "createdAt"]
+        queryField: "userFormByCreatedAt"
+    ) {
+    id: ID!
+    createdAt: AWSDateTime!
+    owner: String
+    formDefinitionID: ID!
+    questionAnswers: [QuestionAnswer]!
+        @connection(keyName: "byUserForm", fields: ["id"])
+    formDefinition: FormDefinition! @connection(fields: ["formDefinitionID"])
+    
+    orgGroupLeaders: String!
+    orgAdmins: String!
+}
+
+type QuestionAnswer
+    @model
+    @auth(
+        rules: [
+            { allow: owner }
+            { allow: groups, groupsField: "orgAdmins" }
+            { allow: groups, groupsField: "orgGroupLeaders", operations: [read] }
+        ]
+    )
+    @key(name: "byUserForm", fields: ["userFormID"]) {
+    id: ID!
+    userFormID: ID!
+    questionID: ID!
+    question: Question @connection(fields: ["questionID"])
+    orgGroupLeaders: String!
+    orgAdmins: String!
+    
+
+    # if question.type == null or knowledgeMotivation
+    knowledge: Float
+    motivation: Float
+
+    # if question.type == customScaleLabels
+    customScaleValue: Float
+
+    # if question.type == text
+    textValue: String
+}
+
+enum QuestionType {
+    knowledgeMotivation
+    customScaleLabels
+    text
+}
+
+type Question
+    @model
+    @auth(
+        rules: [
+            { allow: groups, groupsField: "orgAdmins" }
+            { allow: groups, groupsField: "organizationID", operations: [read] }
+        ]
+    )
+    @key(
+        name: "byFormDefinition"
+        fields: ["formDefinitionID"]
+        queryField: "questionsByFormDefinition"
+    )
+    @key(
+        name: "byCategory"
+        fields: ["categoryID"]
+        queryField: "questionsByCategory"
+    ) {
+    id: ID!
+    text: String!
+    topic: String!
+    index: Int
+    formDefinitionID: ID!
+    categoryID: ID!
+    category: Category @connection(fields: ["categoryID"])
+    type: QuestionType
+
+    # if type == customScaleLabels
+    scaleStart: String
+    scaleMiddle: String
+    scaleEnd: String
+    
+    orgAdmins: String!
+    organizationID: ID!
+    organization: Organization @connection(fields: ["organizationID"])
+}
+
+type Category
+    @model
+    @auth(
+        rules: [
+            { allow: groups, groupsField: "orgAdmins" }
+            { allow: groups, groupsField: "organizationID", operations: [read] }
+        ]
+    )
+    @key(
+        name: "byFormDefinition"
+        fields: ["formDefinitionID"]
+        queryField: "categoriesByFormDefinition"
+    ) {
+    id: ID!
+    text: String!
+    description: String
+    index: Int
+    formDefinitionID: ID!
+    formDefinition: FormDefinition @connection(fields: ["formDefinitionID"])
+    questions: [Question] @connection(keyName: "byCategory", fields: ["id"])
+
+    orgAdmins: String!
+    organizationID: ID!
+    organization: Organization @connection(fields: ["organizationID"])
+}
+
+type Group
+    @model
+    @auth(
+        rules: [
+            { allow: groups, groupsField: "orgAdmins" }
+            { allow: groups, groupsField: "orgGroupLeaders", operations: [read] }
+        ]
+    ) {
+    id: ID!
+    groupLeaderUsername: String!
+    organizationID: ID!
+    organization: Organization @connection(fields: ["organizationID"])
+    orgGroupLeaders: String!
+    orgAdmins: String!
+}
+
+type User
+    @model
+    @auth(
+        rules: [
+            { allow: groups, groupsField: "orgAdmins" }
+            { allow: groups, groupsField: "orgGroupLeaders"}
+        ]
+    )
+    @key(name: "byGroup", fields: ["groupID"], queryField: "usersByGroup") {
+    id: ID!
+    groupID: ID!
+    group: Group! @connection(fields: ["groupID"])
+    organizationID: ID!
+    organization: Organization @connection(fields: ["organizationID"])
+    orgAdmins: String!
+    orgGroupLeaders: String!
+}
+
+type CreateQuestionAnswerResult {
+    status: Int!
+    error: String
+    failedInputs: [CreateQuestionAnswerFailedInput]
+}
+
+type CreateQuestionAnswerFailedInput {
+    id: ID
+    userFormID: ID!
+    questionID: ID!
+    knowledge: Float
+    motivation: Float
+    customScaleValue: Float
+    formDefinitionID: String!
+}
+
+input CreateQuestionAnswerInput {
+    id: ID
+    userFormID: ID!
+    questionID: ID!
+    knowledge: Float
+    motivation: Float
+    customScaleValue: Float
+    formDefinitionID: String!
+    orgAdmins: String
+    orgGroupLeaders: String
+}
+
+type Mutation {
+    batchCreateQuestionAnswer(
+        input: [CreateQuestionAnswerInput]
+        organizationID: String
+    ): CreateQuestionAnswerResult @function(name: "createUserformBatch")
+}

@@ -1,0 +1,5 @@
+.container {
+    overflow-y: auto;
+    padding: 24px;
+    height: 100%;
+}
