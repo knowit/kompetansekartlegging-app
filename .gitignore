@@ -12,6 +12,8 @@ cdk/appsync/*
 *params.json
 
 frontend/src/exports.js
-frontend/src/graphql/*
+frontend/src/graphql/mutations.ts
+frontend/src/graphql/queries.ts
+frontend/src/graphql/subscriptions.ts
 frontend/src/API.ts
 frontend/build
