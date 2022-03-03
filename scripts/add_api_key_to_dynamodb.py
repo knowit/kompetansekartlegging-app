@@ -15,7 +15,7 @@ def add_api_key_to_dynamodb(organization_ID, api_key, iam_user, graphql_api_id, 
     dynamo_client = client_session.resource('dynamodb')
 
     full_table_name = table_name + '-' + graphql_api_id + '-' + env
-
+    
     table = dynamo_client.Table(full_table_name)
 
 
@@ -50,6 +50,5 @@ if __name__ == '__main__':
     destination_iam_user = parameters['destination_iam_user']
     destination_graphql_api_id = parameters['destination_graphql_api_id']
     destination_env = parameters['destination_env']
-
-
+    print(destination_env, destination_iam_user, destination_graphql_api_id)
     add_api_key_to_dynamodb(organization_ID, api_key, destination_iam_user, destination_graphql_api_id, destination_env)

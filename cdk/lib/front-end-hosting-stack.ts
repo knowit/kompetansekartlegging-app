@@ -9,7 +9,7 @@ import * as path from "path";
 import { Certificate, CertificateValidation } from "aws-cdk-lib/aws-certificatemanager";
 import * as cfront from "aws-cdk-lib/aws-cloudfront";
 
-export class CdkTestStack extends Stack {
+export class FrontEndStack extends Stack {
     constructor(scope: Construct, id: string, props?: StackProps, hostedZoneProps?: {name: string, id: string}) {
         super(scope, id, props);
         const accountId = "";

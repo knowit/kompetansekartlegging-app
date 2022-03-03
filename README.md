@@ -15,7 +15,8 @@ This project requires [npm](https://www.npmjs.com/get-npm).
 To deploy the CDK backend you need to:
 1. Clone the GitHub repo.
 2. Run `$ cd kompetansekartlegging-app/cdk`
-3. Run `$ npm install` in base folder (kompetansekartlegging-app/cdk). Then, in the backend folder, run `npm install` in the src folders for each function, and run `npm install` in the presignup trigger.
+3. Run `$ npm install` in base folder (kompetansekartlegging-app/cdk). 
+   Then, in the backend folder, run `npm install` in the src folders for each function, and run `npm install` in the presignup trigger.
 4. Run `cdk bootstrap` in base folder (can skip if your AWS account has already done cdk bootstrap in other project)
 5. Run `npm run deploy` (This command first does `cdk deploy` followed by executing the hooks/hooks.ts script)
 6. Run `npm run codegen`

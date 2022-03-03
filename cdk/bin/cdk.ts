@@ -4,7 +4,8 @@ import * as cdk from 'aws-cdk-lib';
 import { KompetanseStack } from '../lib/kompetanse-stack';
 
 const app = new cdk.App();
-new KompetanseStack(app, 'KompetanseStack', {
+const ENV = app.node.tryGetContext("ENV")
+new KompetanseStack(app, `KompetanseStack-${ENV}`, {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */

@@ -23,7 +23,7 @@ export class KompetanseFrontendStack extends Stack {
     });
 
     new s3deploy.BucketDeployment(this, 'KompetansekartleggingFrontendBucketDeploy', {
-      sources: [s3deploy.Source.asset('../build')],
+      sources: [s3deploy.Source.asset('../frontend/build')],
       destinationBucket: websiteBucket,
       distribution,
       distributionPaths: ['/*'],
@@ -32,15 +32,15 @@ export class KompetanseFrontendStack extends Stack {
     const deployUser = new iam.User(this, 'deploy_website');
     websiteBucket.grantWrite(deployUser);
 
-    switch(process.env.DEPLOYMENT_ENV) { 
-      case 'dev': { 
-          new KompetanseFrontendDistributionAndCertsStack('dev.kompetanse.knowit.no', websiteBucket, this);
-          break; 
-      } 
-      case 'prod': { 
-        new KompetanseFrontendDistributionAndCertsStack('kompetanse.knowit.no', websiteBucket, this);
-        break; 
-      } 
-   } 
+  //   switch(process.env.DEPLOYMENT_ENV) { 
+  //     case 'dev': { 
+  //         new KompetanseFrontendDistributionAndCertsStack('dev.kompetanse.knowit.no', websiteBucket, this);
+  //         break; 
+  //     } 
+  //     case 'prod': { 
+  //       new KompetanseFrontendDistributionAndCertsStack('kompetanse.knowit.no', websiteBucket, this);
+  //       break; 
+  //     } 
+  //  } 
   }
 }

@@ -20,15 +20,12 @@ import * as graphQL from "@aws-cdk/aws-appsync-alpha/lib/graphqlapi"
 export class KompetanseStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
-    // const cdkContext = (process.env.CDK_CONTEXT_JSON) ? JSON.parse(process.env.CDK_CONTEXT_JSON) : null
     const DEVELOPMENT_ENV = this.node.tryGetContext("DEVELOPMENT_ENV");
     const AZURE = this.node.tryGetContext("AZURE");
+    const GOOGLE_ID = this.node.tryGetContext("GOOGLE_ID");
+    const GOOGLE_SECRET = this.node.tryGetContext("GOOGLE_SECRET");
     const ENV = this.node.tryGetContext("ENV");
     const isProd = DEVELOPMENT_ENV === "master";
-
-    // console.log(process.env)
-    console.log(DEVELOPMENT_ENV);
-    console.log(AZURE);
 
     const pool = new cognito.UserPool(this, "Kompetansekartlegging", {
       customAttributes: {
@@ -49,8 +46,8 @@ export class KompetanseStack extends Stack {
     const supportedProviders = [];
 
     const googlePorvider = new cognito.UserPoolIdentityProviderGoogle(this, "Google", {
-      clientId: "1053265626832-duocbqr4vs9n78ubn40d49ujrgm5sg14.apps.googleusercontent.com",
-      clientSecret: "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",
+      clientId: GOOGLE_ID,
+      clientSecret: GOOGLE_SECRET,
       userPool: pool,
       scopes: ["profile", "email", "openid"],
       attributeMapping: {
@@ -195,15 +192,15 @@ export class KompetanseStack extends Stack {
     pool.addTrigger(cognito.UserPoolOperation.PRE_SIGN_UP, presignupTrigger);
     
     const tableNames = {
-      "OrganizationTable": `Organization-${this.artifactId}-${ENV}`,
-      "UserTable": `User-${this.artifactId}-${ENV}`,
-      "UserFormTable": `UserForm-${this.artifactId}-${ENV}`,
-      "QuestionTable": `Question-${this.artifactId}-${ENV}`,
-      "QuestionAnswerTable": `QuestionAnswer-${this.artifactId}-${ENV}`,
-      "FormDefinitionTable": `FormDefinition-${this.artifactId}-${ENV}`,
-      "APIKeyPermissionTable": `APIKeyPermission-${this.artifactId}-${ENV}`,
-      "GroupTable": `Group-${this.artifactId}-${ENV}`,
-      "CategoryTable": `Category-${this.artifactId}-${ENV}`,
+      "OrganizationTable": `Organization-${this.artifactId}`,
+      "UserTable": `User-${this.artifactId}`,
+      "UserFormTable": `UserForm-${this.artifactId}`,
+      "QuestionTable": `Question-${this.artifactId}`,
+      "QuestionAnswerTable": `QuestionAnswer-${this.artifactId}`,
+      "FormDefinitionTable": `FormDefinition-${this.artifactId}`,
+      "APIKeyPermissionTable": `APIKeyPermission-${this.artifactId}`,
+      "GroupTable": `Group-${this.artifactId}`,
+      "CategoryTable": `Category-${this.artifactId}`,
     }
 
     const appSync = new AppSyncTransformer(this, "Appsync", {
@@ -241,6 +238,38 @@ export class KompetanseStack extends Stack {
       ]
     });
 
+    const tableArns: any = {}
+
+    Object.keys(appSync.tableMap).forEach(table => {
+      tableArns[table] = appSync.tableMap[table].tableArn;
+    });
+
+    const externalApiStatement = new iam.PolicyStatement({
+      actions: [
+        "dynamodb:Get*",
+        "dynamodb:BatchGetItem",
+        "dynamodb:List*",
+        "dynamodb:Describe*",
+        "dynamodb:Scan",
+        "dynamodb:Query"
+      ],
+      effect: iam.Effect.ALLOW,
+      resources: [
+        tableArns["UserFormTable"],
+        `${tableArns["UserFormTable"]}/index/*`,
+        tableArns["QuestionTable"], 
+        `${tableArns["QuestionTable"]}/index/*`,
+        tableArns["QuestionAnswerTable"],
+        `${tableArns["QuestionAnswerTable"]}/index/*`,
+        tableArns["CategoryTable"],
+        `${tableArns["CategoryTable"]}/index/*`,
+        tableArns["FormDefinitionTable"],
+        `${tableArns["FormDefinitionTable"]}/index/*`,
+        tableArns["APIKeyPermissionTable"],
+        `${tableArns["APIKeyPermissionTable"]}/index/*`
+      ]
+    });
+    
     const externalAPILambda = new lambda.Function(this, "kompetanseExternalApiLambda", {
       code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/externalAPI/src")),
       handler: "index.handler",
@@ -248,14 +277,13 @@ export class KompetanseStack extends Stack {
       environment: {
         "USERPOOL": pool.userPoolId,
         "TABLE_MAP": JSON.stringify(appSync.tableNameMap)
-      }
+      },
+      initialPolicy: [externalApiStatement]
     });
 
-    const tableArns: any = {}
+    
 
-    Object.keys(appSync.tableMap).forEach(table => {
-      tableArns[table] = appSync.tableMap[table].tableArn;
-    });
+
 
     const createUserFormStatement = new iam.PolicyStatement({
       actions: [
@@ -287,7 +315,7 @@ export class KompetanseStack extends Stack {
     })
 
     presignupTrigger.addEnvironment("TABLE_MAP", JSON.stringify(appSync.tableNameMap));
-    externalAPILambda.addEnvironment("TABLE_MAP", JSON.stringify(appSync.tableNameMap));
+    // externalAPILambda.addEnvironment("TABLE_MAP", JSON.stringify(appSync.tableNameMap));
 
     const batchCreateUser = new lambda.Function(this, "kompetansebatchuserform", {
       code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/createUserformBatch/src")),
@@ -343,7 +371,8 @@ export class KompetanseStack extends Stack {
         cognitoUserPools: [pool],
       }),
       authorizationScopes: ["aws.cognito.signin.user.admin"],
-    })
+    });
+
     proxy.addMethod("OPTIONS", new gateway.MockIntegration({
       passthroughBehavior: gateway.PassthroughBehavior.WHEN_NO_MATCH,
       requestTemplates: {
@@ -369,16 +398,96 @@ export class KompetanseStack extends Stack {
         },
         responseModels: {"application/json": gateway.Model.EMPTY_MODEL}
       }],
-
     });
     
-    const externalApi = new gateway.LambdaRestApi(this, "KompetanseExternalApi", {
-      handler: externalAPILambda,
-      restApiName: "externalAPI",
+    // const externalApi = new gateway.LambdaRestApi(this, "KompetanseExternalApi", {
+    //   handler: externalAPILambda,
+    //   restApiName: "externalAPI",
+    //   deployOptions: {
+    //     stageName: (isProd) ? "prod" : "dev"
+    //   }
+    // });
+
+    const externalApi = new gateway.RestApi(this, "KompetanseExternalApi", {
+      restApiName: "externalApi",
       deployOptions: {
         stageName: (isProd) ? "prod" : "dev"
       }
     });
+
+    const externalApiProxy = externalApi.root.addProxy({
+      anyMethod: false,
+    });
+
+    const extResponseModel = externalApi.addModel("externalAPIResponseModel", {
+      contentType: "application/json",
+      modelName: "ResponseSchema",
+      schema: {
+        "type" : gateway.JsonSchemaType.OBJECT,
+        "required" : [ "response" ],
+        "properties" : {
+          "response" : {
+            "type" : gateway.JsonSchemaType.STRING
+          }
+        },
+        "title" : "Response Schema"
+      }
+    })
+
+    const externalApiAnyMethod = externalApiProxy.addMethod("ANY", new gateway.LambdaIntegration(
+      externalAPILambda
+    ),
+    {
+      apiKeyRequired: true,
+      requestModels: {
+        "application/json": extResponseModel
+      },
+      methodResponses: [
+        {
+          statusCode: "200",
+          responseModels: {
+            "application/json": extResponseModel
+          }
+        }
+      ]
+    })
+    externalApiProxy.addMethod("OPTIONS", new gateway.MockIntegration({
+      passthroughBehavior: gateway.PassthroughBehavior.WHEN_NO_MATCH,
+      requestTemplates: {
+        "application/json" : JSON.stringify({statusCode: 200})
+      },
+      integrationResponses: [{
+        statusCode: "200",
+        responseParameters:{
+          "method.response.header.Access-Control-Allow-Methods": "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+          "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+          "method.response.header.Access-Control-Allow-Origin": "'*'"
+        }
+      }],
+    }), {
+      methodResponses: [{
+        statusCode: "200",
+        responseParameters: {
+          'method.response.header.Content-Type': true,
+          "method.response.header.Access-Control-Allow-Headers": true,
+          'method.response.header.Access-Control-Allow-Origin': true,
+          'method.response.header.Access-Control-Allow-Credentials': true,
+          'method.response.header.Access-Control-Allow-Methods': true
+        },
+      }],
+    });
+
+    const extUsagePlan = externalApi.addUsagePlan("externalApiUsagePlan", {
+      name: "standard",
+      apiStages: [{
+        api: externalApi,
+        stage: externalApi.deploymentStage
+      }]
+    });
+  
+
+    const apiKeyTest = extUsagePlan.addApiKey(new gateway.ApiKey(this, "TestKey", {apiKeyName:"Test"}));
+
 
     if (batchCreateUser.role) createUserFormPolicy.attachToRole(batchCreateUser.role);
 
