@@ -1,6 +1,7 @@
 import * as appsync from "@aws-sdk/client-appsync";
 import * as lambda from "@aws-sdk/client-lambda";
 import * as iam from "@aws-sdk/client-iam";
+import { fromIni } from "@aws-sdk/credential-providers";
 
 export default async (userPoolId: string, userPoolClientId: string, appsyncId: string, batchCreateUserId: any, tableMap: string, tableArns: string) => {
     const lambdaClient = new lambda.LambdaClient({region: "eu-central-1"});

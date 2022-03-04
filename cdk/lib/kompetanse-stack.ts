@@ -209,7 +209,7 @@ export class KompetanseStack extends Stack {
     });
 
     const adminQueriesLambda = new lambda.Function(this, "kompetanseAdminQueries", {
-      code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/AdminQueries/src")),
+      code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/AdminQueries")),
       handler: "index.handler",
       runtime: lambda.Runtime.NODEJS_14_X,
       environment: {
@@ -271,7 +271,7 @@ export class KompetanseStack extends Stack {
     });
     
     const externalAPILambda = new lambda.Function(this, "kompetanseExternalApiLambda", {
-      code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/externalAPI/src")),
+      code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/externalAPI")),
       handler: "index.handler",
       runtime: lambda.Runtime.NODEJS_14_X,
       environment: {
@@ -318,7 +318,7 @@ export class KompetanseStack extends Stack {
     // externalAPILambda.addEnvironment("TABLE_MAP", JSON.stringify(appSync.tableNameMap));
 
     const batchCreateUser = new lambda.Function(this, "kompetansebatchuserform", {
-      code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/createUserformBatch/src")),
+      code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/createUserformBatch")),
       handler: "index.handler",
       runtime: lambda.Runtime.NODEJS_14_X,
     });
