@@ -182,8 +182,8 @@ export class KompetanseStack extends Stack {
       // };
     } else {
       domainSettings.cognitoDomain = {
-        domainPrefix: "komptest"
-      }
+        domainPrefix: `komptest-${ENV}`
+      };
     }
 
     pool.addDomain("kompetansekartlegging-domain-name", domainSettings);
