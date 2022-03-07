@@ -1,18 +1,27 @@
 import boto3
 import json
 
-source_iam_user = ''
+with open('parameters.json') as parameters_file:
+    parameters = json.load(parameters_file)
+
+parameter_keys = ['source_iam_user', 'source_userpool_id', 'destination_iam_user', 'destination_userpool_id']
+
+if not all(key in parameters for key in parameter_keys):
+    print(f"parameters.json must contain the following keys: f{parameter_keys}")
+    exit()
+
+source_iam_user = parameters['source_iam_user']
 source_session = boto3.Session(profile_name=source_iam_user)
 source_client = source_session.client('cognito-idp')
-sourceUserPoolId = ""
+sourceUserPoolId = parameters['source_userpool_id']
 
-destination_iam_user = 'KompetanseProdB'
+destination_iam_user = parameters['destination_iam_user']
 destination_session = boto3.Session(profile_name=destination_iam_user)
 destination_cognito_client = destination_session.client('cognito-idp')
 # destination_dynamo_client = destination_session.client('dynamodb')
 # destination_table_id = "" 
 # destination_env = ""
-destUserPoolId = ""
+destUserPoolId = parameters['destination_userpool_id']
 
 def migrate_user(user):
     userGroups = source_client.admin_list_groups_for_user(
