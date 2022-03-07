@@ -46,22 +46,41 @@ dest_tablenames = [
 for tablename in tablenames:
     dynamopaginator = source_dynamo_client.get_paginator('scan')
     source_tabname = tablename + '-' + source_graphql_api_id + '-' + source_env
-    # destination_tabname = tablename + '-' + destination_graphql_api_id + '-' + destination_env
-    destination_tabname = ""
-    for name in dest_tablenames:
-        if f'{tablename}Table' in name:
-            destination_tabname = name
-    if destination_tabname == "":
-        continue
+    destination_tabname = tablename + '-' + destination_graphql_api_id + '-' + destination_env
+    # destination_tabname = ""
+    # for name in dest_tablenames:
+    #     if f'{tablename}Table' in name:
+    #         destination_tabname = name
+    # if destination_tabname == "":
+    #     continue
     dynamoresponse = dynamopaginator.paginate(
         TableName = source_tabname,
         Select = 'ALL_ATTRIBUTES',
         ReturnConsumedCapacity = 'NONE',
         ConsistentRead = True
     )
+    bulkWrite = {}
+    bulkWrite[destination_tabname] = []
+    print(f"Writing to table {tablename}...")
     for page in dynamoresponse:
         for item in page['Items']:
-            destination_dynamo_client.put_item(
-                TableName = destination_tabname,
-                Item = item
-            )
+            bulkWrite[destination_tabname].append({
+                'PutRequest': {
+                    'Item': item
+                }
+            })
+            if len(bulkWrite[destination_tabname]) == 25:
+                response = destination_dynamo_client.batch_write_item(RequestItems=bulkWrite)
+                if "UnprocessedItems" in response.keys() and len(response["UnprocessedItems"]) > 0:
+                    response = destination_dynamo_client.batch_write_item(RequestItems=response["UnprocessedItems"])
+                bulkWrite[destination_tabname] = []
+    if len(bulkWrite[destination_tabname]) > 0:
+        response = destination_dynamo_client.batch_write_item(RequestItems=bulkWrite)
+        if "UnprocessedItems" in response.keys() and len(response["UnprocessedItems"]) > 0:
+            response = destination_dynamo_client.batch_write_item(RequestItems=response["UnprocessedItems"])
+        bulkWrite[destination_tabname] = []
+            # destination_dynamo_client.put_item(
+            #     TableName = destination_tabname,
+            #     Item = item
+            # )
+    print(f"Finished writing to table {tablename}!")
