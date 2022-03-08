@@ -1,3 +1,4 @@
+#!/bin/bash
 npm install
 cd backend/presignup && npm install
 cd ../function/AdminQueries && npm install

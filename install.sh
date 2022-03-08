@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "Installing backend packages..."
 cd cdk && ./install.sh
 echo "Instaling frontend packages..."

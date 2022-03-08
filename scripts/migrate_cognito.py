@@ -18,9 +18,7 @@ sourceUserPoolId = parameters['source_userpool_id']
 destination_iam_user = parameters['destination_iam_user']
 destination_session = boto3.Session(profile_name=destination_iam_user)
 destination_cognito_client = destination_session.client('cognito-idp')
-# destination_dynamo_client = destination_session.client('dynamodb')
-# destination_table_id = "" 
-# destination_env = ""
+
 destUserPoolId = parameters['destination_userpool_id']
 
 def migrate_user(user):
@@ -30,16 +28,9 @@ def migrate_user(user):
     )
     userName = user["Username"]
 
-    # isGroupLeader = any([group["GroupName"] == "groupLeader" for group in userGroups["Groups"]])
-    # if isGroupLeader:
-    #     print(f"{userName} IsGroupLeader!")
-    # isAdmin = any([group["GroupName"] == "groupLeader" for group in userGroups["Groups"]])
-    # if isAdmin:
-    #     print(f"{userName} IsAdmin!")
-
     userAttributes = [item for item in user['Attributes'] if item['Name'] != 'sub' and item['Name'] != 'identities']
     email = [item for item in user['Attributes'] if item['Name'] == 'email'][0]['Value']
-    # userAttributes.append({"Name": "custom:OrganizationID", "Value": "knowitobjectnet"})
+    
     if email == userName:
         try:
             destination_cognito_client.admin_create_user(
@@ -54,12 +45,6 @@ def migrate_user(user):
                 Username=email,
                 Password="NotReal123",
                 Permanent=True
-            )
-
-            destination_cognito_client.admin_add_user_to_group(
-                UserPoolId=destUserPoolId,
-                Username=email,
-                GroupName="knowitobjectnet"
             )
 
             for group in userGroups["Groups"]:
@@ -85,6 +70,43 @@ def migrate_user(user):
 #     UserPoolId=sourceUserPoolId,
 #     Username='Google_104475194586241570827'
 # )
+
+cognito_groups = []
+
+response = source_client.list_groups(
+    UserPoolId = sourceUserPoolId
+)
+
+for group in response["Groups"]:
+    cognito_groups.append(group["GroupName"])
+
+groupNextToken = None
+if "PaginationToken" in response.keys():
+    groupNextToken = response["PaginationToken"]
+
+while groupNextToken:
+    response = source_client.list_groups(
+        UserPoolId = sourceUserPoolId
+    )
+
+    for group in response["Groups"]:
+        cognito_groups.append(group["GroupName"])
+
+    groupNextToken = None
+    if "PaginationToken" in response.keys():
+        groupNextToken = response["PaginationToken"]
+
+# print(cognito_groups)
+# exit()
+for group in cognito_groups:
+    if "eu-central-1" in group:
+        continue
+    # print(group)
+    # exit()
+    destination_cognito_client.create_group(
+        UserPoolId=destUserPoolId,
+        GroupName=group,
+    )
 
 response = source_client.list_users(
     UserPoolId = sourceUserPoolId

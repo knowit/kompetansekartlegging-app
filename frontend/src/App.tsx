@@ -6,7 +6,7 @@ import awsconfig from "./exports";
 import Content from "./components/Content";
 import Login from "./components/Login";
 import { ThemeProvider } from "@material-ui/core/styles";
-import { debounce, makeStyles } from "@material-ui/core";
+import { Button, debounce, makeStyles, Snackbar } from "@material-ui/core";
 import { isMobile } from "react-device-detect";
 import FloatingScaleDescButton from "./components/FloatingScaleDescButton";
 import NavBarDesktop from "./components/NavBarDesktop";
@@ -18,50 +18,6 @@ import { setUserInfo, setUserInfoLogOut, selectUserState, fetchOrganizationNameB
 import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth";
 
 const userBranch = process?.env.REACT_APP_USER_BRANCH || ""; // Process does not exist in Webpack 5?
-
-// const outputs = {
-//     "userFormRoleNameOutput": "CdkTestStack-kompetansebatchuserformServiceRoleE88-J4ATXKBYTRU4",
-//     "awsuserpoolsid": "eu-central-1_KqJ1hhY27",
-//     "outputAppSyncId": "a5qoydhxqnh6rllfdwd2fofwmi",
-//     "awsuserpoolswebclientid": "3aqvnc3qcmvdudh325iq7n91oi",
-//     "outputCreateBatch": "CdkTestStack-kompetansebatchuserformB155B7A1-gBMmljnNx2hH",
-//     "KompetanseExternalApiEndpoint650AEEDF": "https://ktulgxtih3.execute-api.eu-central-1.amazonaws.com/dev",
-//     "awscognitoidentitypoolid": "eu-central-1:d7a39531-827d-4892-8dbd-fe2ec7c82056",
-//     "kompetanseAdminQueriesRestApiEndpoint41001590": "https://ryh71xzda2.execute-api.eu-central-1.amazonaws.com/dev",
-//     "oauth": {"oauth":{"domain":"komptest.auth.eu-central-1.amazoncognito.com"}},
-//     "appsyncGraphQLEndpointOutput": "https://ovgbqhmzbrc5hjb2ner3bp5nqa.appsync-api.eu-central-1.amazonaws.com/graphql",
-//     "functionMap": {"adminQueries":{"name":"AdminQueries","region":"eu-central-1"},"externalAPI":{"name":"externalAPI","region":"eu-central-1"}}
-//   }
-//   {
-//     "awsuserpoolsid": "eu-central-1_au7QZ2F5a",
-//     "KompetanseAdminQueriesApiEndpoint50D0A167": "https://dwyllpu16m.execute-api.eu-central-1.amazonaws.com/dev",
-//     "outputAppSyncId": "a4p2xba2szf7dpxqizbdrejls4",
-//     "awsuserpoolswebclientid": "6ki69imsvkopvdntgvqvpvrjd1",
-//     "outputCreateBatch": "CdkTestStack-kompetansebatchuserformB155B7A1-fGCMnEJYiUMN",
-//     "KompetanseExternalApiEndpoint650AEEDF": "https://4kly9rmajc.execute-api.eu-central-1.amazonaws.com/dev",
-//     "awscognitoidentitypoolid": "eu-central-1:23b1887c-a926-40bf-856d-7e98b90a720c",
-//     "oauth": {oauth:{domain:"komptest.auth.eu-central-1.amazoncognito.com"}},
-//     "appsyncGraphQLEndpointOutput": "https://p6fjez3benfufbpm5jdiv6shna.appsync-api.eu-central-1.amazonaws.com/graphql",
-//     "functionMap": {adminQueries:{name:"AdminQueries",region:"eu-central-1"},externalAPI:{name:"externalAPI",region:"eu-central-1"}}
-// };
-
-
-
-// awsconfig.aws_cognito_identity_pool_id = outputs.awscognitoidentitypoolid;
-// awsconfig.aws_user_pools_id = outputs.awsuserpoolsid;
-// awsconfig.aws_user_pools_web_client_id = outputs.awsuserpoolswebclientid;
-// awsconfig.oauth.domain = outputs.oauth.oauth.domain;
-// awsconfig.aws_appsync_graphqlEndpoint = outputs.appsyncGraphQLEndpointOutput;
-// awsconfig.aws_cloud_logic_custom = [
-//     {
-//         ...outputs.functionMap.adminQueries,
-//         endpoint: outputs.kompetanseAdminQueriesRestApiEndpoint41001590
-//     },
-//     {
-//         ...outputs.functionMap.externalAPI,
-//         endpoint: outputs.KompetanseExternalApiEndpoint650AEEDF
-//     },
-// ];
 
 
 // console.log("Hosted branch: ", userBranch);
@@ -227,10 +183,21 @@ const App = () => {
             setCollapseMobileCategories(true);
         }
     };
+    const [bannerOpen, setBannerOpen] = useState(true);
 
     return (
         <ThemeProvider theme={theme}>
             <div className={style.root}>
+                 {(userBranch !== "master") ? <Snackbar open={bannerOpen} anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+                    <div style= {{
+                        background:"rgba(0,255,0, 255)",
+                        borderRadius:5,
+                        padding: 4,
+                        textAlign:"center"
+                    }}>
+                    NB: Dette er et test miljø!  <Button onClick={() => setBannerOpen(false)}>Close</Button>
+                    </div>
+                </Snackbar> : null}
                 {userState.isSignedIn ? (
                     <Fragment>
                         {isMobile ? null : (

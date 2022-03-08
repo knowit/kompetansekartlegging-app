@@ -29,6 +29,6 @@
       "aws-cn"
     ],
     "DEVELOPMENT_ENV": "dev",
-    "ENV": "ksandbox"
+    "ENV": "dev"
   }
 }

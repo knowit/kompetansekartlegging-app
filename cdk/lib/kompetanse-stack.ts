@@ -4,17 +4,11 @@ import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as iam from 'aws-cdk-lib/aws-iam';
 // import * as appsync from 'aws-cdk-lib/aws-appsync';
-import * as s3 from 'aws-cdk-lib/aws-s3';
-import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
-import * as r53 from 'aws-cdk-lib/aws-route53';
-import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as gateway from 'aws-cdk-lib/aws-apigateway';
 // import { CfnUserPoolIdentityProvider } from 'aws-cdk-lib/aws-cognito';
 import { Construct } from 'constructs';
 import * as path from "path";
-import AppsyncConstruct from './appsyncConstruct';
 import { AppSyncTransformer } from 'cdk-appsync-transformer';
-import * as graphQL from "@aws-cdk/aws-appsync-alpha/lib/graphqlapi"
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class KompetanseStack extends Stack {
@@ -26,6 +20,8 @@ export class KompetanseStack extends Stack {
     const GOOGLE_SECRET = this.node.tryGetContext("GOOGLE_SECRET");
     const ENV = this.node.tryGetContext("ENV");
     const isProd = DEVELOPMENT_ENV === "master";
+
+    // COGNITO SetUp
 
     const pool = new cognito.UserPool(this, "Kompetansekartlegging", {
       customAttributes: {
@@ -45,6 +41,7 @@ export class KompetanseStack extends Stack {
 
     const supportedProviders = [];
 
+    // Federation Providers
     const googlePorvider = new cognito.UserPoolIdentityProviderGoogle(this, "Google", {
       clientId: GOOGLE_ID,
       clientSecret: GOOGLE_SECRET,
@@ -71,9 +68,9 @@ export class KompetanseStack extends Stack {
         "name": "http://schemas.microsoft.com/ws/2008/06/identity/claims/displayname"
       }
     });
-
     supportedProviders.push({ name: samlProvider.providerName });
 
+    // AppClient
     const appClient = pool.addClient("AppClient", {
       supportedIdentityProviders: supportedProviders,
       oAuth: {
@@ -85,6 +82,7 @@ export class KompetanseStack extends Stack {
 
     });
 
+    // Identity Pool Setup
     const identityPool = new cognito.CfnIdentityPool(this, "KompetanseIdentityPool", {
       allowUnauthenticatedIdentities: true,
       cognitoIdentityProviders: [{ providerName: pool.userPoolProviderName, clientId: appClient.userPoolClientId }],
@@ -105,16 +103,16 @@ export class KompetanseStack extends Stack {
       ),
     });
 
-    authRole.addToPolicy(new iam.PolicyStatement({
-      actions: [
-        "execute-api:Invoke"
-      ],
-      resources: [
-        "arn:aws:execute-api:eu-central-1:153690382195:65iwvl3jha/migrate/GET//*",
-        "arn:aws:execute-api:eu-central-1:153690382195:65iwvl3jha/migrate/GET/"
-      ],
-      effect: iam.Effect.ALLOW
-    }))
+    // authRole.addToPolicy(new iam.PolicyStatement({
+    //   actions: [
+    //     "execute-api:Invoke"
+    //   ],
+    //   resources: [
+    //     "arn:aws:execute-api:eu-central-1:153690382195:65iwvl3jha/migrate/GET//*",
+    //     "arn:aws:execute-api:eu-central-1:153690382195:65iwvl3jha/migrate/GET/"
+    //   ],
+    //   effect: iam.Effect.ALLOW
+    // }))
 
     const unauthRole = new iam.Role(this, "UnauthRole", {
       assumedBy: new iam.FederatedPrincipal(
@@ -139,6 +137,8 @@ export class KompetanseStack extends Stack {
         roles: { authenticated: authRole.roleArn, unauthenticated: unauthRole.roleArn },
       }
     );
+
+    // PreSignUp Trigger Setup
 
     const presignupCognitoPermissions = new iam.PolicyStatement({
       actions: ["cognito-idp:AdminAddUserToGroup", "cognito-idp:ListUsers", "cognito-idp:UpdateUserAttributes", "cognito-idp:AdminUpdateUserAttributes", "cognito-idp:AdminLinkProviderForUser", "cognito-idp:AdminCreateUser", "cognito-idp:AdminConfirmSignUp", "cognito-idp:AdminSetUserPassword"],
@@ -190,7 +190,9 @@ export class KompetanseStack extends Stack {
 
 
     pool.addTrigger(cognito.UserPoolOperation.PRE_SIGN_UP, presignupTrigger);
-    
+
+    // AppSync Setup 
+
     const tableNames = {
       "OrganizationTable": `Organization-${this.artifactId}`,
       "UserTable": `User-${this.artifactId}`,
@@ -207,6 +209,14 @@ export class KompetanseStack extends Stack {
       schemaPath: path.join(__dirname, "/../backend/schema.graphql"),
       tableNames: tableNames
     });
+
+    const tableArns: any = {}
+
+    Object.keys(appSync.tableMap).forEach(table => {
+      tableArns[table] = appSync.tableMap[table].tableArn;
+    });
+    
+    // AdminQueries Lambda setup
 
     const adminQueriesLambda = new lambda.Function(this, "kompetanseAdminQueries", {
       code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/AdminQueries")),
@@ -238,11 +248,8 @@ export class KompetanseStack extends Stack {
       ]
     });
 
-    const tableArns: any = {}
 
-    Object.keys(appSync.tableMap).forEach(table => {
-      tableArns[table] = appSync.tableMap[table].tableArn;
-    });
+    // ExternalAPI Lambda Setup
 
     const externalApiStatement = new iam.PolicyStatement({
       actions: [
@@ -281,9 +288,7 @@ export class KompetanseStack extends Stack {
       initialPolicy: [externalApiStatement]
     });
 
-    
-
-
+    // CreateUserformBatch setup
 
     const createUserFormStatement = new iam.PolicyStatement({
       actions: [
@@ -314,8 +319,10 @@ export class KompetanseStack extends Stack {
       statements: [createUserFormStatement]
     })
 
+    // Add Table map from appsync to Presignup trigger
     presignupTrigger.addEnvironment("TABLE_MAP", JSON.stringify(appSync.tableNameMap));
-    // externalAPILambda.addEnvironment("TABLE_MAP", JSON.stringify(appSync.tableNameMap));
+
+    // CreateUserFormBatch Setup
 
     const batchCreateUser = new lambda.Function(this, "kompetansebatchuserform", {
       code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/createUserformBatch")),
@@ -323,37 +330,11 @@ export class KompetanseStack extends Stack {
       runtime: lambda.Runtime.NODEJS_14_X,
     });
     appSync.addLambdaDataSourceAndResolvers("createUserformBatch", "BatchCreateUserDataSource", batchCreateUser);
-
-    // const appSync = new AppsyncConstruct(this, "KompetanseAppSync", {
-    //   userpool: pool,
-    //   region: this.region
-    // });
-
-    // const adminQueryApi = new gateway.LambdaRestApi(this, "KompetanseAdminQueriesApi", {
-    //   handler: adminQueriesLambda,
-    //   restApiName: "AdminQueries",
-    //   deployOptions: {
-    //     stageName: (isProd) ? "prod" : "dev",
-    //   },
-    //   defaultMethodOptions: {
-    //     authorizer: new gateway.CognitoUserPoolsAuthorizer(this, "CognitoAdminQueries", {
-    //       authorizerName: "COGNITO",
-    //       cognitoUserPools: [pool],
-    //     }),
-    //     authorizationScopes: ["aws.cognito.signin.user.admin"],
-    //   },
-    //   defaultCorsPreflightOptions: {
-    //     allowOrigins: gateway.Cors.ALL_ORIGINS,
-    //     allowMethods: gateway.Cors.ALL_METHODS,
-    //     allowHeaders: [
-    //       'Content-Type',
-    //       'X-Amz-Date',
-    //       'Authorization',
-    //       'X-Api-Key',
-    //     ],
-    //   }
-    // });
-
+    
+    if (batchCreateUser.role) createUserFormPolicy.attachToRole(batchCreateUser.role);
+    
+    // Admin API Setup
+    
     const adminQueryApi = new gateway.RestApi(this, "kompetanseAdminQueriesRestApi", {
       restApiName: "AdminQueries",
       deployOptions: {
@@ -361,7 +342,6 @@ export class KompetanseStack extends Stack {
       },
     });
 
-    // const resource = adminQueryApi.root.addResource("");
     const proxy = adminQueryApi.root.addProxy({
       anyMethod: false
     });
@@ -399,14 +379,8 @@ export class KompetanseStack extends Stack {
         responseModels: {"application/json": gateway.Model.EMPTY_MODEL}
       }],
     });
-    
-    // const externalApi = new gateway.LambdaRestApi(this, "KompetanseExternalApi", {
-    //   handler: externalAPILambda,
-    //   restApiName: "externalAPI",
-    //   deployOptions: {
-    //     stageName: (isProd) ? "prod" : "dev"
-    //   }
-    // });
+
+    // External API Setup
 
     const externalApi = new gateway.RestApi(this, "KompetanseExternalApi", {
       restApiName: "externalApi",
@@ -477,6 +451,8 @@ export class KompetanseStack extends Stack {
       }],
     });
 
+    // ExternalAPI Usage plan setup
+
     const extUsagePlan = externalApi.addUsagePlan("externalApiUsagePlan", {
       name: "standard",
       apiStages: [{
@@ -486,10 +462,11 @@ export class KompetanseStack extends Stack {
     });
   
 
-    const apiKeyTest = extUsagePlan.addApiKey(new gateway.ApiKey(this, "TestKey", {apiKeyName:"Test"}));
+    // const apiKeyTest = extUsagePlan.addApiKey(new gateway.ApiKey(this, "TestKey", {apiKeyName:"Test"}));
 
 
-    if (batchCreateUser.role) createUserFormPolicy.attachToRole(batchCreateUser.role);
+
+    // Outputs
 
     const identityPoolIdOutput = new CfnOutput(this, "aws_cognito_identity_pool_id", {
       value: identityPool.ref, // "eu-central-1:ed60ff7c-18dc-49e6-a8cf-aa7a068fa2a5",
@@ -506,13 +483,6 @@ export class KompetanseStack extends Stack {
     const tableArnMapOutput = new CfnOutput(this, "tableArns", {
       value: JSON.stringify(tableArns)
     });
-    // const createUserFormRoleOutput = new CfnOutput(this, "userFormRoleOutput", {
-    //   value: batchCreateUser.role?.roleArn || ""
-    // });
-
-    // const createUserFormPolicyArnOutput = new CfnOutput(this, "userFormPolicyArn", {
-    //   value: createUserFormPolicy,
-    // });
 
     const createUserFormRoleNameOutput = new CfnOutput(this, "userFormRoleNameOutput", {
       value: batchCreateUser.role?.roleName || ""
