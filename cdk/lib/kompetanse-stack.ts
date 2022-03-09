@@ -180,6 +180,9 @@ export class KompetanseStack extends Stack {
       //     domainName: authDomainName,
       //     certificate: certificate
       // };
+      domainSettings.cognitoDomain = {
+        domainPrefix: `komptest-${ENV}`
+      };
     } else {
       domainSettings.cognitoDomain = {
         domainPrefix: `komptest-${ENV}`
@@ -276,6 +279,29 @@ export class KompetanseStack extends Stack {
         `${tableArns["APIKeyPermissionTable"]}/index/*`
       ]
     });
+
+    const externalAPICognitoStatement = new iam.PolicyStatement({
+      actions: [
+        "cognito-identity:Describe*",
+        "cognito-identity:Get*",
+        "cognito-identity:List*",
+        "cognito-idp:Describe*",
+        "cognito-idp:AdminGetDevice",
+        "cognito-idp:AdminGetUser",
+        "cognito-idp:AdminList*",
+        "cognito-idp:List*",
+        "cognito-sync:Describe*",
+        "cognito-sync:Get*",
+        "cognito-sync:List*",
+        "iam:ListOpenIdConnectProviders",
+        "iam:ListRoles",
+        "sns:ListPlatformApplications"
+      ],
+      effect: iam.Effect.ALLOW,
+      resources: [
+        pool.userPoolArn
+      ]
+    })
     
     const externalAPILambda = new lambda.Function(this, "kompetanseExternalApiLambda", {
       code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/externalAPI")),
@@ -285,7 +311,8 @@ export class KompetanseStack extends Stack {
         "USERPOOL": pool.userPoolId,
         "TABLE_MAP": JSON.stringify(appSync.tableNameMap)
       },
-      initialPolicy: [externalApiStatement]
+      initialPolicy: [externalApiStatement, externalAPICognitoStatement],
+      timeout: Duration.seconds(25)
     });
 
     // CreateUserformBatch setup
@@ -490,7 +517,7 @@ export class KompetanseStack extends Stack {
 
     const oauthOutput = new CfnOutput(this, "oauth", {
       value: JSON.stringify({
-          domain: (isProd) ? domainSettings.customDomain?.domainName : `${domainSettings.cognitoDomain?.domainPrefix}.auth.eu-central-1.amazoncognito.com` //"komptest.auth.eu-central-1.amazoncognito.com"
+          domain: `${domainSettings.cognitoDomain?.domainPrefix}.auth.eu-central-1.amazoncognito.com` //"komptest.auth.eu-central-1.amazoncognito.com"
       })
     });
 

@@ -16,11 +16,17 @@ export class KompetanseFrontendStack extends Stack {
     const websiteBucket = new s3.Bucket(this, 'KompetanseHostingBucket', {
       websiteIndexDocument: 'index.html',
       publicReadAccess: true,
+
     });
 
+    const s3Origin = new origins.S3Origin(websiteBucket);
     const distribution = new cloudfront.Distribution(this, 'KompetanseFrontendDistribution', {
-      defaultBehavior: { origin: new origins.S3Origin(websiteBucket) },
+      defaultBehavior: { origin:  s3Origin, viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS},
+      defaultRootObject: "index.html",
+      priceClass: cloudfront.PriceClass.PRICE_CLASS_100 // Europe and NA only
     });
+
+    // distribution.addBehavior("", s3Origin, {viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS});
 
     new s3deploy.BucketDeployment(this, 'KompetansekartleggingFrontendBucketDeploy', {
       sources: [s3deploy.Source.asset('../frontend/build')],
