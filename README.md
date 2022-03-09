@@ -41,6 +41,7 @@ To run the project locally:
 * Run `./deploybackend.sh` to deploy changes to the backend
 * Run `npm start` in frontend folder to run frontend
 
+### Production deployment instructions can be found [here](https://github.com/knowit/Dataplattform-issues/wiki/Kompetansekartlegging:-Deployment-Guide-(CDK))
 
 
 ## Useful commands
