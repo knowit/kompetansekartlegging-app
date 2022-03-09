@@ -8,6 +8,7 @@ available for the individual employees and managers.
 ## Dependencies
 
 This project requires [npm](https://www.npmjs.com/get-npm).
+All custom scripts are written in bash script.
 
 
 ## Deploying CDK backend
@@ -37,9 +38,9 @@ To run the project locally:
 7. Run `export AWS_PROFILE={aws cli profilename}` followed by `npm run deploy` and `npm run codegen` (Alternatively, go to root directory and run `./deploybackend.sh full`)
 8. Change directory to frontend and run `npm start`
 
-### After CDK has been deployed, the flow becomes:
+### After Setup:
 * Run `./deploybackend.sh` to deploy changes to the backend
-* Run `npm start` in frontend folder to run frontend
+* Run `npm start` in frontend folder to run frontend locally
 
 
 
