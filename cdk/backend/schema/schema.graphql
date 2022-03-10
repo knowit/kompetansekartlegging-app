@@ -1,0 +1,790 @@
+﻿schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+type APIKeyPermission {
+  APIKeyHashed: String!
+  createdAt: AWSDateTime!
+  id: ID!
+  organizationID: String!
+  updatedAt: AWSDateTime!
+}
+
+type Category {
+  createdAt: AWSDateTime!
+  description: String
+  formDefinition: FormDefinition
+  formDefinitionID: ID!
+  id: ID!
+  index: Int
+  orgAdmins: String!
+  organization: Organization
+  organizationID: ID!
+  questions(filter: ModelQuestionFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelQuestionConnection
+  text: String!
+  updatedAt: AWSDateTime!
+}
+
+type CreateQuestionAnswerFailedInput {
+  customScaleValue: Float
+  formDefinitionID: String!
+  id: ID
+  knowledge: Float
+  motivation: Float
+  questionID: ID!
+  userFormID: ID!
+}
+
+type CreateQuestionAnswerResult {
+  error: String
+  failedInputs: [CreateQuestionAnswerFailedInput]
+  status: Int!
+}
+
+type FormDefinition {
+  createdAt: AWSDateTime!
+  id: ID!
+  label: String
+  orgAdmins: String!
+  organization: Organization
+  organizationID: ID!
+  questions(filter: ModelQuestionFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelQuestionConnection
+  sortKeyConstant: String!
+  updatedAt: AWSDateTime!
+}
+
+type Group {
+  createdAt: AWSDateTime!
+  groupLeaderUsername: String!
+  id: ID!
+  orgAdmins: String!
+  orgGroupLeaders: String!
+  organization: Organization
+  organizationID: ID!
+  updatedAt: AWSDateTime!
+}
+
+type ModelAPIKeyPermissionConnection {
+  items: [APIKeyPermission]!
+  nextToken: String
+}
+
+type ModelCategoryConnection {
+  items: [Category]!
+  nextToken: String
+}
+
+type ModelFormDefinitionConnection {
+  items: [FormDefinition]!
+  nextToken: String
+}
+
+type ModelGroupConnection {
+  items: [Group]!
+  nextToken: String
+}
+
+type ModelOrganizationConnection {
+  items: [Organization]!
+  nextToken: String
+}
+
+type ModelQuestionAnswerConnection {
+  items: [QuestionAnswer]!
+  nextToken: String
+}
+
+type ModelQuestionConnection {
+  items: [Question]!
+  nextToken: String
+}
+
+type ModelUserConnection {
+  items: [User]!
+  nextToken: String
+}
+
+type ModelUserFormConnection {
+  items: [UserForm]!
+  nextToken: String
+}
+
+type Mutation {
+  batchCreateQuestionAnswer(input: [CreateQuestionAnswerInput], organizationID: String): CreateQuestionAnswerResult
+  createAPIKeyPermission(condition: ModelAPIKeyPermissionConditionInput, input: CreateAPIKeyPermissionInput!): APIKeyPermission
+  createCategory(condition: ModelCategoryConditionInput, input: CreateCategoryInput!): Category
+  createFormDefinition(condition: ModelFormDefinitionConditionInput, input: CreateFormDefinitionInput!): FormDefinition
+  createGroup(condition: ModelGroupConditionInput, input: CreateGroupInput!): Group
+  createOrganization(condition: ModelOrganizationConditionInput, input: CreateOrganizationInput!): Organization
+  createQuestion(condition: ModelQuestionConditionInput, input: CreateQuestionInput!): Question
+  createQuestionAnswer(condition: ModelQuestionAnswerConditionInput, input: CreateQuestionAnswerInput!): QuestionAnswer
+  createUser(condition: ModelUserConditionInput, input: CreateUserInput!): User
+  createUserForm(condition: ModelUserFormConditionInput, input: CreateUserFormInput!): UserForm
+  deleteAPIKeyPermission(condition: ModelAPIKeyPermissionConditionInput, input: DeleteAPIKeyPermissionInput!): APIKeyPermission
+  deleteCategory(condition: ModelCategoryConditionInput, input: DeleteCategoryInput!): Category
+  deleteFormDefinition(condition: ModelFormDefinitionConditionInput, input: DeleteFormDefinitionInput!): FormDefinition
+  deleteGroup(condition: ModelGroupConditionInput, input: DeleteGroupInput!): Group
+  deleteOrganization(condition: ModelOrganizationConditionInput, input: DeleteOrganizationInput!): Organization
+  deleteQuestion(condition: ModelQuestionConditionInput, input: DeleteQuestionInput!): Question
+  deleteQuestionAnswer(condition: ModelQuestionAnswerConditionInput, input: DeleteQuestionAnswerInput!): QuestionAnswer
+  deleteUser(condition: ModelUserConditionInput, input: DeleteUserInput!): User
+  deleteUserForm(condition: ModelUserFormConditionInput, input: DeleteUserFormInput!): UserForm
+  updateAPIKeyPermission(condition: ModelAPIKeyPermissionConditionInput, input: UpdateAPIKeyPermissionInput!): APIKeyPermission
+  updateCategory(condition: ModelCategoryConditionInput, input: UpdateCategoryInput!): Category
+  updateFormDefinition(condition: ModelFormDefinitionConditionInput, input: UpdateFormDefinitionInput!): FormDefinition
+  updateGroup(condition: ModelGroupConditionInput, input: UpdateGroupInput!): Group
+  updateOrganization(condition: ModelOrganizationConditionInput, input: UpdateOrganizationInput!): Organization
+  updateQuestion(condition: ModelQuestionConditionInput, input: UpdateQuestionInput!): Question
+  updateQuestionAnswer(condition: ModelQuestionAnswerConditionInput, input: UpdateQuestionAnswerInput!): QuestionAnswer
+  updateUser(condition: ModelUserConditionInput, input: UpdateUserInput!): User
+  updateUserForm(condition: ModelUserFormConditionInput, input: UpdateUserFormInput!): UserForm
+}
+
+type Organization {
+  createdAt: AWSDateTime!
+  id: ID!
+  identifierAttribute: String!
+  orgname: String!
+  owner: String
+  updatedAt: AWSDateTime!
+}
+
+type Query {
+  categoriesByFormDefinition(filter: ModelCategoryFilterInput, formDefinitionID: ID, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelCategoryConnection
+  formByCreatedAt(createdAt: ModelStringKeyConditionInput, filter: ModelFormDefinitionFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection, sortKeyConstant: String): ModelFormDefinitionConnection
+  formByOrganizationByCreatedAt(createdAt: ModelStringKeyConditionInput, filter: ModelFormDefinitionFilterInput, limit: Int, nextToken: String, organizationID: ID, sortDirection: ModelSortDirection): ModelFormDefinitionConnection
+  formDefinitionByOrganizationID(filter: ModelFormDefinitionFilterInput, limit: Int, nextToken: String, organizationID: ID, sortDirection: ModelSortDirection): ModelFormDefinitionConnection
+  getAPIKeyPermission(id: ID!): APIKeyPermission
+  getCategory(id: ID!): Category
+  getFormDefinition(id: ID!): FormDefinition
+  getGroup(id: ID!): Group
+  getOrganization(id: ID!): Organization
+  getQuestion(id: ID!): Question
+  getQuestionAnswer(id: ID!): QuestionAnswer
+  getUser(id: ID!): User
+  getUserForm(id: ID!): UserForm
+  listAPIKeyPermissions(filter: ModelAPIKeyPermissionFilterInput, limit: Int, nextToken: String): ModelAPIKeyPermissionConnection
+  listCategorys(filter: ModelCategoryFilterInput, limit: Int, nextToken: String): ModelCategoryConnection
+  listFormDefinitions(filter: ModelFormDefinitionFilterInput, limit: Int, nextToken: String): ModelFormDefinitionConnection
+  listGroups(filter: ModelGroupFilterInput, limit: Int, nextToken: String): ModelGroupConnection
+  listOrganizations(filter: ModelOrganizationFilterInput, limit: Int, nextToken: String): ModelOrganizationConnection
+  listQuestionAnswers(filter: ModelQuestionAnswerFilterInput, limit: Int, nextToken: String): ModelQuestionAnswerConnection
+  listQuestions(filter: ModelQuestionFilterInput, limit: Int, nextToken: String): ModelQuestionConnection
+  listUserForms(filter: ModelUserFormFilterInput, limit: Int, nextToken: String): ModelUserFormConnection
+  listUsers(filter: ModelUserFilterInput, limit: Int, nextToken: String): ModelUserConnection
+  organizationByAPIKeyHashed(APIKeyHashed: String, filter: ModelAPIKeyPermissionFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelAPIKeyPermissionConnection
+  organizationByIdentifierAttribute(filter: ModelOrganizationFilterInput, identifierAttribute: String, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelOrganizationConnection
+  questionsByCategory(categoryID: ID, filter: ModelQuestionFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelQuestionConnection
+  questionsByFormDefinition(filter: ModelQuestionFilterInput, formDefinitionID: ID, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelQuestionConnection
+  userFormByCreatedAt(createdAt: ModelStringKeyConditionInput, filter: ModelUserFormFilterInput, limit: Int, nextToken: String, owner: String, sortDirection: ModelSortDirection): ModelUserFormConnection
+  usersByGroup(filter: ModelUserFilterInput, groupID: ID, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelUserConnection
+}
+
+type Question {
+  category: Category
+  categoryID: ID!
+  createdAt: AWSDateTime!
+  formDefinitionID: ID!
+  id: ID!
+  index: Int
+  orgAdmins: String!
+  organization: Organization
+  organizationID: ID!
+  scaleEnd: String
+  scaleMiddle: String
+  scaleStart: String
+  text: String!
+  topic: String!
+  type: QuestionType
+  updatedAt: AWSDateTime!
+}
+
+type QuestionAnswer {
+  createdAt: AWSDateTime!
+  customScaleValue: Float
+  id: ID!
+  knowledge: Float
+  motivation: Float
+  orgAdmins: String!
+  orgGroupLeaders: String!
+  owner: String
+  question: Question
+  questionID: ID!
+  textValue: String
+  updatedAt: AWSDateTime!
+  userFormID: ID!
+}
+
+type Subscription {
+  onCreateAPIKeyPermission: APIKeyPermission @aws_subscribe(mutations : ["createAPIKeyPermission"])
+  onCreateCategory: Category @aws_subscribe(mutations : ["createCategory"])
+  onCreateFormDefinition: FormDefinition @aws_subscribe(mutations : ["createFormDefinition"])
+  onCreateGroup: Group @aws_subscribe(mutations : ["createGroup"])
+  onCreateOrganization: Organization @aws_subscribe(mutations : ["createOrganization"])
+  onCreateQuestion: Question @aws_subscribe(mutations : ["createQuestion"])
+  onCreateQuestionAnswer(owner: String!): QuestionAnswer @aws_subscribe(mutations : ["createQuestionAnswer"])
+  onCreateUser: User @aws_subscribe(mutations : ["createUser"])
+  onCreateUserForm(owner: String!): UserForm @aws_subscribe(mutations : ["createUserForm"])
+  onDeleteAPIKeyPermission: APIKeyPermission @aws_subscribe(mutations : ["deleteAPIKeyPermission"])
+  onDeleteCategory: Category @aws_subscribe(mutations : ["deleteCategory"])
+  onDeleteFormDefinition: FormDefinition @aws_subscribe(mutations : ["deleteFormDefinition"])
+  onDeleteGroup: Group @aws_subscribe(mutations : ["deleteGroup"])
+  onDeleteOrganization: Organization @aws_subscribe(mutations : ["deleteOrganization"])
+  onDeleteQuestion: Question @aws_subscribe(mutations : ["deleteQuestion"])
+  onDeleteQuestionAnswer(owner: String!): QuestionAnswer @aws_subscribe(mutations : ["deleteQuestionAnswer"])
+  onDeleteUser: User @aws_subscribe(mutations : ["deleteUser"])
+  onDeleteUserForm(owner: String!): UserForm @aws_subscribe(mutations : ["deleteUserForm"])
+  onUpdateAPIKeyPermission: APIKeyPermission @aws_subscribe(mutations : ["updateAPIKeyPermission"])
+  onUpdateCategory: Category @aws_subscribe(mutations : ["updateCategory"])
+  onUpdateFormDefinition: FormDefinition @aws_subscribe(mutations : ["updateFormDefinition"])
+  onUpdateGroup: Group @aws_subscribe(mutations : ["updateGroup"])
+  onUpdateOrganization: Organization @aws_subscribe(mutations : ["updateOrganization"])
+  onUpdateQuestion: Question @aws_subscribe(mutations : ["updateQuestion"])
+  onUpdateQuestionAnswer(owner: String!): QuestionAnswer @aws_subscribe(mutations : ["updateQuestionAnswer"])
+  onUpdateUser: User @aws_subscribe(mutations : ["updateUser"])
+  onUpdateUserForm(owner: String!): UserForm @aws_subscribe(mutations : ["updateUserForm"])
+}
+
+type User {
+  createdAt: AWSDateTime!
+  group: Group!
+  groupID: ID!
+  id: ID!
+  orgAdmins: String!
+  orgGroupLeaders: String!
+  organization: Organization
+  organizationID: ID!
+  updatedAt: AWSDateTime!
+}
+
+type UserForm {
+  createdAt: AWSDateTime!
+  formDefinition: FormDefinition!
+  formDefinitionID: ID!
+  id: ID!
+  orgAdmins: String!
+  orgGroupLeaders: String!
+  owner: String
+  questionAnswers(filter: ModelQuestionAnswerFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelQuestionAnswerConnection
+  updatedAt: AWSDateTime!
+}
+
+enum ModelAttributeTypes {
+  _null
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+enum QuestionType {
+  customScaleLabels
+  knowledgeMotivation
+  text
+}
+
+input CreateAPIKeyPermissionInput {
+  APIKeyHashed: String!
+  id: ID
+  organizationID: String!
+}
+
+input CreateCategoryInput {
+  description: String
+  formDefinitionID: ID!
+  id: ID
+  index: Int
+  orgAdmins: String!
+  organizationID: ID!
+  text: String!
+}
+
+input CreateFormDefinitionInput {
+  createdAt: AWSDateTime
+  id: ID
+  label: String
+  orgAdmins: String!
+  organizationID: ID!
+  sortKeyConstant: String!
+}
+
+input CreateGroupInput {
+  groupLeaderUsername: String!
+  id: ID
+  orgAdmins: String!
+  orgGroupLeaders: String!
+  organizationID: ID!
+}
+
+input CreateOrganizationInput {
+  createdAt: AWSDateTime
+  id: ID
+  identifierAttribute: String!
+  orgname: String!
+  owner: String
+}
+
+input CreateQuestionAnswerInput {
+  customScaleValue: Float
+  formDefinitionID: String!
+  id: ID
+  knowledge: Float
+  motivation: Float
+  orgAdmins: String
+  orgGroupLeaders: String
+  questionID: ID!
+  userFormID: ID!
+}
+
+input CreateQuestionInput {
+  categoryID: ID!
+  formDefinitionID: ID!
+  id: ID
+  index: Int
+  orgAdmins: String!
+  organizationID: ID!
+  scaleEnd: String
+  scaleMiddle: String
+  scaleStart: String
+  text: String!
+  topic: String!
+  type: QuestionType
+}
+
+input CreateUserFormInput {
+  createdAt: AWSDateTime
+  formDefinitionID: ID!
+  id: ID
+  orgAdmins: String!
+  orgGroupLeaders: String!
+  owner: String
+}
+
+input CreateUserInput {
+  groupID: ID!
+  id: ID
+  orgAdmins: String!
+  orgGroupLeaders: String!
+  organizationID: ID!
+}
+
+input DeleteAPIKeyPermissionInput {
+  id: ID!
+}
+
+input DeleteCategoryInput {
+  id: ID!
+}
+
+input DeleteFormDefinitionInput {
+  id: ID!
+}
+
+input DeleteGroupInput {
+  id: ID!
+}
+
+input DeleteOrganizationInput {
+  id: ID!
+}
+
+input DeleteQuestionAnswerInput {
+  id: ID!
+}
+
+input DeleteQuestionInput {
+  id: ID!
+}
+
+input DeleteUserFormInput {
+  id: ID!
+}
+
+input DeleteUserInput {
+  id: ID!
+}
+
+input ModelAPIKeyPermissionConditionInput {
+  APIKeyHashed: ModelStringInput
+  and: [ModelAPIKeyPermissionConditionInput]
+  not: ModelAPIKeyPermissionConditionInput
+  or: [ModelAPIKeyPermissionConditionInput]
+  organizationID: ModelStringInput
+}
+
+input ModelAPIKeyPermissionFilterInput {
+  APIKeyHashed: ModelStringInput
+  and: [ModelAPIKeyPermissionFilterInput]
+  id: ModelIDInput
+  not: ModelAPIKeyPermissionFilterInput
+  or: [ModelAPIKeyPermissionFilterInput]
+  organizationID: ModelStringInput
+}
+
+input ModelBooleanInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  eq: Boolean
+  ne: Boolean
+}
+
+input ModelCategoryConditionInput {
+  and: [ModelCategoryConditionInput]
+  description: ModelStringInput
+  formDefinitionID: ModelIDInput
+  index: ModelIntInput
+  not: ModelCategoryConditionInput
+  or: [ModelCategoryConditionInput]
+  text: ModelStringInput
+}
+
+input ModelCategoryFilterInput {
+  and: [ModelCategoryFilterInput]
+  description: ModelStringInput
+  formDefinitionID: ModelIDInput
+  id: ModelIDInput
+  index: ModelIntInput
+  not: ModelCategoryFilterInput
+  or: [ModelCategoryFilterInput]
+  orgAdmins: ModelStringInput
+  organizationID: ModelIDInput
+  text: ModelStringInput
+}
+
+input ModelFloatInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  between: [Float]
+  eq: Float
+  ge: Float
+  gt: Float
+  le: Float
+  lt: Float
+  ne: Float
+}
+
+input ModelFormDefinitionConditionInput {
+  and: [ModelFormDefinitionConditionInput]
+  createdAt: ModelStringInput
+  label: ModelStringInput
+  not: ModelFormDefinitionConditionInput
+  or: [ModelFormDefinitionConditionInput]
+  sortKeyConstant: ModelStringInput
+}
+
+input ModelFormDefinitionFilterInput {
+  and: [ModelFormDefinitionFilterInput]
+  createdAt: ModelStringInput
+  id: ModelIDInput
+  label: ModelStringInput
+  not: ModelFormDefinitionFilterInput
+  or: [ModelFormDefinitionFilterInput]
+  orgAdmins: ModelStringInput
+  organizationID: ModelIDInput
+  sortKeyConstant: ModelStringInput
+}
+
+input ModelGroupConditionInput {
+  and: [ModelGroupConditionInput]
+  groupLeaderUsername: ModelStringInput
+  not: ModelGroupConditionInput
+  or: [ModelGroupConditionInput]
+  organizationID: ModelIDInput
+}
+
+input ModelGroupFilterInput {
+  and: [ModelGroupFilterInput]
+  groupLeaderUsername: ModelStringInput
+  id: ModelIDInput
+  not: ModelGroupFilterInput
+  or: [ModelGroupFilterInput]
+  orgAdmins: ModelStringInput
+  orgGroupLeaders: ModelStringInput
+  organizationID: ModelIDInput
+}
+
+input ModelIDInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  beginsWith: ID
+  between: [ID]
+  contains: ID
+  eq: ID
+  ge: ID
+  gt: ID
+  le: ID
+  lt: ID
+  ne: ID
+  notContains: ID
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  between: [Int]
+  eq: Int
+  ge: Int
+  gt: Int
+  le: Int
+  lt: Int
+  ne: Int
+}
+
+input ModelOrganizationConditionInput {
+  and: [ModelOrganizationConditionInput]
+  createdAt: ModelStringInput
+  identifierAttribute: ModelStringInput
+  not: ModelOrganizationConditionInput
+  or: [ModelOrganizationConditionInput]
+  orgname: ModelStringInput
+  owner: ModelStringInput
+}
+
+input ModelOrganizationFilterInput {
+  and: [ModelOrganizationFilterInput]
+  createdAt: ModelStringInput
+  id: ModelIDInput
+  identifierAttribute: ModelStringInput
+  not: ModelOrganizationFilterInput
+  or: [ModelOrganizationFilterInput]
+  orgname: ModelStringInput
+  owner: ModelStringInput
+}
+
+input ModelQuestionAnswerConditionInput {
+  and: [ModelQuestionAnswerConditionInput]
+  customScaleValue: ModelFloatInput
+  knowledge: ModelFloatInput
+  motivation: ModelFloatInput
+  not: ModelQuestionAnswerConditionInput
+  or: [ModelQuestionAnswerConditionInput]
+  questionID: ModelIDInput
+  textValue: ModelStringInput
+  userFormID: ModelIDInput
+}
+
+input ModelQuestionAnswerFilterInput {
+  and: [ModelQuestionAnswerFilterInput]
+  customScaleValue: ModelFloatInput
+  id: ModelIDInput
+  knowledge: ModelFloatInput
+  motivation: ModelFloatInput
+  not: ModelQuestionAnswerFilterInput
+  or: [ModelQuestionAnswerFilterInput]
+  orgAdmins: ModelStringInput
+  orgGroupLeaders: ModelStringInput
+  questionID: ModelIDInput
+  textValue: ModelStringInput
+  userFormID: ModelIDInput
+}
+
+input ModelQuestionConditionInput {
+  and: [ModelQuestionConditionInput]
+  categoryID: ModelIDInput
+  formDefinitionID: ModelIDInput
+  index: ModelIntInput
+  not: ModelQuestionConditionInput
+  or: [ModelQuestionConditionInput]
+  scaleEnd: ModelStringInput
+  scaleMiddle: ModelStringInput
+  scaleStart: ModelStringInput
+  text: ModelStringInput
+  topic: ModelStringInput
+  type: ModelQuestionTypeInput
+}
+
+input ModelQuestionFilterInput {
+  and: [ModelQuestionFilterInput]
+  categoryID: ModelIDInput
+  formDefinitionID: ModelIDInput
+  id: ModelIDInput
+  index: ModelIntInput
+  not: ModelQuestionFilterInput
+  or: [ModelQuestionFilterInput]
+  orgAdmins: ModelStringInput
+  organizationID: ModelIDInput
+  scaleEnd: ModelStringInput
+  scaleMiddle: ModelStringInput
+  scaleStart: ModelStringInput
+  text: ModelStringInput
+  topic: ModelStringInput
+  type: ModelQuestionTypeInput
+}
+
+input ModelQuestionTypeInput {
+  eq: QuestionType
+  ne: QuestionType
+}
+
+input ModelSizeInput {
+  between: [Int]
+  eq: Int
+  ge: Int
+  gt: Int
+  le: Int
+  lt: Int
+  ne: Int
+}
+
+input ModelStringInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  beginsWith: String
+  between: [String]
+  contains: String
+  eq: String
+  ge: String
+  gt: String
+  le: String
+  lt: String
+  ne: String
+  notContains: String
+  size: ModelSizeInput
+}
+
+input ModelStringKeyConditionInput {
+  beginsWith: String
+  between: [String]
+  eq: String
+  ge: String
+  gt: String
+  le: String
+  lt: String
+}
+
+input ModelUserConditionInput {
+  and: [ModelUserConditionInput]
+  groupID: ModelIDInput
+  not: ModelUserConditionInput
+  or: [ModelUserConditionInput]
+  organizationID: ModelIDInput
+}
+
+input ModelUserFilterInput {
+  and: [ModelUserFilterInput]
+  groupID: ModelIDInput
+  id: ModelIDInput
+  not: ModelUserFilterInput
+  or: [ModelUserFilterInput]
+  orgAdmins: ModelStringInput
+  orgGroupLeaders: ModelStringInput
+  organizationID: ModelIDInput
+}
+
+input ModelUserFormConditionInput {
+  and: [ModelUserFormConditionInput]
+  createdAt: ModelStringInput
+  formDefinitionID: ModelIDInput
+  not: ModelUserFormConditionInput
+  or: [ModelUserFormConditionInput]
+}
+
+input ModelUserFormFilterInput {
+  and: [ModelUserFormFilterInput]
+  createdAt: ModelStringInput
+  formDefinitionID: ModelIDInput
+  id: ModelIDInput
+  not: ModelUserFormFilterInput
+  or: [ModelUserFormFilterInput]
+  orgAdmins: ModelStringInput
+  orgGroupLeaders: ModelStringInput
+  owner: ModelStringInput
+}
+
+input UpdateAPIKeyPermissionInput {
+  APIKeyHashed: String
+  id: ID!
+  organizationID: String
+}
+
+input UpdateCategoryInput {
+  description: String
+  formDefinitionID: ID
+  id: ID!
+  index: Int
+  orgAdmins: String
+  organizationID: ID
+  text: String
+}
+
+input UpdateFormDefinitionInput {
+  createdAt: AWSDateTime
+  id: ID!
+  label: String
+  orgAdmins: String
+  organizationID: ID
+  sortKeyConstant: String
+}
+
+input UpdateGroupInput {
+  groupLeaderUsername: String
+  id: ID!
+  orgAdmins: String
+  orgGroupLeaders: String
+  organizationID: ID
+}
+
+input UpdateOrganizationInput {
+  createdAt: AWSDateTime
+  id: ID!
+  identifierAttribute: String
+  orgname: String
+  owner: String
+}
+
+input UpdateQuestionAnswerInput {
+  customScaleValue: Float
+  id: ID!
+  knowledge: Float
+  motivation: Float
+  orgAdmins: String
+  orgGroupLeaders: String
+  questionID: ID
+  textValue: String
+  userFormID: ID
+}
+
+input UpdateQuestionInput {
+  categoryID: ID
+  formDefinitionID: ID
+  id: ID!
+  index: Int
+  orgAdmins: String
+  organizationID: ID
+  scaleEnd: String
+  scaleMiddle: String
+  scaleStart: String
+  text: String
+  topic: String
+  type: QuestionType
+}
+
+input UpdateUserFormInput {
+  createdAt: AWSDateTime
+  formDefinitionID: ID
+  id: ID!
+  orgAdmins: String
+  orgGroupLeaders: String
+  owner: String
+}
+
+input UpdateUserInput {
+  groupID: ID
+  id: ID!
+  orgAdmins: String
+  orgGroupLeaders: String
+  organizationID: ID
+}

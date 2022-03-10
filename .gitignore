@@ -5,13 +5,31 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-
-# Compiled binary addons (http://nodejs.org/api/addons.html)
-build/
+!jest.config.js
 
 # Dependency directories
-node_modules/
 jspm_packages/
+node_modules
+
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+cdk.context.json
+cdk/outputs.json
+cdk/appsync/*
+
+# Parameter files for scripts
+*parameters.json
+*params.json
+
+# Code-generated files
+frontend/src/exports.js
+frontend/src/graphql/mutations.ts
+frontend/src/graphql/queries.ts
+frontend/src/graphql/subscriptions.ts
+frontend/src/API.ts
+frontend/build
 
 # Distribution directories
 dist/
@@ -40,3 +58,6 @@ cdk/cdk.out
 
 # DSStore
 .DS_Store
+
+# Python cache
+__pycache__

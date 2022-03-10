@@ -1,27 +1,41 @@
 {
-  "name": "cdk",
+  "name": "cdk-test",
   "version": "0.1.0",
   "bin": {
-    "cdk": "bin/cdk.js"
+    "cdk-test": "bin/cdk-test.js"
   },
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "deploy": "cdk deploy --outputs-file outputs.json  && npx ts-node --prefer-ts-exts hooks/hooks.ts",
+    "codegen": "npx amplify-graphql-docs-generator --schema appsync/schema.graphql --output ../frontend/src/graphql --separateFiles true --language typescript && graphql-codegen --config codegen.yml"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "2.6.2",
+    "@graphql-codegen/introspection": "2.1.1",
+    "@graphql-codegen/typescript": "2.4.5",
+    "@graphql-codegen/typescript-operations": "2.3.2",
     "@types/jest": "^26.0.10",
     "@types/node": "10.17.27",
+    "aws-cdk": "2.12.0",
     "jest": "^26.4.2",
     "ts-jest": "^26.2.0",
-    "aws-cdk": "2.12.0",
     "ts-node": "^9.0.0",
     "typescript": "~3.9.7"
   },
   "dependencies": {
+    "@aws-sdk/client-appsync": "^3.53.0",
+    "@aws-sdk/client-iam": "^3.53.0",
+    "@aws-sdk/client-lambda": "^3.53.0",
+    "@aws-sdk/credential-providers": "^3.53.0",
+    "@graphql-codegen/cli": "^2.6.2",
+    "amplify-graphql-docs-generator": "^2.2.4",
     "aws-cdk-lib": "2.12.0",
+    "cdk-appsync-transformer": "^2.0.0-alpha.0",
     "constructs": "^10.0.0",
+    "graphql": "^16.3.0",
     "source-map-support": "^0.5.16"
   }
 }

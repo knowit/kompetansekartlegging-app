@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { KompetanseStack } from '../lib/kompetanse-stack';
+import { KompetanseFrontendStack } from '../lib/KompetanseFrontendStack';
 
 const app = new cdk.App();
-const ENV = app.node.tryGetContext("ENV")
-new KompetanseStack(app, `KompetanseStack-${ENV}`, {
+new KompetanseFrontendStack(app, `KompetanseFrontendStack-${process.env.DEPLOYMENT_ENV || ''}`, {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */
@@ -19,8 +18,5 @@ new KompetanseStack(app, `KompetanseStack-${ENV}`, {
   // env: { account: '123456789012', region: 'us-east-1' },
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
-  // env: {
-  //   account: "EUCentralAmplify",
-  //   region: "eu-central-1"
-  // }
 });
+app.synth();

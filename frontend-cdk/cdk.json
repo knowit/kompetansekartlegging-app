@@ -27,8 +27,6 @@
     "@aws-cdk/core:target-partitions": [
       "aws",
       "aws-cn"
-    ],
-    "DEVELOPMENT_ENV": "dev",
-    "ENV": "dev"
+    ]
   }
 }

@@ -1,0 +1,13 @@
+overwrite: true
+schema:
+  - "backend/awsAppSyncDirectives.graphql"
+  - "appsync/schema.graphql"
+# documents: "src/**/*.graphql"
+generates:
+  ../frontend/src/API.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+  ./graphql.schema.json:
+    plugins:
+      - "introspection"
