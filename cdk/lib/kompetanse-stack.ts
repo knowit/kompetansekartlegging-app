@@ -65,7 +65,7 @@ export class KompetanseStack extends Stack {
       attributeMapping: {
         "custom:company": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/company",
         "email": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
-        "name": "http://schemas.microsoft.com/ws/2008/06/identity/claims/displayname"
+        "name": "http://schemas.microsoft.com/identity/claims/displayname"
       }
     });
     supportedProviders.push({ name: samlProvider.providerName });
