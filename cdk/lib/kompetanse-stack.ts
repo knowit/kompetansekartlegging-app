@@ -225,6 +225,7 @@ export class KompetanseStack extends Stack {
       code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/AdminQueries")),
       handler: "index.handler",
       runtime: lambda.Runtime.NODEJS_14_X,
+      timeout: Duration.seconds(25),
       environment: {
         "USERPOOL": pool.userPoolId,
         "GROUP": "admin",
@@ -355,6 +356,7 @@ export class KompetanseStack extends Stack {
       code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/createUserformBatch")),
       handler: "index.handler",
       runtime: lambda.Runtime.NODEJS_14_X,
+      timeout: Duration.seconds(25)
     });
     appSync.addLambdaDataSourceAndResolvers("createUserformBatch", "BatchCreateUserDataSource", batchCreateUser);
     
