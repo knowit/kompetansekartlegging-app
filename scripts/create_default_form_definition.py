@@ -27,10 +27,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     organization_ID = args.organization_ID
 
-    if organization_ID == None:
-        print("You need to specify an organizationID")
-        exit()
-
     orgId = organization_ID
     orgAdmins = f"{orgId}0admin"
 
