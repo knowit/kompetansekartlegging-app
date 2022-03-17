@@ -67,7 +67,7 @@ export const BlockInfo = (props: {
     let questions = props.questions ?? [];
 
     let answeredQuestions = questions.filter(
-        (question) => question.motivation !== -1 && question.knowledge !== -1
+        (question) => (question.motivation !== -1 && question.knowledge !== -1) || (question.customScaleValue != null && question.customScaleValue >= 0)
     );
 
     if (questions.length > answeredQuestions.length)
