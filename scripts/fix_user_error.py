@@ -33,7 +33,28 @@ tablenames = ["UserForm", "QuestionAnswer"]
 destination_client_session = boto3.Session(profile_name=destination_iam_user)
 destination_dynamo_client = destination_client_session.client('dynamodb')
 
-csvfilename = ""
+incCSV = open(".csv") # inc = incorrect
+corCSV = open(".csv") # cor = correct
+oc = csv.reader(incCSV)
+sc = csv.reader(corCSV)
+
+incQs = [row for row in oc]
+corQs = [row for row in sc]
+
+incorrectToCorrectQuestions = {}
+oHrow = incQs[0]
+sHrow = corQs[0]
+for i in range(1, len(incQs)):
+    if i == 69:
+        incorrectToCorrectQuestions[incQs[i][0]] = "8fab3291-b14c-45fe-ac10-19e6459216c3"
+        continue
+    for j in range(1, len(corQs)):
+        if incQs[i][12] == corQs[j][11] and incQs[i][13] == corQs[j][12]:
+            print(i, j)
+            incorrectToCorrectQuestions[incQs[i][0]] = corQs[j][0]
+
+
+csvfilename = ".csv"
 f = open(csvfilename)
 c = csv.reader(f)
 hrow  = ""
@@ -52,6 +73,7 @@ floatingHeaders = ['knowledge', 'motivation', 'customScaleValue']
 
 for item in items:
     obj = {}
+    # print(item)
     for i in range(0, len(hrow)):
         if item[i] == '':
             continue
@@ -59,14 +81,16 @@ for item in items:
             obj[hrow[i]] = {'S':f'{correct_org}0admin'}
         elif hrow[i] == "orgGroupLeaders":
             obj[hrow[i]] = {'S':f'{correct_org}0groupLeader'}
+        elif hrow[i] == "questionID":
+            obj[hrow[i]] = {'S':incorrectToCorrectQuestions[item[i]]}
         else:
             if hrow[i] in floatingHeaders:
                 obj[hrow[i]] = {'N': item[i]}
             else:
                 obj[hrow[i]] = {'S': item[i]}
     # dynamoItems.append(obj)
+    print(obj)
     destination_dynamo_client.put_item(
         TableName=f'QuestionAnswer-{destination_graphql_api_id}-{destination_env}',
         Item=obj)
-    # print(obj)
 print("finished")
