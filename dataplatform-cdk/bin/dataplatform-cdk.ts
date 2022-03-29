@@ -4,7 +4,9 @@ import * as cdk from 'aws-cdk-lib';
 import { DataplatformCdkStack } from '../lib/dataplatform-cdk-stack';
 
 const app = new cdk.App();
-new DataplatformCdkStack(app, 'DataplatformCdkStack', {
+const env = app.node.tryGetContext("ENV");
+new DataplatformCdkStack(app, `DataplatformCdkStack-${env}`, {
+  orgIds: ["knowitobejctnet"]//, "knowitstavanger", "knowitquality", "knowitamende", "knowitexposlo", "knowitexpbergen"]
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */
