@@ -3,6 +3,8 @@ import * as cam from 'aws-cdk-lib/aws-certificatemanager';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as iam from 'aws-cdk-lib/aws-iam';
+import * as backup from 'aws-cdk-lib/aws-backup'
+import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
 // import * as appsync from 'aws-cdk-lib/aws-appsync';
 import * as gateway from 'aws-cdk-lib/aws-apigateway';
 // import { CfnUserPoolIdentityProvider } from 'aws-cdk-lib/aws-cognito';
@@ -493,8 +495,22 @@ export class KompetanseStack extends Stack {
 
     // const apiKeyTest = extUsagePlan.addApiKey(new gateway.ApiKey(this, "TestKey", {apiKeyName:"Test"}));
 
-
-
+    // Backup-plan for production
+    if (isProd) {
+      const plan = backup.BackupPlan.daily35DayRetention(this, 'Plan');
+      plan.addSelection('Selection', {
+        resources: [
+            backup.BackupResource.fromDynamoDbTable(dynamodb.Table.fromTableName(this, 'TableOrganization', `Organization-${this.artifactId}`)),
+            backup.BackupResource.fromDynamoDbTable(dynamodb.Table.fromTableName(this, 'TableUser', `User-${this.artifactId}`)),
+            backup.BackupResource.fromDynamoDbTable(dynamodb.Table.fromTableName(this, 'TableUserForm', `UserForm-${this.artifactId}`)),
+            backup.BackupResource.fromDynamoDbTable(dynamodb.Table.fromTableName(this, 'TableQuestion', `Question-${this.artifactId}`)),
+            backup.BackupResource.fromDynamoDbTable(dynamodb.Table.fromTableName(this, 'TableQuestionAnswer', `QuestionAnswer-${this.artifactId}`)),
+            backup.BackupResource.fromDynamoDbTable(dynamodb.Table.fromTableName(this, 'TableAPIKeyPermission', `APIKeyPermission-${this.artifactId}`)),
+            backup.BackupResource.fromDynamoDbTable(dynamodb.Table.fromTableName(this, 'TableGroup', `Group-${this.artifactId}`)),
+            backup.BackupResource.fromDynamoDbTable(dynamodb.Table.fromTableName(this, 'TableCategory', `Category-${this.artifactId}`))
+        ]
+      })
+    }
     // Outputs
 
     const identityPoolIdOutput = new CfnOutput(this, "aws_cognito_identity_pool_id", {
