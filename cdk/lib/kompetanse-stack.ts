@@ -16,12 +16,11 @@ import { AppSyncTransformer } from 'cdk-appsync-transformer';
 export class KompetanseStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
-    const DEVELOPMENT_ENV = this.node.tryGetContext("DEVELOPMENT_ENV");
     const AZURE = this.node.tryGetContext("AZURE");
     const GOOGLE_ID = this.node.tryGetContext("GOOGLE_ID");
     const GOOGLE_SECRET = this.node.tryGetContext("GOOGLE_SECRET");
     const ENV = this.node.tryGetContext("ENV");
-    const isProd = DEVELOPMENT_ENV === "master";
+    const isProd = ENV === "prod";
 
     // COGNITO SetUp
 
