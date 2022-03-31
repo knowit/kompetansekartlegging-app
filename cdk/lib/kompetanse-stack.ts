@@ -3,6 +3,8 @@ import * as cam from 'aws-cdk-lib/aws-certificatemanager';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as iam from 'aws-cdk-lib/aws-iam';
+import * as backup from 'aws-cdk-lib/aws-backup'
+import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
 // import * as appsync from 'aws-cdk-lib/aws-appsync';
 import * as gateway from 'aws-cdk-lib/aws-apigateway';
 // import { CfnUserPoolIdentityProvider } from 'aws-cdk-lib/aws-cognito';
@@ -14,12 +16,11 @@ import { AppSyncTransformer } from 'cdk-appsync-transformer';
 export class KompetanseStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
-    const DEVELOPMENT_ENV = this.node.tryGetContext("DEVELOPMENT_ENV");
     const AZURE = this.node.tryGetContext("AZURE");
     const GOOGLE_ID = this.node.tryGetContext("GOOGLE_ID");
     const GOOGLE_SECRET = this.node.tryGetContext("GOOGLE_SECRET");
     const ENV = this.node.tryGetContext("ENV");
-    const isProd = DEVELOPMENT_ENV === "master";
+    const isProd = ENV === "prod";
 
     // COGNITO SetUp
 
@@ -493,8 +494,13 @@ export class KompetanseStack extends Stack {
 
     // const apiKeyTest = extUsagePlan.addApiKey(new gateway.ApiKey(this, "TestKey", {apiKeyName:"Test"}));
 
-
-
+    // Backup-plan for production
+    if (isProd) {
+      const plan = backup.BackupPlan.daily35DayRetention(this, 'Plan');
+      plan.addSelection('Selection', {
+        resources: Object.keys(appSync.tableMap).map(tableName => backup.BackupResource.fromDynamoDbTable(appSync.tableMap[tableName]))
+      });
+    }
     // Outputs
 
     const identityPoolIdOutput = new CfnOutput(this, "aws_cognito_identity_pool_id", {
