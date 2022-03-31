@@ -11,17 +11,6 @@ This project requires [npm](https://www.npmjs.com/get-npm).
 All custom scripts are written in bash script.
 
 
-## Deploying CDK backend
-
-To deploy the CDK backend you need to:
-1. Clone the GitHub repo.
-2. Run `$ cd kompetansekartlegging-app/cdk`
-3. Run `$ npm install` in base folder (kompetansekartlegging-app/cdk). 
-   Then, in the backend folder, run `npm install` in the src folders for each function, and run `npm install` in the presignup trigger.
-4. Run `cdk bootstrap` in base folder (can skip if your AWS account has already done cdk bootstrap in other project)
-5. Run `npm run deploy` (This command first does `cdk deploy` followed by executing the hooks/hooks.ts script)
-6. Run `npm run codegen`
-
 ## Running the project
 
 To run the project locally:
@@ -32,11 +21,22 @@ To run the project locally:
 3. Run `$ ./install.sh`
 4. Run `cd cdk`
 5. Edit the ENV context variable in cdk.json (For sandbox, choose anything. If prod, ENV should be prod. If dev, ENV should be dev)
-6. Create a cdk.context.json file
-   
+6. Create a cdk.context.json file  
    a. Add GOOGLE_ID, GOOGLE_SECRET and AZURE to it, where GOOGLE_ID is the GCP App Id, GOOGLE_SECRET is the GCP App secret key, and AZURE is the Azure AD metadata url
 7. Run `export AWS_PROFILE={aws cli profilename}` followed by `npm run deploy` and `npm run codegen` (Alternatively, go to root directory and run `./deploybackend.sh full`)
 8. Change directory to frontend and run `npm start`
+
+
+## Deploying CDK backend
+
+To deploy the CDK backend you need to:
+1. Clone the GitHub repo.
+2. Run `$ cd kompetansekartlegging-app/cdk`
+3. Run `$ npm install` in base folder (kompetansekartlegging-app/cdk). 
+   Then, in the backend folder, run `npm install` in the src folders for each function, and run `npm install` in the presignup trigger.
+4. Run `cdk bootstrap` in base folder (can skip if your AWS account has already done cdk bootstrap in other project)
+5. Run `npm run deploy` (This command first does `cdk deploy` followed by executing the hooks/hooks.ts script)
+6. Run `npm run codegen`
 
 ### After Setup:
 * Run `./deploybackend.sh` to deploy changes to the backend

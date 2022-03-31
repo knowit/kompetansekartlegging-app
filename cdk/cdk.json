@@ -28,7 +28,6 @@
       "aws",
       "aws-cn"
     ],
-    "DEVELOPMENT_ENV": "dev",
     "ENV": "dev"
   }
 }
