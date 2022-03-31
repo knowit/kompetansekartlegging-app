@@ -498,17 +498,8 @@ export class KompetanseStack extends Stack {
     if (isProd) {
       const plan = backup.BackupPlan.daily35DayRetention(this, 'Plan');
       plan.addSelection('Selection', {
-        resources: [
-            backup.BackupResource.fromDynamoDbTable(dynamodb.Table.fromTableName(this, 'TableOrganization', `Organization-${this.artifactId}`)),
-            backup.BackupResource.fromDynamoDbTable(dynamodb.Table.fromTableName(this, 'TableUser', `User-${this.artifactId}`)),
-            backup.BackupResource.fromDynamoDbTable(dynamodb.Table.fromTableName(this, 'TableUserForm', `UserForm-${this.artifactId}`)),
-            backup.BackupResource.fromDynamoDbTable(dynamodb.Table.fromTableName(this, 'TableQuestion', `Question-${this.artifactId}`)),
-            backup.BackupResource.fromDynamoDbTable(dynamodb.Table.fromTableName(this, 'TableQuestionAnswer', `QuestionAnswer-${this.artifactId}`)),
-            backup.BackupResource.fromDynamoDbTable(dynamodb.Table.fromTableName(this, 'TableAPIKeyPermission', `APIKeyPermission-${this.artifactId}`)),
-            backup.BackupResource.fromDynamoDbTable(dynamodb.Table.fromTableName(this, 'TableGroup', `Group-${this.artifactId}`)),
-            backup.BackupResource.fromDynamoDbTable(dynamodb.Table.fromTableName(this, 'TableCategory', `Category-${this.artifactId}`))
-        ]
-      })
+        resources: Object.keys(appSync.tableMap).map(tableName => backup.BackupResource.fromDynamoDbTable(appSync.tableMap[tableName]))
+      });
     }
     // Outputs
 
