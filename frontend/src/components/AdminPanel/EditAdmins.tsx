@@ -25,6 +25,8 @@ import Table from "../mui/Table";
 import PictureAndNameCell from "./PictureAndNameCell";
 import {useSelector} from 'react-redux';
 import {selectAdminCognitoGroupName } from '../../redux/User';
+import { API, Auth } from "aws-amplify";
+import exports from "../../exports";
 
 const Admin = (props: any) => {
     const { admin, deleteAdmin } = props;
@@ -86,6 +88,40 @@ const EditAdmins = () => {
         params: adminCognitoGroupName
     });
     const [showAddAdmin, setShowAddAdmin] = useState<boolean>(false);
+    const download = (path: string, filename: string) => {
+        // Create a new link
+        const anchor = document.createElement('a');
+        anchor.href = path;
+        anchor.download = filename;
+    
+        // Append to the DOM
+        document.body.appendChild(anchor);
+    
+        // Trigger `click` event
+        anchor.click();
+    
+        // Remove element from DOM
+        document.body.removeChild(anchor);
+    }; 
+    const downloadExcel = async () => {
+        const data = await API.get("CreateExcelAPI", "", {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `${(await Auth.currentSession())
+                    .getAccessToken()
+                    .getJwtToken()}`,
+            },
+        });
+        console.log("log")
+        // const blob = new Blob([data], {type: "application/application/vnd.ms-excel"})
+        // const url = URL.createObjectURL(blob);
+        download(data, "report.xlsx");
+        // const wind = window.open(`${window.location.hostname}/report.xlsx`,"_blank")
+        // if (wind) {
+        //     wind.document.write(data)
+        // }
+    }
+
     const [
         showDeleteUserFromGroupDialog,
         setShowDeleteUserFromGroupDialog,
@@ -135,6 +171,14 @@ const EditAdmins = () => {
                         onClick={() => setShowAddAdmin(true)}
                     >
                         Legg til administrator
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<PersonAddIcon />}
+                        style={{ marginTop: "24px" }}
+                        onClick={() => downloadExcel()}>
+                        Last ned resultater (Excel)
                     </Button>
                 </>
             )}

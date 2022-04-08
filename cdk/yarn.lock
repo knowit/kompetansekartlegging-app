@@ -14,6 +14,11 @@
   "resolved" "https://registry.npmjs.org/@aws-cdk/aws-appsync-alpha/-/aws-appsync-alpha-2.4.0-alpha.0.tgz"
   "version" "2.4.0-alpha.0"
 
+"@aws-cdk/aws-lambda-python-alpha@^2.19.0-alpha.0":
+  "integrity" "sha512-bZzcP9EnxxapBXj88uSoHaJyOzmU6YOgy6lDxlo/ZFYyFpvGUH6Op30o2RDmYMmQjuEKRRRkY0XNARjcZnJvYw=="
+  "resolved" "https://registry.npmjs.org/@aws-cdk/aws-lambda-python-alpha/-/aws-lambda-python-alpha-2.19.0-alpha.0.tgz"
+  "version" "2.19.0-alpha.0"
+
 "@aws-cdk/cfnspec@2.12.0":
   "integrity" "sha512-osUkHzU9Ne6gCajbvxvy9WN4GOTX0YfdFRLG0v9nAZ2V8zmS1NmlaqD7mxhE5bMtQXf9XUfrEWZc95ez5I4fOQ=="
   "resolved" "https://registry.npmjs.org/@aws-cdk/cfnspec/-/cfnspec-2.12.0.tgz"
@@ -2469,17 +2474,17 @@
   "resolved" "https://registry.npmjs.org/auto-bind/-/auto-bind-4.0.0.tgz"
   "version" "4.0.0"
 
-"aws-cdk-lib@^2.4.0", "aws-cdk-lib@2.12.0":
-  "integrity" "sha512-ot2gJycvHy9OqKkiDVSOP1QNOxapNUbjahEWSp0Mdxkweark0OdrzBv4JNaJYfGMn8IdZZ6FV/hpsi4MYHQ/+w=="
-  "resolved" "https://registry.npmjs.org/aws-cdk-lib/-/aws-cdk-lib-2.12.0.tgz"
-  "version" "2.12.0"
+"aws-cdk-lib@^2.19.0", "aws-cdk-lib@^2.4.0", "aws-cdk-lib@2.19.0":
+  "integrity" "sha512-zt0lAsTpYfrDitjJXp1smEi4o1EYtAAj4fb0WW4GYBW+P6FqymXyAF5mUT8YWPkMJTnSP8d4FeDUyatQVWYRJA=="
+  "resolved" "https://registry.npmjs.org/aws-cdk-lib/-/aws-cdk-lib-2.19.0.tgz"
+  "version" "2.19.0"
   dependencies:
     "@balena/dockerignore" "^1.0.2"
     "case" "1.6.3"
     "fs-extra" "^9.1.0"
     "ignore" "^5.2.0"
     "jsonschema" "^1.4.0"
-    "minimatch" "^3.0.5"
+    "minimatch" "^3.1.2"
     "punycode" "^2.1.1"
     "semver" "^7.3.5"
     "yaml" "1.10.2"
@@ -4182,11 +4187,6 @@
   "integrity" "sha1-FQStJSMVjKpA20onh8sBQRmU6k8="
   "resolved" "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   "version" "1.0.0"
-
-"fsevents@^2.1.2", "fsevents@~2.3.2":
-  "integrity" "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA=="
-  "resolved" "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
-  "version" "2.3.2"
 
 "ftp@^0.3.10":
   "integrity" "sha1-kZfYYa2BQvPmPVqDv+TFn3MwiF0="
@@ -6132,8 +6132,8 @@
   dependencies:
     "brace-expansion" "^1.1.7"
 
-"minimatch@^3.0.5":
-  "version" "3.0.5"
+"minimatch@^3.1.2":
+  "version" "3.1.2"
   dependencies:
     "brace-expansion" "^1.1.7"
 

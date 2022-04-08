@@ -2,9 +2,11 @@ import { CfnOutput, Duration, Stack, StackProps } from 'aws-cdk-lib';
 import * as cam from 'aws-cdk-lib/aws-certificatemanager';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as python from "@aws-cdk/aws-lambda-python-alpha";
 import * as iam from 'aws-cdk-lib/aws-iam';
-import * as backup from 'aws-cdk-lib/aws-backup'
+import * as backup from 'aws-cdk-lib/aws-backup';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
+import * as s3 from 'aws-cdk-lib/aws-s3';
 // import * as appsync from 'aws-cdk-lib/aws-appsync';
 import * as gateway from 'aws-cdk-lib/aws-apigateway';
 // import { CfnUserPoolIdentityProvider } from 'aws-cdk-lib/aws-cognito';
@@ -317,6 +319,58 @@ export class KompetanseStack extends Stack {
       timeout: Duration.seconds(25)
     });
 
+    // CreateExcel Setup
+    const excelBucket = new s3.Bucket(this, "excelBucket", {lifecycleRules: [
+      {expiration: Duration.days(1)}
+    ],
+  });
+
+    const excelStatement = new iam.PolicyStatement({
+      actions: [
+        "dynamodb:Get*",
+        "dynamodb:BatchGetItem",
+        "dynamodb:List*",
+        "dynamodb:Describe*",
+        "dynamodb:Scan",
+        "dynamodb:Query",
+        "s3:*",
+        "s3:PutObject",
+        "s3:PutObjectAcl"
+      ],
+      effect: iam.Effect.ALLOW,
+      resources: [
+        tableArns["UserFormTable"],
+        `${tableArns["UserFormTable"]}/index/*`,
+        tableArns["QuestionTable"], 
+        `${tableArns["QuestionTable"]}/index/*`,
+        tableArns["QuestionAnswerTable"],
+        `${tableArns["QuestionAnswerTable"]}/index/*`,
+        tableArns["CategoryTable"],
+        `${tableArns["CategoryTable"]}/index/*`,
+        tableArns["FormDefinitionTable"],
+        `${tableArns["FormDefinitionTable"]}/index/*`,
+        excelBucket.bucketArn,
+        `${excelBucket.bucketArn}/*`
+      ]
+    });
+
+
+    const createExcelLambda = new python.PythonFunction(this, "kompetanseCreateExcelLambda", {
+      entry: path.join(__dirname, "/../backend/function/excelGenerator"),
+      runtime: lambda.Runtime.PYTHON_3_8,
+      environment: {
+        SOURCE_NAME: "KompetanseStack",
+        ENV: ENV,
+        USER_POOL_ID: pool.userPoolId,
+        EXCEL_BUCKET: excelBucket.bucketName
+      },
+      initialPolicy: [excelStatement, externalAPICognitoStatement],
+      timeout: Duration.seconds(25)
+    });
+
+
+
+
     // CreateUserformBatch setup
 
     const createUserFormStatement = new iam.PolicyStatement({
@@ -372,10 +426,10 @@ export class KompetanseStack extends Stack {
       },
     });
 
-    const proxy = adminQueryApi.root.addProxy({
+    const adminProxy = adminQueryApi.root.addProxy({
       anyMethod: false
     });
-    proxy.addMethod("ANY", new gateway.LambdaIntegration(adminQueriesLambda), {
+    adminProxy.addMethod("ANY", new gateway.LambdaIntegration(adminQueriesLambda), {
       authorizer: new gateway.CognitoUserPoolsAuthorizer(this, "CognitoAdminQueries", {
         authorizerName: "COGNITO",
         cognitoUserPools: [pool],
@@ -383,7 +437,7 @@ export class KompetanseStack extends Stack {
       authorizationScopes: ["aws.cognito.signin.user.admin"],
     });
 
-    proxy.addMethod("OPTIONS", new gateway.MockIntegration({
+    adminProxy.addMethod("OPTIONS", new gateway.MockIntegration({
       passthroughBehavior: gateway.PassthroughBehavior.WHEN_NO_MATCH,
       requestTemplates: {
         "application/json" : JSON.stringify({statusCode: 200})
@@ -407,6 +461,53 @@ export class KompetanseStack extends Stack {
           'method.response.header.Access-Control-Allow-Methods': true
         },
         responseModels: {"application/json": gateway.Model.EMPTY_MODEL}
+      }],
+    });
+
+    // Admin API Setup
+    
+    const excelApi = new gateway.RestApi(this, "kompetanseExcelRestApi", {
+      restApiName: "CreateExcelAPI",
+      deployOptions: {
+        stageName: "dev"
+      },
+    });
+
+    const excelProxy = excelApi.root.addProxy({
+      anyMethod: false
+    });
+    excelProxy.addMethod("ANY", new gateway.LambdaIntegration(createExcelLambda), {
+      authorizer: new gateway.CognitoUserPoolsAuthorizer(this, "CognitoExcelAPI", {
+        authorizerName: "COGNITO",
+        cognitoUserPools: [pool],
+      }),
+      authorizationScopes: ["aws.cognito.signin.user.admin"],
+    });
+
+    excelProxy.addMethod("OPTIONS", new gateway.MockIntegration({
+      passthroughBehavior: gateway.PassthroughBehavior.WHEN_NO_MATCH,
+      requestTemplates: {
+        "application/json" : JSON.stringify({statusCode: 200})
+      },
+      integrationResponses: [{
+        statusCode: "200",
+        responseParameters:{
+          "method.response.header.Access-Control-Allow-Methods": "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+          "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+          "method.response.header.Access-Control-Allow-Origin": "'*'"
+        }
+      }],
+    }), {
+      methodResponses: [{
+        statusCode: "200",
+        responseParameters: {
+          'method.response.header.Content-Type': true,
+          "method.response.header.Access-Control-Allow-Headers": true,
+          'method.response.header.Access-Control-Allow-Origin': true,
+          'method.response.header.Access-Control-Allow-Credentials': true,
+          'method.response.header.Access-Control-Allow-Methods': true
+        },
+        responseModels: {"application/json": gateway.Model.EMPTY_MODEL, "application/vnd.ms-excel": gateway.Model.EMPTY_MODEL}
       }],
     });
 
@@ -539,6 +640,11 @@ export class KompetanseStack extends Stack {
         externalAPI: {
           name: externalApi.restApiName,
           endpoint: externalApi.url,
+          region: this.region
+        },
+        excelApi: {
+          name: excelApi.restApiName,
+          endpoint: excelApi.url,
           region: this.region
         }
       })

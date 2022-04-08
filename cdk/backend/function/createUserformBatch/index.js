@@ -360,21 +360,36 @@ async function insertQuestionAnswers(answerArray, userformId) {
         };
     });
     console.log("Prepped answers: ", JSON.stringify(prepedAnswers));
-
-    for (let i = 0; i < prepedAnswers.length; i++) {
-        await docClient
-            .batchWrite(prepedAnswers[i], (err, data) => {
-                if (err) {
-                    console.log(`BatchWrite error ${i}: `, err);
-                    result.failedData.push(err);
-                    result.errors.push(err);
-                } else {
-                    console.log(`BatchWrite data ${i}: `, data);
-                    result.data.push(data);
-                }
-            })
-            .promise();
-    }
+    let promises = prepedAnswers.map((answers, i) => {
+        console.log(`Started writing answer ${i}`)
+        return docClient
+        .batchWrite(answers, (err, data) => {
+            if (err) {
+                console.log(`BatchWrite error ${i}: `, err);
+                result.failedData.push(err);
+                result.errors.push(err);
+            } else {
+                console.log(`BatchWrite data ${i}: `, data);
+                result.data.push(data);
+            }
+        })
+        .promise();
+    });
+    // for (let i = 0; i < prepedAnswers.length; i++) {
+    //     promises.push(docClient
+    //         .batchWrite(prepedAnswers[i], (err, data) => {
+    //             if (err) {
+    //                 console.log(`BatchWrite error ${i}: `, err);
+    //                 result.failedData.push(err);
+    //                 result.errors.push(err);
+    //             } else {
+    //                 console.log(`BatchWrite data ${i}: `, data);
+    //                 result.data.push(data);
+    //             }
+    //         })
+    //         .promise());
+    // }
+    await Promise.all(promises) // Allows us to fire off all writes at the same time?
     return result;
 }
 
