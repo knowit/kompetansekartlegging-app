@@ -4,9 +4,12 @@ import json
 from tempfile import NamedTemporaryFile
 import boto3
 from openpyxl import Workbook
-from openpyxl.styles import Alignment, PatternFill, Color, Border
+from openpyxl.styles import Alignment, PatternFill, Color, Border, Font
 from openpyxl.chart.radar_chart import RadarChart
-from openpyxl.utils import get_column_letter
+from openpyxl.chart.bar_chart import BarChart
+from openpyxl.chart.reference import Reference
+from openpyxl.worksheet.datavalidation import DataValidation
+from openpyxl.utils import get_column_letter, FORMULAE
 from openpyxl.writer.excel import save_virtual_workbook
 from dateutil import parser
 from datetime import datetime
@@ -86,6 +89,7 @@ def fetch_user_answers(username, formDef):
 
 
 def fetch_org_data(orgid):
+    later = datetime.now()
     formDefsResponse = db_client.query(
             TableName=formDefTable,
             IndexName="byOrganizationByCreatedAt",
@@ -114,7 +118,7 @@ def fetch_org_data(orgid):
     for item in catResponse["Items"]:
         attributes = {}
         for key in item.keys():
-            attributes[key] = item[key]['S'] if 'S' in item[key].keys() else item[key]['N'] 
+            attributes[key] = item[key]['S'] if 'S' in item[key].keys() else item[key]['N']
         # print(attributes)
         categories.append(attributes)
 
@@ -130,7 +134,7 @@ def fetch_org_data(orgid):
     for item in questionResponse["Items"]:
         attributes = {}
         for key in item.keys():
-            attributes[key] = item[key]['S'] if 'S' in item[key].keys() else item[key]['N'] 
+            attributes[key] = item[key]['S'] if 'S' in item[key].keys() else item[key]['N']
         # print(attributes)
         questions.append(attributes)
 
@@ -173,6 +177,7 @@ def fetch_org_data(orgid):
 
 def handler(event, context):
     print(event)
+    later = datetime.now()
     groups = event["requestContext"]["authorizer"]["claims"]["cognito:groups"].split(",")
     isAdmin = False
     orgid = ""
@@ -183,16 +188,20 @@ def handler(event, context):
         if len(roles) > 1 and roles[1] == "admin":
             isAdmin = True
             orgid = roles[0]
-    
+
     if isAdmin:
         print("User is admin")
         book = make_workbook(orgid)
+        print("Time passed make_workbook:", datetime.now() - later)
         with NamedTemporaryFile(mode="w+b") as temp:
             book.save(temp.name)
             temp.seek(0)
+            print("Time passed save workbook:", datetime.now() - later)
             # stream = temp.read()
-            key = f"{orgid}_report.xlsx"
+            key = f"{orgid}_report_{datetime.now().isoformat(sep='-',timespec='minutes')}.xlsx"
             s3_client.put_object(Bucket=bucketName, Key=key, Body=temp, ACL='public-read')
+            
+            print("Time passed total:", datetime.now() - later)
             return {
                 "statusCode": 200,
                 "headers": {
@@ -214,7 +223,9 @@ def handler(event, context):
                 "body": json.dumps("User is not Admin")}
 
 def make_workbook(orgid):
+    later = datetime.now()
     formDefs, categories, questions, users = fetch_org_data(orgid)
+    print("Time passed fetching data:", datetime.now() - later)
     book = Workbook()
     questions.sort(key=lambda x: x["categoryID"])
 
@@ -222,7 +233,7 @@ def make_workbook(orgid):
     data_sheet.title = "data"
 
     aggregateSheet = book.create_sheet("Aggergates")
-    # aggregateSheet.sheet_state = "hidden"
+    chartSheet = book.create_sheet("Charts")
 
     questionBlockStart = 4 #Excel is 1 indexed... :/
 
@@ -263,7 +274,7 @@ def make_workbook(orgid):
         cell.alignment = Alignment(horizontal="center")
         cell.fill = PatternFill(patternType= "solid",fgColor=categoryColor)
         data_sheet.merge_cells(start_row=2, end_row=2, start_column=col+len(questions), end_column=col + len(questions) + len(questionCategoryMap[category["id"]])-1)
-        
+
         cell = aggregateSheet.cell(userStartRow + 5, aggCol, category["text"])
         cell.alignment = Alignment(horizontal="center")
         cell.fill = PatternFill(patternType= "solid",fgColor=categoryColor)
@@ -291,7 +302,7 @@ def make_workbook(orgid):
             # col += 1
             cell = data_sheet.cell(3, col + len(questions), question["topic"])
             cell.alignment = Alignment(text_rotation=90)
-            cell.fill = PatternFill(patternType= "solid",fgColor=questionColor) 
+            cell.fill = PatternFill(patternType= "solid",fgColor=questionColor)
             cell.border = Border(outline=True)
 
             cell = data_sheet.cell(4, col, question["id"])
@@ -299,12 +310,13 @@ def make_workbook(orgid):
             cell.border = Border(outline=True)
             # col += 1
             cell = data_sheet.cell(4, col + len(questions), question["id"])
-            cell.fill = PatternFill(patternType= "solid",fgColor=grayColor) 
+            cell.fill = PatternFill(patternType= "solid",fgColor=grayColor)
             cell.border = Border(outline=True)
 
             questionPositions[question["id"]] = (col, col+len(questions))
             col += 1
 
+    print("Time passed adding headers to data sheet:", datetime.now() - later)
 
     row = userStartRow
     for user in users:
@@ -312,18 +324,24 @@ def make_workbook(orgid):
         cell = data_sheet.cell(row, 1, user["username"])
         data_sheet.merge_cells(start_row=row, end_row=row, start_column=1, end_column=3)
         for question in questions:
+            if not question["id"] in user["answers"].keys():
+                continue
             answer = user["answers"][question["id"]]
             if "knowledge" in answer.keys():
-                cell = data_sheet.cell(row, questionPositions[question["id"]][0], float(answer["knowledge"]))
-                cell.fill = PatternFill(patternType= "solid",fgColor=Color(rgb="AAAAFF", tint=(1 - float(answer["knowledge"])/5.0)), bgColor="aa000000")
+                if float(answer["knowledge"]) >= 0:
+                    cell = data_sheet.cell(row, questionPositions[question["id"]][0], float(answer["knowledge"]))
+                    cell.fill = PatternFill(patternType= "solid",fgColor=Color(rgb="AAAAFF", tint=(1 - float(answer["knowledge"])/5.0)), bgColor="aa000000")
+                else:
+                    cell = data_sheet.cell(row, questionPositions[question["id"]][0], 0)
             if "motivation" in answer.keys():
-                cell = data_sheet.cell(row, questionPositions[question["id"]][1], float(answer["motivation"]))
-                cell.fill = PatternFill(patternType= "solid",fgColor=Color(rgb="AAAAFF", tint=(1 - float(answer["motivation"])/5.0)))
-            if "type" in question.keys() and question["type"] == "customScaleLabels":
+                if float(answer["motivation"]) >= 0:
+                    cell = data_sheet.cell(row, questionPositions[question["id"]][1], float(answer["motivation"]))
+                    cell.fill = PatternFill(patternType= "solid",fgColor=Color(rgb="AAAAFF", tint=(1 - float(answer["motivation"])/5.0)))
+                else:
+                    cell = data_sheet.cell(row, questionPositions[question["id"]][1], 0)
+            if "type" in question.keys() and question["type"] == "customScaleLabels" and "customScaleValue" in answer.keys():
                 cell = data_sheet.cell(row, questionPositions[question["id"]][0], float(answer["customScaleValue"]))
-                cell.fill = PatternFill(patternType= "solid",fgColor=Color(rgb="AAAAFF", tint=(1 - float(answer["customScaleValue"])/5.0)), bgColor="aa000000")
                 cell = data_sheet.cell(row, questionPositions[question["id"]][1], float(answer["customScaleValue"]))
-                cell.fill = PatternFill(patternType= "solid",fgColor=Color(rgb="AAAAFF", tint=(1 - float(answer["customScaleValue"])/5.0)))
 
         catCol = questionBlockStart
         aggCol = questionBlockStart
@@ -338,6 +356,57 @@ def make_workbook(orgid):
             aggCol += 4
 
         row += 1
+    print("Time passed adding rows to data/aggregate sheet:", datetime.now() - later)
+
+    aggCol = questionBlockStart
+    cell = aggregateSheet.cell(row + 7, aggCol - 1, "Total:")
+    cell.font = Font(bold=True)
+    chartRow = 3
+    chartSheet.cell(chartRow - 1, 2, "Average")
+    chartSheet.cell(chartRow - 1, 3, "Median")
+    chartSheet.cell(chartRow - 1, 4, "Max")
+
+    for category in categories:
+        endCol = catCol + len(questionCategoryMap[category["id"]]) - 1
+        chartSheet.cell(chartRow, 1, f"{category['text']})")
+        chartSheet.cell(chartRow, 2, f"=AVERAGE({aggregateSheet.title}!${get_column_letter(aggCol)}{userStartRow + 7}:${get_column_letter(aggCol)}{row + 6})")
+        chartSheet.cell(chartRow, 3, f"=MEDIAN({aggregateSheet.title}!${get_column_letter(aggCol+1)}{userStartRow + 7}:${get_column_letter(aggCol+1)}{row + 6})")
+        chartSheet.cell(chartRow, 4, f"=MAX({aggregateSheet.title}!${get_column_letter(aggCol+3)}{userStartRow + 7}:${get_column_letter(aggCol+3)}{row + 6})")
+        catCol += len(questionCategoryMap[category["id"]])
+        aggCol += 4
+        chartRow += 1
+
+    barGraph = BarChart()
+    barGraph.type="bar"
+    barGraph.title = "Category Summaries"
+    barData = Reference(chartSheet, min_col=2, min_row=2, max_col=4, max_row=chartRow-1)
+    barCategories = Reference(chartSheet, min_col=1, min_row=3, max_col=1, max_row=chartRow-1)
+    barGraph.add_data(barData, titles_from_data=True)
+    barGraph.set_categories(barCategories)
+    chartSheet.add_chart(barGraph, f"{get_column_letter(7)}3")
+
+    for col, question in enumerate(questions):
+        cell = chartSheet.cell(23, col + 2, question["topic"])
+    filtr = f"=FILTER({data_sheet.title}!{get_column_letter(1)}{userStartRow}:{get_column_letter(questionBlockStart + len(questions) - 1)}{row};{data_sheet.title}!{get_column_letter(1)}{userStartRow}:{get_column_letter(1)}{row}=A23)"
+    cell = chartSheet.cell(22, 1, f'For å bruke radar grafen, sett inn denne funksjonen i celle A24:')
+    cell = chartSheet.cell(22, 2, f'"{filtr}"')
+
+    radarChart = RadarChart(radarStyle="filled")
+    radar_data = Reference(chartSheet, min_col=2, max_col= 2+len(questions)-1, min_row=23, max_row=24)
+    radar_cols = Reference(chartSheet, min_col=2, max_col= 2+len(questions)-1, min_row=23, max_row=23)
+    radarChart.add_data(radar_data)
+    radarChart.set_categories(radar_cols)
+    chartSheet.add_chart(radarChart, f"{get_column_letter(15)}1")
+    print("Time passed adding charts to vhart sheet:", datetime.now() - later)
+    
+    userNames=[]
+    for user in users:
+        userNames.append(user["username"])
+    userDataVal = DataValidation(type="list", formula1=f'={data_sheet.title}!A{userStartRow}:A{row}', allow_blank=True)
+    cell = chartSheet.cell(23, 1, userNames[0])
+    
+    userDataVal.add(cell)
+    chartSheet.add_data_validation(userDataVal)
 
     aggregateSheet.cell(3, 3, f"Average")
     aggregateSheet.cell(4, 3, f"Median")
@@ -350,8 +419,8 @@ def make_workbook(orgid):
         aggregateSheet.cell(3, motivationPos, f"=AVERAGE({data_sheet.title}!${get_column_letter(motivationPos)}{userStartRow}:${get_column_letter(motivationPos)}{row})")
         aggregateSheet.cell(4, knowledgePos, f"=MEDIAN({data_sheet.title}!${get_column_letter(knowledgePos)}{userStartRow}:${get_column_letter(knowledgePos)}{row})")
         aggregateSheet.cell(4, motivationPos, f"=MEDIAN({data_sheet.title}!${get_column_letter(motivationPos)}{userStartRow}:${get_column_letter(motivationPos)}{row})")
+    print("Time passed adding aggregates to aggregate sheet:", datetime.now() - later)
 
-    chartSheet = book.create_sheet("Charts")
     return book
     # book.save("test.xlsx")
 
@@ -366,9 +435,18 @@ def make_workbook(orgid):
 # f.write(str(result["body"]))
 # f.close()
 
+# env = "dev"#environ.get("ENV")
+# sourceName = "KompetanseStack"#environ.get("SOURCE_NAME")
+# userPoolId = "eu-central-1_Ors5TrglC"#environ.get("USER_POOL_ID")
 
+# formDefTable = f"FormDefinition-{sourceName}-{env}"
+# categoryTable = f"Category-{sourceName}-{env}"
+# questionTable = f"Question-{sourceName}-{env}"
+# userFormTable = f"UserForm-{sourceName}-{env}"
+# questionAnswerTable = f"QuestionAnswer-{sourceName}-{env}"
 # later = datetime.now()
-# make_workbook("knowitobjectnet")
+# book =make_workbook("knowitobjectnet")
+# book.save("testy.xlsx")
 # print(datetime.now() - later)
 """
 TODO: Write the rest of the code.

@@ -365,7 +365,8 @@ export class KompetanseStack extends Stack {
         EXCEL_BUCKET: excelBucket.bucketName
       },
       initialPolicy: [excelStatement, externalAPICognitoStatement],
-      timeout: Duration.seconds(25)
+      timeout: Duration.seconds(25),
+      memorySize:2048
     });
 
 
