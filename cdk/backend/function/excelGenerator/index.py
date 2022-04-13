@@ -199,8 +199,11 @@ def handler(event, context):
             print("Time passed save workbook:", datetime.now() - later)
             # stream = temp.read()
             key = f"{orgid}_report_{datetime.now().isoformat(sep='-',timespec='minutes')}.xlsx"
-            s3_client.put_object(Bucket=bucketName, Key=key, Body=temp, ACL='public-read')
-            
+            s3_client.put_object(Bucket=bucketName, Key=key, Body=temp)
+            presigned_url = s3_client.generate_presigned_url('get_object',
+                                                        Params={'Bucket': bucketName,
+                                                                'Key': key},
+                                                        ExpiresIn=5*60)
             print("Time passed total:", datetime.now() - later)
             return {
                 "statusCode": 200,
@@ -210,7 +213,7 @@ def handler(event, context):
                     "Access-Control-Allow-Origin": "*",
                     "Access-Control-Allow-Credentials": True
                 },
-                "body": f"https://{bucketName}.s3.amazonaws.com/{key}"
+                "body": presigned_url#f"https://{bucketName}.s3.amazonaws.com/{key}"
             }
     return {
                 "statusCode": 200,
