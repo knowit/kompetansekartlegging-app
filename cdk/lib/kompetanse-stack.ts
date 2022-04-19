@@ -357,7 +357,7 @@ export class KompetanseStack extends Stack {
 
     const createExcelLambda = new python.PythonFunction(this, "kompetanseCreateExcelLambda", {
       entry: path.join(__dirname, "/../backend/function/excelGenerator"),
-      runtime: lambda.Runtime.PYTHON_3_8,
+      runtime: lambda.Runtime.PYTHON_3_9,
       environment: {
         SOURCE_NAME: "KompetanseStack",
         ENV: ENV,

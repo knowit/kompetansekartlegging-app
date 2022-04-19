@@ -1,4 +1,5 @@
-
+import concurrent.futures
+import asyncio
 from io import BytesIO
 import json
 from tempfile import NamedTemporaryFile
@@ -67,7 +68,7 @@ def fetch_user_answers(username, formDef):
         userForms.append(attributes)
 
     userForms.sort(key=sortByCreatedAt, reverse=True)
-    if len(userForms) <= 0: return {"userFormId":"", "answers":{}}
+    if len(userForms) <= 0: return {"username": username, "userFormId":"", "answers":{}}
     currentUserForm = userForms[0]
 
     answerRes = db_client.query(
@@ -79,16 +80,17 @@ def fetch_user_answers(username, formDef):
         },
     )
     answers = {}
+    if "LastEvaluatedKey" in answerRes.keys():
+        print("LastEvaluatedKey included in keys")
     for answer in answerRes["Items"]:
         attributes = {}
         for key in answer.keys():
             attributes[key] = answer[key][list(answer[key].keys())[0]]# if 'S' in answer[key].keys() elif '' in answer[key].keys() answer[key]['N']
         answers[attributes["questionID"]] = attributes
+    return {"username": username, "userFormId": currentUserForm["id"], "answers": answers}
 
-    return {"userFormId": currentUserForm["id"], "answers": answers}
 
-
-def fetch_org_data(orgid):
+async def fetch_org_data(orgid):
     later = datetime.now()
     formDefsResponse = db_client.query(
             TableName=formDefTable,
@@ -106,7 +108,8 @@ def fetch_org_data(orgid):
         formDefs.append(attributes)
 
     currentFormDef = formDefs[0]["id"]
-
+    print("Time passed fetching form defs:", datetime.now() - later)
+    later = datetime.now()
     catResponse = db_client.query(
         TableName=categoryTable,
         IndexName="byFormDefinition",
@@ -121,6 +124,8 @@ def fetch_org_data(orgid):
             attributes[key] = item[key]['S'] if 'S' in item[key].keys() else item[key]['N']
         # print(attributes)
         categories.append(attributes)
+    print("Time passed fetching categories:", datetime.now() - later)
+    later = datetime.now()
 
     questionResponse = db_client.query(
         TableName=questionTable,
@@ -137,6 +142,8 @@ def fetch_org_data(orgid):
             attributes[key] = item[key]['S'] if 'S' in item[key].keys() else item[key]['N']
         # print(attributes)
         questions.append(attributes)
+    print("Time passed fetching questions:", datetime.now() - later)
+    later = datetime.now()
 
     users = []
     userRes = cog_client.list_users_in_group(
@@ -168,10 +175,24 @@ def fetch_org_data(orgid):
         next_token = None
         if ("NextToken" in userRes.keys()):
             next_token = userRes["NextToken"]
+    print("Time passed fetching users:", datetime.now() - later)
+    later = datetime.now()
+    
     mappedUsers = []
+    answerTasks = []
+    # with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+
     for user in users:
-        userAnswers = fetch_user_answers(user["Username"], currentFormDef)
-        mappedUsers.append({"username": user["Username"], "email": user["Attributes"]["email"], "answers": userAnswers["answers"], "userFormId": userAnswers["userFormId"]})
+        userAnswers = asyncio.to_thread(fetch_user_answers, user["Username"], currentFormDef)
+        answerTasks.append(userAnswers)
+
+    answers = await asyncio.gather(*answerTasks)
+
+    for a in answers:
+        userAnswers = a
+        mappedUsers.append({"username": userAnswers["username"], "email": userAnswers["username"], "answers": userAnswers["answers"], "userFormId": userAnswers["userFormId"]})
+    
+    print("Time passed fetching answers:", datetime.now() - later)
 
     return formDefs, categories, questions, mappedUsers
 
@@ -191,7 +212,7 @@ def handler(event, context):
 
     if isAdmin:
         print("User is admin")
-        book = make_workbook(orgid)
+        book = asyncio.run(make_workbook(orgid))
         print("Time passed make_workbook:", datetime.now() - later)
         with NamedTemporaryFile(mode="w+b") as temp:
             book.save(temp.name)
@@ -225,9 +246,9 @@ def handler(event, context):
                 },
                 "body": json.dumps("User is not Admin")}
 
-def make_workbook(orgid):
+async def make_workbook(orgid):
     later = datetime.now()
-    formDefs, categories, questions, users = fetch_org_data(orgid)
+    formDefs, categories, questions, users = await fetch_org_data(orgid)
     print("Time passed fetching data:", datetime.now() - later)
     book = Workbook()
     questions.sort(key=lambda x: x["categoryID"])
@@ -328,6 +349,8 @@ def make_workbook(orgid):
         data_sheet.merge_cells(start_row=row, end_row=row, start_column=1, end_column=3)
         for question in questions:
             if not question["id"] in user["answers"].keys():
+                cell = data_sheet.cell(row, questionPositions[question["id"]][0], 0)
+                cell = data_sheet.cell(row, questionPositions[question["id"]][1], 0)
                 continue
             answer = user["answers"][question["id"]]
             if "knowledge" in answer.keys():
@@ -447,10 +470,13 @@ def make_workbook(orgid):
 # questionTable = f"Question-{sourceName}-{env}"
 # userFormTable = f"UserForm-{sourceName}-{env}"
 # questionAnswerTable = f"QuestionAnswer-{sourceName}-{env}"
-# later = datetime.now()
-# book =make_workbook("knowitobjectnet")
-# book.save("testy.xlsx")
-# print(datetime.now() - later)
+# async def main():
+#     later = datetime.now()
+#     book = await make_workbook("knowitobjectnet")
+#     book.save("testy.xlsx")
+#     print(datetime.now() - later)
+
+# asyncio.run(main())
 """
 TODO: Write the rest of the code.
 TODO: Figure out how to send an Excel file from Lambda :)
