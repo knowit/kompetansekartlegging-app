@@ -27,6 +27,7 @@ import {useSelector} from 'react-redux';
 import {selectAdminCognitoGroupName } from '../../redux/User';
 import { API, Auth } from "aws-amplify";
 import exports from "../../exports";
+import { Snackbar } from "@material-ui/core";
 
 const Admin = (props: any) => {
     const { admin, deleteAdmin } = props;
@@ -82,6 +83,7 @@ const AdminTable = ({ admins, deleteAdmin }: any) => {
 const EditAdmins = () => {
 
     const adminCognitoGroupName = useSelector(selectAdminCognitoGroupName);
+    const [isExcelLoading, setIsExcelLoading] = useState<boolean>(false); 
 
     const { result: admins, error, loading, refresh } = useApiGet({
         getFn: listAllUsersInOrganization,
@@ -104,6 +106,8 @@ const EditAdmins = () => {
         document.body.removeChild(anchor);
     }; 
     const downloadExcel = async () => {
+        setIsExcelLoading(true);
+        console.log("log")
         const data = await API.get("CreateExcelAPI", "", {
             headers: {
                 "Content-Type": "application/json",
@@ -116,6 +120,7 @@ const EditAdmins = () => {
         // const blob = new Blob([data], {type: "application/application/vnd.ms-excel"})
         // const url = URL.createObjectURL(blob);
         download(data, "report.xlsx");
+        setIsExcelLoading(false);
         // const wind = window.open(`${window.location.hostname}/report.xlsx`,"_blank")
         // if (wind) {
         //     wind.document.write(data)
@@ -149,6 +154,7 @@ const EditAdmins = () => {
         <Container maxWidth="md" className={commonStyles.container}>
             {error && <p>An error occured: {error}</p>}
             {loading && <CircularProgress />}
+            {isExcelLoading && <Snackbar open={isExcelLoading} anchorOrigin={{vertical: 'top', horizontal: 'center'}}><CircularProgress/></Snackbar>}
             {!error && !loading && admins && (
                 <>
                     <Card style={{ marginBottom: "24px" }} variant="outlined">
