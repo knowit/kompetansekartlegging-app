@@ -1,6 +1,4 @@
-import concurrent.futures
 import asyncio
-from io import BytesIO
 import json
 from tempfile import NamedTemporaryFile
 import boto3
@@ -14,15 +12,6 @@ from openpyxl.utils import get_column_letter, FORMULAE
 from openpyxl.writer.excel import save_virtual_workbook
 from dateutil import parser
 from datetime import datetime
-import base64
-# book = Workbook()
-# dataSheet = book.create_sheet("data")
-# dataSheet.merge_cells("A1:C1")
-# dataSheet.merge_cells("A2:C2")
-# dataSheet.col
-# for row in range(3, 20):
-#     for col in range(3, 20):
-#         dataSheet.cell(row, col, row*col)
 
 from os import environ
 
@@ -34,8 +23,6 @@ env = environ.get("ENV")
 sourceName = environ.get("SOURCE_NAME")
 userPoolId = environ.get("USER_POOL_ID")
 bucketName = environ.get("EXCEL_BUCKET")
-
-# tables = ["UserForm", "QuestionAnswer", "Organization", "FormDefinition", "Category", "Question"]
 
 formDefTable = f"FormDefinition-{sourceName}-{env}"
 categoryTable = f"Category-{sourceName}-{env}"
@@ -104,7 +91,6 @@ async def fetch_org_data(orgid):
         attributes = {}
         for key in item.keys():
             attributes[key] = item[key]['S']
-        # print(attributes)
         formDefs.append(attributes)
 
     currentFormDef = formDefs[0]["id"]
@@ -122,7 +108,6 @@ async def fetch_org_data(orgid):
         attributes = {}
         for key in item.keys():
             attributes[key] = item[key]['S'] if 'S' in item[key].keys() else item[key]['N']
-        # print(attributes)
         categories.append(attributes)
     print("Time passed fetching categories:", datetime.now() - later)
     later = datetime.now()
@@ -269,7 +254,6 @@ async def make_workbook(orgid):
 
 
     col = questionBlockStart
-    # for row in range(0, len(questions)):
     grayColor = Color(rgb="000000", tint=0.6)
 
     cell = data_sheet.cell(1, questionBlockStart, "Kompetanse")
@@ -411,19 +395,19 @@ async def make_workbook(orgid):
     barGraph.set_categories(barCategories)
     chartSheet.add_chart(barGraph, f"{get_column_letter(7)}3")
 
-    for col, question in enumerate(questions):
-        cell = chartSheet.cell(23, col + 2, question["topic"])
-    filtr = f"=FILTER({data_sheet.title}!{get_column_letter(1)}{userStartRow}:{get_column_letter(questionBlockStart + len(questions) - 1)}{row};{data_sheet.title}!{get_column_letter(1)}{userStartRow}:{get_column_letter(1)}{row}=A23)"
-    cell = chartSheet.cell(22, 1, f'For å bruke radar grafen, sett inn denne funksjonen i celle A24:')
-    cell = chartSheet.cell(22, 2, f'"{filtr}"')
+    # for col, question in enumerate(questions):
+    #     cell = chartSheet.cell(23, col + 2, question["topic"])
+    # filtr = f"=FILTER({data_sheet.title}!{get_column_letter(1)}{userStartRow}:{get_column_letter(questionBlockStart + len(questions) - 1)}{row};{data_sheet.title}!{get_column_letter(1)}{userStartRow}:{get_column_letter(1)}{row}=A23)"
+    # cell = chartSheet.cell(22, 1, f'For å bruke radar grafen, sett inn denne funksjonen i celle A24:')
+    # cell = chartSheet.cell(22, 2, f'"{filtr}"')
 
-    radarChart = RadarChart(radarStyle="filled")
-    radar_data = Reference(chartSheet, min_col=2, max_col= 2+len(questions)-1, min_row=23, max_row=24)
-    radar_cols = Reference(chartSheet, min_col=2, max_col= 2+len(questions)-1, min_row=23, max_row=23)
-    radarChart.add_data(radar_data)
-    radarChart.set_categories(radar_cols)
-    chartSheet.add_chart(radarChart, f"{get_column_letter(15)}1")
-    print("Time passed adding charts to vhart sheet:", datetime.now() - later)
+    # radarChart = RadarChart(radarStyle="filled")
+    # radar_data = Reference(chartSheet, min_col=2, max_col= 2+len(questions)-1, min_row=23, max_row=24)
+    # radar_cols = Reference(chartSheet, min_col=2, max_col= 2+len(questions)-1, min_row=23, max_row=23)
+    # radarChart.add_data(radar_data)
+    # radarChart.set_categories(radar_cols)
+    # chartSheet.add_chart(radarChart, f"{get_column_letter(15)}1")
+    print("Time passed adding charts to chart sheet:", datetime.now() - later)
     
     userNames=[]
     for user in users:
@@ -448,35 +432,23 @@ async def make_workbook(orgid):
     print("Time passed adding aggregates to aggregate sheet:", datetime.now() - later)
 
     return book
-    # book.save("test.xlsx")
 
-# result = handler({
-#      'requestContext': {'resourceId': 'dapfk0rz91',
-#  'authorizer': {'claims': {'sub': '2eba70a5-76cb-4a37-945d-1fd26cc6b138',
-#  'cognito:groups': 'knowitobjectnet0groupLeader,knowitobjectnet0admin,knowitobjectnet,admin',}}}
-# }, "")
-# print(result)
+env = "dev"#environ.get("ENV")
+sourceName = "KompetanseStack"#environ.get("SOURCE_NAME")
+userPoolId = "eu-central-1_Ors5TrglC"#environ.get("USER_POOL_ID")
 
-# f = open("t.xlsx", "w")
-# f.write(str(result["body"]))
-# f.close()
+formDefTable = f"FormDefinition-{sourceName}-{env}"
+categoryTable = f"Category-{sourceName}-{env}"
+questionTable = f"Question-{sourceName}-{env}"
+userFormTable = f"UserForm-{sourceName}-{env}"
+questionAnswerTable = f"QuestionAnswer-{sourceName}-{env}"
+async def main():
+    later = datetime.now()
+    book = await make_workbook("knowitobjectnet")
+    book.save("testy.xlsx")
+    print(datetime.now() - later)
 
-# env = "dev"#environ.get("ENV")
-# sourceName = "KompetanseStack"#environ.get("SOURCE_NAME")
-# userPoolId = "eu-central-1_Ors5TrglC"#environ.get("USER_POOL_ID")
-
-# formDefTable = f"FormDefinition-{sourceName}-{env}"
-# categoryTable = f"Category-{sourceName}-{env}"
-# questionTable = f"Question-{sourceName}-{env}"
-# userFormTable = f"UserForm-{sourceName}-{env}"
-# questionAnswerTable = f"QuestionAnswer-{sourceName}-{env}"
-# async def main():
-#     later = datetime.now()
-#     book = await make_workbook("knowitobjectnet")
-#     book.save("testy.xlsx")
-#     print(datetime.now() - later)
-
-# asyncio.run(main())
+asyncio.run(main())
 """
 TODO: Write the rest of the code.
 TODO: Figure out how to send an Excel file from Lambda :)
