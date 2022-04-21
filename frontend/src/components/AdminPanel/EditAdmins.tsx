@@ -107,7 +107,6 @@ const EditAdmins = () => {
     }; 
     const downloadExcel = async () => {
         setIsExcelLoading(true);
-        console.log("log")
         const data = await API.get("CreateExcelAPI", "", {
             headers: {
                 "Content-Type": "application/json",
@@ -116,15 +115,8 @@ const EditAdmins = () => {
                     .getJwtToken()}`,
             },
         });
-        console.log("log")
-        // const blob = new Blob([data], {type: "application/application/vnd.ms-excel"})
-        // const url = URL.createObjectURL(blob);
         download(data, "report.xlsx");
         setIsExcelLoading(false);
-        // const wind = window.open(`${window.location.hostname}/report.xlsx`,"_blank")
-        // if (wind) {
-        //     wind.document.write(data)
-        // }
     }
 
     const [
