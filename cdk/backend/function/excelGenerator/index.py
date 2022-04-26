@@ -1,4 +1,6 @@
 import asyncio
+import concurrent.futures
+import threading
 import json
 from tempfile import NamedTemporaryFile
 import boto3
@@ -93,7 +95,7 @@ async def fetch_org_data(orgid):
             attributes[key] = item[key]['S']
         formDefs.append(attributes)
 
-    currentFormDef = formDefs[0]["id"]
+    currentFormDef = formDefs[-1]["id"]
     print("Time passed fetching form defs:", datetime.now() - later)
     later = datetime.now()
     catResponse = db_client.query(
@@ -231,10 +233,56 @@ def handler(event, context):
                 },
                 "body": json.dumps("User is not Admin")}
 
+def add_user_row(data_sheet, aggregateSheet, row, user, questions, questionPositions, questionBlockStart, categories, questionCategoryMap):
+
+    cell = data_sheet.cell(row, 1, user["username"])
+    data_sheet.merge_cells(start_row=row, end_row=row, start_column=1, end_column=3)
+    for question in questions:
+        if not question["id"] in user["answers"].keys():
+            cell = data_sheet.cell(row, questionPositions[question["id"]][0], 0)
+            cell = data_sheet.cell(row, questionPositions[question["id"]][1], 0)
+            continue
+        answer = user["answers"][question["id"]]
+        if "knowledge" in answer.keys():
+            if float(answer["knowledge"]) >= 0:
+                cell = data_sheet.cell(row, questionPositions[question["id"]][0], float(answer["knowledge"]))
+                cell.fill = PatternFill(patternType= "solid",fgColor=Color(rgb="AAAAFF", tint=(1 - float(answer["knowledge"])/5.0)), bgColor="aa000000")
+            else:
+                cell = data_sheet.cell(row, questionPositions[question["id"]][0], 0)
+        if "motivation" in answer.keys():
+            if float(answer["motivation"]) >= 0:
+                cell = data_sheet.cell(row, questionPositions[question["id"]][1], float(answer["motivation"]))
+                cell.fill = PatternFill(patternType= "solid",fgColor=Color(rgb="AAAAFF", tint=(1 - float(answer["motivation"])/5.0)))
+                continue
+            else:
+                cell = data_sheet.cell(row, questionPositions[question["id"]][1], 0)
+                continue
+        if "type" in question.keys() and question["type"] == "customScaleLabels":
+            if "customScaleValue" in answer.keys():
+                cell = data_sheet.cell(row, questionPositions[question["id"]][0], float(answer["customScaleValue"]))
+                cell = data_sheet.cell(row, questionPositions[question["id"]][1], float(answer["customScaleValue"]))
+            else:
+                cell = data_sheet.cell(row, questionPositions[question["id"]][0], 0)
+                cell = data_sheet.cell(row, questionPositions[question["id"]][1], 0)
+            continue
+        print("Dominus")
+    catCol = questionBlockStart
+    aggCol = questionBlockStart
+    aggregateSheet.cell(row + 7, aggCol - 1, user["username"])
+    for category in categories:
+        endCol = catCol + len(questionCategoryMap[category["id"]]) - 1
+        aggregateSheet.cell(row + 7, aggCol, f"=AVERAGE({data_sheet.title}!${get_column_letter(catCol)}{row}:${get_column_letter(endCol)}{row})")
+        aggregateSheet.cell(row + 7, aggCol + 1, f"=MEDIAN({data_sheet.title}!${get_column_letter(catCol)}{row}:${get_column_letter(endCol)}{row})")
+        aggregateSheet.cell(row + 7, aggCol + 2, f"=PERCENTILE({data_sheet.title}!${get_column_letter(catCol)}{row}:${get_column_letter(endCol)}{row}, 0.95)")
+        aggregateSheet.cell(row + 7, aggCol + 3, f"=MAX({data_sheet.title}!${get_column_letter(catCol)}{row}:${get_column_letter(endCol)}{row})")
+        catCol += len(questionCategoryMap[category["id"]])
+        aggCol += 4
+
 async def make_workbook(orgid):
     later = datetime.now()
     formDefs, categories, questions, users = await fetch_org_data(orgid)
     print("Time passed fetching data:", datetime.now() - later)
+    later = datetime.now()
     book = Workbook()
     questions.sort(key=lambda x: x["categoryID"])
 
@@ -244,7 +292,7 @@ async def make_workbook(orgid):
     aggregateSheet = book.create_sheet("Aggergates")
     chartSheet = book.create_sheet("Charts")
 
-    questionBlockStart = 4 #Excel is 1 indexed... :/
+    questionBlockStart = 4 #Excel is 1 indexed
 
     questionCategoryMap = {}
     for question in questions:
@@ -325,48 +373,19 @@ async def make_workbook(orgid):
             col += 1
 
     print("Time passed adding headers to data sheet:", datetime.now() - later)
+    later = datetime.now()
 
+    noAnswer = []
     row = userStartRow
     for user in users:
-        if not user["answers"].keys(): continue
-        cell = data_sheet.cell(row, 1, user["username"])
-        data_sheet.merge_cells(start_row=row, end_row=row, start_column=1, end_column=3)
-        for question in questions:
-            if not question["id"] in user["answers"].keys():
-                cell = data_sheet.cell(row, questionPositions[question["id"]][0], 0)
-                cell = data_sheet.cell(row, questionPositions[question["id"]][1], 0)
-                continue
-            answer = user["answers"][question["id"]]
-            if "knowledge" in answer.keys():
-                if float(answer["knowledge"]) >= 0:
-                    cell = data_sheet.cell(row, questionPositions[question["id"]][0], float(answer["knowledge"]))
-                    cell.fill = PatternFill(patternType= "solid",fgColor=Color(rgb="AAAAFF", tint=(1 - float(answer["knowledge"])/5.0)), bgColor="aa000000")
-                else:
-                    cell = data_sheet.cell(row, questionPositions[question["id"]][0], 0)
-            if "motivation" in answer.keys():
-                if float(answer["motivation"]) >= 0:
-                    cell = data_sheet.cell(row, questionPositions[question["id"]][1], float(answer["motivation"]))
-                    cell.fill = PatternFill(patternType= "solid",fgColor=Color(rgb="AAAAFF", tint=(1 - float(answer["motivation"])/5.0)))
-                else:
-                    cell = data_sheet.cell(row, questionPositions[question["id"]][1], 0)
-            if "type" in question.keys() and question["type"] == "customScaleLabels" and "customScaleValue" in answer.keys():
-                cell = data_sheet.cell(row, questionPositions[question["id"]][0], float(answer["customScaleValue"]))
-                cell = data_sheet.cell(row, questionPositions[question["id"]][1], float(answer["customScaleValue"]))
-
-        catCol = questionBlockStart
-        aggCol = questionBlockStart
-        aggregateSheet.cell(row + 7, aggCol - 1, user["username"])
-        for category in categories:
-            endCol = catCol + len(questionCategoryMap[category["id"]]) - 1
-            aggregateSheet.cell(row + 7, aggCol, f"=AVERAGE({data_sheet.title}!${get_column_letter(catCol)}{row}:${get_column_letter(endCol)}{row})")
-            aggregateSheet.cell(row + 7, aggCol + 1, f"=MEDIAN({data_sheet.title}!${get_column_letter(catCol)}{row}:${get_column_letter(endCol)}{row})")
-            aggregateSheet.cell(row + 7, aggCol + 2, f"=PERCENTILE({data_sheet.title}!${get_column_letter(catCol)}{row}:${get_column_letter(endCol)}{row}, 0.95)")
-            aggregateSheet.cell(row + 7, aggCol + 3, f"=MAX({data_sheet.title}!${get_column_letter(catCol)}{row}:${get_column_letter(endCol)}{row})")
-            catCol += len(questionCategoryMap[category["id"]])
-            aggCol += 4
+        if not user["answers"].keys(): 
+            noAnswer.append(user["username"])
+            continue
+        add_user_row(data_sheet, aggregateSheet, int(row), user, questions, questionPositions, questionBlockStart, categories, questionCategoryMap)
 
         row += 1
     print("Time passed adding rows to data/aggregate sheet:", datetime.now() - later)
+    later = datetime.now()
 
     aggCol = questionBlockStart
     cell = aggregateSheet.cell(row + 7, aggCol - 1, "Total:")
@@ -377,12 +396,12 @@ async def make_workbook(orgid):
     chartSheet.cell(chartRow - 1, 4, "Max")
 
     for category in categories:
-        endCol = catCol + len(questionCategoryMap[category["id"]]) - 1
+        #endCol = catCol + len(questionCategoryMap[category["id"]]) - 1
         chartSheet.cell(chartRow, 1, f"{category['text']})")
         chartSheet.cell(chartRow, 2, f"=AVERAGE({aggregateSheet.title}!${get_column_letter(aggCol)}{userStartRow + 7}:${get_column_letter(aggCol)}{row + 6})")
         chartSheet.cell(chartRow, 3, f"=MEDIAN({aggregateSheet.title}!${get_column_letter(aggCol+1)}{userStartRow + 7}:${get_column_letter(aggCol+1)}{row + 6})")
         chartSheet.cell(chartRow, 4, f"=MAX({aggregateSheet.title}!${get_column_letter(aggCol+3)}{userStartRow + 7}:${get_column_letter(aggCol+3)}{row + 6})")
-        catCol += len(questionCategoryMap[category["id"]])
+        #catCol += len(questionCategoryMap[category["id"]])
         aggCol += 4
         chartRow += 1
 
@@ -408,6 +427,7 @@ async def make_workbook(orgid):
     # radarChart.set_categories(radar_cols)
     # chartSheet.add_chart(radarChart, f"{get_column_letter(15)}1")
     print("Time passed adding charts to chart sheet:", datetime.now() - later)
+    later = datetime.now()
     
     userNames=[]
     for user in users:
@@ -433,22 +453,22 @@ async def make_workbook(orgid):
 
     return book
 
-env = "dev"#environ.get("ENV")
-sourceName = "KompetanseStack"#environ.get("SOURCE_NAME")
-userPoolId = "eu-central-1_Ors5TrglC"#environ.get("USER_POOL_ID")
+# env = "ksandbox"#environ.get("ENV")
+# sourceName = "KompetanseStack"#environ.get("SOURCE_NAME")
+# userPoolId = "eu-central-1_BBWYsJYGz"#"eu-central-1_Ors5TrglC"#environ.get("USER_POOL_ID")
 
-formDefTable = f"FormDefinition-{sourceName}-{env}"
-categoryTable = f"Category-{sourceName}-{env}"
-questionTable = f"Question-{sourceName}-{env}"
-userFormTable = f"UserForm-{sourceName}-{env}"
-questionAnswerTable = f"QuestionAnswer-{sourceName}-{env}"
-async def main():
-    later = datetime.now()
-    book = await make_workbook("knowitobjectnet")
-    book.save("testy.xlsx")
-    print(datetime.now() - later)
+# formDefTable = f"FormDefinition-{sourceName}-{env}"
+# categoryTable = f"Category-{sourceName}-{env}"
+# questionTable = f"Question-{sourceName}-{env}"
+# userFormTable = f"UserForm-{sourceName}-{env}"
+# questionAnswerTable = f"QuestionAnswer-{sourceName}-{env}"
+# async def main():
+#     later = datetime.now()
+#     book = await make_workbook("knowitobjectnet")
+#     book.save("testy.xlsx")
+#     print(datetime.now() - later)
 
-asyncio.run(main())
+# asyncio.run(main())
 """
 TODO: Write the rest of the code.
 TODO: Figure out how to send an Excel file from Lambda :)
