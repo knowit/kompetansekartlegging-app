@@ -388,8 +388,8 @@ async def make_workbook(orgid):
     later = datetime.now()
 
     aggCol = questionBlockStart
-    cell = aggregateSheet.cell(row + 7, aggCol - 1, "Total:")
-    cell.font = Font(bold=True)
+    # cell = aggregateSheet.cell(row + 7, aggCol - 1, "Total:")
+    # cell.font = Font(bold=True)
     chartRow = 3
     chartSheet.cell(chartRow - 1, 2, "Average")
     chartSheet.cell(chartRow - 1, 3, "Median")
@@ -426,17 +426,20 @@ async def make_workbook(orgid):
     # radarChart.add_data(radar_data)
     # radarChart.set_categories(radar_cols)
     # chartSheet.add_chart(radarChart, f"{get_column_letter(15)}1")
+
+    # userNames=[]
+    # for user in users:
+    #     userNames.append(user["username"])
+    # userDataVal = DataValidation(type="list", formula1=f'={data_sheet.title}!A{userStartRow}:A{row}', allow_blank=True)
+    # cell = chartSheet.cell(23, 1, userNames[0])
+    
+    # userDataVal.add(cell)
+    # chartSheet.add_data_validation(userDataVal)
+
+
     print("Time passed adding charts to chart sheet:", datetime.now() - later)
     later = datetime.now()
     
-    userNames=[]
-    for user in users:
-        userNames.append(user["username"])
-    userDataVal = DataValidation(type="list", formula1=f'={data_sheet.title}!A{userStartRow}:A{row}', allow_blank=True)
-    cell = chartSheet.cell(23, 1, userNames[0])
-    
-    userDataVal.add(cell)
-    chartSheet.add_data_validation(userDataVal)
 
     aggregateSheet.cell(3, 3, f"Average")
     aggregateSheet.cell(4, 3, f"Median")
@@ -453,9 +456,11 @@ async def make_workbook(orgid):
 
     return book
 
-# env = "ksandbox"#environ.get("ENV")
-# sourceName = "KompetanseStack"#environ.get("SOURCE_NAME")
-# userPoolId = "eu-central-1_BBWYsJYGz"#"eu-central-1_Ors5TrglC"#environ.get("USER_POOL_ID")
+# Uncomment code below and fill in ENV, SourceName and UserpoolId to run locally
+
+# env = ""
+# sourceName = ""
+# userPoolId = ""
 
 # formDefTable = f"FormDefinition-{sourceName}-{env}"
 # categoryTable = f"Category-{sourceName}-{env}"
