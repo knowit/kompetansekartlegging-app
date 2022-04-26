@@ -63,7 +63,7 @@ export class KompetanseStack extends Stack {
       providerName: "AzureAD",
       providerType: "SAML",
       providerDetails: {
-        MetadataURL: AZURE//"https://login.microsoftonline.com/645152b7-1e59-4dbc-aec9-b418a90db78c/federationmetadata/2007-06/federationmetadata.xml?appid=f0c04a53-e576-4c4b-b9f1-86491313bc2f"
+        MetadataURL: AZURE
       },
       attributeMapping: {
         "custom:company": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/company",
