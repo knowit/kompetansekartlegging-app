@@ -12,6 +12,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import AssesmentIcon from "@material-ui/icons/BarChart"
 import Typography from "@material-ui/core/Typography";
 
 import commonStyles from "./common.module.css";
@@ -27,7 +28,8 @@ import {useSelector} from 'react-redux';
 import {selectAdminCognitoGroupName } from '../../redux/User';
 import { API, Auth } from "aws-amplify";
 import exports from "../../exports";
-import { Snackbar } from "@material-ui/core";
+import { Box, Modal, Snackbar } from "@material-ui/core";
+import ReactMarkdown from "react-markdown";
 
 const Admin = (props: any) => {
     const { admin, deleteAdmin } = props;
@@ -142,6 +144,32 @@ const EditAdmins = () => {
         refresh();
     };
 
+    const [isHelpModalOpen, setHelpModalOpen] = useState<boolean>(false)
+
+    const modalstyle = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        minWidth: 800,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        maxHeight: "80%",
+        overflow:"scroll",
+        p: 4,
+        borderRadius:10
+      };
+
+    const [helpMarkdown, setHelpMarkdown] = useState<any>()
+    
+    fetch("https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/README.md")
+    .then(async response => {
+        let markdown = await response.text();
+        setHelpMarkdown(markdown);
+    })
+    .catch(error => console.error(error));
+    
     return (
         <Container maxWidth="md" className={commonStyles.container}>
             {error && <p>An error occured: {error}</p>}
@@ -173,11 +201,24 @@ const EditAdmins = () => {
                     <Button
                         variant="contained"
                         color="primary"
-                        startIcon={<PersonAddIcon />}
+                        startIcon={<AssesmentIcon />}
                         style={{ marginTop: "24px" }}
                         onClick={() => downloadExcel()}>
                         Last ned resultater (Excel)
                     </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<AssesmentIcon />}
+                        style={{ marginTop: "24px" }}
+                        onClick={() => setHelpModalOpen(true)}>
+                        Hjelp (?)
+                    </Button>
+                    <Modal open={isHelpModalOpen} onClose={() => setHelpModalOpen(false)}>
+                        <Box sx={modalstyle}>
+                            <ReactMarkdown>{helpMarkdown}</ReactMarkdown>
+                        </Box>
+                    </Modal>
                 </>
             )}
             <DeleteUserFromGroupDialog
