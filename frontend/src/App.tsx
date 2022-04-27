@@ -17,7 +17,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setUserInfo, setUserInfoLogOut, selectUserState, fetchOrganizationNameByID } from './redux/User';
 import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth";
 
-const userBranch = process?.env.REACT_APP_USER_BRANCH || ""; // Process does not exist in Webpack 5?
+const userBranch = (process) ? process.env.REACT_APP_USER_BRANCH : ""; // Process does not exist in Webpack 5?
 
 
 // console.log("Hosted branch: ", userBranch);

@@ -1,0 +1,2 @@
+# Registrering av nye brukere
+Det er ikke mulig for administratorer å registrere nye brukere på siden. Brukerne er selv nødt til å gå inn på siden og trykke “Logg inn (Andre knowit selskaper)”. Først etter at dette er gjort, vil de bli synlige i “Rediger administrator” og “Rediger gruppeledere” sidene under “Administrator” rollen.
