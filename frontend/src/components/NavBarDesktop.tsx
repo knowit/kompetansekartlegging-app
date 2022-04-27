@@ -201,6 +201,20 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
                                 <ReactMarkdown>{helpMarkdown}</ReactMarkdown>
                             </Box>
                         </Modal> : null}
+                        {(userState.roles.includes(UserRole.Admin)) ? <Button
+                            ref={anchorRef}
+                            aria-controls={
+                                avatarMenuOpen ? "menu-list-grow" : undefined
+                            }
+                            // onClick={() => {console.log("Hahaha")}}
+                            aria-label="Help button"
+                            endIcon={<HelpIcon style={{color:"white"}}/>}
+                            onClick={() => setHelpModalOpen(true)}
+                            >
+                            <div className={style.userName}>
+                            Hjelp 
+                            </div>
+                        </Button> : null}
                         <Button
                             ref={anchorRef}
                             aria-controls={
@@ -219,20 +233,6 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
                                 alt="Profile Picture"
                             />
                         </Button>
-                        {(userState.roles.includes(UserRole.Admin)) ? <Button
-                            ref={anchorRef}
-                            aria-controls={
-                                avatarMenuOpen ? "menu-list-grow" : undefined
-                            }
-                            // onClick={() => {console.log("Hahaha")}}
-                            aria-label="Help button"
-                            // startIcon={}
-                            onClick={() => setHelpModalOpen(true)}
-                            >
-                            <div className={style.userName}>
-                            <HelpIcon/>
-                            </div>
-                        </Button> : null}
                         
                         <Popper
                             open={avatarMenuOpen}
