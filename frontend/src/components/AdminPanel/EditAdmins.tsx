@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Container from "@material-ui/core/Container";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -163,12 +163,15 @@ const EditAdmins = () => {
 
     const [helpMarkdown, setHelpMarkdown] = useState<any>()
     
-    fetch("https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/README.md")
-    .then(async response => {
-        let markdown = await response.text();
-        setHelpMarkdown(markdown);
-    })
-    .catch(error => console.error(error));
+    useEffect(() => {
+        // console.log("Fetching help text")
+        fetch("https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/README.md")
+        .then(async response => {
+            let markdown = await response.text();
+            setHelpMarkdown(markdown);
+        })
+        .catch(error => console.error(error));
+    }, [])
     
     return (
         <Container maxWidth="md" className={commonStyles.container}>
