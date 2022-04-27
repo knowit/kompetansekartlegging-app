@@ -9,6 +9,8 @@ import {
     Grow,
     Paper,
     MenuList,
+    Modal,
+    Box,
 } from "@material-ui/core";
 import {
     Dialog,
@@ -20,11 +22,12 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect, useRef, useState } from "react";
 import { KnowitColors } from "../styles";
-import { NavBarPropsDesktop } from "../types";
+import { NavBarPropsDesktop, UserRole } from "../types";
 import { ReactComponent as KnowitLogo } from "../Logotype-Knowit-Digital-white 1.svg";
 import { useSelector } from "react-redux";
 import { selectUserState } from "../redux/User";
-
+import ReactMarkdown from "react-markdown";
+import HelpIcon from "@material-ui/icons/Help";
 
 const navbarStyles = makeStyles((theme) => ({
     root: {
@@ -152,6 +155,35 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
         avatarMenuPrevOpen.current = avatarMenuOpen;
     }, [avatarMenuOpen]);
 
+    const [isHelpModalOpen, setHelpModalOpen] = useState<boolean>(false)
+
+    const modalstyle = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        minWidth: "20%",
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        // boxShadow: 24,
+        maxHeight: "80%",
+        overflowY:"auto",
+        p: 4,
+        borderRadius:10
+      };
+
+    const [helpMarkdown, setHelpMarkdown] = useState<any>()
+    
+    useEffect(() => {
+        console.log("Fetching help text")
+        fetch("https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/frontend/markdown/help.md")
+        .then(async response => {
+            let markdown = await response.text();
+            setHelpMarkdown(markdown);
+        })
+        .catch(error => console.error(error));
+    }, [])
+
     return (
         <div className={style.root}>
             <AppBar position="static">
@@ -163,6 +195,12 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
 
                     {/* <Button variant="contained" className={classes.logoutButton} onClick={() => Auth.signOut()}>Sign out</Button>  */}
                     <div className={style.dropdownMenuButton}>
+                        
+                    {(userState.roles.includes(UserRole.Admin)) ? <Modal open={isHelpModalOpen} onClose={() => setHelpModalOpen(false)}>
+                            <Box sx={modalstyle}>
+                                <ReactMarkdown>{helpMarkdown}</ReactMarkdown>
+                            </Box>
+                        </Modal> : null}
                         <Button
                             ref={anchorRef}
                             aria-controls={
@@ -181,6 +219,21 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
                                 alt="Profile Picture"
                             />
                         </Button>
+                        {(userState.roles.includes(UserRole.Admin)) ? <Button
+                            ref={anchorRef}
+                            aria-controls={
+                                avatarMenuOpen ? "menu-list-grow" : undefined
+                            }
+                            // onClick={() => {console.log("Hahaha")}}
+                            aria-label="Help button"
+                            // startIcon={}
+                            onClick={() => setHelpModalOpen(true)}
+                            >
+                            <div className={style.userName}>
+                            <HelpIcon/>
+                            </div>
+                        </Button> : null}
+                        
                         <Popper
                             open={avatarMenuOpen}
                             anchorEl={anchorRef.current}

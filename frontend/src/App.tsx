@@ -6,7 +6,7 @@ import awsconfig from "./exports";
 import Content from "./components/Content";
 import Login from "./components/Login";
 import { ThemeProvider } from "@material-ui/core/styles";
-import { Button, debounce, makeStyles, Snackbar } from "@material-ui/core";
+import { Box, Button, debounce, makeStyles, Modal, Snackbar } from "@material-ui/core";
 import { isMobile } from "react-device-detect";
 import FloatingScaleDescButton from "./components/FloatingScaleDescButton";
 import NavBarDesktop from "./components/NavBarDesktop";
@@ -16,6 +16,7 @@ import theme from "./theme";
 import { useSelector, useDispatch } from 'react-redux';
 import { setUserInfo, setUserInfoLogOut, selectUserState, fetchOrganizationNameByID } from './redux/User';
 import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth";
+import ReactMarkdown from "react-markdown";
 
 const userBranch = (process) ? process.env.REACT_APP_USER_BRANCH : ""; // Process does not exist in Webpack 5?
 
@@ -183,7 +184,34 @@ const App = () => {
         }
     };
     const [bannerOpen, setBannerOpen] = useState(true);
+    const [isHelpModalOpen, setHelpModalOpen] = useState<boolean>(false)
 
+    const modalstyle = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        minWidth: "20%",
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        // boxShadow: 24,
+        maxHeight: "80%",
+        overflowY:"auto",
+        p: 4,
+        borderRadius:10
+      };
+
+    const [helpMarkdown, setHelpMarkdown] = useState<any>()
+    
+    useEffect(() => {
+        console.log("Fetching help text")
+        fetch("https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/frontend/markdown/help.md")
+        .then(async response => {
+            let markdown = await response.text();
+            setHelpMarkdown(markdown);
+        })
+        .catch(error => console.error(error));
+    }, [])
     return (
         <ThemeProvider theme={theme}>
             <div className={style.root}>

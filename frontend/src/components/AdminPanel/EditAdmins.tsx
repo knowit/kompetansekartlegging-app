@@ -144,34 +144,7 @@ const EditAdmins = () => {
         refresh();
     };
 
-    const [isHelpModalOpen, setHelpModalOpen] = useState<boolean>(false)
 
-    const modalstyle = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        minWidth: 800,
-        bgcolor: 'background.paper',
-        border: '2px solid #000',
-        boxShadow: 24,
-        maxHeight: "80%",
-        overflow:"scroll",
-        p: 4,
-        borderRadius:10
-      };
-
-    const [helpMarkdown, setHelpMarkdown] = useState<any>()
-    
-    useEffect(() => {
-        // console.log("Fetching help text")
-        fetch("https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/README.md")
-        .then(async response => {
-            let markdown = await response.text();
-            setHelpMarkdown(markdown);
-        })
-        .catch(error => console.error(error));
-    }, [])
     
     return (
         <Container maxWidth="md" className={commonStyles.container}>
@@ -209,19 +182,6 @@ const EditAdmins = () => {
                         onClick={() => downloadExcel()}>
                         Last ned resultater (Excel)
                     </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<AssesmentIcon />}
-                        style={{ marginTop: "24px" }}
-                        onClick={() => setHelpModalOpen(true)}>
-                        Hjelp (?)
-                    </Button>
-                    <Modal open={isHelpModalOpen} onClose={() => setHelpModalOpen(false)}>
-                        <Box sx={modalstyle}>
-                            <ReactMarkdown>{helpMarkdown}</ReactMarkdown>
-                        </Box>
-                    </Modal>
                 </>
             )}
             <DeleteUserFromGroupDialog
