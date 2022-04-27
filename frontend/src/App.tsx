@@ -184,34 +184,7 @@ const App = () => {
         }
     };
     const [bannerOpen, setBannerOpen] = useState(true);
-    const [isHelpModalOpen, setHelpModalOpen] = useState<boolean>(false)
-
-    const modalstyle = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        minWidth: "20%",
-        bgcolor: 'background.paper',
-        border: '2px solid #000',
-        // boxShadow: 24,
-        maxHeight: "80%",
-        overflowY:"auto",
-        p: 4,
-        borderRadius:10
-      };
-
-    const [helpMarkdown, setHelpMarkdown] = useState<any>()
     
-    useEffect(() => {
-        console.log("Fetching help text")
-        fetch("https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/frontend/markdown/help.md")
-        .then(async response => {
-            let markdown = await response.text();
-            setHelpMarkdown(markdown);
-        })
-        .catch(error => console.error(error));
-    }, [])
     return (
         <ThemeProvider theme={theme}>
             <div className={style.root}>
