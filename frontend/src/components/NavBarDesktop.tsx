@@ -175,7 +175,6 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
     const [helpMarkdown, setHelpMarkdown] = useState<any>()
     
     useEffect(() => {
-        console.log("Fetching help text")
         fetch("https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/frontend/markdown/help.md")
         .then(async response => {
             let markdown = await response.text();
