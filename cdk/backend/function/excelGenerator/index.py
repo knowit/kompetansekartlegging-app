@@ -14,10 +14,10 @@ from openpyxl.utils import get_column_letter, FORMULAE
 from openpyxl.writer.excel import save_virtual_workbook
 from dateutil import parser
 from datetime import datetime
+from os import environ
+
 
 region = environ.get("AWS_REGION")
-
-from os import environ
 
 db_client = boto3.client("dynamodb")
 cog_client = boto3.client("cognito-idp")
