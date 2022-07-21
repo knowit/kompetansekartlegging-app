@@ -273,6 +273,68 @@ paths:
                                 $ref: "#/components/schemas/UserForm"
             security:
                 - api_key: []
+    /groups:
+        get:
+            tags:
+                - group
+            summary: Returner en liste av grupper
+            operationId: getGroups
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Group"
+                            example: >
+                                [
+                                    {
+                                        "gid": "bbbbbbbb-4cfa-2222-9e8f-dddddddddddd",
+                                        "groupLeader": "leader1@email.com"
+                                    },
+                                    {
+                                        "gid": "aaaaaaaa-4cfa-2222-9e8f-dddddddddddd",
+                                        "groupLeader": "leader2@email.com"
+                                    }
+                                ]
+            security:
+                - api_key: []
+    "/groups/{groupId}":
+        get:
+            tags:
+                - group
+            summary: Returner en liste brukere knyttet til en gitt gruppe
+            operationId: getMembersOfGroup
+            parameters:
+                - name: groupId
+                  in: path
+                  description: ID-en til gruppa
+                  required: true
+                  schema:
+                      type: string
+                      example: "fb9e8f06-4cfa-463e-9e8f-cc0853464070"
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/User"
+                            example: >
+                                [
+                                    {
+                                        "userid": "member1@email.com"
+                                    },
+                                    {
+                                        "userid": "member2@email.com"
+                                    }
+                                ]
+            security:
+                - api_key: []
 components:
     schemas:
         UserForm:
