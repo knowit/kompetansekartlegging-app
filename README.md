@@ -57,3 +57,8 @@ To deploy the CDK backend you need to:
 ## Special packages used:
 * Appsync Transformer for CDK: https://github.com/kcwinner/cdk-appsync-transformer
 * Codegen inspiration: https://github.com/kcwinner/advocacy/tree/master/cdk-amplify-appsync-helpers
+
+# API docs
+
+Documentation for the external API can be found at this projects Github Pages (`kompetansekartlegging-app/docs`) or at this URL: https://apidocs.kompetanse.knowit.no
+
