@@ -276,7 +276,7 @@ paths:
     /groups:
         get:
             tags:
-                - group
+                - gruppe
             summary: Returner en liste av grupper
             operationId: getGroups
             responses:
@@ -304,7 +304,7 @@ paths:
     "/groups/{groupId}":
         get:
             tags:
-                - group
+                - gruppe
             summary: Returner en liste brukere knyttet til en gitt gruppe
             operationId: getMembersOfGroup
             parameters:
@@ -337,6 +337,15 @@ paths:
                 - api_key: []
 components:
     schemas:
+        User:
+            type: object
+            properties:
+                userid: string
+        Group:
+            type: object
+            properties:
+                gid: string
+                groupLeader: string
         UserForm:
             type: object
             properties:
