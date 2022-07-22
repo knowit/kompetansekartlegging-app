@@ -14,13 +14,15 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v2
       - name: Install
+        working-directory: ./frontend
         run: npm install
       - name: Build
+        working-directory: ./frontend
         run: npm run build
       - name: Deploy
         uses: lbertenasco/s3-deploy@v1
         with:
-          folder: build
+          folder: frontend/build
           bucket: ${{ secrets.S3_BUCKET }}
           dist-id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
           invalidation: / *
