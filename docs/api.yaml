@@ -340,12 +340,15 @@ components:
         Member:
             type: object
             properties:
-                userid: string
+                userid: 
+                    type: string
         Group:
             type: object
             properties:
-                gid: string
-                groupLeader: string
+                gid: 
+                    type: string
+                groupLeader: 
+                    type: string
         UserForm:
             type: object
             properties:
