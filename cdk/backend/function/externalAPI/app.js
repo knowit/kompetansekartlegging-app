@@ -34,7 +34,9 @@ const {
     getAllFormDefs,
     getAllCategoriesForFormDef,
     getAllQuestionForCategory,
-    getOrganizationIDFromAPIKeyHashed
+    getOrganizationIDFromAPIKeyHashed,
+    getAllGroups,
+    getMembersOfGroup
 } = require("./db");
 
 const getOrganizationID = async () => {
@@ -230,6 +232,31 @@ router.get(
             allQuestions.Items.map((q) =>
                 q.type ? q : { ...q, type: "knowledgeMotivation" }
             )
+        );
+    }
+);
+
+// returns: list of all groups
+router.get("/groups", async (req, res) => {
+    const organization_ID = await getOrganizationID();
+
+    const allGroups = await getAllGroups(organization_ID);
+    return res.json(
+        allGroups.Items.flatMap((ag) => ({
+            gid: ag.id,
+            groupLeader: ag.groupLeaderUsername
+        }))
+    );
+});
+
+// returns: members of a group
+router.get("/groups/:id", async (req, res) => {
+        const groupId = req.params.id;
+        const allMembers = await getMembersOfGroup(groupId);
+        return res.json(
+            allMembers.Items.flatMap((user) => ({
+                userid: user.id
+            }))
         );
     }
 );
