@@ -45,34 +45,37 @@ export class KompetanseStack extends Stack {
     const supportedProviders = [];
 
     // Federation Providers
-    const googlePorvider = new cognito.UserPoolIdentityProviderGoogle(this, "Google", {
-      clientId: GOOGLE_ID,
-      clientSecret: GOOGLE_SECRET,
-      userPool: pool,
-      scopes: ["profile", "email", "openid"],
-      attributeMapping: {
-        email: cognito.ProviderAttribute.GOOGLE_EMAIL,
-        fullname: cognito.ProviderAttribute.GOOGLE_NAME,
-        profilePicture: cognito.ProviderAttribute.GOOGLE_PICTURE
-      }
-    })
-    supportedProviders.push({ name: googlePorvider.providerName });
+    if (GOOGLE_SECRET && GOOGLE_ID) {
+      const googlePorvider = new cognito.UserPoolIdentityProviderGoogle(this, "Google", {
+        clientId: GOOGLE_ID,
+        clientSecret: GOOGLE_SECRET,
+        userPool: pool,
+        scopes: ["profile", "email", "openid"],
+        attributeMapping: {
+          email: cognito.ProviderAttribute.GOOGLE_EMAIL,
+          fullname: cognito.ProviderAttribute.GOOGLE_NAME,
+          profilePicture: cognito.ProviderAttribute.GOOGLE_PICTURE
+        }
+      })
+      supportedProviders.push({ name: googlePorvider.providerName });
+    }
 
-    const samlProvider = new cognito.CfnUserPoolIdentityProvider(this, "Saml", {
-      userPoolId: pool.userPoolId,
-      providerName: "AzureAD",
-      providerType: "SAML",
-      providerDetails: {
-        MetadataURL: AZURE
-      },
-      attributeMapping: {
-        "custom:company": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/company",
-        "email": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
-        "name": "http://schemas.microsoft.com/identity/claims/displayname"
-      }
-    });
-    supportedProviders.push({ name: samlProvider.providerName });
-
+    if (AZURE) {
+      const samlProvider = new cognito.CfnUserPoolIdentityProvider(this, "Saml", {
+        userPoolId: pool.userPoolId,
+        providerName: "AzureAD",
+        providerType: "SAML",
+        providerDetails: {
+          MetadataURL: AZURE
+        },
+        attributeMapping: {
+          "custom:company": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/company",
+          "email": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
+          "name": "http://schemas.microsoft.com/identity/claims/displayname"
+        }
+      });
+      supportedProviders.push({ name: samlProvider.providerName });
+    }
     // AppClient
     const appClient = pool.addClient("AppClient", {
       supportedIdentityProviders: supportedProviders,
@@ -82,64 +85,70 @@ export class KompetanseStack extends Stack {
         logoutUrls: (isProd) ? ["https://kompetanse.knowit.no/"] : ["http://localhost:3000/"]
       },
       userPoolClientName: "Kompetansekartlegging App Client",
-
     });
 
     // Identity Pool Setup
-    const identityPool = new cognito.CfnIdentityPool(this, "KompetanseIdentityPool", {
-      allowUnauthenticatedIdentities: true,
-      cognitoIdentityProviders: [{ providerName: pool.userPoolProviderName, clientId: appClient.userPoolClientId }],
-    })
+    if (supportedProviders.length > 0) {
+      const identityPool = new cognito.CfnIdentityPool(this, "KompetanseIdentityPool", {
+        allowUnauthenticatedIdentities: true,
+        cognitoIdentityProviders: [{ providerName: pool.userPoolProviderName, clientId: appClient.userPoolClientId }],
+      })
 
-    const authRole = new iam.Role(this, "AuthRole", {
-      assumedBy: new iam.FederatedPrincipal(
-        "cognito-identity.amazonaws.com",
+      const authRole = new iam.Role(this, "AuthRole", {
+        assumedBy: new iam.FederatedPrincipal(
+          "cognito-identity.amazonaws.com",
+          {
+            StringEquals: {
+              "cognito-identity.amazonaws.com:aud": identityPool.ref,
+            },
+            "ForAnyValue:StringLike": {
+              "cognito-identity.amazonaws.com:amr": "authenticated",
+            },
+          },
+          "sts:AssumeRoleWithWebIdentity"
+        ),
+      });
+
+      // authRole.addToPolicy(new iam.PolicyStatement({
+      //   actions: [
+      //     "execute-api:Invoke"
+      //   ],
+      //   resources: [
+      //     "arn:aws:execute-api:eu-central-1:153690382195:65iwvl3jha/migrate/GET//*",
+      //     "arn:aws:execute-api:eu-central-1:153690382195:65iwvl3jha/migrate/GET/"
+      //   ],
+      //   effect: iam.Effect.ALLOW
+      // }))
+
+      const unauthRole = new iam.Role(this, "UnauthRole", {
+        assumedBy: new iam.FederatedPrincipal(
+          "cognito-identity.amazonaws.com",
+          {
+            StringEquals: {
+              "cognito-identity.amazonaws.com:aud": identityPool.ref,
+            },
+            "ForAnyValue:StringLike": {
+              "cognito-identity.amazonaws.com:amr": "unauthenticated",
+            },
+          },
+          "sts:AssumeRoleWithWebIdentity"
+        ),
+      });
+
+      const roleAttachment = new cognito.CfnIdentityPoolRoleAttachment(
+        this,
+        "IdentityPoolRoleAttachment",
         {
-          StringEquals: {
-            "cognito-identity.amazonaws.com:aud": identityPool.ref,
-          },
-          "ForAnyValue:StringLike": {
-            "cognito-identity.amazonaws.com:amr": "authenticated",
-          },
-        },
-        "sts:AssumeRoleWithWebIdentity"
-      ),
-    });
-
-    // authRole.addToPolicy(new iam.PolicyStatement({
-    //   actions: [
-    //     "execute-api:Invoke"
-    //   ],
-    //   resources: [
-    //     "arn:aws:execute-api:eu-central-1:153690382195:65iwvl3jha/migrate/GET//*",
-    //     "arn:aws:execute-api:eu-central-1:153690382195:65iwvl3jha/migrate/GET/"
-    //   ],
-    //   effect: iam.Effect.ALLOW
-    // }))
-
-    const unauthRole = new iam.Role(this, "UnauthRole", {
-      assumedBy: new iam.FederatedPrincipal(
-        "cognito-identity.amazonaws.com",
-        {
-          StringEquals: {
-            "cognito-identity.amazonaws.com:aud": identityPool.ref,
-          },
-          "ForAnyValue:StringLike": {
-            "cognito-identity.amazonaws.com:amr": "unauthenticated",
-          },
-        },
-        "sts:AssumeRoleWithWebIdentity"
-      ),
-    });
-
-    const roleAttachment = new cognito.CfnIdentityPoolRoleAttachment(
-      this,
-      "IdentityPoolRoleAttachment",
-      {
-        identityPoolId: identityPool.ref,
-        roles: { authenticated: authRole.roleArn, unauthenticated: unauthRole.roleArn },
-      }
-    );
+          identityPoolId: identityPool.ref,
+          roles: { authenticated: authRole.roleArn, unauthenticated: unauthRole.roleArn },
+        }
+      );
+      
+      // Conditional output
+      const identityPoolIdOutput = new CfnOutput(this, "aws_cognito_identity_pool_id", {
+        value: identityPool.ref, // "eu-central-1:ed60ff7c-18dc-49e6-a8cf-aa7a068fa2a5",
+      });
+    }
 
     // PreSignUp Trigger Setup
 
