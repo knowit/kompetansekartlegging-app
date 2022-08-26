@@ -4,6 +4,8 @@ import * as cdk from 'aws-cdk-lib'
 import { KompetanseStack } from '../lib/kompetanse-stack'
 import { ExportDatabaseStack } from '../lib/exportdatabase-stack'
 import { AuroraStack } from '../lib/aurora-stack'
+import 'source-map-support/register'
+import { DatatransformStack } from '../lib/datatransform-stack'
 
 const app = new cdk.App()
 const ENV = app.node.tryGetContext('ENV')
@@ -31,3 +33,4 @@ new AuroraStack(app, `AuroraStack-${ENV}`, {
     region: process.env.CDK_DEFAULT_REGION,
   },
 })
+new DatatransformStack(app, `Datatransformstack-${ENV}`, {})

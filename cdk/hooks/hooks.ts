@@ -1,6 +1,7 @@
 import setAppSyncAuth from './setAppSyncAuth'
 import initializeDatabase from './initializeDatabase'
 import * as fs from 'fs'
+import { Key } from 'aws-cdk-lib/aws-kms'
 
 const file = fs.readFileSync('outputs.json', { encoding: 'utf-8' })
 
