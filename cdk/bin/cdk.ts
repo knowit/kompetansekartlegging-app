@@ -3,6 +3,7 @@ import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import { KompetanseStack } from '../lib/kompetanse-stack';
 import { ExportDatabaseStack } from '../lib/exportdatabase-stack'
+import { AuroraStack as AuroraStack } from '../lib/aurora-cdk-stack';
 
 const app = new cdk.App();
 const ENV = app.node.tryGetContext("ENV")
@@ -27,3 +28,6 @@ new KompetanseStack(app, `KompetanseStack-${ENV}`, {
 });
 
 new ExportDatabaseStack(app, `ExportDatabaseStack-${ENV}`, {});
+new AuroraStack(app, `AuroraStack-${ENV}`, {
+  env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
+});
