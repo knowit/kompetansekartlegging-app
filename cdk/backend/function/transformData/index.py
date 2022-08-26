@@ -12,7 +12,13 @@ s3 = boto3.resource("s3")
 def handler(event, context):
     transform("organization.csv")
     transform("users.csv", appendEmptyColumnsNames=["owner"])
-
+    transform("APIKeyPermission.csv")
+    transform("category.csv")
+    transform("formDefinition.csv", removeColumns=["sortKeyConstant"])
+    transform("group.csv")
+    transform("question.csv", removeColumns=["qid"]) #what is qid, is either empty or marked with <empty> on dynamoDB
+    transform("questionAnswer.csv")
+    transform("userForm.csv")
 
 def transform(key, removeColumns=[], appendEmptyColumnsNames=[]):
     csvPdFile = getPandasCSVFile(key)
