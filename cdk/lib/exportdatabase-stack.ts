@@ -23,7 +23,6 @@ export class ExportDatabaseStack extends Stack {
     const ENV = this.node.tryGetContext("ENV");
     const exportToDataBucket = new s3.Bucket(this, "exportToDataBucket", {
         blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-        lifecycleRules: [{expiration: Duration.days(1)}]
     });
 
     //access 
