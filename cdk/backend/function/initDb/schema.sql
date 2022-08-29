@@ -2,13 +2,13 @@
 -- Oppretter dersom det ikke eksisterer fra før av
 
 CREATE TABLE IF NOT EXISTS apiKeyPermission(
-    id INTEGER PRIMARY KEY NOT NULL,
+    id VARCHAR(255) PRIMARY KEY NOT NULL,
     APIKeyHashed VARCHAR(255) NOT NULL,
     organizationID VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS organization(
-    id INTEGER PRIMARY KEY NOT NULL,
+    id VARCHAR(255) PRIMARY KEY NOT NULL,
     createdAt TIMESTAMPTZ NOT NULL,
     owner VARCHAR(255),
     orgname VARCHAR(255) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS organization(
 );
 
 CREATE TABLE IF NOT EXISTS formDefinition(
-    id INTEGER PRIMARY KEY NOT NULL,
+    id VARCHAR(255) PRIMARY KEY NOT NULL,
     label VARCHAR(255),
     createdAt TIMESTAMPTZ NOT NULL,
     updatedAt TIMESTAMPTZ,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS formDefinition(
 );
 
 CREATE TABLE IF NOT EXISTS userForm(
-    id INTEGER PRIMARY KEY NOT NULL,
+    id VARCHAR(255) PRIMARY KEY NOT NULL,
     createdAt TIMESTAMPTZ NOT NULL,
     updatedAt TIMESTAMPTZ,
     owner VARCHAR(255),
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS userForm(
 );
 
 CREATE TABLE IF NOT EXISTS category(
-    id INTEGER PRIMARY KEY NOT NULL,
+    id VARCHAR(255) PRIMARY KEY NOT NULL,
     text VARCHAR(255) NOT NULL,
     description TEXT,
     index INTEGER,
@@ -52,7 +52,7 @@ EXCEPTION
 END $$;
 
 CREATE TABLE IF NOT EXISTS question(
-    id INTEGER PRIMARY KEY NOT NULL,
+    id VARCHAR(255) PRIMARY KEY NOT NULL,
     text VARCHAR(255) NOT NULL,
     topic VARCHAR(255) NOT NULL,
     index INTEGER,
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS question(
 );
 
 CREATE TABLE IF NOT EXISTS questionAnswer(
-    id INTEGER PRIMARY KEY NOT NULL,
+    id VARCHAR(255) PRIMARY KEY NOT NULL,
     userFormID INTEGER NOT NULL references userForm(id),
     questionID INTEGER NOT NULL references question(id),
     knowledge REAL,
@@ -76,13 +76,13 @@ CREATE TABLE IF NOT EXISTS questionAnswer(
 );
 
 CREATE TABLE IF NOT EXISTS "group"(
-    id INTEGER PRIMARY KEY NOT NULL,
-    groupLeaderUsername VARCHAR(255) NOT NULL,
+    id VARCHAR(255) PRIMARY KEY NOT NULL,
+    groupLeaderUsername VARCHAR(255) NOT NULL references user(id),
     organizationID INTEGER NOT NULL references organization(id)
 );
 
 CREATE TABLE IF NOT EXISTS "user"(
-    id INTEGER PRIMARY KEY NOT NULL,
+    id VARCHAR(255) PRIMARY KEY NOT NULL,
     groupID INTEGER NOT NULL references "group"(id),
     organizationID INTEGER NOT NULL references organization(id)
 );
