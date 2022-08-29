@@ -1,34 +1,50 @@
 import setAppSyncAuth from "./setAppSyncAuth";
-import * as fs from "fs"
+import initializeDatabase from "./initializeDatabase";
+import * as fs from "fs";
 
 const file = fs.readFileSync("outputs.json", {encoding: "utf-8"})
 
 const json = JSON.parse(file);
-let stack: any;
-// const stack = json.KompetanseStack;
-stack = json[Object.keys(json).find(key => key.startsWith("KompetanseStack-")) || 0]; 
+const kompetanseStackKey = Object.keys(json).find(key => key.startsWith("KompetanseStack"));
+const auroraStackKey = Object.keys(json).find(key => key.startsWith("AuroraStack"));
+if (kompetanseStackKey === undefined) {
+    throw new ReferenceError("Kunne ikke finne KompetanseStack i outputs.json");
+} else if (auroraStackKey === undefined) {
+    throw new ReferenceError("Kunne ikke finne AuroraStack i outputs.json");
+}
+
+// AuroraStack
+
+let auroraStack: any = json[auroraStackKey];
+initializeDatabase(auroraStack.initDbFunctionName);
+
+
+// KompetanseStack
+
+let kompetanseStack: any;
+kompetanseStack = json[kompetanseStackKey];
 // console.log(stack);
-stack.oauth = JSON.parse(stack.oauth);
-stack.functionMap = JSON.parse(stack.functionMap);
-const functionMap = Object.keys(stack.functionMap).map(key => {
+kompetanseStack.oauth = JSON.parse(kompetanseStack.oauth);
+kompetanseStack.functionMap = JSON.parse(kompetanseStack.functionMap);
+const functionMap = Object.keys(kompetanseStack.functionMap).map(key => {
     // stack.functionMap[key].endpoint = stack.functionMap[key].endpoint.substring(0, stack.functionMap[key].endpoint.length - 1) 
     return {
-        ...stack.functionMap[key],
-        endpoint: stack.functionMap[key].endpoint.substring(0, stack.functionMap[key].endpoint.length - 1) // Remove / from endpoint 
+        ...kompetanseStack.functionMap[key],
+        endpoint: kompetanseStack.functionMap[key].endpoint.substring(0, kompetanseStack.functionMap[key].endpoint.length - 1) // Remove / from endpoint 
     }
 });
 
-setAppSyncAuth(stack.awsuserpoolsid, stack.awsuserpoolswebclientid, stack.outputAppSyncId, stack.outputCreateBatch, stack.tablenamemap, stack.tableArns)
+setAppSyncAuth(kompetanseStack.awsuserpoolsid, kompetanseStack.awsuserpoolswebclientid, kompetanseStack.outputAppSyncId, kompetanseStack.outputCreateBatch, kompetanseStack.tablenamemap, kompetanseStack.tableArns)
 
 fs.writeFileSync("../frontend/src/exports.js", `
 const exports = {
     aws_project_region: "eu-central-1",
     aws_cognito_region: "eu-central-1",
-    aws_user_pools_id: "${stack.awsuserpoolsid}",
-    aws_cognito_identity_pool_id: "${stack.awscognitoidentitypoolid}",
-    aws_user_pools_web_client_id: "${stack.awsuserpoolswebclientid}",
+    aws_user_pools_id: "${kompetanseStack.awsuserpoolsid}",
+    aws_cognito_identity_pool_id: "${kompetanseStack.awscognitoidentitypoolid}",
+    aws_user_pools_web_client_id: "${kompetanseStack.awsuserpoolswebclientid}",
     oauth: {
-        domain: "${stack.oauth.domain}",
+        domain: "${kompetanseStack.oauth.domain}",
         "scope": [
             "phone",
             "email",
@@ -40,7 +56,7 @@ const exports = {
         redirectSignIn: "",
         redirectSignOut: ""
     },
-    aws_appsync_graphqlEndpoint: "${stack.appsyncGraphQLEndpointOutput}",
+    aws_appsync_graphqlEndpoint: "${kompetanseStack.appsyncGraphQLEndpointOutput}",
     aws_cloud_logic_custom: ${JSON.stringify(functionMap, null, 2)},
     "federationTarget": "COGNITO_USER_AND_IDENTITY_POOLS",
     "aws_cognito_username_attributes": [],
