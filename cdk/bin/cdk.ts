@@ -2,6 +2,7 @@
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import { KompetanseStack } from '../lib/kompetanse-stack';
+import { ExportDatabaseStack } from '../lib/exportdatabase-stack'
 
 const app = new cdk.App();
 const ENV = app.node.tryGetContext("ENV")
@@ -24,3 +25,5 @@ new KompetanseStack(app, `KompetanseStack-${ENV}`, {
   //   region: "eu-central-1"
   // }
 });
+
+new ExportDatabaseStack(app, `ExportDatabaseStack-${ENV}`, {});

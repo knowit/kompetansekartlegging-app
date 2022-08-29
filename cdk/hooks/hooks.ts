@@ -6,7 +6,7 @@ const file = fs.readFileSync("outputs.json", {encoding: "utf-8"})
 const json = JSON.parse(file);
 let stack: any;
 // const stack = json.KompetanseStack;
-stack = json[Object.keys(json)[0]];
+stack = json[Object.keys(json).find(key => key.startsWith("KompetanseStack-")) || 0]; 
 // console.log(stack);
 stack.oauth = JSON.parse(stack.oauth);
 stack.functionMap = JSON.parse(stack.functionMap);
