@@ -23,7 +23,7 @@ export class AuroraStack extends Stack {
     });
 
   
-    const initDbLambda = new lambda.Function(this, "KompetanseAuroraInitDb", {
+    const initializeDB = new lambda.Function(this, "KompetanseAuroraInitDb", {
         code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/initDb")),
         functionName: "KompetanseAuroraInitDb",
         handler: "index.handler",
@@ -31,23 +31,21 @@ export class AuroraStack extends Stack {
         timeout: Duration.seconds(25),
         environment: { 
             DATABASE_ARN: auroraCluster.clusterArn,
-            SECRET_ARN: auroraCluster.secret?.secretArn || "",
+            SECRET_ARN: auroraCluster.secret!.secretArn,
             DATABASE_NAME: "auroraTestDB",
         },
     });
-    auroraCluster.grantDataApiAccess(initDbLambda);
+    auroraCluster.grantDataApiAccess(initializeDB);
 
-      
-    // construct arn from available information
-    const account  = props.env?.account;
-    const region = props.env?.region;
-    const auroraArn = `arn:aws:rds:${region}:${account}:cluster:${auroraCluster.clusterArn}`;
-
-    const deploymentStage = "aurora-cluster-id-dev";
+    
+    // Outputs
      
     new CfnOutput(this, 'AuroraClusterArn', {
-      exportName: `${deploymentStage}`,
-      value: auroraArn
+      value: auroraCluster.clusterArn
     }); 
+
+    new CfnOutput(this, 'initDbFunctionName', {
+      value: initializeDB.functionName
+    })
   }
 }
