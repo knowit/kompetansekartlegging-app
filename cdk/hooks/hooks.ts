@@ -1,6 +1,6 @@
 import setAppSyncAuth from "./setAppSyncAuth";
 import initializeDatabase from "./initializeDatabase";
-import * as fs from "fs";
+import * as fs from "fs"
 
 const file = fs.readFileSync("outputs.json", {encoding: "utf-8"})
 
