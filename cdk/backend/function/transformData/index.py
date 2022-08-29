@@ -10,8 +10,8 @@ s3BucketTo = environ.get("TRANSFORMED_DATA_BUCKET")
 s3 = boto3.resource("s3")
 
 def handler(event, context):
-    transform("organization.csv")
-    transform("users.csv", appendEmptyColumnsNames=["owner"])
+    transform("organization.csv",appendEmptyColumnsNames=["owner"])
+    transform("users.csv")
     transform("APIKeyPermission.csv")
     transform("category.csv")
     transform("formDefinition.csv", removeColumns=["sortKeyConstant"])
