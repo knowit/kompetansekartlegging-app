@@ -44,6 +44,10 @@ export class AuroraStack extends Stack {
       value: auroraCluster.clusterArn
     }); 
 
+    new CfnOutput(this, 'AuroraSecretArn', {
+      value: auroraCluster.secret!.secretArn
+    }); 
+
     new CfnOutput(this, 'initDbFunctionName', {
       value: initializeDB.functionName
     })

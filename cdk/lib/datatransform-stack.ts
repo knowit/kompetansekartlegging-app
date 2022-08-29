@@ -1,4 +1,4 @@
-import { CfnOutput, Duration, Stack, StackProps } from 'aws-cdk-lib';
+import { CfnOutput, Duration, Stack, StackProps, Fn } from 'aws-cdk-lib';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as s3 from 'aws-cdk-lib/aws-s3';
@@ -12,51 +12,6 @@ export class DatatransformStack extends Stack {
     super(scope, id, props);
     const ENV = this.node.tryGetContext("ENV");
 
-
-    const auroraCluster = new rds.ServerlessCluster(this, 'AuroraCluster', {
-      engine: rds.DatabaseClusterEngine.AURORA_POSTGRESQL,
-      parameterGroup: rds.ParameterGroup.fromParameterGroupName(this, 'ParameterGroup', 'default.aurora-postgresql10'),
-      credentials: { username: 'clusteradmin' },
-      clusterIdentifier: 'aurora-cluster',
-      defaultDatabaseName: 'auroraTestDB',
-      enableDataApi: true,
-      scaling: {
-          autoPause: Duration.minutes(10), // default is to pause after 5 minutes of idle time
-          minCapacity: rds.AuroraCapacityUnit.ACU_2, // default is 2 Aurora capacity units (ACUs)
-          maxCapacity: rds.AuroraCapacityUnit.ACU_8, // default is 16 Aurora capacity units (ACUs)
-      }
-    });
-
-
-    const initDbLambda = new lambda.Function(this, "KompetanseAuroraInitDb", {
-        code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/initDb")),
-        functionName: "KompetanseAuroraInitDb",
-        handler: "index.handler",
-        runtime: lambda.Runtime.PYTHON_3_9,
-        timeout: Duration.seconds(25),
-        environment: { 
-            DATABASE_ARN: auroraCluster.clusterArn,
-            SECRET_ARN: auroraCluster.secret?.secretArn || "",
-            DATABASE_NAME: "auroraTestDB",
-        },
-    });
-    auroraCluster.grantDataApiAccess(initDbLambda);
-
-      
-    // construct arn from available information
-    const account  = props?.env?.account;
-    const region = props?.env?.region;
-    const auroraArn = `arn:aws:rds:${region}:${account}:cluster:${auroraCluster.clusterArn}`;
-
-    const deploymentStage = "aurora-cluster-id-dev";
-      
-    new CfnOutput(this, 'AuroraClusterArn', {
-      exportName: `${deploymentStage}`,
-      value: auroraArn
-    });
-
-
-    ///START
     const transformedDataBucket = new s3.Bucket(this, "transformedDataBucket", {});
 
     const transformDataPolicyStatment = new iam.PolicyStatement({
@@ -69,6 +24,9 @@ export class DatatransformStack extends Stack {
         layerVersionArn:"arn:aws:lambda:eu-central-1:770693421928:layer:Klayers-p39-pandas:6"
     })
 
+    // Fetch aurora arns
+    const clusterArn = Fn.importValue("AuroraClusterArn");
+    const secretArn= Fn.importValue("AuroraSecretArn");
 
     // 👇 define the Lambda
     const transformDataFunction = new lambda.Function(this, "TransformData", {
@@ -99,8 +57,8 @@ export class DatatransformStack extends Stack {
       environment : {
         ENV:ENV,
         TRANSFORMED_DATA_BUCKET: transformedDataBucket.bucketName,
-        DATABASE_ARN: auroraCluster.clusterArn,
-        SECRET_ARN: auroraCluster.secret?.secretArn || "",
+        DATABASE_ARN: clusterArn,
+        SECRET_ARN: secretArn,
         DATABASE_NAME: "auroraTestDB",
       },
       timeout: Duration.seconds(25),
@@ -119,7 +77,7 @@ export class DatatransformStack extends Stack {
       }),
     )
 
-    auroraCluster.grantDataApiAccess(insertDataFunction);
+    //auroraCluster.grantDataApiAccess(insertDataFunction);
 
 
   }
