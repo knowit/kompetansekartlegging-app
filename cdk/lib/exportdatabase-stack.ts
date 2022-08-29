@@ -14,6 +14,9 @@ import { Construct } from 'constructs';
 import * as path from "path";
 import { AppSyncTransformer } from 'cdk-appsync-transformer';
 import { BlockPublicAccess } from 'aws-cdk-lib/aws-s3';
+import { TaskStateBase } from 'aws-cdk-lib/aws-stepfunctions';
+import { AwsCustomResource, AwsCustomResourcePolicy, PhysicalResourceId } from 'aws-cdk-lib/custom-resources';
+import { CdkTransformer } from 'cdk-appsync-transformer/lib/transformer';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class ExportDatabaseStack extends Stack {
@@ -45,7 +48,7 @@ export class ExportDatabaseStack extends Stack {
         ]
       });
 
-      //lambda function. kommentar til meg selv: change stuff
+      //lambda function
       const exportDataLambda = new lambda.Function(this, "ExportData", {
         code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/exportData")),
         runtime: lambda.Runtime.PYTHON_3_9,
@@ -69,8 +72,33 @@ export class ExportDatabaseStack extends Stack {
             "arn:aws:s3:::*",
             "arn:aws:dynamodb:*"
         ]
-      }));
+      }));   
 
-   
+      const lambdaTrigger = new AwsCustomResource(this, "ExportDataTrigger", {
+        policy: AwsCustomResourcePolicy.fromStatements([new iam.PolicyStatement({
+          actions: ["lambda:InvokeFunction"],
+          effect: iam.Effect.ALLOW,
+          resources: [exportDataLambda.functionArn]
+
+        })]),
+        onCreate: {
+          service: "Lambda",
+          action: "invoke",
+          parameters: {
+            FunctionName: exportDataLambda.functionName,
+            InvocationType: "Event"
+          },
+          physicalResourceId: PhysicalResourceId.of("ExportDataTriggerId")
+        },
+        onUpdate: {
+          service: "Lambda",
+          action: "invoke",
+          parameters: {
+            FunctionName: exportDataLambda.functionName,
+            InvocationType: "event"
+          },
+          physicalResourceId: PhysicalResourceId.of("ExportDataTriggerId")
+        } 
+      })
   }
 }
