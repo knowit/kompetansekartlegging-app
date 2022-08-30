@@ -119,7 +119,7 @@ export class DatatransformStack extends Stack {
       }),
     )
 
-    auroraCluster.grantDataApiAccess(insertDataFunction);
+    auroraCluster.grantDataApiAccess(insertDataFunction)
 
 
   }
