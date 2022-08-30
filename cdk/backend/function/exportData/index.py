@@ -11,14 +11,22 @@ sourceName = environ.get("SOURCE_NAME")
 
 tableNames = []
 
-formDefTableName = f"FormDefinition-{sourceName}-{env}"
-categoryTableName = f"Category-{sourceName}-{env}"
-questionTableName = f"Question-{sourceName}-{env}"
-userFormTableName = f"UserForm-{sourceName}-{env}"
-questionAnswerTableName = f"QuestionAnswer-{sourceName}-{env}"
+def getFileName(name):
+    return f"{name}-{sourceName}-{env}"
+
+formDefTableName = getFileName("FormDefinition")
+categoryTableName = getFileName("Category")
+questionTableName = getFileName("Question")
+userFormTableName = getFileName("UserForm")
+questionAnswerTableName = getFileName("QuestionAnswer")
+apiKeyPermissionTableName = getFileName("APIKeyPermission")
+groupTableName = getFileName("Group")
+organizationTableName = getFileName("Organization")
+userTableName = getFileName("User")
+
 
 tableNames.extend([formDefTableName, categoryTableName, questionTableName,
-userFormTableName, questionAnswerTableName])
+userFormTableName, questionAnswerTableName, apiKeyPermissionTableName, groupTableName, organizationTableName, userTableName])
 
 formDefTable = dynamodb_resource.Table(formDefTableName)
 
@@ -59,12 +67,3 @@ def save_to_csv(table):
             writer.writerow(item.values())
 
     return filename
-
-
-
-
-        
-        
-    
-
-    print("EXPORT COMPLETED!")

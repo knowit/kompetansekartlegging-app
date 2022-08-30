@@ -1,11 +1,10 @@
 import boto3
-import csv
 from os import environ
 import pandas as pd
 from io import StringIO
 
 s3Resource = boto3.resource("s3")
-s3BucketFrom = "testbucketmarjar2"
+s3BucketFrom = environ.get("EXPORT_BUCKET")
 s3BucketTo = environ.get("TRANSFORMED_DATA_BUCKET")
 s3 = boto3.resource("s3")
 
