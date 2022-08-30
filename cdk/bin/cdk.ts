@@ -27,6 +27,14 @@ new KompetanseStack(app, `KompetanseStack-${ENV}`, {
 })
 
 new ExportDatabaseStack(app, `ExportDatabaseStack-${ENV}`, {})
+
+const auroraStack = new AuroraStack(app, `AuroraStack-${ENV}`, {})
+
+new DatatransformStack(app, `Datatransformstack-${ENV}`, {
+  cluster: auroraStack.auroraCluster,
+})
+
+new ExportDatabaseStack(app, `ExportDatabaseStack-${ENV}`, {})
 new AuroraStack(app, `AuroraStack-${ENV}`, {
   env: {
     account: process.env.CDK_DEFAULT_ACCOUNT,

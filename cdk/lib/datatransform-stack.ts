@@ -7,8 +7,12 @@ import * as path from "path";
 import * as rds from 'aws-cdk-lib/aws-rds';
 // import * as sqs from 'aws-cdk-lib/aws-sqs'
 
+interface DatatransformStackProps extends StackProps {
+  cluster: rds.ServerlessCluster;
+}
+
 export class DatatransformStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
+  constructor(scope: Construct, id: string, props: DatatransformStackProps) {
     super(scope, id, props);
     const ENV = this.node.tryGetContext("ENV");
 
@@ -24,9 +28,8 @@ export class DatatransformStack extends Stack {
         layerVersionArn:"arn:aws:lambda:eu-central-1:770693421928:layer:Klayers-p39-pandas:6"
     })
 
-    // Fetch aurora arns
-    const clusterArn = Fn.importValue("AuroraClusterArn");
-    const secretArn= Fn.importValue("AuroraSecretArn");
+    // Fetch aurora cluster
+    const cluster: rds.ServerlessCluster = props.cluster;
 
     // 👇 define the Lambda
     const transformDataFunction = new lambda.Function(this, "TransformData", {
@@ -57,8 +60,8 @@ export class DatatransformStack extends Stack {
       environment : {
         ENV:ENV,
         TRANSFORMED_DATA_BUCKET: transformedDataBucket.bucketName,
-        DATABASE_ARN: clusterArn,
-        SECRET_ARN: secretArn,
+        DATABASE_ARN: cluster.clusterArn,
+        SECRET_ARN: cluster.secret!.secretArn,
         DATABASE_NAME: "auroraTestDB",
       },
       timeout: Duration.seconds(25),
@@ -77,8 +80,6 @@ export class DatatransformStack extends Stack {
       }),
     )
 
-    //auroraCluster.grantDataApiAccess(insertDataFunction);
-
-
+    cluster.grantDataApiAccess(insertDataFunction);
   }
 }
