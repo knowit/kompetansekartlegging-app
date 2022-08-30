@@ -74,6 +74,5 @@ CREATE TABLE IF NOT EXISTS "user"(
     groupID UUID NOT NULL references "group"(id),
     organizationID VARCHAR(255) NOT NULL references organization(id)
 );
-
 ALTER TABLE "group"
 ADD groupLeaderUsername VARCHAR(255) NOT NULL references "user"(id);
