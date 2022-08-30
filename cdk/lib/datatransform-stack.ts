@@ -13,7 +13,7 @@ export class DatatransformStack extends Stack {
     const ENV = this.node.tryGetContext("ENV");
 
 
-    const auroraCluster = new rds.ServerlessCluster(this, 'AuroraCluster', {
+    const auroraCluster = new rds.ServerlessCluster(this, 'AuroraCluster2', {
       engine: rds.DatabaseClusterEngine.AURORA_POSTGRESQL,
       parameterGroup: rds.ParameterGroup.fromParameterGroupName(this, 'ParameterGroup', 'default.aurora-postgresql10'),
       credentials: { username: 'clusteradmin' },

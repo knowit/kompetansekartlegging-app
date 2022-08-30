@@ -2,7 +2,7 @@
 -- Oppretter dersom det ikke eksisterer fra før av
 
 CREATE TABLE IF NOT EXISTS apiKeyPermission(
-    id INTEGER PRIMARY KEY NOT NULL,
+    id VARCHAR(255) PRIMARY KEY NOT NULL,
     APIKeyHashed VARCHAR(255) NOT NULL,
     organizationID VARCHAR(255) NOT NULL
 );
@@ -16,29 +16,29 @@ CREATE TABLE IF NOT EXISTS organization(
 );
 
 CREATE TABLE IF NOT EXISTS formDefinition(
-    id INTEGER PRIMARY KEY NOT NULL,
+    id VARCHAR(255) PRIMARY KEY NOT NULL,
     label VARCHAR(255),
     createdAt TIMESTAMPTZ NOT NULL,
     updatedAt TIMESTAMPTZ,
     sortKeyConstant VARCHAR(255) NOT NULL,
-    organizationID INTEGER NOT NULL references organization(id)
+    organizationID VARCHAR(255) NOT NULL references organization(id)
 );
 
 CREATE TABLE IF NOT EXISTS userForm(
-    id INTEGER PRIMARY KEY NOT NULL,
+    id VARCHAR(255) PRIMARY KEY NOT NULL,
     createdAt TIMESTAMPTZ NOT NULL,
     updatedAt TIMESTAMPTZ,
     owner VARCHAR(255),
-    formDefinitionID INTEGER NOT NULL references formDefinition(id)
+    formDefinitionID VARCHAR(255) NOT NULL references formDefinition(id)
 );
 
 CREATE TABLE IF NOT EXISTS category(
-    id INTEGER PRIMARY KEY NOT NULL,
+    id VARCHAR(255) PRIMARY KEY NOT NULL,
     text VARCHAR(255) NOT NULL,
     description TEXT,
     index INTEGER,
-    formDefinitionID INTEGER NOT NULL references formDefinition(id),
-    organizationID INTEGER NOT NULL references organization(id)
+    formDefinitionID VARCHAR(255) NOT NULL references formDefinition(id),
+    organizationID VARCHAR(255) NOT NULL references organization(id)
 );
 
 DO $$ BEGIN
@@ -52,23 +52,23 @@ EXCEPTION
 END $$;
 
 CREATE TABLE IF NOT EXISTS question(
-    id INTEGER PRIMARY KEY NOT NULL,
+    id VARCHAR(255) PRIMARY KEY NOT NULL,
     text VARCHAR(255) NOT NULL,
     topic VARCHAR(255) NOT NULL,
     index INTEGER,
-    formDefinitionID INTEGER NOT NULL references formDefinition(id),
-    categoryID INTEGER NOT NULL references category(id),
+    formDefinitionID VARCHAR(255) NOT NULL references formDefinition(id),
+    categoryID VARCHAR(255) NOT NULL references category(id),
     type questionType,
     scaleStart VARCHAR(255),
     scaleMiddle VARCHAR(255),
     scaleEnd VARCHAR(255),
-    organizationID INTEGER NOT NULL references organization(id)
+    organizationID VARCHAR(255) NOT NULL references organization(id)
 );
 
 CREATE TABLE IF NOT EXISTS questionAnswer(
-    id INTEGER PRIMARY KEY NOT NULL,
-    userFormID INTEGER NOT NULL references userForm(id),
-    questionID INTEGER NOT NULL references question(id),
+    id VARCHAR(255) PRIMARY KEY NOT NULL,
+    userFormID VARCHAR(255) NOT NULL references userForm(id),
+    questionID VARCHAR(255) NOT NULL references question(id),
     knowledge REAL,
     motivation REAL,
     customScaleValue REAL,
@@ -76,13 +76,13 @@ CREATE TABLE IF NOT EXISTS questionAnswer(
 );
 
 CREATE TABLE IF NOT EXISTS "group"(
-    id INTEGER PRIMARY KEY NOT NULL,
-    groupLeaderUsername VARCHAR(255) NOT NULL,
-    organizationID INTEGER NOT NULL references organization(id)
+    id VARCHAR(255) PRIMARY KEY NOT NULL,
+    groupLeaderUsername VARCHAR(255) NOT NULL references "user"(id),
+    organizationID VARCHAR(255) NOT NULL references organization(id)
 );
 
 CREATE TABLE IF NOT EXISTS "user"(
-    id INTEGER PRIMARY KEY NOT NULL,
+    id VARCHAR(255) PRIMARY KEY NOT NULL,
     groupID INTEGER NOT NULL references "group"(id),
-    organizationID INTEGER NOT NULL references organization(id)
+    organizationID VARCHAR(255) NOT NULL references organization(id)
 );
