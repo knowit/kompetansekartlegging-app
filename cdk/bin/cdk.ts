@@ -4,7 +4,7 @@ import * as cdk from 'aws-cdk-lib';
 import { KompetanseStack } from '../lib/kompetanse-stack';
 import { ExportDatabaseStack } from '../lib/exportdatabase-stack'
 import { AuroraStack } from '../lib/aurora-stack';
-import {DatatransformStack} from '../lib/datatransform-stack';
+import { DatatransformStack } from '../lib/datatransform-stack';
 
 const app = new cdk.App();
 const ENV = app.node.tryGetContext("ENV")
@@ -30,7 +30,9 @@ new KompetanseStack(app, `KompetanseStack-${ENV}`, {
 
 new ExportDatabaseStack(app, `ExportDatabaseStack-${ENV}`, {});
 
-new AuroraStack(app, `AuroraStack-${ENV}`, {});
+const auroraStack = new AuroraStack(app, `AuroraStack-${ENV}`, {});
 
-new DatatransformStack(app, `Datatransformstack-${ENV}`, {});
+new DatatransformStack(app, `Datatransformstack-${ENV}`, {
+  cluster: auroraStack.auroraCluster,
+} );
 

@@ -1,14 +1,16 @@
-import { CfnOutput, Stack, StackProps, Duration } from 'aws-cdk-lib';
+import { CfnOutput, Stack, StackProps, Duration, Fn } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as rds from 'aws-cdk-lib/aws-rds';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as path from "path";
 
 export class AuroraStack extends Stack {
+  public readonly auroraCluster: rds.ServerlessCluster;
+
   constructor(scope: Construct, id: string, props: StackProps) {
     super(scope, id, props);
 
-    const auroraCluster = new rds.ServerlessCluster(this, 'AuroraCluster', {
+      this.auroraCluster = new rds.ServerlessCluster(this, 'AuroraCluster', {
         engine: rds.DatabaseClusterEngine.AURORA_POSTGRESQL,
         parameterGroup: rds.ParameterGroup.fromParameterGroupName(this, 'ParameterGroup', 'default.aurora-postgresql10'),
         credentials: { username: 'clusteradmin' },
@@ -21,7 +23,6 @@ export class AuroraStack extends Stack {
             maxCapacity: rds.AuroraCapacityUnit.ACU_8, // default is 16 Aurora capacity units (ACUs)
         }
     });
-
   
     const initializeDB = new lambda.Function(this, "KompetanseAuroraInitDb", {
         code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/initDb")),
@@ -30,26 +31,25 @@ export class AuroraStack extends Stack {
         runtime: lambda.Runtime.PYTHON_3_9,
         timeout: Duration.seconds(25),
         environment: { 
-            DATABASE_ARN: auroraCluster.clusterArn,
-            SECRET_ARN: auroraCluster.secret!.secretArn,
+            DATABASE_ARN: this.auroraCluster.clusterArn,
+            SECRET_ARN: this.auroraCluster.secret!.secretArn,
             DATABASE_NAME: "auroraTestDB",
         },
     });
-    auroraCluster.grantDataApiAccess(initializeDB);
-
+    this.auroraCluster.grantDataApiAccess(initializeDB);
     
     // Outputs
      
     new CfnOutput(this, 'AuroraClusterArn', {
-      value: auroraCluster.clusterArn
+      value: this.auroraCluster.clusterArn
     }); 
 
     new CfnOutput(this, 'AuroraSecretArn', {
-      value: auroraCluster.secret!.secretArn
+      value: this.auroraCluster.secret!.secretArn
     }); 
 
     new CfnOutput(this, 'initDbFunctionName', {
       value: initializeDB.functionName
-    })
+    });
   }
 }
