@@ -59,7 +59,6 @@ def save_to_csv(table):
         header = True   
 
         for item in data:
-            # Write header row?
             if header:
                 writer.writerow(item.keys())
                 header = False

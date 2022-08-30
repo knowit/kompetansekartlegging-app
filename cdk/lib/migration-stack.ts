@@ -119,7 +119,8 @@ export class MigrationStack extends Stack {
         environment:  {
             ENV:ENV,
             TRANSFORMED_DATA_BUCKET: transformedDataBucket.bucketName,
-            EXPORT_BUCKET: exportToDataBucket.bucketName
+            EXPORT_BUCKET: exportToDataBucket.bucketName,
+            SOURCE_NAME: "KompetanseStack"
         },
         timeout: Duration.seconds(25),
         layers: [pandasLayer]
