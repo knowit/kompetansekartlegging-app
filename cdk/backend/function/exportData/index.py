@@ -53,6 +53,7 @@ def save_to_csv(table):
     dynamodb_table = dynamodb_resource.Table(table)
     filename = f"/tmp/{table}.csv" 
     data = scan_table(dynamodb_table)   
+    allKeys = findAllUniqueKeys(data)
     
     with open(filename, 'w') as output_file:
         writer = csv.writer(output_file)
@@ -60,9 +61,27 @@ def save_to_csv(table):
 
         for item in data:
             if header:
-                writer.writerow(item.keys())
+                writer.writerow(allKeys)
                 header = False
-
-            writer.writerow(item.values())
-
+            
+            values = fillInEmptyValues(item, allKeys)
+            writer.writerow(values)
+        
     return filename
+    
+def findAllUniqueKeys(items):
+    keys = []
+    for item in items:
+        keys.extend(item.keys())
+    keysSet = set(keys)
+    keys = list(keysSet)
+    
+    return keys
+    
+def fillInEmptyValues(item, allKeys):
+    values = []
+    for key in allKeys:
+        value = item.get(key, None)
+        values.append(value)
+    
+    return values
