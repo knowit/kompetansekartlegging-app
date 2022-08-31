@@ -14,17 +14,22 @@ dbClient = boto3.client("rds-data")
 dbARN = environ.get("DATABASE_ARN")
 secretARN = environ.get("SECRET_ARN")
 dbName = environ.get("DATABASE_NAME")
+env = environ.get("ENV")
+sourceName = environ.get("SOURCE_NAME")
+
+def getFileName(name):
+    return f"transformed-{name}-{sourceName}-{env}.csv"
 
 def handler(event, context):
-    excuteInsert(organisationSQL, "transformed-organization.csv")
-    excuteInsert(apiKeyPermissionSQL, "transformed-APIKeyPermission.csv")
-    excuteInsert(formDefinitionSQL, "transformed-formDefinition.csv")
-    excuteInsert(categorySQL, "transformed-category.csv")
-    excuteInsert(groupSQL, "transformed-group.csv")
-    excuteInsert(userSQL, "transformed-user.csv")
-    excuteInsert(questionSQL, "transformed-question.csv")
-    excuteInsert(questionAnswerSQL, "transformed-questionAnswer.csv")
-    excuteInsert(userFormSQL, "transformed-userForm.csv")
+    excuteInsert(organisationSQL, getFileName("Organization"))
+    excuteInsert(apiKeyPermissionSQL, getFileName("APIKeyPermission"))
+    excuteInsert(formDefinitionSQL, getFileName("FormDefinition"))
+    excuteInsert(categorySQL, getFileName("Category"))
+    excuteInsert(groupSQL, getFileName("Group"))
+    excuteInsert(userSQL, getFileName("User"))
+    excuteInsert(questionSQL, getFileName("Question"))
+    excuteInsert(questionAnswerSQL, getFileName("QuestionAnswer"))
+    excuteInsert(userFormSQL, getFileName("UserForm"))
 
 def excuteInsert(sqlTextFunction, fileName):
     file = getPandasCSVFile(fileName)

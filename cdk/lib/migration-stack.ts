@@ -144,6 +144,7 @@ export class MigrationStack extends Stack {
         DATABASE_ARN: cluster.clusterArn,
         SECRET_ARN: cluster.secret!.secretArn,
         DATABASE_NAME: "auroraTestDB",
+        SOURCE_NAME: "KompetanseStack",
       },
       timeout: Duration.seconds(25),
       layers: [pandasLayer]
