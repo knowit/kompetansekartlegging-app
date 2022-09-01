@@ -31,7 +31,7 @@ Cypress.Commands.add("fillInn", (x) => {
         cy.get("@sliders")
             .eq(j)
             .children('[data-index="' + i + '"' + "]")
-            .click({ force: true, multiple: true }).pause();
+            .click({ force: true, multiple: true });
     }
 });
 
