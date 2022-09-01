@@ -9,10 +9,13 @@ s3BucketTo = environ.get("TRANSFORMED_DATA_BUCKET")
 env = environ.get("ENV")
 sourceName = environ.get("SOURCE_NAME")
 s3 = boto3.resource("s3")
+lambda_client = boto3.client('lambda')
+triggerFunctionName = environ.get("TRIGGER_FUNCTION")
+
 
 def handler(event, context):
     transform("Organization",appendEmptyColumnsNames=["owner"])
-    transform("Users")
+    transform("User")
     transform("APIKeyPermission")
     transform("Category")
     transform("FormDefinition", removeColumns=["sortKeyConstant"])
@@ -20,6 +23,9 @@ def handler(event, context):
     transform("Question", removeColumns=["qid"]) #what is qid, is either empty or marked with <empty> on dynamoDB
     transform("QuestionAnswer")
     transform("UserForm")
+
+    lambda_client.invoke(FunctionName=triggerFunctionName, 
+                     InvocationType='Event')
 
 def getFileName(name):
     return f"{name}-{sourceName}-{env}.csv"
