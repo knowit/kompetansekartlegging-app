@@ -26,7 +26,6 @@ groupTableName = getFileName("Group")
 organizationTableName = getFileName("Organization")
 userTableName = getFileName("User")
 
-
 tableNames.extend([formDefTableName, categoryTableName, questionTableName,
 userFormTableName, questionAnswerTableName, apiKeyPermissionTableName, groupTableName, organizationTableName, userTableName])
 
