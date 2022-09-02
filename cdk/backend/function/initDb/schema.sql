@@ -1,11 +1,6 @@
 -- Tabeller for Kompetansekartlegging
 -- Oppretter dersom det ikke eksisterer fra før av
 
-CREATE TABLE IF NOT EXISTS apiKeyPermission(
-    id VARCHAR(255) PRIMARY KEY NOT NULL,
-    APIKeyHashed VARCHAR(255) NOT NULL,
-    organizationID VARCHAR(255) NOT NULL
-);
 
 CREATE TABLE IF NOT EXISTS organization(
     id VARCHAR(255) PRIMARY KEY NOT NULL,
@@ -15,12 +10,17 @@ CREATE TABLE IF NOT EXISTS organization(
     identifierAttribute VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS apiKeyPermission(
+    id VARCHAR(255) PRIMARY KEY NOT NULL,
+    APIKeyHashed VARCHAR(255) NOT NULL,
+    organizationID VARCHAR(255) NOT NULL references organization(id);
+);
+
 CREATE TABLE IF NOT EXISTS formDefinition(
     id UUID PRIMARY KEY NOT NULL,
     label VARCHAR(255),
     createdAt TIMESTAMPTZ NOT NULL,
     updatedAt TIMESTAMPTZ,
-    sortKeyConstant VARCHAR(255) NOT NULL,
     organizationID VARCHAR(255) NOT NULL references organization(id)
 );
 
@@ -53,7 +53,7 @@ END $$;
 
 CREATE TABLE IF NOT EXISTS question(
     id UUID PRIMARY KEY NOT NULL,
-    text VARCHAR(255) NOT NULL,
+    text TEXT,
     topic VARCHAR(255) NOT NULL,
     index INTEGER,
     formDefinitionID UUID NOT NULL references formDefinition(id),
@@ -77,7 +77,8 @@ CREATE TABLE IF NOT EXISTS questionAnswer(
 
 CREATE TABLE IF NOT EXISTS "group"(
     id UUID PRIMARY KEY NOT NULL,
-    organizationID VARCHAR(255) NOT NULL references organization(id)
+    organizationID VARCHAR(255) NOT NULL references organization(id),
+    groupLeaderUsername VARCHAR(255) NOT NULL 
 );
 
 CREATE TABLE IF NOT EXISTS "user"(
@@ -85,6 +86,3 @@ CREATE TABLE IF NOT EXISTS "user"(
     groupID UUID NOT NULL references "group"(id),
     organizationID VARCHAR(255) NOT NULL references organization(id)
 );
-
-ALTER TABLE "group"
-ADD groupLeaderUsername VARCHAR(255) NOT NULL references "user"(id);

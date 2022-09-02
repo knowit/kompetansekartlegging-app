@@ -12,13 +12,13 @@ s3 = boto3.resource("s3")
 
 def handler(event, context):
     transform("Organization",appendEmptyColumnsNames=["owner"])
-    transform("Users")
+    transform("User")
     transform("APIKeyPermission")
     transform("Category")
     transform("FormDefinition", removeColumns=["sortKeyConstant"])
     transform("Group")
     transform("Question", removeColumns=["qid"]) #what is qid, is either empty or marked with <empty> on dynamoDB
-    transform("QuestionAnswer")
+    transform("QuestionAnswer", appendEmptyColumnsNames=["textValue"])
     transform("UserForm")
 
 def getFileName(name):
