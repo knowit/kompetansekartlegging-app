@@ -67,4 +67,4 @@ __pycache__
 
 *.xlsx
 
-../.idea/
+.idea
