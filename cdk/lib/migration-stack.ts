@@ -123,7 +123,8 @@ export class MigrationStack extends Stack {
             SOURCE_NAME: "KompetanseStack"
         },
         timeout: Duration.seconds(25),
-        layers: [pandasLayer]
+        layers: [pandasLayer],
+        memorySize: 2048
       });
       
     // 👇 add the policy to the Function's role
@@ -146,8 +147,9 @@ export class MigrationStack extends Stack {
         DATABASE_NAME: "auroraTestDB",
         SOURCE_NAME: "KompetanseStack",
       },
-      timeout: Duration.seconds(25),
-      layers: [pandasLayer]
+      timeout: Duration.seconds(65),
+      layers: [pandasLayer],
+      memorySize: 2048
     })
 
     const insertDataPolicyStatment = new iam.PolicyStatement({

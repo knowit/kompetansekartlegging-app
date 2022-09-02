@@ -17,7 +17,6 @@ CREATE TABLE IF NOT EXISTS formDefinition(
     label VARCHAR(255),
     createdAt TIMESTAMPTZ NOT NULL,
     updatedAt TIMESTAMPTZ,
-    sortKeyConstant VARCHAR(255) NOT NULL,
     organizationID VARCHAR(255) NOT NULL references organization(id)
 );
 CREATE TABLE IF NOT EXISTS userForm(
@@ -45,7 +44,7 @@ WHEN duplicate_object THEN null;
 END $$;
 CREATE TABLE IF NOT EXISTS question(
     id UUID PRIMARY KEY NOT NULL,
-    text VARCHAR(255) NOT NULL,
+    text TEXT,
     topic VARCHAR(255) NOT NULL,
     index INTEGER,
     formDefinitionID UUID NOT NULL references formDefinition(id),
@@ -67,7 +66,8 @@ CREATE TABLE IF NOT EXISTS questionAnswer(
 );
 CREATE TABLE IF NOT EXISTS "group"(
     id UUID PRIMARY KEY NOT NULL,
-    organizationID VARCHAR(255) NOT NULL references organization(id)
+    organizationID VARCHAR(255) NOT NULL references organization(id),
+    groupLeaderUsername VARCHAR(255) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS "user"(
     id VARCHAR(255) PRIMARY KEY NOT NULL,
