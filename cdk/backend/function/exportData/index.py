@@ -5,9 +5,11 @@ import json
 
 s3_client = boto3.client('s3')
 dynamodb_resource = boto3.resource('dynamodb')
+lambda_client = boto3.client('lambda')
 
 env = environ.get("ENV")
 sourceName = environ.get("SOURCE_NAME")
+triggerFunctionName = environ.get("TRIGGER_FUNCTION")
 
 tableNames = []
 
@@ -24,7 +26,6 @@ groupTableName = getFileName("Group")
 organizationTableName = getFileName("Organization")
 userTableName = getFileName("User")
 
-
 tableNames.extend([formDefTableName, categoryTableName, questionTableName,
 userFormTableName, questionAnswerTableName, apiKeyPermissionTableName, groupTableName, organizationTableName, userTableName])
 
@@ -38,6 +39,11 @@ def handler(event, context):
         TEMP_FILENAME=save_to_csv(table)
         OUTPUT_KEY = f"{table}.csv"
         s3_client.put_object(Bucket=OUTPUT_BUCKET, Key=OUTPUT_KEY, Body=open(TEMP_FILENAME, 'rb')) 
+    
+    lambda_client.invoke(FunctionName=triggerFunctionName, 
+                     InvocationType='Event')
+
+    
 
 def scan_table(table):
     response = table.scan()

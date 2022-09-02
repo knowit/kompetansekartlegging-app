@@ -22,25 +22,86 @@ export class MigrationStack extends Stack {
         blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
     });
 
-    //access 
-    const exportDataPolicy = new iam.PolicyStatement({
+
+    const transformedDataBucket = new s3.Bucket(this, "transformedDataBucket", {});
+
+    const pandasLayer = lambda.LayerVersion.fromLayerVersionAttributes(this, "PandasLayer", {
+      layerVersionArn:"arn:aws:lambda:eu-central-1:770693421928:layer:Klayers-p39-pandas:6"
+  })
+
+    // Fetch aurora cluster
+    const cluster: rds.ServerlessCluster = props.cluster;
+
+
+    const insertDataFunction = new lambda.Function(this, "InsertData", {
+      code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/insertData")),
+      functionName: "InsertData",
+      handler: "index.handler",
+      runtime: lambda.Runtime.PYTHON_3_9,
+      environment : {
+        ENV:ENV,
+        TRANSFORMED_DATA_BUCKET: transformedDataBucket.bucketName,
+        DATABASE_ARN: cluster.clusterArn,
+        SECRET_ARN: cluster.secret!.secretArn,
+        DATABASE_NAME: "auroraTestDB",
+        SOURCE_NAME: "KompetanseStack",
+      },
+      timeout: Duration.seconds(25),
+      layers: [pandasLayer],
+      memorySize:2048
+
+    })
+
+    const insertDataPolicyStatment = new iam.PolicyStatement({
+      actions: ["s3:*", "rds:*"],
+      effect: iam.Effect.ALLOW,
+      resources: ['arn:aws:s3:::*', transformedDataBucket.bucketArn, `${transformedDataBucket.bucketArn}/*`]
+    });
+
+    insertDataFunction.role?.attachInlinePolicy(
+      new iam.Policy(this, 'insert-data-buckets-policy', {
+        statements: [insertDataPolicyStatment],
+      }),
+    )
+
+    cluster.grantDataApiAccess(insertDataFunction);
+
+
+    const transformDataPolicyStatment = new iam.PolicyStatement({
         actions: [
           "s3:*",
-          "dynamodb:Get*",
-          "dynamodb:BatchGetItem",
-          "dynamodb:List*",
-          "dynamodb:Describe*",
-          "dynamodb:Scan",
-          "dynamodb:Query"
-        ],
+          "lambda:InvokeFunction"],
         effect: iam.Effect.ALLOW,
-        resources: [
-            "arn:aws:s3:::*",
-            "arn:aws:dynamodb:*",
-            exportToDataBucket.bucketArn,
-            `${exportToDataBucket.bucketArn}/*`
-        ]
+        resources: ['arn:aws:s3:::*', "arn:aws:lambda:*",
+        transformedDataBucket.bucketArn, `${transformedDataBucket.bucketArn}/*`]
       });
+
+
+    // 👇 define the Lambda
+    const transformDataFunction = new lambda.Function(this, "TransformData", {
+        code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/transformData")),
+        functionName: "TransformData",
+        handler: "index.handler",
+        runtime: lambda.Runtime.PYTHON_3_9,
+        environment:  {
+            ENV:ENV,
+            TRANSFORMED_DATA_BUCKET: transformedDataBucket.bucketName,
+            EXPORT_BUCKET: exportToDataBucket.bucketName,
+            SOURCE_NAME: "KompetanseStack",
+            TRIGGER_FUNCTION: insertDataFunction.functionName
+        },
+        timeout: Duration.seconds(25),
+        layers: [pandasLayer],
+        memorySize:2048
+
+      });
+      
+    // 👇 add the policy to the Function's role
+    transformDataFunction.role?.attachInlinePolicy(
+      new iam.Policy(this, 'transform-data-buckets-policy', {
+        statements: [transformDataPolicyStatment],
+      }),
+    );
 
       //lambda function
       const exportDataLambda = new lambda.Function(this, "ExportData", {
@@ -51,7 +112,8 @@ export class MigrationStack extends Stack {
         environment:  {
             ENV:ENV,
             SOURCE_NAME: "KompetanseStack",
-            EXPORT_TO_DATA_BUCKET:exportToDataBucket.bucketName
+            EXPORT_TO_DATA_BUCKET:exportToDataBucket.bucketName,
+            TRIGGER_FUNCTION:transformDataFunction.functionName
         },
         memorySize:2048
       });
@@ -60,13 +122,18 @@ export class MigrationStack extends Stack {
         effect: iam.Effect.ALLOW,
         actions: [ 
             "s3:*",
-            "dynamodb:*"
+            "dynamodb:*",
+            "lambda:InvokeFunction"
         ],
         resources: [ 
             "arn:aws:s3:::*",
-            "arn:aws:dynamodb:*"
+            "arn:aws:dynamodb:*",
+            "arn:aws:lambda:*",
+            transformDataFunction.functionArn,
+            `${transformDataFunction.functionArn}/*`
         ]
       }));   
+
 
       const lambdaTrigger = new AwsCustomResource(this, "ExportDataTrigger", {
         policy: AwsCustomResourcePolicy.fromStatements([new iam.PolicyStatement({
@@ -94,76 +161,5 @@ export class MigrationStack extends Stack {
           physicalResourceId: PhysicalResourceId.of("ExportDataTriggerId")
         } 
       })
-
-      const transformedDataBucket = new s3.Bucket(this, "transformedDataBucket", {});
-
-    const transformDataPolicyStatment = new iam.PolicyStatement({
-        actions: ["s3:*"],
-        effect: iam.Effect.ALLOW,
-        resources: ['arn:aws:s3:::*', transformedDataBucket.bucketArn, `${transformedDataBucket.bucketArn}/*`]
-      });
-
-    const pandasLayer = lambda.LayerVersion.fromLayerVersionAttributes(this, "PandasLayer", {
-        layerVersionArn:"arn:aws:lambda:eu-central-1:770693421928:layer:Klayers-p39-pandas:6"
-    })
-
-    // Fetch aurora cluster
-    const cluster: rds.ServerlessCluster = props.cluster;
-
-    // 👇 define the Lambda
-    const transformDataFunction = new lambda.Function(this, "TransformData", {
-        code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/transformData")),
-        functionName: "TransformData",
-        handler: "index.handler",
-        runtime: lambda.Runtime.PYTHON_3_9,
-        environment:  {
-            ENV:ENV,
-            TRANSFORMED_DATA_BUCKET: transformedDataBucket.bucketName,
-            EXPORT_BUCKET: exportToDataBucket.bucketName,
-            SOURCE_NAME: "KompetanseStack"
-        },
-        timeout: Duration.seconds(25),
-        layers: [pandasLayer],
-        memorySize: 2048
-      });
-      
-    // 👇 add the policy to the Function's role
-    transformDataFunction.role?.attachInlinePolicy(
-      new iam.Policy(this, 'transform-data-buckets-policy', {
-        statements: [transformDataPolicyStatment],
-      }),
-    );
-
-    const insertDataFunction = new lambda.Function(this, "InsertData", {
-      code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/insertData")),
-      functionName: "InsertData",
-      handler: "index.handler",
-      runtime: lambda.Runtime.PYTHON_3_9,
-      environment : {
-        ENV:ENV,
-        TRANSFORMED_DATA_BUCKET: transformedDataBucket.bucketName,
-        DATABASE_ARN: cluster.clusterArn,
-        SECRET_ARN: cluster.secret!.secretArn,
-        DATABASE_NAME: "auroraTestDB",
-        SOURCE_NAME: "KompetanseStack",
-      },
-      timeout: Duration.seconds(65),
-      layers: [pandasLayer],
-      memorySize: 2048
-    })
-
-    const insertDataPolicyStatment = new iam.PolicyStatement({
-      actions: ["s3:*", "rds:*"],
-      effect: iam.Effect.ALLOW,
-      resources: ['arn:aws:s3:::*', transformedDataBucket.bucketArn, `${transformedDataBucket.bucketArn}/*`]
-    });
-
-    insertDataFunction.role?.attachInlinePolicy(
-      new iam.Policy(this, 'insert-data-buckets-policy', {
-        statements: [insertDataPolicyStatment],
-      }),
-    )
-
-    cluster.grantDataApiAccess(insertDataFunction);
   }
 }
