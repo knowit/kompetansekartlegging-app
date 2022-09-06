@@ -19,7 +19,7 @@ describe("should add competance", () => {
         cy.wait(1000);
         cy.get(".makeStyles-menu-28").contains("1. Design").click();
         cy.get("button").contains("Fyll ut").click();
-        cy.fillInn(36);
+        cy.fillIn(36);
         cy.clickAndStay();
         cy.get("button").contains("Lagre og gå videre").click();
     });
@@ -27,7 +27,7 @@ describe("should add competance", () => {
         cy.wait(1000);
         cy.get(".makeStyles-menu-28").contains("2. Mobil").click();
         cy.get("button").contains("Fyll ut").click();
-        cy.fillInn(30);
+        cy.fillIn(30);
         cy.clickAndStay();
         cy.get("button").contains("Lagre og gå videre").click();
     });
@@ -35,7 +35,7 @@ describe("should add competance", () => {
         cy.wait(1000);
         cy.get(".makeStyles-menu-28").contains("3. Frontend").click();
         cy.get("button").contains("Fyll ut").click();
-        cy.fillInn(34);
+        cy.fillIn(34);
         cy.clickAndStay();
         cy.get("button").contains("Lagre og gå videre").click();
     });
@@ -43,7 +43,7 @@ describe("should add competance", () => {
         cy.wait(1000);
         cy.get(".makeStyles-menu-28").contains("4. Backend").click();
         cy.get("button").contains("Fyll ut").click();
-        cy.fillInn(38);
+        cy.fillIn(38);
         cy.clickAndStay();
         cy.get("button").contains("Lagre og gå videre").click();
     });
@@ -53,7 +53,7 @@ describe("should add competance", () => {
             .contains("5. AI og Data Engineering")
             .click();
         cy.get("button").contains("Fyll ut").click();
-        cy.fillInn(38);
+        cy.fillIn(38);
         cy.clickAndStay();
         cy.get("button").contains("Lagre og gå videre").click();
     });
@@ -61,7 +61,7 @@ describe("should add competance", () => {
         cy.wait(1000);
         cy.get(".makeStyles-menu-28").contains("6. IoT og Hardware").click();
         cy.get("button").contains("Fyll ut").click();
-        cy.fillInn(34);
+        cy.fillIn(34);
         cy.clickAndStay();
         cy.get("button").contains("Lagre og gå videre").click();
     });
@@ -69,7 +69,7 @@ describe("should add competance", () => {
         cy.wait(1000);
         cy.get(".makeStyles-menu-28").contains("7. Cloud og DevOps").click();
         cy.get("button").contains("Fyll ut").click();
-        cy.fillInn(40);
+        cy.fillIn(40);
         cy.clickAndStay();
         cy.get("button").contains("Lagre og gå videre").click();
     });
@@ -79,7 +79,7 @@ describe("should add competance", () => {
             .contains("8. Smidig metodikk og produktledelse")
             .click();
         cy.get("button").contains("Fyll ut").click();
-        cy.fillInn(30);
+        cy.fillIn(30);
         cy.clickAndStay();
         cy.get("button").contains("Lagre og gå videre").click();
     });
@@ -89,7 +89,7 @@ describe("should add competance", () => {
             .contains("9. Salg og forretningsutvikling")
             .click();
         cy.get("button").contains("Fyll ut").click();
-        cy.fillInn(22);
+        cy.fillIn(22);
         cy.clickAndStay();
         cy.get("button").contains("Lagre og gå videre").click();
     });
@@ -97,7 +97,7 @@ describe("should add competance", () => {
         cy.wait(1000);
         cy.get(".makeStyles-menu-28").contains("10. Jobbrotasjon").click();
         cy.get("button").contains("Fyll ut").click();
-        cy.fillInn(2);
+        cy.fillIn(2);
         cy.clickAndStay();
         cy.get("button").contains("Lagre og gå videre").click();
     });
@@ -105,7 +105,7 @@ describe("should add competance", () => {
         cy.wait(1000);
         cy.get(".makeStyles-menu-28").contains("11. Softskills").click();
         cy.get("button").contains("Fyll ut").click();
-        cy.fillInn(11);
+        cy.fillIn(12);
         cy.clickAndStay();
         cy.get("button").contains("Send inn svar og avslutt").click();
     });

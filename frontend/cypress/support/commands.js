@@ -21,7 +21,7 @@ Cypress.Commands.add("login", () => {
     cy.get("@password").type("{enter}", { force: true });
 });
 
-Cypress.Commands.add("fillInn", (x) => {
+Cypress.Commands.add("fillIn", (x) => {
     const minimum = 0;
     const maximum = 50;
 
