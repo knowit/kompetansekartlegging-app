@@ -107,6 +107,6 @@ describe("should add competance", () => {
         cy.get("button").contains("Fyll ut").click();
         cy.fillIn(12);
         cy.clickAndStay();
-        cy.get("button").contains("Send inn svar og avslutt").click();
+        //cy.get("button").contains("Send inn svar og avslutt").click();
     });
 });

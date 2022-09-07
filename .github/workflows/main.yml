@@ -6,12 +6,17 @@ jobs:
   cypress-run:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout 
         uses: actions/checkout@v2
+        with:
+          ref: cypress
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
-          build: npm run build
+          working-directory: frontend
           start: npm start
+          wait-on: 'http://localhost:3000'
+          command: npx cypress run
+          
