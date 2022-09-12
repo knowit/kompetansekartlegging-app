@@ -18,8 +18,8 @@ jobs:
           wait-on: 'http://localhost:3000'
           command: npx cypress run
           record: true
-        - uses: cypress-io/github-action
-        - uses: actions/upload-artifact@v1
+      - name: Cypress save
+          uses: actions/upload-artifact@v1
           if: always()
           with:
             name: cypress-videos
