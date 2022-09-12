@@ -4,7 +4,7 @@ Cypress.on("uncaught:exception", () => {
     return false;
 });
 
-describe("should add competance", () => {
+describe.skip("should add competance", () => {
     beforeEach(() => {
         cy.visit("/");
         cy.login();
