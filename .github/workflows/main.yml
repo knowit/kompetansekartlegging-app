@@ -19,3 +19,8 @@ jobs:
           start: npm start
           wait-on: 'http://localhost:3000'
           command: npx cypress run
+      - uses: actions/download-artifact@v3
+        with:
+          name: my-artifact
+      - name: Display structure of downloaded files
+        run: ls -R
