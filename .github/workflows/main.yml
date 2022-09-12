@@ -17,4 +17,5 @@ jobs:
         with:
           working-directory: frontend
           start: npm start
-          command: npm run cypress open
+          wait-on: 'http://localhost:3000'
+          command: npm cy:open
