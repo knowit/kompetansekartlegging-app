@@ -10,6 +10,11 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: cypress
+        uses: actions/download-artifact@v3
+        with:
+          name: my-artifact
+      - name: Display structure of downloaded files
+        run: ls -R
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
       - name: Cypress run
@@ -19,8 +24,3 @@ jobs:
           start: npm start
           wait-on: 'http://localhost:3000'
           command: npx cypress run
-      - uses: actions/download-artifact@v3
-        with:
-          name: my-artifact
-      - name: Display structure of downloaded files
-        run: ls -R
