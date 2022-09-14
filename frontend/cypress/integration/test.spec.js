@@ -5,8 +5,8 @@ Cypress.on("uncaught:exception", () => {
 });
 
 it('lflf', () => {
-    cy.visit("https://kompetanse.knowit.no", { timeout: 10000 });
+    cy.visit("http://localhost:3000", { timeout: 10000 });
     cy.wait(5000)
-    cy.get("button").contains("Logg inn").click();
+    cy.get("button").contains("Dev login").click();
 
 })
