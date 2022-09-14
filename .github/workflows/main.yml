@@ -18,9 +18,10 @@ jobs:
           wait-on: 'http://localhost:3000'
           command: npx cypress run
           record: true
-      - name: Save build folder
+      - name: Upload video 📼
         uses: actions/upload-artifact@v2
+        if: always()
         with:
-          name: build
-          if-no-files-found: error
-          path: frontend/cypress
+          name: Test videos
+          path: cypress/videos
+          retention-days: 14
