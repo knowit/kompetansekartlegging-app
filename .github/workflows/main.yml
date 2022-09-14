@@ -21,7 +21,7 @@ jobs:
           record: true
       - name: Upload video 📼
         uses: actions/upload-artifact@v2
-        if: always()
+        if: falure()
         with:
           name: build
           if-no-files-found: error
