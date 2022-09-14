@@ -23,5 +23,5 @@ jobs:
         if: always()
         with:
           name: Test videos
-          path: cypress/videos
+          path: build
           retention-days: 14
