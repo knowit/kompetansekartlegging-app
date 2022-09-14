@@ -6,6 +6,7 @@ Cypress.on("uncaught:exception", () => {
 
 it('lflf', () => {
     cy.visit("http://localhost:3000");
+    cy.wait(3000)
     cy.get("button").contains("Dev login").click();
 
 })
