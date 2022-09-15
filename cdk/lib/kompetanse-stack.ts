@@ -45,34 +45,37 @@ export class KompetanseStack extends Stack {
     const supportedProviders = [];
 
     // Federation Providers
-    const googlePorvider = new cognito.UserPoolIdentityProviderGoogle(this, "Google", {
-      clientId: GOOGLE_ID,
-      clientSecret: GOOGLE_SECRET,
-      userPool: pool,
-      scopes: ["profile", "email", "openid"],
-      attributeMapping: {
-        email: cognito.ProviderAttribute.GOOGLE_EMAIL,
-        fullname: cognito.ProviderAttribute.GOOGLE_NAME,
-        profilePicture: cognito.ProviderAttribute.GOOGLE_PICTURE
-      }
-    })
-    supportedProviders.push({ name: googlePorvider.providerName });
+    if (GOOGLE_SECRET && GOOGLE_ID) {
+      const googlePorvider = new cognito.UserPoolIdentityProviderGoogle(this, "Google", {
+        clientId: GOOGLE_ID,
+        clientSecret: GOOGLE_SECRET,
+        userPool: pool,
+        scopes: ["profile", "email", "openid"],
+        attributeMapping: {
+          email: cognito.ProviderAttribute.GOOGLE_EMAIL,
+          fullname: cognito.ProviderAttribute.GOOGLE_NAME,
+          profilePicture: cognito.ProviderAttribute.GOOGLE_PICTURE
+        }
+      })
+      supportedProviders.push({ name: googlePorvider.providerName });
+    }
 
-    const samlProvider = new cognito.CfnUserPoolIdentityProvider(this, "Saml", {
-      userPoolId: pool.userPoolId,
-      providerName: "AzureAD",
-      providerType: "SAML",
-      providerDetails: {
-        MetadataURL: AZURE
-      },
-      attributeMapping: {
-        "custom:company": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/company",
-        "email": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
-        "name": "http://schemas.microsoft.com/identity/claims/displayname"
-      }
-    });
-    supportedProviders.push({ name: samlProvider.providerName });
-
+    if (AZURE) {
+      const samlProvider = new cognito.CfnUserPoolIdentityProvider(this, "Saml", {
+        userPoolId: pool.userPoolId,
+        providerName: "AzureAD",
+        providerType: "SAML",
+        providerDetails: {
+          MetadataURL: AZURE
+        },
+        attributeMapping: {
+          "custom:company": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/company",
+          "email": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
+          "name": "http://schemas.microsoft.com/identity/claims/displayname"
+        }
+      });
+      supportedProviders.push({ name: samlProvider.providerName });
+    }
     // AppClient
     const appClient = pool.addClient("AppClient", {
       supportedIdentityProviders: supportedProviders,
@@ -82,64 +85,70 @@ export class KompetanseStack extends Stack {
         logoutUrls: (isProd) ? ["https://kompetanse.knowit.no/"] : ["http://localhost:3000/"]
       },
       userPoolClientName: "Kompetansekartlegging App Client",
-
     });
 
     // Identity Pool Setup
-    const identityPool = new cognito.CfnIdentityPool(this, "KompetanseIdentityPool", {
-      allowUnauthenticatedIdentities: true,
-      cognitoIdentityProviders: [{ providerName: pool.userPoolProviderName, clientId: appClient.userPoolClientId }],
-    })
+    if (supportedProviders.length > 0) {
+      const identityPool = new cognito.CfnIdentityPool(this, "KompetanseIdentityPool", {
+        allowUnauthenticatedIdentities: true,
+        cognitoIdentityProviders: [{ providerName: pool.userPoolProviderName, clientId: appClient.userPoolClientId }],
+      })
 
-    const authRole = new iam.Role(this, "AuthRole", {
-      assumedBy: new iam.FederatedPrincipal(
-        "cognito-identity.amazonaws.com",
+      const authRole = new iam.Role(this, "AuthRole", {
+        assumedBy: new iam.FederatedPrincipal(
+          "cognito-identity.amazonaws.com",
+          {
+            StringEquals: {
+              "cognito-identity.amazonaws.com:aud": identityPool.ref,
+            },
+            "ForAnyValue:StringLike": {
+              "cognito-identity.amazonaws.com:amr": "authenticated",
+            },
+          },
+          "sts:AssumeRoleWithWebIdentity"
+        ),
+      });
+
+      // authRole.addToPolicy(new iam.PolicyStatement({
+      //   actions: [
+      //     "execute-api:Invoke"
+      //   ],
+      //   resources: [
+      //     "arn:aws:execute-api:eu-central-1:153690382195:65iwvl3jha/migrate/GET//*",
+      //     "arn:aws:execute-api:eu-central-1:153690382195:65iwvl3jha/migrate/GET/"
+      //   ],
+      //   effect: iam.Effect.ALLOW
+      // }))
+
+      const unauthRole = new iam.Role(this, "UnauthRole", {
+        assumedBy: new iam.FederatedPrincipal(
+          "cognito-identity.amazonaws.com",
+          {
+            StringEquals: {
+              "cognito-identity.amazonaws.com:aud": identityPool.ref,
+            },
+            "ForAnyValue:StringLike": {
+              "cognito-identity.amazonaws.com:amr": "unauthenticated",
+            },
+          },
+          "sts:AssumeRoleWithWebIdentity"
+        ),
+      });
+
+      const roleAttachment = new cognito.CfnIdentityPoolRoleAttachment(
+        this,
+        "IdentityPoolRoleAttachment",
         {
-          StringEquals: {
-            "cognito-identity.amazonaws.com:aud": identityPool.ref,
-          },
-          "ForAnyValue:StringLike": {
-            "cognito-identity.amazonaws.com:amr": "authenticated",
-          },
-        },
-        "sts:AssumeRoleWithWebIdentity"
-      ),
-    });
-
-    // authRole.addToPolicy(new iam.PolicyStatement({
-    //   actions: [
-    //     "execute-api:Invoke"
-    //   ],
-    //   resources: [
-    //     "arn:aws:execute-api:eu-central-1:153690382195:65iwvl3jha/migrate/GET//*",
-    //     "arn:aws:execute-api:eu-central-1:153690382195:65iwvl3jha/migrate/GET/"
-    //   ],
-    //   effect: iam.Effect.ALLOW
-    // }))
-
-    const unauthRole = new iam.Role(this, "UnauthRole", {
-      assumedBy: new iam.FederatedPrincipal(
-        "cognito-identity.amazonaws.com",
-        {
-          StringEquals: {
-            "cognito-identity.amazonaws.com:aud": identityPool.ref,
-          },
-          "ForAnyValue:StringLike": {
-            "cognito-identity.amazonaws.com:amr": "unauthenticated",
-          },
-        },
-        "sts:AssumeRoleWithWebIdentity"
-      ),
-    });
-
-    const roleAttachment = new cognito.CfnIdentityPoolRoleAttachment(
-      this,
-      "IdentityPoolRoleAttachment",
-      {
-        identityPoolId: identityPool.ref,
-        roles: { authenticated: authRole.roleArn, unauthenticated: unauthRole.roleArn },
-      }
-    );
+          identityPoolId: identityPool.ref,
+          roles: { authenticated: authRole.roleArn, unauthenticated: unauthRole.roleArn },
+        }
+      );
+      
+      // Conditional output
+      const identityPoolIdOutput = new CfnOutput(this, "aws_cognito_identity_pool_id", {
+        value: identityPool.ref, // "eu-central-1:ed60ff7c-18dc-49e6-a8cf-aa7a068fa2a5",
+      });
+    }
 
     // PreSignUp Trigger Setup
 
@@ -320,55 +329,104 @@ export class KompetanseStack extends Stack {
     });
 
     // CreateExcel Setup
-    const excelBucket = new s3.Bucket(this, "excelBucket", {lifecycleRules: [
-      {expiration: Duration.days(1)}
-    ],
-  });
+    const excelEnabled = false;
 
-    const excelStatement = new iam.PolicyStatement({
-      actions: [
-        "dynamodb:Get*",
-        "dynamodb:BatchGetItem",
-        "dynamodb:List*",
-        "dynamodb:Describe*",
-        "dynamodb:Scan",
-        "dynamodb:Query",
-        "s3:*",
-        "s3:PutObject",
-        "s3:PutObjectAcl"
-      ],
-      effect: iam.Effect.ALLOW,
-      resources: [
-        tableArns["UserFormTable"],
-        `${tableArns["UserFormTable"]}/index/*`,
-        tableArns["QuestionTable"], 
-        `${tableArns["QuestionTable"]}/index/*`,
-        tableArns["QuestionAnswerTable"],
-        `${tableArns["QuestionAnswerTable"]}/index/*`,
-        tableArns["CategoryTable"],
-        `${tableArns["CategoryTable"]}/index/*`,
-        tableArns["FormDefinitionTable"],
-        `${tableArns["FormDefinitionTable"]}/index/*`,
-        excelBucket.bucketArn,
-        `${excelBucket.bucketArn}/*`
-      ]
-    });
+    if (excelEnabled) {
+      const excelBucket = new s3.Bucket(this, "excelBucket", {lifecycleRules: [
+        {expiration: Duration.days(1)}
+        ],
+      });
+
+      const excelStatement = new iam.PolicyStatement({
+        actions: [
+          "dynamodb:Get*",
+          "dynamodb:BatchGetItem",
+          "dynamodb:List*",
+          "dynamodb:Describe*",
+          "dynamodb:Scan",
+          "dynamodb:Query",
+          "s3:*",
+          "s3:PutObject",
+          "s3:PutObjectAcl"
+        ],
+        effect: iam.Effect.ALLOW,
+        resources: [
+          tableArns["UserFormTable"],
+          `${tableArns["UserFormTable"]}/index/*`,
+          tableArns["QuestionTable"], 
+          `${tableArns["QuestionTable"]}/index/*`,
+          tableArns["QuestionAnswerTable"],
+          `${tableArns["QuestionAnswerTable"]}/index/*`,
+          tableArns["CategoryTable"],
+          `${tableArns["CategoryTable"]}/index/*`,
+          tableArns["FormDefinitionTable"],
+          `${tableArns["FormDefinitionTable"]}/index/*`,
+          excelBucket.bucketArn,
+          `${excelBucket.bucketArn}/*`
+        ]
+      });
 
 
-    const createExcelLambda = new python.PythonFunction(this, "kompetanseCreateExcelLambda", {
-      entry: path.join(__dirname, "/../backend/function/excelGenerator"),
-      runtime: lambda.Runtime.PYTHON_3_9,
-      environment: {
-        SOURCE_NAME: "KompetanseStack",
-        ENV: ENV,
-        USER_POOL_ID: pool.userPoolId,
-        EXCEL_BUCKET: excelBucket.bucketName
-      },
-      initialPolicy: [excelStatement, externalAPICognitoStatement],
-      timeout: Duration.seconds(25),
-      memorySize:2048
-    });
-
+      const createExcelLambda = new python.PythonFunction(this, "kompetanseCreateExcelLambda", {
+        entry: path.join(__dirname, "/../backend/function/excelGenerator"),
+        runtime: lambda.Runtime.PYTHON_3_9,
+        environment: {
+          SOURCE_NAME: "KompetanseStack",
+          ENV: ENV,
+          USER_POOL_ID: pool.userPoolId,
+          EXCEL_BUCKET: excelBucket.bucketName
+        },
+        initialPolicy: [excelStatement, externalAPICognitoStatement],
+        timeout: Duration.seconds(25),
+        memorySize:2048
+      });
+        // Excel API Setup
+    
+        const excelApi = new gateway.RestApi(this, "kompetanseExcelRestApi", {
+          restApiName: "CreateExcelAPI",
+          deployOptions: {
+            stageName: "dev"
+          },
+        });
+    
+        const excelProxy = excelApi.root.addProxy({
+          anyMethod: false
+        });
+        excelProxy.addMethod("ANY", new gateway.LambdaIntegration(createExcelLambda), {
+          authorizer: new gateway.CognitoUserPoolsAuthorizer(this, "CognitoExcelAPI", {
+            authorizerName: "COGNITO",
+            cognitoUserPools: [pool],
+          }),
+          authorizationScopes: ["aws.cognito.signin.user.admin"],
+        });
+    
+        excelProxy.addMethod("OPTIONS", new gateway.MockIntegration({
+          passthroughBehavior: gateway.PassthroughBehavior.WHEN_NO_MATCH,
+          requestTemplates: {
+            "application/json" : JSON.stringify({statusCode: 200})
+          },
+          integrationResponses: [{
+            statusCode: "200",
+            responseParameters:{
+              "method.response.header.Access-Control-Allow-Methods": "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+              "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+              "method.response.header.Access-Control-Allow-Origin": "'*'"
+            }
+          }],
+        }), {
+          methodResponses: [{
+            statusCode: "200",
+            responseParameters: {
+              'method.response.header.Content-Type': true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              'method.response.header.Access-Control-Allow-Origin': true,
+              'method.response.header.Access-Control-Allow-Credentials': true,
+              'method.response.header.Access-Control-Allow-Methods': true
+            },
+            responseModels: {"application/json": gateway.Model.EMPTY_MODEL, "application/vnd.ms-excel": gateway.Model.EMPTY_MODEL}
+          }],
+        });    
+    }
 
 
 
@@ -465,52 +523,6 @@ export class KompetanseStack extends Stack {
       }],
     });
 
-    // Admin API Setup
-    
-    const excelApi = new gateway.RestApi(this, "kompetanseExcelRestApi", {
-      restApiName: "CreateExcelAPI",
-      deployOptions: {
-        stageName: "dev"
-      },
-    });
-
-    const excelProxy = excelApi.root.addProxy({
-      anyMethod: false
-    });
-    excelProxy.addMethod("ANY", new gateway.LambdaIntegration(createExcelLambda), {
-      authorizer: new gateway.CognitoUserPoolsAuthorizer(this, "CognitoExcelAPI", {
-        authorizerName: "COGNITO",
-        cognitoUserPools: [pool],
-      }),
-      authorizationScopes: ["aws.cognito.signin.user.admin"],
-    });
-
-    excelProxy.addMethod("OPTIONS", new gateway.MockIntegration({
-      passthroughBehavior: gateway.PassthroughBehavior.WHEN_NO_MATCH,
-      requestTemplates: {
-        "application/json" : JSON.stringify({statusCode: 200})
-      },
-      integrationResponses: [{
-        statusCode: "200",
-        responseParameters:{
-          "method.response.header.Access-Control-Allow-Methods": "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
-          "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-          "method.response.header.Access-Control-Allow-Origin": "'*'"
-        }
-      }],
-    }), {
-      methodResponses: [{
-        statusCode: "200",
-        responseParameters: {
-          'method.response.header.Content-Type': true,
-          "method.response.header.Access-Control-Allow-Headers": true,
-          'method.response.header.Access-Control-Allow-Origin': true,
-          'method.response.header.Access-Control-Allow-Credentials': true,
-          'method.response.header.Access-Control-Allow-Methods': true
-        },
-        responseModels: {"application/json": gateway.Model.EMPTY_MODEL, "application/vnd.ms-excel": gateway.Model.EMPTY_MODEL}
-      }],
-    });
 
     // External API Setup
 
@@ -604,10 +616,6 @@ export class KompetanseStack extends Stack {
       });
     }
     // Outputs
-
-    const identityPoolIdOutput = new CfnOutput(this, "aws_cognito_identity_pool_id", {
-      value: identityPool.ref, // "eu-central-1:ed60ff7c-18dc-49e6-a8cf-aa7a068fa2a5",
-    });
     const userPoolIdOutput = new CfnOutput(this, "aws_user_pools_id", {
       value: pool.userPoolId
     });
@@ -644,8 +652,8 @@ export class KompetanseStack extends Stack {
           region: this.region
         },
         excelApi: {
-          name: excelApi.restApiName,
-          endpoint: excelApi.url,
+          name: "", //excelApi.restApiName,
+          endpoint: "", // excelApi.url,
           region: this.region
         }
       })

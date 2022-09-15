@@ -20,9 +20,10 @@ To run the project locally:
    name the project in the cloning process).
 3. Run `$ ./install.sh`
 4. Run `cd cdk`
-5. Edit the ENV context variable in cdk.json (For sandbox, choose anything. If prod, ENV should be prod. If dev, ENV should be dev)
-6. Create a cdk.context.json file  
-   a. Add GOOGLE_ID, GOOGLE_SECRET and AZURE to it, where GOOGLE_ID is the GCP App Id, GOOGLE_SECRET is the GCP App secret key, and AZURE is the Azure AD metadata url
+6. Create a cdk.context.json file
+
+   1. Add ENV to it. If you are deploying to a sandbox account, you can give it any value you want. These have to be unique, so you might get a conflict if it already exists on AWS. IF YOU ARE DEPLOYING TO PROD OR DEVELOPMENT the ENV value should be `prod` or `dev`. \
+   2. IF DEPLOYING TO PROD OR DEVELOPMENT: Add GOOGLE_ID, GOOGLE_SECRET and AZURE to it, where GOOGLE_ID is the GCP App Id, GOOGLE_SECRET is the GCP App secret key, and AZURE is the Azure AD metadata url
 7. Run `export AWS_PROFILE={aws cli profilename}` followed by `npm run deploy` and `npm run codegen` (Alternatively, go to root directory and run `./deploybackend.sh full`)
 8. Change directory to frontend and run `npm start`
 
@@ -57,3 +58,8 @@ To deploy the CDK backend you need to:
 ## Special packages used:
 * Appsync Transformer for CDK: https://github.com/kcwinner/cdk-appsync-transformer
 * Codegen inspiration: https://github.com/kcwinner/advocacy/tree/master/cdk-amplify-appsync-helpers
+
+# API docs
+
+Documentation for the external API can be found at this projects Github Pages (`kompetansekartlegging-app/docs`) or at this URL: https://apidocs.kompetanse.knowit.no
+
