@@ -85,7 +85,7 @@ question_res = client.scan(
 )
 for question in question_res["Items"]:
     questions.append(question) 
-    
+
 lastkeyscanned = None 
 if "LastEvaluatedKey" in question_res.keys():
     lastkeyscanned = question_res["LastEvaluatedKey"]
@@ -204,7 +204,6 @@ for idChunk in userFormChunks:
 print("QAs found:", len(questionAnswers))
 
 newFormDefinitionId = str(uuid.uuid4())
-# TODO: Give new IDs to items + new name to form?
 
 newFormDefinition = originalFormDefinition["Item"].copy()
 newFormDefinition["oldFormDefinitionID"] = originalFormDefinition["Item"]["id"]
