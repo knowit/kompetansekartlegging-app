@@ -24,6 +24,7 @@ jobs:
           command: npx cypress run
           record: true
           config: baseUrl=http://localhost:3000
+          browser: chrome
       - name: Upload video
         uses: actions/upload-artifact@v2
         if: always()
