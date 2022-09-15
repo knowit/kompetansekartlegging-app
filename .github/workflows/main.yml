@@ -19,7 +19,7 @@ jobs:
           wait-on-timeout: 120
           command: npx cypress run
           record: true
-          config: baseUrl=http://localhost:3333
+          config: baseUrl=http://localhost:3000
       - name: Upload video
         uses: actions/upload-artifact@v2
         if: always()
