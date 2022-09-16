@@ -131,7 +131,7 @@ if __name__ == "__main__":
     newFormDefinitionId = str(uuid.uuid4())
 
     newFormDefinition = originalFormDefinition["Item"].copy()
-    newFormDefinition["copyFrom"] = originalFormDefinition["Item"]["id"]
+    newFormDefinition["copiedFrom"] = originalFormDefinition["Item"]["id"]
     newFormDefinition["id"] = {"S": newFormDefinitionId}
     newFormDefinition["label"] = {"S": newFormDefinitionName}
     newFormDefinition["createdAt"] = {"S": "1970-01-01T00:00:00.000Z"}
@@ -144,7 +144,7 @@ if __name__ == "__main__":
         categoryID_map[category["id"]["S"]] = newCategoryID
         newCategory = category.copy()
         newCategory["formDefinitionID"] = {"S": newFormDefinitionId}
-        newCategory["copyFrom"] = category["id"]
+        newCategory["copiedFrom"] = category["id"]
         newCategory["id"] = {"S": newCategoryID}
         newCategories.append(newCategory)
 
@@ -157,7 +157,7 @@ if __name__ == "__main__":
         newQuestion = question.copy()
         newQuestion["formDefinitionID"] = {"S": newFormDefinitionId}
         newQuestion["categoryID"] = {"S": categoryID_map[question["categoryID"]["S"]]}
-        newQuestion["copyFrom"] = question["id"]
+        newQuestion["copiedFrom"] = question["id"]
         newQuestion["id"] = {"S": newQuestionID}
         newQuestions.append(newQuestion)
 
