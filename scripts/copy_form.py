@@ -8,9 +8,9 @@ def scan(client, tablename, filterexpression, filterattributes=None, filtervalue
     items = []
     res = {}
     keywordargs = {}
-    if not filterattributes == None:
+    if filterattributes != None:
         keywordargs["ExpressionAttributeNames"] = filterattributes
-    if not filtervalues == None:
+    if filtervalues != None:
         keywordargs["ExpressionAttributeValues"] = filtervalues
     res = client.scan(
         TableName=tablename,
