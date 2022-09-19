@@ -109,17 +109,6 @@ export class KompetanseStack extends Stack {
         ),
       });
 
-      // authRole.addToPolicy(new iam.PolicyStatement({
-      //   actions: [
-      //     "execute-api:Invoke"
-      //   ],
-      //   resources: [
-      //     "arn:aws:execute-api:eu-central-1:153690382195:65iwvl3jha/migrate/GET//*",
-      //     "arn:aws:execute-api:eu-central-1:153690382195:65iwvl3jha/migrate/GET/"
-      //   ],
-      //   effect: iam.Effect.ALLOW
-      // }))
-
       const unauthRole = new iam.Role(this, "UnauthRole", {
         assumedBy: new iam.FederatedPrincipal(
           "cognito-identity.amazonaws.com",
@@ -179,19 +168,6 @@ export class KompetanseStack extends Stack {
 
     const domainSettings: { cognitoDomain?: { domainPrefix: string }, customDomain?: { domainName: string, certificate: cam.Certificate } } = {}
     if (isProd) {
-      // const hostedZone = new r53.HostedZone(this, "KompetansekartleggingHostedZone", {
-      //   zoneName: "kompetanse.knowit.no",
-      // });
-
-      // const authDomainName = "auth.kompetanse.knowit.no";
-      // const certificate = new cam.Certificate(this, "auth.kompetanse.knowit.no", {
-      //   domainName: authDomainName,
-      //   validation: cam.CertificateValidation.fromDns(hostedZone)
-      // });
-      // domainSettings.customDomain = {
-      //     domainName: authDomainName,
-      //     certificate: certificate
-      // };
       domainSettings.cognitoDomain = {
         domainPrefix: `komptest-${ENV}`
       };
@@ -605,8 +581,6 @@ export class KompetanseStack extends Stack {
       }]
     });
   
-
-    // const apiKeyTest = extUsagePlan.addApiKey(new gateway.ApiKey(this, "TestKey", {apiKeyName:"Test"}));
 
     // Backup-plan for production
     if (isProd) {
