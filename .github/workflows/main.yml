@@ -20,31 +20,27 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-      - name: Read secrets from AWS Secrets Manager into environment variables
-        uses: abhilash1in/aws-secrets-manager-action@v2.1.0
-        with:
-          secrets: |
-            my_secret_1
-            app1/dev/*
-        parse-json: true
-      - name: Check if env variable is set after fetching secrets
-        run: if [ -z ${MY_SECRET_1+x} ]; then echo "MY_SECRET_1 is unset"; else echo "MY_SECRET_1 is set to '$MY_SECRET_1'"; fi
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
-        with:
-          working-directory: frontend
-          build: npm run build
-          start: npm start
-          wait-on: 'http://localhost:3000'
-          wait-on-timeout: 120
-          command: npx cypress run
-          record: true
-          config: baseUrl=http://localhost:3000
-          browser: chrome
-      - name: Upload video
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: build
-          if-no-files-found: error
-          path: frontend/cypress
+
+      - name: Test AWS cli
+        run: |
+          aws --help
+      
+      # - name: Cypress run
+      #   uses: cypress-io/github-action@v4
+      #   with:
+      #     working-directory: frontend
+      #     build: npm run build
+      #     start: npm start
+      #     wait-on: 'http://localhost:3000'
+      #     wait-on-timeout: 120
+      #     command: npx cypress run
+      #     record: true
+      #     config: baseUrl=http://localhost:3000
+      #     browser: chrome
+      # - name: Upload video
+      #   uses: actions/upload-artifact@v2
+      #   if: always()
+      #   with:
+      #     name: build
+      #     if-no-files-found: error
+      #     path: frontend/cypress
