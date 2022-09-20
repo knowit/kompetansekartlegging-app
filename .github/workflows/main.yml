@@ -26,8 +26,8 @@ jobs:
           aws secretsmanager get-secret-value --secret-id dev/cypress/exports.js > frontend/src/exports.js &&
           aws secretsmanager get-secret-value --secret-id dev/cypress/API.ts > frontend/src/API.ts &&
           aws secretsmanager get-secret-value --secret-id dev/cypress/mutations.ts > frontend/src/graphql/mutations.ts &&
-          aws secretsmanager get-secret-value --secret-id dev/cypress/queries.ts > frontend/src/queries.ts &&
-          aws secretsmanager get-secret-value --secret-id dev/cypress/subscriptions.ts > frontend/src/subscriptions.ts
+          aws secretsmanager get-secret-value --secret-id dev/cypress/queries.ts > frontend/src/graphql/queries.ts &&
+          aws secretsmanager get-secret-value --secret-id dev/cypress/subscriptions.ts > frontend/src/graphql/subscriptions.ts
           
       - name: Cypress run
         uses: cypress-io/github-action@v4
