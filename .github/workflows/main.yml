@@ -24,24 +24,23 @@ jobs:
       - name: Test AWS cli
         run: |
           aws secretsmanager get-secret-value --secret-id dev/cypress/exports.js > frontend/src/exports.js
-          cat frontend/src/exports.js 
-      
-      # - name: Cypress run
-      #   uses: cypress-io/github-action@v4
-      #   with:
-      #     working-directory: frontend
-      #     build: npm run build
-      #     start: npm start
-      #     wait-on: 'http://localhost:3000'
-      #     wait-on-timeout: 120
-      #     command: npx cypress run
-      #     record: true
-      #     config: baseUrl=http://localhost:3000
-      #     browser: chrome
-      # - name: Upload video
-      #   uses: actions/upload-artifact@v2
-      #   if: always()
-      #   with:
-      #     name: build
-      #     if-no-files-found: error
-      #     path: frontend/cypress
+          
+      - name: Cypress run
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: frontend
+          build: npm run build
+          start: npm start
+          wait-on: 'http://localhost:3000'
+          wait-on-timeout: 120
+          command: npx cypress run
+          record: true
+          config: baseUrl=http://localhost:3000
+          browser: chrome
+      - name: Upload video
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: build
+          if-no-files-found: error
+          path: frontend/cypress
