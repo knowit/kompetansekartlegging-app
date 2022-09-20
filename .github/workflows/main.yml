@@ -23,7 +23,7 @@ jobs:
 
       - name: Test AWS cli
         run: |
-          aws --help
+          aws secretsmanager get-secret-value --secret-id dev/cypress/exports.js 
       
       # - name: Cypress run
       #   uses: cypress-io/github-action@v4
