@@ -45,6 +45,11 @@ To deploy the CDK backend you need to:
 
 ### Production deployment instructions can be found [here](https://github.com/knowit/Dataplattform-issues/wiki/Kompetansekartlegging:-Deployment-Guide-(CDK))
 
+## Running cypress tests
+1. Run `cd frontend`
+2. Run `npm start` (if it is not running)
+3. Open new terminal window and run `cd frontend`. Then run `npx cypress run`, tests will run in the terminal. 
+
 
 ## Useful commands
 

@@ -4,7 +4,7 @@ Cypress.on("uncaught:exception", () => {
     return false;
 });
 
-describe.skip("should add competance", () => {
+describe("should add competance", () => {
     beforeEach(() => {
         cy.visit("/");
         cy.login();
@@ -14,6 +14,22 @@ describe.skip("should add competance", () => {
         cy.get(".makeStyles-menu-28")
             .contains("MINE SVAR")
             .click({ force: true });
+    });
+
+    it("should check meny", () => {
+        cy.wait(1000);
+        cy.get(".makeStyles-menu-28")
+            .should("contain", "1. Design")
+            .and("contain", "2. Mobil")
+            .and("contain", "3. Frontend")
+            .and("contain", "4. Backend")
+            .and("contain", "5. AI og Data Engineering")
+            .and('contain', '6. IoT og Hardware')
+            .and('contain', '7. Cloud og DevOps')
+            .and('contain', '8. Smidig metodikk og produktledelse')
+            .and('contain', '9. Salg og forretningsutvikling')
+            .and('contain', '10. Jobbrotasjon')
+            .and('contain', '11. Softskills')
     });
     it("should add competance in Design module", () => {
         cy.wait(1000);
@@ -107,6 +123,6 @@ describe.skip("should add competance", () => {
         cy.get("button").contains("Fyll ut").click();
         cy.fillIn(12);
         cy.clickAndStay();
-        //cy.get("button").contains("Send inn svar og avslutt").click();
+        cy.get("button").contains("Send inn svar og avslutt").click();
     });
 });

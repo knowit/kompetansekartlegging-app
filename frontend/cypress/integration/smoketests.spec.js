@@ -4,7 +4,7 @@ Cypress.on("uncaught:exception", () => {
     return false;
 });
 
-it.skip("should check the page content", () => {
+it("should check the page content", () => {
     cy.visit("/");
     cy.get(".makeStyles-buttonAlign-11").should("exist");
 
