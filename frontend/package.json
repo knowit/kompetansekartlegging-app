@@ -27,7 +27,7 @@
     },
     "scripts": {
         "start": "react-scripts start",
-        "build": "react-scripts build",
+        "build": "CI=false && react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
     },
@@ -53,6 +53,7 @@
         "@types/react-router-dom": "^5.1.5",
         "@types/recharts": "^1.8.16",
         "@types/uuid": "^8.3.0",
+        "cypress": "^9.5.4",
         "eslint": "^7.20.0",
         "prettier": "^2.2.1",
         "typescript": "^4.0.3"
