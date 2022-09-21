@@ -8,8 +8,6 @@ jobs:
     steps:
       - name: Checkout 
         uses: actions/checkout@v2
-        with:
-          ref: main
       - name: Setup Node
         uses: actions/setup-node@v3
         with: 
@@ -47,3 +45,4 @@ jobs:
         with:
           name: build
           if-no-files-found: error
+          path: frontend/cypress
