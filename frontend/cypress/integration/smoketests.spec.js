@@ -10,7 +10,7 @@ it("should check the page content", () => {
 
     cy.get(".makeStyles-buttonAlign-11").children();
 
-    cy.get("button1").contains("Logg inn (Knowit Objectnet)").should("exist");
+    cy.get("button").contains("Logg inn (Knowit Objectnet)").should("exist");
     cy.get("button")
         .contains("Logg inn (Andre Knowit Selskaper)")
         .should("exist");
