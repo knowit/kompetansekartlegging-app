@@ -4,7 +4,7 @@ Cypress.on("uncaught:exception", () => {
     return false;
 });
 
-describe("should add competance", () => {
+describe.skip("should add competance", () => {
     beforeEach(() => {
         cy.visit("/");
         cy.login();
@@ -12,7 +12,7 @@ describe("should add competance", () => {
         cy.get(".MuiFab-root").click();
         cy.get(".makeStyles-header-68 > .MuiButtonBase-root").click();
         cy.get(".makeStyles-menu-28")
-            .contains("MINE SVAR1")
+            .contains("MINE SVAR")
             .click({ force: true });
     });
 
