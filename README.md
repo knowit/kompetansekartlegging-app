@@ -51,7 +51,7 @@ To deploy the CDK backend you need to:
 3. Open new terminal window and run `cd frontend`. Then run `npx cypress run`, tests will run in the terminal. 
 
 ## GitHub Actions
-Every time you create a pull request, cypress tests will run automatically. 
+Every time you create a pull request, cypress tests will run automatically. Cypress saves screenshots if any of tests feil. You can find screenshots in workflow, in the Artifacts. 
 NB! It takes ca 25 min to run them in GHA, while local running takes only 4-5 min. 
 
 
