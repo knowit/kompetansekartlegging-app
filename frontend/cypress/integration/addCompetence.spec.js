@@ -12,7 +12,7 @@ describe("should add competance", () => {
         cy.get(".MuiFab-root").click();
         cy.get(".makeStyles-header-68 > .MuiButtonBase-root").click();
         cy.get(".makeStyles-menu-28")
-            .contains("MINE SVAR")
+            .contains("MINE SVAR1")
             .click({ force: true });
     });
 
