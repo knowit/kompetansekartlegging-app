@@ -21,6 +21,7 @@ export class KompetanseStack extends Stack {
     const AZURE = this.node.tryGetContext("AZURE");
     const GOOGLE_ID = this.node.tryGetContext("GOOGLE_ID");
     const GOOGLE_SECRET = this.node.tryGetContext("GOOGLE_SECRET");
+    const EXCEL = this.node.tryGetContext("EXCEL");
     const ENV = this.node.tryGetContext("ENV");
     const isProd = ENV === "prod";
 
@@ -207,6 +208,12 @@ export class KompetanseStack extends Stack {
       tableArns[table] = appSync.tableMap[table].tableArn;
     });
     
+    const ApiMap: {[key:string]: {
+      name: string,
+      region: string,
+      endpoint: string
+    }} = {}
+
     // AdminQueries Lambda setup
 
     const adminQueriesLambda = new lambda.Function(this, "kompetanseAdminQueries", {
@@ -305,7 +312,7 @@ export class KompetanseStack extends Stack {
     });
 
     // CreateExcel Setup
-    const excelEnabled = false;
+    const excelEnabled = EXCEL;
 
     if (excelEnabled) {
       const excelBucket = new s3.Bucket(this, "excelBucket", {lifecycleRules: [
@@ -401,7 +408,12 @@ export class KompetanseStack extends Stack {
             },
             responseModels: {"application/json": gateway.Model.EMPTY_MODEL, "application/vnd.ms-excel": gateway.Model.EMPTY_MODEL}
           }],
-        });    
+        });
+        ApiMap["excelApi"] = {
+          name: excelApi.restApiName,
+          endpoint: excelApi.url,
+          region: this.region
+        };
     }
 
 
@@ -500,6 +512,12 @@ export class KompetanseStack extends Stack {
     });
 
 
+    ApiMap["adminQueries"] = {
+      name: adminQueryApi.restApiName,
+      endpoint: adminQueryApi.url,
+      region: this.region
+    };
+
     // External API Setup
 
     const externalApi = new gateway.RestApi(this, "KompetanseExternalApi", {
@@ -571,6 +589,12 @@ export class KompetanseStack extends Stack {
       }],
     });
 
+    ApiMap["externalAPI"] = {
+      name: externalApi.restApiName,
+      endpoint: externalApi.url,
+      region: this.region
+    };
+
     // ExternalAPI Usage plan setup
 
     const extUsagePlan = externalApi.addUsagePlan("externalApiUsagePlan", {
@@ -614,23 +638,7 @@ export class KompetanseStack extends Stack {
     });
 
     const functionMapOutput = new CfnOutput(this, "functionMap", {
-      value: JSON.stringify({
-        adminQueries: {
-          name: adminQueryApi.restApiName,
-          endpoint: adminQueryApi.url,
-          region: this.region
-        },
-        externalAPI: {
-          name: externalApi.restApiName,
-          endpoint: externalApi.url,
-          region: this.region
-        },
-        excelApi: {
-          name: "", //excelApi.restApiName,
-          endpoint: "", // excelApi.url,
-          region: this.region
-        }
-      })
+      value: JSON.stringify(ApiMap)
     });
     
     const userCreateBatchOutput = new CfnOutput(this, "outputCreateBatch", {

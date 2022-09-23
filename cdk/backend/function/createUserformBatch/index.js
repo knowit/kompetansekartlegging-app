@@ -437,7 +437,7 @@ async function getUserformByOwnerWithLimit(formDefID = undefined, limit = 1) {
             })
             .promise();
         let lastEvaluatedKey = result.LastEvaluatedKey;
-        while (lastEvaluatedKey) {
+        while (lastEvaluatedKey && !(result.Items.length > 0)) {
             result = await docClient
             .query({
                 TableName: USERFORMTABLE_NAME,
@@ -458,8 +458,6 @@ async function getUserformByOwnerWithLimit(formDefID = undefined, limit = 1) {
                 Limit: limit,
             })
             .promise();
-            if (result.Items.length > 0)
-                break;
             lastEvaluatedKey = result.LastEvaluatedKey;
         }
         console.log("Limited userform querry result: ", result);
