@@ -39,7 +39,9 @@ export class KompetanseStack extends Stack {
         requireLowercase: false,
         requireSymbols: false,
         requireUppercase: false,
-      }
+      },
+      selfSignUpEnabled: !isProd,
+      autoVerify: {email: !isProd}
     })
 
     const supportedProviders = [];
@@ -165,7 +167,7 @@ export class KompetanseStack extends Stack {
 
     const presignupTrigger = new lambda.Function(this, "KompetansePresignUpTrigger", {
       code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/presignup")),
-      functionName: "KompetansePreSignupTrigger",
+      functionName: `KompetansePreSignupTrigger-${ENV}`,
       handler: "index.handler",
       runtime: lambda.Runtime.NODEJS_14_X,
       timeout: Duration.seconds(25)
