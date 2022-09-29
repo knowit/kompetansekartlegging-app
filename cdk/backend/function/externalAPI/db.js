@@ -208,7 +208,7 @@ const getAllUsers = async (organization_ID) => {
         const organizationAttribute = user['Attributes'].filter((attribute) => (
             attribute['Name'] === 'custom:OrganizationID'))[0]
 
-        return organizationAttribute['Value'] === organization_ID
+        return organizationAttribute && organizationAttribute['Value'] === organization_ID
     });
 
     filteredUsersWithoutOrganizationID = filteredUsers.map((user) => {

@@ -223,6 +223,7 @@ export class KompetanseStack extends Stack {
       handler: "index.handler",
       runtime: lambda.Runtime.NODEJS_14_X,
       timeout: Duration.seconds(25),
+      memorySize: 512,
       environment: {
         "USERPOOL": pool.userPoolId,
         "GROUP": "admin",
@@ -310,6 +311,7 @@ export class KompetanseStack extends Stack {
         "TABLE_MAP": JSON.stringify(appSync.tableNameMap)
       },
       initialPolicy: [externalApiStatement, externalAPICognitoStatement],
+      memorySize: 1024,
       timeout: Duration.seconds(25)
     });
 
