@@ -187,7 +187,7 @@ async function getOrCreateUserform(eventInput) {
     };
 
     //Get last userform
-    const lastUserform = await getUserformByOwnerWithLimit();
+    const lastUserform = await getUserformByOwnerWithLimit(eventInput.formDefinitionID);
     if (typeof lastUserform != "undefined" && lastUserform.length > 0) {
         returnValue.oldUserformId = lastUserform[0].id;
         const createdTime = new Date(lastUserform[0].createdAt).getTime();
@@ -375,20 +375,6 @@ async function insertQuestionAnswers(answerArray, userformId) {
         })
         .promise();
     });
-    // for (let i = 0; i < prepedAnswers.length; i++) {
-    //     promises.push(docClient
-    //         .batchWrite(prepedAnswers[i], (err, data) => {
-    //             if (err) {
-    //                 console.log(`BatchWrite error ${i}: `, err);
-    //                 result.failedData.push(err);
-    //                 result.errors.push(err);
-    //             } else {
-    //                 console.log(`BatchWrite data ${i}: `, data);
-    //                 result.data.push(data);
-    //             }
-    //         })
-    //         .promise());
-    // }
     await Promise.all(promises) // Allows us to fire off all writes at the same time?
     return result;
 }
@@ -429,24 +415,51 @@ async function createUserform(formDefinitionId) {
 }
 
 //Returns the X newest userforms by ownerId
-async function getUserformByOwnerWithLimit(limit = 1) {
+async function getUserformByOwnerWithLimit(formDefID = undefined, limit = 1) {
     try {
         let result = await docClient
             .query({
                 TableName: USERFORMTABLE_NAME,
                 IndexName: "byCreatedAt",
                 KeyConditionExpression: "#o = :ownerValue",
+                FilterExpression: "#formdefid = :formdefValue",
                 ExpressionAttributeNames: {
                     "#o": "owner",
+                    "#formdefid": "formDefinitionID"
                 },
                 ExpressionAttributeValues: {
                     ":ownerValue": ownerId,
+                    ":formdefValue": formDefID
                 },
                 ScanIndexForward: false, //Sort direction: true (default) = ASC, false = DESC
                 ConsistentRead: false,
                 Limit: limit,
             })
             .promise();
+        let lastEvaluatedKey = result.LastEvaluatedKey;
+        while (lastEvaluatedKey && !(result.Items.length > 0)) {
+            result = await docClient
+            .query({
+                TableName: USERFORMTABLE_NAME,
+                IndexName: "byCreatedAt",
+                KeyConditionExpression: "#o = :ownerValue",
+                FilterExpression: "#formdefid = :formdefValue",  // Make sure we fetch the newest UserForm related to current active form definition
+                ExpressionAttributeNames: {
+                    "#o": "owner",
+                    "#formdefid": "formDefinitionID"
+                },
+                ExpressionAttributeValues: {
+                    ":ownerValue": ownerId,
+                    ":formdefValue": formDefID
+                },
+                ExclusiveStartKey: lastEvaluatedKey,
+                ScanIndexForward: false, //Sort direction: true (default) = ASC, false = DESC
+                ConsistentRead: false,
+                Limit: limit,
+            })
+            .promise();
+            lastEvaluatedKey = result.LastEvaluatedKey;
+        }
         console.log("Limited userform querry result: ", result);
         return result.Items;
     } catch (err) {
