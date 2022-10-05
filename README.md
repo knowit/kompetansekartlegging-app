@@ -7,9 +7,13 @@ available for the individual employees and managers.
 
 ## Dependencies
 
-This project requires [npm](https://www.npmjs.com/get-npm).
+This project requires [npm](https://www.npmjs.com/get-npm). It also requires that [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) and [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html#getting_started_install) are installed.
 All custom scripts are written in bash script.
 
+
+## Using AWS CLI SSO profiles
+To use an AWS CLI sso profile, you need to run the sync_sso.py script before running our npm commands for deploying the backend. This script requires you to have boto3 installed on the python environment you use.
+`python sync_sso.py awscliprofilename` is the full command you need to run. This creates temporary credentials for the SSO profile, allowing npm run deploy to use those to perform calls to AWS.
 
 ## Running the project
 
