@@ -14,7 +14,7 @@ enum SubmenuCategory {
     HIDDEN,
     EDIT_ORGANIZATIONS,
     EDIT_SUPER_ADMINS,
-    EDIT_ORGANIZATION_ADMINS
+    EDIT_ORGANIZATION_ADMINS,
 }
 
 const activeSubmenuItemToSubmenuCategory = (
@@ -41,10 +41,14 @@ const SuperAdminPanel = ({ activeSubmenuItem }: SuperAdminPanelProps) => {
         <div className={style.container}>
             {(category === SubmenuCategory.MAIN ||
                 category === SubmenuCategory.EDIT_ORGANIZATIONS) && (
-                <EditOrganizations/>
+                <EditOrganizations />
             )}
-            {category === SubmenuCategory.EDIT_SUPER_ADMINS && <EditSuperAdmins/>}
-            {category === SubmenuCategory.EDIT_ORGANIZATION_ADMINS && <EditOrganizationAdmins/>}
+            {category === SubmenuCategory.EDIT_SUPER_ADMINS && (
+                <EditSuperAdmins />
+            )}
+            {category === SubmenuCategory.EDIT_ORGANIZATION_ADMINS && (
+                <EditOrganizationAdmins />
+            )}
         </div>
     );
 };

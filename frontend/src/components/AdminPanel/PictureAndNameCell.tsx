@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -21,4 +21,4 @@ const PictureAndNameCell = ({ name, picture }: any) => {
     );
 };
 
-export default PictureAndNameCell
+export default PictureAndNameCell;

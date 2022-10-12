@@ -11,16 +11,18 @@ import ErrorIcon from "@material-ui/icons/Error";
 import { dialogStyles } from "../../styles";
 import { OrganizationInfo } from "./SuperAdminTypes";
 
-
 interface DeleteOrganiationDialogProps {
-    open: boolean
-    onConfirm: (arg: OrganizationInfo) => void,
-    onCancel: () => void,
-    organization: OrganizationInfo
-};
+    open: boolean;
+    onConfirm: (arg: OrganizationInfo) => void;
+    onCancel: () => void;
+    organization: OrganizationInfo;
+}
 
-const DeleteOrganizationDialog : React.FC<DeleteOrganiationDialogProps> = ({
-    open, onConfirm, onCancel, organization
+const DeleteOrganizationDialog: React.FC<DeleteOrganiationDialogProps> = ({
+    open,
+    onConfirm,
+    onCancel,
+    organization,
 }) => {
     const style = dialogStyles();
 
@@ -42,11 +44,15 @@ const DeleteOrganizationDialog : React.FC<DeleteOrganiationDialogProps> = ({
             </DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Er du sikker på at du har lyst å fjerne organizasjonen {organization.name}?{" "}
+                    Er du sikker på at du har lyst å fjerne organizasjonen{" "}
+                    {organization.name}?{" "}
                 </DialogContentText>
             </DialogContent>
             <DialogActions className={style.alertButtons}>
-                <Button onClick={() => onConfirm(organization)} className={style.cancelButton}>
+                <Button
+                    onClick={() => onConfirm(organization)}
+                    className={style.cancelButton}
+                >
                     <span className={style.buttonText}>Fjern</span>
                 </Button>
                 <Button onClick={onCancel} className={style.confirmButton}>

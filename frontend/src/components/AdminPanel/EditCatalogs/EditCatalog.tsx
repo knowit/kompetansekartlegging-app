@@ -47,8 +47,9 @@ const useStyles = makeStyles(() =>
 const EditCatalog = () => {
     const [user, setUser] = useState<any | null>(null);
 
-    if (!user) {Auth.currentAuthenticatedUser().then(setUser);}
-
+    if (!user) {
+        Auth.currentAuthenticatedUser().then(setUser);
+    }
 
     const classes = useStyles();
     const { id: formDefinitionID } = useParams<Record<string, string>>();
@@ -65,21 +66,25 @@ const EditCatalog = () => {
         () => listCategoriesByFormDefinitionID(formDefinitionID),
         [formDefinitionID]
     );
-    const { result: categories, error, loading, refresh } = useApiGet({
+    const {
+        result: categories,
+        error,
+        loading,
+        refresh,
+    } = useApiGet({
         getFn: memoizedCallback,
         cmpFn: compareByIndex,
     });
 
-    const [showAddCategoryDialog, setShowAddCategoryDialog] = useState<boolean>(
-        false
-    );
+    const [showAddCategoryDialog, setShowAddCategoryDialog] =
+        useState<boolean>(false);
     const addCategoryConfirm = async (name: string, description: string) => {
         await createCategory(
             name,
             description,
             categories.length + 1,
             formDefinitionID,
-            (user) ? user.attributes[ORGANIZATION_ID_ATTRIBUTE] : ""
+            user ? user.attributes[ORGANIZATION_ID_ATTRIBUTE] : ""
         );
         setShowAddCategoryDialog(false);
         refresh();

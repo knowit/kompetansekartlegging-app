@@ -18,17 +18,19 @@ import {
 
 import Main from "./Main";
 import GroupMember from "./GroupMember";
-import {ORGANIZATION_ID_ATTRIBUTE} from "../../constants";
-import {useSelector} from 'react-redux';
-import {selectGroupLeaderCognitoGroupName, selectUserState} from '../../redux/User';
+import { ORGANIZATION_ID_ATTRIBUTE } from "../../constants";
+import { useSelector } from "react-redux";
+import {
+    selectGroupLeaderCognitoGroupName,
+    selectUserState,
+} from "../../redux/User";
 
 const GroupLeaderPanel = ({
     members,
     setMembers,
     activeSubmenuItem,
-    setActiveSubmenuItem
+    setActiveSubmenuItem,
 }: any) => {
-
     const userState = useSelector(selectUserState);
 
     const {
@@ -52,7 +54,7 @@ const GroupLeaderPanel = ({
         loading: groupLeadersLoading,
     } = useApiGet({
         getFn: listGroupLeadersInOrganization,
-        params: userState.organizationID
+        params: userState.organizationID,
     });
     const {
         result: allAvailableUsers,
@@ -60,17 +62,15 @@ const GroupLeaderPanel = ({
         loading: allAvailableUsersLoading,
     } = useApiGet({
         getFn: listAllAvailableUsersInOrganization,
-        params: userState.organizationID
+        params: userState.organizationID,
     });
 
     const group = groups?.find(
         (g: Group) => g.groupLeaderUsername === userState.userName
     );
     const groupId = group?.id;
-    const [
-        showDeleteUserFromGroupDialog,
-        setShowDeleteUserFromGroupDialog,
-    ] = useState<boolean>(false);
+    const [showDeleteUserFromGroupDialog, setShowDeleteUserFromGroupDialog] =
+        useState<boolean>(false);
     const [memberToDelete, setMemberToDelete] = useState<any>();
     const deleteMember = (user: any, group: any) => {
         setMemberToDelete({ user, group });
@@ -94,7 +94,11 @@ const GroupLeaderPanel = ({
                 if (userHasGroup) {
                     return updateUserGroup(u.Username, groupId);
                 } else {
-                    return addUserToGroup(u.Username, groupId, userState.organizationID);
+                    return addUserToGroup(
+                        u.Username,
+                        groupId,
+                        userState.organizationID
+                    );
                 }
             })
         );
@@ -112,10 +116,8 @@ const GroupLeaderPanel = ({
         allAvailableUsersError ||
         groupLeadersError;
 
-    const [
-        allAvailableUsersAnnotated,
-        setAllAvailableUsersAnnotated,
-    ] = useState<any[]>([]);
+    const [allAvailableUsersAnnotated, setAllAvailableUsersAnnotated] =
+        useState<any[]>([]);
 
     useEffect(() => {
         if (allAvailableUsers && groupLeaders && groups && users) {

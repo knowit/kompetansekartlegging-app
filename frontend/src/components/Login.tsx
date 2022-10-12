@@ -111,7 +111,7 @@ const loginStyle = makeStyles({
     },
 });
 
-const userBranch = (process) ? process.env.REACT_APP_USER_BRANCH : "";
+const userBranch = process ? process.env.REACT_APP_USER_BRANCH : "";
 const isNotProd = userBranch !== "master";
 const Login = (props: { isMobile: boolean }) => {
     // console.log("/tree/", userBranch, isNotProd);
@@ -158,12 +158,12 @@ const Login = (props: { isMobile: boolean }) => {
                     </h1>
                 </div>
                 <div className={style.buttonAlign}>
-                <Button
+                    <Button
                         className={style.loginButton}
-                        onClick={
-                            () => Auth.federatedSignIn({
+                        onClick={() =>
+                            Auth.federatedSignIn({
                                 customProvider:
-                                CognitoHostedUIIdentityProvider.Google,
+                                    CognitoHostedUIIdentityProvider.Google,
                             })
                         }
                     >
@@ -171,10 +171,9 @@ const Login = (props: { isMobile: boolean }) => {
                     </Button>
                     <Button
                         className={style.loginButton}
-                        onClick={
-                            () => Auth.federatedSignIn({
-                                customProvider:
-                                    "AzureAD",
+                        onClick={() =>
+                            Auth.federatedSignIn({
+                                customProvider: "AzureAD",
                             })
                         }
                     >

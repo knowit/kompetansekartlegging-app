@@ -21,10 +21,8 @@ const QuestionList = ({
 }: any) => {
     const [enableUpdates, setEnableUpdates] = useState<boolean>(true);
 
-    const [
-        showDeleteQuestionDialog,
-        setShowDeleteQuestionDialog,
-    ] = useState<boolean>(false);
+    const [showDeleteQuestionDialog, setShowDeleteQuestionDialog] =
+        useState<boolean>(false);
     const [questionToDelete, setQuestionToDelete] = useState<any>();
     const deleteQuestion = (question: any) => {
         setShowDeleteQuestionDialog(true);

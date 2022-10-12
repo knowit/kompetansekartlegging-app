@@ -14,7 +14,6 @@ const useStyles = makeStyles({
     },
 });
 
-
 const StyledEditIcon = withStyles(() => ({
     root: {
         fontSize: "15px",
@@ -46,7 +45,6 @@ const GroupAvatar = ({ showBadge, onClick, name, picture }: any) => (
         <Avatar alt={name} src={picture} />
     </StyledBadge>
 );
-
 
 const PictureAndNameEditCell = ({ name, picture, onEdit }: any) => {
     const classes = useStyles();

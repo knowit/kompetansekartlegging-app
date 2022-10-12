@@ -18,7 +18,7 @@ const BootstrapInput = withStyles((theme: Theme) =>
         root: {
             "& svg": {
                 color: KnowitColors.white,
-            }
+            },
         },
         input: {
             borderRadius: "15px",
@@ -64,7 +64,7 @@ const useStyles = makeStyles(() =>
             pointerEvents: "none",
             backgroundColor: KnowitColors.darkBrown,
             padding: "0 8px 0 4px",
-        }
+        },
     })
 );
 

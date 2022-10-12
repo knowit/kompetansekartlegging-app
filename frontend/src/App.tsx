@@ -1,29 +1,40 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import "./App.css";
-import {Amplify,  API, Auth, Hub, Analytics } from "aws-amplify";
+import { Amplify, API, Auth, Hub, Analytics } from "aws-amplify";
 // import awsconfig from "./aws-exports";
 import awsconfig from "./exports";
 import Content from "./components/Content";
 import Login from "./components/Login";
 import { ThemeProvider } from "@material-ui/core/styles";
-import { Box, Button, debounce, makeStyles, Modal, Snackbar } from "@material-ui/core";
+import {
+    Box,
+    Button,
+    debounce,
+    makeStyles,
+    Modal,
+    Snackbar,
+} from "@material-ui/core";
 import { isMobile } from "react-device-detect";
 import FloatingScaleDescButton from "./components/FloatingScaleDescButton";
 import NavBarDesktop from "./components/NavBarDesktop";
 import theme from "./theme";
 
 // redux
-import { useSelector, useDispatch } from 'react-redux';
-import { setUserInfo, setUserInfoLogOut, selectUserState, fetchOrganizationNameByID } from './redux/User';
+import { useSelector, useDispatch } from "react-redux";
+import {
+    setUserInfo,
+    setUserInfoLogOut,
+    selectUserState,
+    fetchOrganizationNameByID,
+} from "./redux/User";
 import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth";
 import ReactMarkdown from "react-markdown";
 
-const userBranch = (process) ? process.env.REACT_APP_USER_BRANCH : ""; // Process does not exist in Webpack 5?
-
+const userBranch = process ? process.env.REACT_APP_USER_BRANCH : ""; // Process does not exist in Webpack 5?
 
 // console.log("Hosted branch: ", userBranch);
-  
-switch(userBranch) {
+
+switch (userBranch) {
     case "master":
         awsconfig.oauth.domain = "auth.kompetanse.knowit.no";
         break;
@@ -42,19 +53,20 @@ API.configure(awsconfig);
 Auth.configure(awsconfig);
 
 Hub.listen(/.*/, (data) => {
-    console.log('Hub listening to all messages: ', data);
+    console.log("Hub listening to all messages: ", data);
     if (data.payload.event === "signIn_failure") {
-        let message = data.payload.data.message; 
+        let message = data.payload.data.message;
         if (message.includes("Google") && !message.includes("organization")) {
             Auth.federatedSignIn({
-                customProvider:
-                    CognitoHostedUIIdentityProvider.Google,
+                customProvider: CognitoHostedUIIdentityProvider.Google,
             });
-        } else if (message.includes("AzureAD") && !message.includes("organization")) {
+        } else if (
+            message.includes("AzureAD") &&
+            !message.includes("organization")
+        ) {
             // console.log("Failure in the membrane");
             Auth.federatedSignIn({
-                customProvider:
-                    "AzureAD",
+                customProvider: "AzureAD",
             });
         }
         // Auth.federatedSignIn();
@@ -75,8 +87,8 @@ const appStyle = makeStyles({
 });
 
 // Sometimes the cognito-object does not contain attributes. Not sure why
-const cognitoUserContainsAttributes = (data:any) : boolean => {
-    return 'attributes' in data;
+const cognitoUserContainsAttributes = (data: any): boolean => {
+    return "attributes" in data;
 };
 
 const App = () => {
@@ -104,7 +116,7 @@ const App = () => {
             console.log("Auth occured", event);
             switch (event) {
                 case "signIn":
-                    if(cognitoUserContainsAttributes(data)){
+                    if (cognitoUserContainsAttributes(data)) {
                         dispatch(setUserInfo(data));
                         dispatch(fetchOrganizationNameByID(data));
                     }
@@ -119,7 +131,7 @@ const App = () => {
         });
         Auth.currentAuthenticatedUser()
             .then((res) => {
-                if(cognitoUserContainsAttributes(res)){
+                if (cognitoUserContainsAttributes(res)) {
                     dispatch(setUserInfo(res));
                     dispatch(fetchOrganizationNameByID(res));
                 }
@@ -152,10 +164,8 @@ const App = () => {
     // SCROLL
     const mobileNavRef = useRef<HTMLInputElement>(null);
     const categoryNavRef = useRef<HTMLInputElement | null>(null);
-    const [
-        collapseMobileCategories,
-        setCollapseMobileCategories,
-    ] = useState<boolean>(false);
+    const [collapseMobileCategories, setCollapseMobileCategories] =
+        useState<boolean>(false);
 
     useEffect(() => {
         window.addEventListener("scroll", handleScroll);
@@ -184,20 +194,30 @@ const App = () => {
         }
     };
     const [bannerOpen, setBannerOpen] = useState(true);
-    
+
     return (
         <ThemeProvider theme={theme}>
             <div className={style.root}>
-                 {(userBranch !== "master") ? <Snackbar open={bannerOpen} anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
-                    <div style= {{
-                        background:"rgba(0,255,0, 255)",
-                        borderRadius:5,
-                        padding: 4,
-                        textAlign:"center"
-                    }}>
-                    NB: Dette er et test miljø!  <Button onClick={() => setBannerOpen(false)}>Close</Button>
-                    </div>
-                </Snackbar> : null}
+                {userBranch !== "master" ? (
+                    <Snackbar
+                        open={bannerOpen}
+                        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                    >
+                        <div
+                            style={{
+                                background: "rgba(0,255,0, 255)",
+                                borderRadius: 5,
+                                padding: 4,
+                                textAlign: "center",
+                            }}
+                        >
+                            NB: Dette er et test miljø!{" "}
+                            <Button onClick={() => setBannerOpen(false)}>
+                                Close
+                            </Button>
+                        </div>
+                    </Snackbar>
+                ) : null}
                 {userState.isSignedIn ? (
                     <Fragment>
                         {isMobile ? null : (

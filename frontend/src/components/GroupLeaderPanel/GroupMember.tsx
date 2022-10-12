@@ -61,7 +61,7 @@ const GroupMember = ({ members, userId, isMobile = false }: any) => {
                         )
                 );
             } catch (e) {
-                setError(typeof e == 'string' ? e.toString() : 'undefined');
+                setError(typeof e == "string" ? e.toString() : "undefined");
             }
             setLoading(false);
         };

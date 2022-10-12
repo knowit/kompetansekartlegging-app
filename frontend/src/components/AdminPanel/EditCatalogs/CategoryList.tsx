@@ -21,10 +21,8 @@ const CategoryList = ({
     const history = useHistory();
     const [enableUpdates, setEnableUpdates] = useState<boolean>(true);
 
-    const [
-        showDeleteCategoryDialog,
-        setShowDeleteCategoryDialog,
-    ] = useState<boolean>(false);
+    const [showDeleteCategoryDialog, setShowDeleteCategoryDialog] =
+        useState<boolean>(false);
     const [categoryToDelete, setCategoryToDelete] = useState<any>();
     const deleteCategory = (category: any) => {
         setShowDeleteCategoryDialog(true);
