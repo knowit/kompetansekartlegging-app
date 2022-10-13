@@ -23,7 +23,8 @@ To run the project locally:
 2. Run `$ cd kompetansekartlegging-app` (or whatever you've chosen to
    name the project in the cloning process).
 3. Run `$ ./install.sh`
-4. Run `cd cdk`
+4. Run `cd cdk` \
+   a. If you are using aws sso profiles you need to run `python sync_sso.py aws-cli-profile` after step 4
 5. Run `cdk bootstrap`
 6. Create a cdk.context.json file
 ```
