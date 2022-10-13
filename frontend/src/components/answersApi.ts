@@ -183,7 +183,7 @@ const getUserAnswers = async (
             }
             nextToken = response.questionAnswers.nextToken;
         }
-    } while (nextToken || !foundLatestUserForm);
+    } while (nextToken || (nextUserFormToken && !foundLatestUserForm));
 
     if (
         paginatedUserform
