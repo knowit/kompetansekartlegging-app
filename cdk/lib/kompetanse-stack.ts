@@ -266,6 +266,10 @@ export class KompetanseStack extends Stack {
       resources: [
         tableArns["UserFormTable"],
         `${tableArns["UserFormTable"]}/index/*`,
+        tableArns["GroupTable"],
+        `${tableArns["GroupTable"]}/index/*`,
+        tableArns["UserTable"],
+        `${tableArns["GroupTable"]}/index/*`,
         tableArns["QuestionTable"], 
         `${tableArns["QuestionTable"]}/index/*`,
         tableArns["QuestionAnswerTable"],

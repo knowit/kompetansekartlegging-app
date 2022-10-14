@@ -23,9 +23,15 @@ const FORM_DEFINITION_TABLE_NAME = TableMap["FormDefinitionTable"];
 const USER_POOL_ID = process.env.USERPOOL;
 const APIKEYPERMISSION_TABLE_NAME = TableMap["APIKeyPermissionTable"];
     // process.env.API_KOMPETANSEKARTLEGGIN_APIKEYPERMISSIONTABLE_NAME;
+const GROUP_TABLE_NAME = TableMap["GroupTable"];
+    // process.env.API_KOMPETANSEKARTLEGGIN_GROUPTABLE_NAME;
+const USER_TABLE_NAME = TableMap["UserTable"];
+    // process.env.API_KOMPETANSEKARTLEGGIN_GROUPTABLE_NAME;
 
 const organizationFilterParameter = ':oid';
 const organizationFilterExpression = 'organizationID = ' + organizationFilterParameter;
+const groupFilterParameter = ':gid';
+const groupFilterExpression = 'groupID = ' + groupFilterParameter;
 
 
 const getOrganizationIDFromAPIKeyHashed = async (APIKeyHashed) => {
@@ -237,6 +243,28 @@ const getAllFormDefs = async (organization_ID) => {
         .promise();
 };
 
+// Get all groups
+const getAllGroups = async (organization_ID) => {
+
+    return await docClient
+        .scan({
+            TableName: GROUP_TABLE_NAME,
+            FilterExpression: organizationFilterExpression,
+            ExpressionAttributeValues: {[organizationFilterParameter]: organization_ID}
+        })
+        .promise();
+};
+
+const getMembersOfGroup = async (group_ID) => {
+    return await docClient
+        .scan({
+            TableName: USER_TABLE_NAME,
+            FilterExpression: groupFilterExpression,
+            ExpressionAttributeValues: {[groupFilterParameter]: group_ID}
+        })
+        .promise();
+};
+
 // Get the newest form definition.
 const getNewestFormDef = async (organization_ID) => {
 
@@ -270,5 +298,7 @@ module.exports = {
     getAnswersForUser,
     getAllCategoriesForFormDef,
     getAllQuestionForCategory,
-    getOrganizationIDFromAPIKeyHashed
+    getOrganizationIDFromAPIKeyHashed,
+    getAllGroups,
+    getMembersOfGroup
 };

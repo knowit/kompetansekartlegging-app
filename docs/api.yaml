@@ -1,0 +1,481 @@
+openapi: 3.0.0
+servers:
+    - url: https://api.kompetanse.knowit.no/
+      description: Default server
+    - url: https://api.dev.kompetanse.knowit.no/
+      description: Dev server
+info:
+    title: Kompetansekartlegging API
+    version: 0.0.1
+    description: >
+        # Introduksjon
+
+        Kompetansekartleggings APIet gir autentiserte brukere tilgang
+        til kompetansekarleggingsdata.
+
+        # Autentisering
+
+        For å bruke dette APIet må du ha en nøkkel.
+          
+          - API Key (med `x-api-key` i headeren)
+
+        # API spesifikasjoner
+
+        [OpenAPI fila kan lastes ned her](api.yaml).
+tags:
+    - name: bruker
+      description: Grunnleggende informasjon om de ansatte som bruker appen.
+    - name: katalog
+      description: Informasjon om kataloger, kategorier og spørsmål.
+    - name: svar
+      description: Svarene til de ansatte.
+paths:
+    /users:
+        get:
+            tags:
+                - bruker
+            summary: Returner en liste av brukere
+            operationId: getUsers
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/User"
+                            example: >
+                                [
+                                    {
+                                        "username": "Google_111111111111111111111",
+                                        "attributes": [
+                                            {
+                                                "Name": "email",
+                                                "Value": "abc@email.no"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "username": "Google_222222222222222222222",
+                                        "attributes": [
+                                            {
+                                                "Name": "email",
+                                                "Value": "def@email.no"
+                                            }
+                                        ]
+                                    }
+                                ]
+            security:
+                - api_key: []
+    /catalogs:
+        get:
+            tags:
+                - katalog
+            summary: Returner en liste av kataloger
+            operationId: getCatalogs
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Catalog"
+                            example: >
+                                [
+                                    {
+                                        "id": "bbbbbbbb-4cfa-2222-9e8f-dddddddddddd",
+                                        "label": "2021 Vår"
+                                    },
+                                    {
+                                        "id": "aaaaaaaa-4cfa-2222-9e8f-dddddddddddd",
+                                        "label": "2021 Høst"
+                                    }
+                                ]
+            security:
+                - api_key: []
+    "/catalogs/{catalogId}/categories":
+        get:
+            tags:
+                - katalog
+            summary: Returner en liste av kategorier i en katalog
+            operationId: getCategoriesForCatalog
+            parameters:
+                - name: catalogId
+                  in: path
+                  description: ID-en til katalogen
+                  required: true
+                  schema:
+                      type: string
+                      example: "fb9e8f06-4cfa-463e-9e8f-cc0853464070"
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Category"
+                            example: >
+                                [
+                                    {
+                                        "index": 1,
+                                        "text": "Fiber optic CD-ROM array",
+                                        "description": "I'll disconnect the fiber optic CD-ROM array, that should parse the FTP driver!",
+                                        "id": "aaaaaaaa-bbad-4fed-9bd1-bbbbbbbbbbbb"
+                                    },
+                                    {
+                                        "index": 2,
+                                        "text": "RSS antenna",
+                                        "description": "Send the analog transistor into the array, it will attach the card by hacking its RSS antenna!",
+                                        "id": "cccccccc-bbad-4fed-9bd1-dddddddddddd"
+                                    }
+                                ]
+            security:
+                - api_key: []
+    "/catalogs/{catalogId}/categories/{categoryId}/questions":
+        get:
+            tags:
+                - katalog
+            summary: Returner en liste av spørsmål i en kategori
+            operationId: getQuestionsForCategory
+            parameters:
+                - name: catalogId
+                  in: path
+                  description: ID-en til katalogen
+                  required: true
+                  schema:
+                      type: string
+                      example: "fb9e8f06-4cfa-463e-9e8f-cc0853464070"
+                - name: categoryId
+                  in: path
+                  description: ID-en til kategorien
+                  required: true
+                  schema:
+                      type: string
+                      example: "84baa82a-bbad-4fed-9bd1-85c9f50fdcfc"
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Question"
+                            example: >
+                                [
+                                    {
+                                        "index": 1,
+                                        "id": "aaaaaaaa-7123-4d35-9cfd-bbbbbbbbbbbb",
+                                        "topic": "Viktig JS kunnskap",
+                                        "text": "[] == ![]?",
+                                        "categoryID": "aaaaaaaa-d88e-40c6-808f-bbbbbbbbbbbb",
+                                        "type": "knowledgeMotivation"
+                                    },
+                                    {
+                                        "index": 2,
+                                        "id": "bbbbbbbb-7123-4d35-9cfd-cccccccccccc",
+                                        "topic": "Viktig JS kunnskap",
+                                        "text": "typeof document.all?",
+                                        "categoryID": "aaaaaaaa-d88e-40c6-808f-bbbbbbbbbbbb",
+                                        "type": "customScaleLabels",
+                                        "scaleStart": "Vil ikke",
+                                        "scaleMiddle": "Kanskje",
+                                        "scaleEnd": "Jippi"
+                                    }
+                                ]
+            security:
+                - api_key: []
+    "/catalogs/{catalogId}/questions":
+        get:
+            tags:
+                - katalog
+            summary: Returner en liste av spørsmål i en katalog
+            operationId: getQuestionsForCatalog
+            parameters:
+                - name: catalogId
+                  in: path
+                  description: ID-en til katalogen
+                  required: true
+                  schema:
+                      type: string
+                      example: "fb9e8f06-4cfa-463e-9e8f-cc0853464070"
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Question"
+                            example: >
+                                [
+                                    {
+                                        "index": 1,
+                                        "id": "aaaaaaaa-7123-4d35-9cfd-bbbbbbbbbbbb",
+                                        "topic": "Viktig JS kunnskap",
+                                        "text": "[] == ![]?",
+                                        "categoryID": "aaaaaaaa-d88e-40c6-808f-bbbbbbbbbbbb",
+                                        "type": "knowledgeMotivation"
+                                    },
+                                    {
+                                        "index": 2,
+                                        "id": "bbbbbbbb-7123-4d35-9cfd-cccccccccccc",
+                                        "topic": "Viktig JS kunnskap",
+                                        "text": "typeof document.all?",
+                                        "categoryID": "aaaaaaaa-d88e-40c6-808f-bbbbbbbbbbbb",
+                                        "type": "knowledgeMotivation"
+                                    }
+                                ]
+            security:
+                - api_key: []
+    "/answers":
+        get:
+            tags:
+                - svar
+            summary: Returner de nyeste svarene til alle ansatte for nyeste katalog.
+            operationId: getAnswers
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/UserForm"
+            security:
+                - api_key: []
+    "/answers/{username}/newest":
+        get:
+            tags:
+                - svar
+            summary: Returner de nyeste svarene til den ansatte for nyeste katalog.
+            operationId: getAnswersForUser
+            parameters:
+                - name: username
+                  in: path
+                  description: Brukernavnet til brukeren
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/UserForm"
+            security:
+                - api_key: []
+    /groups:
+        get:
+            tags:
+                - gruppe
+            summary: Returner en liste av grupper
+            operationId: getGroups
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Group"
+                            example: >
+                                [
+                                    {
+                                        "gid": "bbbbbbbb-4cfa-2222-9e8f-dddddddddddd",
+                                        "groupLeader": "leader1@email.com"
+                                    },
+                                    {
+                                        "gid": "aaaaaaaa-4cfa-2222-9e8f-dddddddddddd",
+                                        "groupLeader": "leader2@email.com"
+                                    }
+                                ]
+            security:
+                - api_key: []
+    "/groups/{groupId}":
+        get:
+            tags:
+                - gruppe
+            summary: Returner en liste brukere knyttet til en gitt gruppe
+            operationId: getMembersOfGroup
+            parameters:
+                - name: groupId
+                  in: path
+                  description: ID-en til gruppa
+                  required: true
+                  schema:
+                      type: string
+                      example: "fb9e8f06-4cfa-463e-9e8f-cc0853464070"
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Member"
+                            example: >
+                                [
+                                    {
+                                        "userid": "member1@email.com"
+                                    },
+                                    {
+                                        "userid": "member2@email.com"
+                                    }
+                                ]
+            security:
+                - api_key: []
+components:
+    schemas:
+        Member:
+            type: object
+            properties:
+                userid: 
+                    type: string
+        Group:
+            type: object
+            properties:
+                gid: 
+                    type: string
+                groupLeader: 
+                    type: string
+        UserForm:
+            type: object
+            properties:
+                username:
+                    type: string
+                email:
+                    type: string
+                formDefinitionID:
+                    type: string
+                updatedAt:
+                    type: string
+                answers:
+                    type: array
+                    items:
+                        anyOf:
+                            - $ref: "#/components/schemas/AnsweredKnowledgeMotivationQuestion"
+                            - $ref: "#/components/schemas/AnsweredCustomScaleLabelsQuestion"
+            required:
+                - username
+                - email
+                - formDefinitionID
+                - updatedAt
+                - answers
+        AnsweredKnowledgeMotivationQuestion:
+            type: object
+            properties:
+                knowledge:
+                    type: number
+                motivation:
+                    type: number
+                question:
+                    $ref: "#/components/schemas/Question"
+            required:
+                - knowledge
+                - motivation
+                - question
+        AnsweredCustomScaleLabelsQuestion:
+            type: object
+            properties:
+                customScaleValue:
+                    type: number
+                question:
+                    $ref: "#/components/schemas/Question"
+            required:
+                - customScaleValue
+                - question
+        UnansweredQuestion:
+            type: object
+            properties:
+                unanswered:
+                    type: boolean
+                    default: true
+                question:
+                    $ref: "#/components/schemas/Question"
+            required:
+                - unanswered
+                - question
+        User:
+            type: object
+            properties:
+                username:
+                    type: string
+                attributes:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                            Name:
+                                type: string
+                            Value:
+                                type: string
+            required:
+                - username
+        Catalog:
+            type: object
+            properties:
+                id:
+                    type: string
+                label:
+                    type: string
+            required:
+                - id
+        Category:
+            type: object
+            properties:
+                id:
+                    type: string
+                text:
+                    type: string
+                index:
+                    type: integer
+                description:
+                    type: string
+            required:
+                - id
+                - text
+                - index
+        Question:
+            type: object
+            properties:
+                id:
+                    type: string
+                topic:
+                    type: string
+                text:
+                    type: string
+                index:
+                    type: integer
+                category:
+                    type: string
+                type:
+                    type: string
+                    enum:
+                        - knowledgeMotivation
+                        - customScaleLabels
+                scaleStart:
+                    type: string
+                scaleMiddle:
+                    type: string
+                scaleEnd:
+                    type: string
+            required:
+                - id
+                - topic
+                - category
+    securitySchemes:
+        api_key:
+            type: apiKey
+            name: x-api-key
+            in: header
