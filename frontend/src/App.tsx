@@ -137,13 +137,11 @@ const App = () => {
                         res.refreshSession(
                             currentSession.getRefreshToken(),
                             (err: any, session: any) => {
-                                console.log("session", err, session);
                                 dispatch(setUserInfo(res));
                                 dispatch(fetchOrganizationNameByID(res));
                             }
                         );
                     });
-                    res.refreshSession();
                 }
             })
             .catch(() => {
