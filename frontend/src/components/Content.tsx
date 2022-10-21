@@ -84,7 +84,7 @@ const contentStyle = makeStyles({
         width: "100%",
         display: "flex",
         flexDirection: "row",
-        overflow: "hidden",
+        overflow: "scroll",
     },
     menu: {
         background: KnowitColors.beige,
