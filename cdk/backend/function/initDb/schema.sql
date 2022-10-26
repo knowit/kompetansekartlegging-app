@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS organization(
 CREATE TABLE IF NOT EXISTS apiKeyPermission(
     id VARCHAR(255) PRIMARY KEY NOT NULL,
     APIKeyHashed VARCHAR(255) NOT NULL,
-    organizationID VARCHAR(255) NOT NULL references organization(id);
+    organizationID VARCHAR(255) NOT NULL references organization(id)
 );
 
 CREATE TABLE IF NOT EXISTS formDefinition(
