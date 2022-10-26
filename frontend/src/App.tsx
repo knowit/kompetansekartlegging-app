@@ -129,11 +129,19 @@ const App = () => {
                     break;
             }
         });
+
         Auth.currentAuthenticatedUser()
             .then((res) => {
                 if (cognitoUserContainsAttributes(res)) {
-                    dispatch(setUserInfo(res));
-                    dispatch(fetchOrganizationNameByID(res));
+                    Auth.currentSession().then((currentSession) => {
+                        res.refreshSession(
+                            currentSession.getRefreshToken(),
+                            (err: any, session: any) => {
+                                dispatch(setUserInfo(res));
+                                dispatch(fetchOrganizationNameByID(res));
+                            }
+                        );
+                    });
                 }
             })
             .catch(() => {

@@ -11,6 +11,15 @@ import { Question } from "../../../API";
 import QuestionListItem from "./QuestionListItem";
 import DeleteQuestionDialog from "./DeleteQuestionDialog";
 
+type QuestionListProps = {
+    id: string,
+    categories: any[],
+    questions: any[],
+    formDefinitionID: string,
+    formDefinitionLabel: string | null,
+    refreshQuestions: any 
+}
+
 const QuestionList = ({
     id,
     categories,
@@ -18,7 +27,7 @@ const QuestionList = ({
     formDefinitionID,
     formDefinitionLabel,
     refreshQuestions,
-}: any) => {
+}: QuestionListProps) => {
     const [enableUpdates, setEnableUpdates] = useState<boolean>(true);
 
     const [showDeleteQuestionDialog, setShowDeleteQuestionDialog] =
@@ -38,9 +47,10 @@ const QuestionList = ({
         setEnableUpdates(false);
 
         const me = question;
-        const swapWith = questions.find(
-            (c: any) => c.index === me.index - direction
-        );
+        const questionsCopy = [...questions]
+        questionsCopy.sort((qA, qB) => qB.index - qA.index)
+
+        const swapWith = questionsCopy[questionsCopy.findIndex((q) => q.index === question.index) + direction]
         await updateQuestionIndex(me, swapWith.index);
         await updateQuestionIndex(swapWith, me.index);
 

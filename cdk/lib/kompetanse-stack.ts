@@ -21,6 +21,7 @@ export class KompetanseStack extends Stack {
     const AZURE = this.node.tryGetContext("AZURE");
     const GOOGLE_ID = this.node.tryGetContext("GOOGLE_ID");
     const GOOGLE_SECRET = this.node.tryGetContext("GOOGLE_SECRET");
+    const EXCEL = this.node.tryGetContext("EXCEL");
     const ENV = this.node.tryGetContext("ENV");
     const isProd = ENV === "prod";
 
@@ -111,17 +112,6 @@ export class KompetanseStack extends Stack {
         ),
       });
 
-      // authRole.addToPolicy(new iam.PolicyStatement({
-      //   actions: [
-      //     "execute-api:Invoke"
-      //   ],
-      //   resources: [
-      //     "arn:aws:execute-api:eu-central-1:153690382195:65iwvl3jha/migrate/GET//*",
-      //     "arn:aws:execute-api:eu-central-1:153690382195:65iwvl3jha/migrate/GET/"
-      //   ],
-      //   effect: iam.Effect.ALLOW
-      // }))
-
       const unauthRole = new iam.Role(this, "UnauthRole", {
         assumedBy: new iam.FederatedPrincipal(
           "cognito-identity.amazonaws.com",
@@ -181,19 +171,6 @@ export class KompetanseStack extends Stack {
 
     const domainSettings: { cognitoDomain?: { domainPrefix: string }, customDomain?: { domainName: string, certificate: cam.Certificate } } = {}
     if (isProd) {
-      // const hostedZone = new r53.HostedZone(this, "KompetansekartleggingHostedZone", {
-      //   zoneName: "kompetanse.knowit.no",
-      // });
-
-      // const authDomainName = "auth.kompetanse.knowit.no";
-      // const certificate = new cam.Certificate(this, "auth.kompetanse.knowit.no", {
-      //   domainName: authDomainName,
-      //   validation: cam.CertificateValidation.fromDns(hostedZone)
-      // });
-      // domainSettings.customDomain = {
-      //     domainName: authDomainName,
-      //     certificate: certificate
-      // };
       domainSettings.cognitoDomain = {
         domainPrefix: `komptest-${ENV}`
       };
@@ -233,6 +210,12 @@ export class KompetanseStack extends Stack {
       tableArns[table] = appSync.tableMap[table].tableArn;
     });
     
+    const ApiMap: {[key:string]: {
+      name: string,
+      region: string,
+      endpoint: string
+    }} = {}
+
     // AdminQueries Lambda setup
 
     const adminQueriesLambda = new lambda.Function(this, "kompetanseAdminQueries", {
@@ -240,6 +223,7 @@ export class KompetanseStack extends Stack {
       handler: "index.handler",
       runtime: lambda.Runtime.NODEJS_14_X,
       timeout: Duration.seconds(25),
+      memorySize: 512,
       environment: {
         "USERPOOL": pool.userPoolId,
         "GROUP": "admin",
@@ -327,11 +311,12 @@ export class KompetanseStack extends Stack {
         "TABLE_MAP": JSON.stringify(appSync.tableNameMap)
       },
       initialPolicy: [externalApiStatement, externalAPICognitoStatement],
+      memorySize: 1024,
       timeout: Duration.seconds(25)
     });
 
     // CreateExcel Setup
-    const excelEnabled = false;
+    const excelEnabled = EXCEL;
 
     if (excelEnabled) {
       const excelBucket = new s3.Bucket(this, "excelBucket", {lifecycleRules: [
@@ -427,7 +412,12 @@ export class KompetanseStack extends Stack {
             },
             responseModels: {"application/json": gateway.Model.EMPTY_MODEL, "application/vnd.ms-excel": gateway.Model.EMPTY_MODEL}
           }],
-        });    
+        });
+        ApiMap["excelApi"] = {
+          name: excelApi.restApiName,
+          endpoint: excelApi.url,
+          region: this.region
+        };
     }
 
 
@@ -526,6 +516,12 @@ export class KompetanseStack extends Stack {
     });
 
 
+    ApiMap["adminQueries"] = {
+      name: adminQueryApi.restApiName,
+      endpoint: adminQueryApi.url,
+      region: this.region
+    };
+
     // External API Setup
 
     const externalApi = new gateway.RestApi(this, "KompetanseExternalApi", {
@@ -597,6 +593,12 @@ export class KompetanseStack extends Stack {
       }],
     });
 
+    ApiMap["externalAPI"] = {
+      name: externalApi.restApiName,
+      endpoint: externalApi.url,
+      region: this.region
+    };
+
     // ExternalAPI Usage plan setup
 
     const extUsagePlan = externalApi.addUsagePlan("externalApiUsagePlan", {
@@ -607,8 +609,6 @@ export class KompetanseStack extends Stack {
       }]
     });
   
-
-    // const apiKeyTest = extUsagePlan.addApiKey(new gateway.ApiKey(this, "TestKey", {apiKeyName:"Test"}));
 
     // Backup-plan for production
     if (isProd) {
@@ -642,23 +642,7 @@ export class KompetanseStack extends Stack {
     });
 
     const functionMapOutput = new CfnOutput(this, "functionMap", {
-      value: JSON.stringify({
-        adminQueries: {
-          name: adminQueryApi.restApiName,
-          endpoint: adminQueryApi.url,
-          region: this.region
-        },
-        externalAPI: {
-          name: externalApi.restApiName,
-          endpoint: externalApi.url,
-          region: this.region
-        },
-        excelApi: {
-          name: "", //excelApi.restApiName,
-          endpoint: "", // excelApi.url,
-          region: this.region
-        }
-      })
+      value: JSON.stringify(ApiMap)
     });
     
     const userCreateBatchOutput = new CfnOutput(this, "outputCreateBatch", {

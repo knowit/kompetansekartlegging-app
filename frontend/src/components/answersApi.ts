@@ -148,6 +148,8 @@ const getUserAnswers = async (
     isMobile: boolean
 ) => {
     let nextToken: string | null = null;
+    let nextUserFormToken: string | null = null;
+    let foundLatestUserForm = false
 
     if (!userName) {
         console.error("User not found when getting useranswers");
@@ -156,17 +158,25 @@ const getUserAnswers = async (
     let questionAnswers: UserAnswer[] = [];
     let paginatedUserform: UserFormPaginated | undefined; // The userform response has pagination on questionAnswers, with nextToken; see types
     do {
-        let response: any = (
+        let query: any = (
             await helper.callGraphQL<UserFormByCreatedAtPaginated>(
                 customQueries.customUserFormByCreatedAt,
                 {
                     ...customQueries.userFormByCreatedAtInputConsts,
                     owner: userName,
-                    nextToken: nextToken,
+                    filter: {formDefinitionID: {eq: formDef.id}},
+                    nextQAToken: nextToken,
+                    nextUserFormToken: nextUserFormToken
                 }
             )
-        ).data?.userFormByCreatedAt.items[0];
-
+        ).data?.userFormByCreatedAt;
+        let response: any = query?.items[0];
+        if (response) {
+            foundLatestUserForm = true
+        }
+        if (query && !foundLatestUserForm) {
+            nextUserFormToken = query.nextToken
+        }
         if (response && response.questionAnswers.items) {
             if (typeof paginatedUserform === "undefined") {
                 paginatedUserform = response;
@@ -178,7 +188,7 @@ const getUserAnswers = async (
             }
             nextToken = response.questionAnswers.nextToken;
         }
-    } while (nextToken);
+    } while (nextToken || (nextUserFormToken && !foundLatestUserForm));
 
     if (
         paginatedUserform

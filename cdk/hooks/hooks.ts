@@ -5,13 +5,12 @@ const file = fs.readFileSync("outputs.json", {encoding: "utf-8"})
 
 const json = JSON.parse(file);
 let stack: any;
-// const stack = json.KompetanseStack;
+
 stack = json[Object.keys(json)[0]];
-// console.log(stack);
+
 stack.oauth = JSON.parse(stack.oauth);
 stack.functionMap = JSON.parse(stack.functionMap);
 const functionMap = Object.keys(stack.functionMap).map(key => {
-    // stack.functionMap[key].endpoint = stack.functionMap[key].endpoint.substring(0, stack.functionMap[key].endpoint.length - 1) 
     return {
         ...stack.functionMap[key],
         endpoint: stack.functionMap[key].endpoint.substring(0, stack.functionMap[key].endpoint.length - 1) // Remove / from endpoint 
