@@ -4,7 +4,6 @@ from os import environ
 import pandas as pd
 from io import StringIO
 import math
-import pandas.io.common
 
 s3Resource = boto3.resource("s3")
 s3BucketFrom = environ.get("TRANSFORMED_DATA_BUCKET")
@@ -69,8 +68,9 @@ def getPandasCSVFile(key):
     try:
         csv_content = pd.read_csv(csvString, sep=",", header=[0])
         return csv_content
-    except pandas.io.common.EmptyDataError as e:
-        print(e + "\n Returning empty list")
+    except Exception as e:
+        print(e)
+        print("Returning empty list")
         return []
 
 
