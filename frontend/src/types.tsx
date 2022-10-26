@@ -4,18 +4,16 @@ import { AlertType } from "./components/AlertNotification";
 import { Dispatch, SetStateAction } from "react";
 import { OverviewType } from "./components/TypedOverviewChart";
 
-
 export interface UserState {
-    isSignedIn: boolean
-    organizationID: string,
-    email: string,
-    name: string,
-    userName: string,
-    organizationName: string
-    picture: string,
-    roles: UserRole[]
+    isSignedIn: boolean;
+    organizationID: string;
+    email: string;
+    name: string;
+    userName: string;
+    organizationName: string;
+    picture: string;
+    roles: UserRole[];
 }
-
 
 export enum Panel {
     Overview,

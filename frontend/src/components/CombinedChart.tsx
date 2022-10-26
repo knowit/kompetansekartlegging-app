@@ -106,9 +106,8 @@ export const CombinedChart = ({ ...props }: CombinedChartProps) => {
         let topSubjects = props.topSubjects;
         return ({ ...props }: ToolTipProps) => {
             if (props.active && props.payload) {
-                let knowledgeValue = props.payload[0]?.payload.valueKnowledge[1].toFixed(
-                    1
-                );
+                let knowledgeValue =
+                    props.payload[0]?.payload.valueKnowledge[1].toFixed(1);
                 let motivationValue = (
                     props.payload[1]?.payload.valueMotivation[1] - chartSplitAt
                 ).toFixed(1);

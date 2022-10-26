@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import { compareByName } from "./helpers";
 
-const useApiGet = ({ getFn, constantResult, cmpFn = compareByName, params = null }: any) => {
-
+const useApiGet = ({
+    getFn,
+    constantResult,
+    cmpFn = compareByName,
+    params = null,
+}: any) => {
     const [result, setResult] = useState<any[]>(constantResult || []);
     const [loading, setLoading] = useState<boolean>(!constantResult);
     const [error, setError] = useState<string | undefined>();
@@ -18,7 +22,7 @@ const useApiGet = ({ getFn, constantResult, cmpFn = compareByName, params = null
                 if (refreshCounter === 0) {
                     setLoading(true);
                 }
-                const res = (params) ? await getFn(params) : await getFn();
+                const res = params ? await getFn(params) : await getFn();
                 if (res.result) {
                     if (cmpFn) {
                         setResult(res.result.sort(cmpFn));

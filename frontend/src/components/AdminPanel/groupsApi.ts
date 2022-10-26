@@ -26,8 +26,10 @@ import {
     updateUser,
 } from "../../graphql/mutations";
 import { ApiResponse } from "./adminApi";
-import { ADMIN_COGNITOGROUP_SUFFIX, GROUPLEADER_COGNITOGROUP_SUFFIX } from '../../constants';
-
+import {
+    ADMIN_COGNITOGROUP_SUFFIX,
+    GROUPLEADER_COGNITOGROUP_SUFFIX,
+} from "../../constants";
 
 const getGroupMembers = async (
     groupID: string
@@ -108,7 +110,7 @@ const addUserToGroup = async (
                 groupID,
                 organizationID: orgID,
                 orgAdmins: `${orgID}${ADMIN_COGNITOGROUP_SUFFIX}`,
-                orgGroupLeaders: `${orgID}${GROUPLEADER_COGNITOGROUP_SUFFIX}`
+                orgGroupLeaders: `${orgID}${GROUPLEADER_COGNITOGROUP_SUFFIX}`,
             },
         });
         const user = userGQ?.data?.createUser as User;

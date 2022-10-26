@@ -108,7 +108,9 @@ const recalculate = (
                 valueKnowledge: [
                     knowledgeStart,
                     knowledgeStart +
-                        (answer.aggCustomScale === -1 ? 0 : answer.aggCustomScale),
+                        (answer.aggCustomScale === -1
+                            ? 0
+                            : answer.aggCustomScale),
                 ],
                 valueMotivation: [
                     motivationStart,
@@ -264,10 +266,8 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
 
         const createHighestData = (): ResultData[] => {
             let ansData: ResultData[] = [];
-            let newTopSubjects: Map<
-                string,
-                { kTop: string; mTop: string }
-            > = new Map();
+            let newTopSubjects: Map<string, { kTop: string; mTop: string }> =
+                new Map();
             props.questionAnswers.forEach((questionAnswers, category) => {
                 let kTop: string = "";
                 let mTop: string = "";

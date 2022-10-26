@@ -1,7 +1,8 @@
-import { API, Auth,  } from "aws-amplify";
-import { ADMIN_COGNITOGROUP_SUFFIX, GROUPLEADER_COGNITOGROUP_SUFFIX } from '../../constants';
-
-
+import { API, Auth } from "aws-amplify";
+import {
+    ADMIN_COGNITOGROUP_SUFFIX,
+    GROUPLEADER_COGNITOGROUP_SUFFIX,
+} from "../../constants";
 
 export interface Response<T> {
     result: T;
@@ -48,7 +49,7 @@ const removeAdmin = async (user: any, org: any) =>
     await removeUserFromGroup(`${org}0admin`, user.Username);
 
 export const addUserToGroup = async (
-    groupname: string,  
+    groupname: string,
     username: string
 ): Promise<ApiResponse<any>> => {
     let apiName = "AdminQueries";
@@ -96,7 +97,7 @@ const listUsersInGroup = async (
     try {
         let response = await API.get(apiName, path, myInit);
         const Users: any[] = [];
-        let nextToken = (response.NextToken) ? response.NextToken : null;
+        let nextToken = response.NextToken ? response.NextToken : null;
         Users.push(...response.Users);
         while (nextToken) {
             myInit.queryStringParameters["token"] = nextToken;
@@ -105,9 +106,9 @@ const listUsersInGroup = async (
             if (response.NextToken && response.NextToken != nextToken) {
                 nextToken = response.NextToken;
             } else {
-                nextToken = null
+                nextToken = null;
             }
-        // nextToken = () ? response.NextToken : null;
+            // nextToken = () ? response.NextToken : null;
         }
         return { result: Users };
     } catch (e) {
@@ -117,10 +118,15 @@ const listUsersInGroup = async (
     }
 };
 
-const listAllUsersInOrganization = async (organizationID: string) => await listUsersInGroup(organizationID);
-const listGroupLeadersInOrganization = async (organizationID: string) => await listUsersInGroup(`${organizationID}${GROUPLEADER_COGNITOGROUP_SUFFIX}`);
+const listAllUsersInOrganization = async (organizationID: string) =>
+    await listUsersInGroup(organizationID);
+const listGroupLeadersInOrganization = async (organizationID: string) =>
+    await listUsersInGroup(
+        `${organizationID}${GROUPLEADER_COGNITOGROUP_SUFFIX}`
+    );
 const listGroupLeaders = async () => await listUsersInGroup("groupLeader");
-const listAdminsInOrganization = async (organizationID: string) => await listUsersInGroup(`${organizationID}${ADMIN_COGNITOGROUP_SUFFIX}`);
+const listAdminsInOrganization = async (organizationID: string) =>
+    await listUsersInGroup(`${organizationID}${ADMIN_COGNITOGROUP_SUFFIX}`);
 const listAdmins = async () => await listUsersInGroup("admin");
 
 const listAllUsers = async (
@@ -154,7 +160,6 @@ const listAllUsers = async (
     }
     return { result: allUsers };
 };
-
 
 export {
     listAllUsers,

@@ -18,13 +18,19 @@ import commonStyles from "../AdminPanel/common.module.css";
 import AddUserToGroupDialog from "../AdminPanel/AddUserToGroupDialog";
 import DeleteUserFromGroupDialog from "../AdminPanel/DeleteUserFromGroupDialog";
 import useApiGet from "../AdminPanel/useApiGet";
-import { listAllUsers, listAllUsersInOrganization, listAdmins, removeUserFromGroup, addUserToGroup } from "../AdminPanel/adminApi";
+import {
+    listAllUsers,
+    listAllUsersInOrganization,
+    listAdmins,
+    removeUserFromGroup,
+    addUserToGroup,
+} from "../AdminPanel/adminApi";
 import { getAttribute } from "../AdminPanel/helpers";
 import Button from "../mui/Button";
 import Table from "../mui/Table";
 import PictureAndNameCell from "../AdminPanel/PictureAndNameCell";
-import {useSelector} from 'react-redux';
-import {selectAdminCognitoGroupName } from '../../redux/User';
+import { useSelector } from "react-redux";
+import { selectAdminCognitoGroupName } from "../../redux/User";
 
 const Admin = (props: any) => {
     const { admin, deleteAdmin } = props;
@@ -78,18 +84,20 @@ const AdminTable = ({ admins, deleteAdmin }: any) => {
 };
 
 const EditSuperAdmins = () => {
-
     const adminCognitoGroupName = useSelector(selectAdminCognitoGroupName);
 
-    const { result: admins, error, loading, refresh } = useApiGet({
+    const {
+        result: admins,
+        error,
+        loading,
+        refresh,
+    } = useApiGet({
         getFn: listAllUsersInOrganization,
-        params: adminCognitoGroupName
+        params: adminCognitoGroupName,
     });
     const [showAddAdmin, setShowAddAdmin] = useState<boolean>(false);
-    const [
-        showDeleteUserFromGroupDialog,
-        setShowDeleteUserFromGroupDialog,
-    ] = useState<boolean>(false);
+    const [showDeleteUserFromGroupDialog, setShowDeleteUserFromGroupDialog] =
+        useState<boolean>(false);
     const [adminToDelete, setAdminToDelete] = useState<any>();
 
     const deleteAdmin = (user: any) => {
@@ -97,7 +105,10 @@ const EditSuperAdmins = () => {
         setAdminToDelete(user);
     };
     const deleteAdminConfirm = async () => {
-        await removeUserFromGroup(adminCognitoGroupName, adminToDelete.Username);
+        await removeUserFromGroup(
+            adminCognitoGroupName,
+            adminToDelete.Username
+        );
         setShowDeleteUserFromGroupDialog(false);
         refresh();
     };
@@ -118,7 +129,8 @@ const EditSuperAdmins = () => {
                     <Card style={{ marginBottom: "24px" }} variant="outlined">
                         <CardContent>
                             <Typography color="textSecondary" gutterBottom>
-                                PLACEHOLDER! HER SKAL REDIGER SUPER-ADMINISTRATORER!
+                                PLACEHOLDER! HER SKAL REDIGER
+                                SUPER-ADMINISTRATORER!
                             </Typography>
                             PLACEHOLDER BESKRIVELSE.
                         </CardContent>

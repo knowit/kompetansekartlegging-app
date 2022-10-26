@@ -9,7 +9,7 @@ import Paper from "@material-ui/core/Paper";
 
 import { getAttribute } from "./helpers";
 import Table from "../mui/Table";
-import TableRow from "../mui/TableRow"
+import TableRow from "../mui/TableRow";
 import PictureAndNameCell from "./PictureAndNameCell";
 
 const User = ({ user, selected, setSelectedUser }: any) => {

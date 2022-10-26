@@ -26,7 +26,7 @@ import PictureAndNameCell from "./PictureAndNameCell";
 import { dialogStyles } from "../../styles";
 import { CloseIcon } from "../DescriptionTable";
 import { not, getAttribute } from "./helpers";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 import { selectUserState } from "../../redux/User";
 
 const getNameOrUsername = (user: any) => {
@@ -43,7 +43,6 @@ const AddMemberToGroupDialog = ({
 }: any) => {
     const style = dialogStyles();
     const userState = useSelector(selectUserState);
-
 
     const [showOnlyUnset, setShowOnlyUnset] = useState<boolean>(true);
     const [nameFilter, setNameFilter] = useState<string>("");

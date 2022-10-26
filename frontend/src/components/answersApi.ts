@@ -76,14 +76,15 @@ const fetchLastFormDefinition = async (
     let formDefPaginated: FormDefinitionPaginated = undefined; // The form definition response has pagination on questions, with nextToken; see types
     try {
         do {
-            let currentForm: any = await helper.callGraphQL<FormDefinitionByCreatedAtPaginated>(
-                customQueries.formByCreatedAtPaginated,
-                {
-                    ...customQueries.formByCreatedAtInputConsts,
-                    nextToken: nextToken,
-                    nextFormToken: nextFormToken,
-                }
-            );
+            let currentForm: any =
+                await helper.callGraphQL<FormDefinitionByCreatedAtPaginated>(
+                    customQueries.formByCreatedAtPaginated,
+                    {
+                        ...customQueries.formByCreatedAtInputConsts,
+                        nextToken: nextToken,
+                        nextFormToken: nextFormToken,
+                    }
+                );
             if (currentForm.data && currentForm.data.formByCreatedAt.items[0]) {
                 if (typeof formDefPaginated === "undefined") {
                     formDefPaginated =
@@ -102,7 +103,11 @@ const fetchLastFormDefinition = async (
                         .nextToken;
                 foundOrganizationForm = true;
                 // nextFormToken = null;
-            } else if (currentForm.data && currentForm.data.formByCreatedAt && !foundOrganizationForm) {
+            } else if (
+                currentForm.data &&
+                currentForm.data.formByCreatedAt &&
+                !foundOrganizationForm
+            ) {
                 nextFormToken = currentForm.data.formByCreatedAt.nextToken;
             }
         } while (nextToken || (nextFormToken && !foundOrganizationForm));
@@ -146,9 +151,9 @@ const getUserAnswers = async (
     let nextUserFormToken: string | null = null;
     let foundLatestUserForm = false
 
-    if(!userName){
+    if (!userName) {
         console.error("User not found when getting useranswers");
-    };
+    }
 
     let questionAnswers: UserAnswer[] = [];
     let paginatedUserform: UserFormPaginated | undefined; // The userform response has pagination on questionAnswers, with nextToken; see types

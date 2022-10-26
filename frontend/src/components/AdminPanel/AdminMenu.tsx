@@ -73,7 +73,9 @@ const AdminMenu = ({
                             onClick={async () => {
                                 if (cat.hasInternalRouting) {
                                     setActiveSubmenuItem("hidden");
-                                    await new Promise(resolve => setTimeout(resolve, 50));
+                                    await new Promise((resolve) =>
+                                        setTimeout(resolve, 50)
+                                    );
                                 }
                                 setActiveSubmenuItem(cat.text);
                             }}

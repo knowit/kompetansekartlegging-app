@@ -16,8 +16,8 @@ import { not, getAttribute } from "./helpers";
 import useApiGet from "./useApiGet";
 import UsersTable from "./UsersTable";
 import { CloseIcon } from "../DescriptionTable";
-import {useSelector} from 'react-redux';
-import {selectUserState } from '../../redux/User';
+import { useSelector } from "react-redux";
+import { selectUserState } from "../../redux/User";
 
 const AddUserToGroupDialog = ({
     onCancel,
@@ -33,7 +33,11 @@ const AddUserToGroupDialog = ({
     const style = dialogStyles();
     const userState = useSelector(selectUserState);
 
-    const { result: users, error, loading } = useApiGet({
+    const {
+        result: users,
+        error,
+        loading,
+    } = useApiGet({
         getFn: userGetFn,
         constantResult: usersConstant,
         params: userState.isSignedIn ? userState.organizationID : null,

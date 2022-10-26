@@ -44,27 +44,25 @@ import { ApiResponse } from "./adminApi";
 const listAllFormDefinitionsForLoggedInUser = async (): Promise<
     ApiResponse<FormDefinition[]>
 > => {
-
     const organizationID = store.getState().user.userState.organizationID;
     try {
-        return await listAllFormDefinitionsByOrganizationID(organizationID as string);
+        return await listAllFormDefinitionsByOrganizationID(
+            organizationID as string
+        );
     } catch (e) {
-        return { error: `Could not get a list of all form definitions for organization id '${organizationID}'.` };
+        return {
+            error: `Could not get a list of all form definitions for organization id '${organizationID}'.`,
+        };
     }
 };
 
 const listAllFormDefinitionsByOrganizationID = async (
     organizationID: string
-): Promise<
-    ApiResponse<FormDefinition[]>
-> => {
+): Promise<ApiResponse<FormDefinition[]>> => {
     try {
-        const gq = await callGraphQL<Query>(
-            formDefinitionByOrganizationId,
-            {
-                organizationID,
-            }
-        );
+        const gq = await callGraphQL<Query>(formDefinitionByOrganizationId, {
+            organizationID,
+        });
         const els = gq?.data?.formDefinitionByOrganizationID?.items?.map(
             (el) =>
                 ({
@@ -79,8 +77,10 @@ const listAllFormDefinitionsByOrganizationID = async (
 
         return { result: els || [] };
     } catch (e) {
-        console.log(e)
-        return { error: `listAllFormDefinitionsByOrganizationID: Could not get a list of all form definitions for organization id '${organizationID}'.` };
+        console.log(e);
+        return {
+            error: `listAllFormDefinitionsByOrganizationID: Could not get a list of all form definitions for organization id '${organizationID}'.`,
+        };
     }
 };
 
@@ -88,12 +88,9 @@ const listCategoriesByFormDefinitionID = async (
     formDefinitionID: string
 ): Promise<ApiResponse<Category[]>> => {
     try {
-        const gq = await callGraphQL<Query>(
-            categoriesByFormDefinition,
-            {
-                formDefinitionID,
-            }
-        );
+        const gq = await callGraphQL<Query>(categoriesByFormDefinition, {
+            formDefinitionID,
+        });
         const els = gq?.data?.categoriesByFormDefinition?.items?.map(
             (el) =>
                 ({
@@ -119,12 +116,9 @@ const listQuestionsByCategoryID = async (
     categoryID: string
 ): Promise<ApiResponse<Question[]>> => {
     try {
-        const gq = await callGraphQL<Query>(
-            questionsByCategory,
-            {
-                categoryID,
-            }
-        );
+        const gq = await callGraphQL<Query>(questionsByCategory, {
+            categoryID,
+        });
         const els = gq?.data?.questionsByCategory?.items?.map(
             (el) =>
                 ({
@@ -235,12 +229,9 @@ const updateFormDefinition = async (
             id,
             ...vars,
         };
-        const gq = await callGraphQL<Mutation>(
-            updateFormDefinitionGq,
-            {
-                input,
-            }
-        );
+        const gq = await callGraphQL<Mutation>(updateFormDefinitionGq, {
+            input,
+        });
         const el = gq?.data?.updateFormDefinition as FormDefinition;
         return { result: el || null };
     } catch (e) {
@@ -262,12 +253,9 @@ const deleteFormDefinition = async (id: string): Promise<ApiResponse<null>> => {
         const input = {
             id,
         };
-        await callGraphQL<Mutation>(
-            deleteFormDefinitionGq,
-            {
-                input,
-            }
-        );
+        await callGraphQL<Mutation>(deleteFormDefinitionGq, {
+            input,
+        });
         return { result: null };
     } catch (e) {
         return {
@@ -321,12 +309,9 @@ const createFormDefinition = async (
             sortKeyConstant: "formDefinitionConstant",
             createdAt: new Date(0).toISOString(),
         };
-        const gq = await callGraphQL<Mutation>(
-            createFormDefinitionGq,
-            {
-                input,
-            }
-        );
+        const gq = await callGraphQL<Mutation>(createFormDefinitionGq, {
+            input,
+        });
         const el = gq?.data?.createFormDefinition as FormDefinition;
         return { result: el || null };
     } catch (e) {
@@ -351,7 +336,7 @@ const createCategory = async (
             index,
             formDefinitionID,
             orgAdmins: `${organizationID}0admin`,
-            organizationID: organizationID
+            organizationID: organizationID,
         };
         const gq = await callGraphQL<Mutation>(createCategoryGq, {
             input,
@@ -359,7 +344,6 @@ const createCategory = async (
         const el = gq?.data?.createCategory as Category;
         return { result: el || null };
     } catch (e) {
-
         return {
             error: `Could not create category '${name}'.`,
         };
