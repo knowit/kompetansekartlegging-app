@@ -90,7 +90,7 @@ const getAnswersForUser = async (user, formDefinitionID, questionMap) => {
     let lastUserForm = getNewestItem(allUserForms.Items);
 
     const answers = await getAnswersForUserForm(lastUserForm.id);
-    const answersWithQuestions = answers.map((a) =>
+    const answersWithQuestions = answers.filter((answer) => questionMap[answer.questionID]).map((a) =>
         mapQuestionToAnswer(questionMap, a)
     );
 
