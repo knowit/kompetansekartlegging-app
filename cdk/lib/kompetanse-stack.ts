@@ -15,6 +15,8 @@ import * as path from "path";
 import { AppSyncTransformer } from 'cdk-appsync-transformer';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
+import { aws_lambda_nodejs as nodejs } from 'aws-cdk-lib';
+
 export class KompetanseStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -326,6 +328,77 @@ export class KompetanseStack extends Stack {
       },
       initialPolicy: [externalApiStatement, externalAPICognitoStatement],
       timeout: Duration.seconds(25)
+    });
+
+    // Express Lambda API
+
+    const expressLambda = new gateway.RestApi(this, "expressLambdaApi", {
+      restApiName: "expressLambdaApi",
+      deployOptions: {
+        stageName: (isProd) ? "prod" : "dev"
+      }
+    });
+
+    const expressLambdaProxy = expressLambda.root.addProxy({
+      anyMethod: false,
+    });
+
+    const expressLambdaResponseModel = expressLambda.addModel("externalAPIResponseModel", {
+      contentType: "application/json",
+      modelName: "ResponseSchema",
+      schema: {
+        "type" : gateway.JsonSchemaType.OBJECT,
+        "required" : [ "response" ],
+        "properties" : {
+          "response" : {
+            "type" : gateway.JsonSchemaType.STRING
+          }
+        },
+        "title" : "Response Schema"
+      }
+    })
+
+    const expressLambdaAnyMethod = expressLambdaProxy.addMethod("ANY", new gateway.LambdaIntegration(
+      externalAPILambda
+    ),
+    {
+      apiKeyRequired: true,
+      requestModels: {
+        "application/json": expressLambdaResponseModel
+      },
+      methodResponses: [
+        {
+          statusCode: "200",
+          responseModels: {
+            "application/json": expressLambdaResponseModel
+          }
+        }
+      ]
+    })
+    expressLambdaProxy.addMethod("OPTIONS", new gateway.MockIntegration({
+      passthroughBehavior: gateway.PassthroughBehavior.WHEN_NO_MATCH,
+      requestTemplates: {
+        "application/json" : JSON.stringify({statusCode: 200})
+      },
+      integrationResponses: [{
+        statusCode: "200",
+        responseParameters:{
+          "method.response.header.Access-Control-Allow-Methods": "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+          "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+          "method.response.header.Access-Control-Allow-Origin": "'*'"
+        }
+      }],
+    }), {
+      methodResponses: [{
+        statusCode: "200",
+        responseParameters: {
+          'method.response.header.Content-Type': true,
+          "method.response.header.Access-Control-Allow-Headers": true,
+          'method.response.header.Access-Control-Allow-Origin': true,
+          'method.response.header.Access-Control-Allow-Credentials': true,
+          'method.response.header.Access-Control-Allow-Methods': true
+        },
+      }],
     });
 
     // CreateExcel Setup

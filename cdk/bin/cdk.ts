@@ -4,6 +4,8 @@ import * as cdk from 'aws-cdk-lib';
 import { KompetanseStack } from '../lib/kompetanse-stack';
 import { MigrationStack } from '../lib/migration-stack'
 import { AuroraStack } from '../lib/aurora-stack';
+import { aws_lambda_nodejs as nodejs} from 'aws-cdk-lib';
+import * as path from "path";
 
 const app = new cdk.App();
 const ENV = app.node.tryGetContext("ENV")
@@ -32,4 +34,6 @@ const auroraStack = new AuroraStack(app, `AuroraStack-${ENV}`, {});
 new MigrationStack(app, `MigrationStack-${ENV}`, {
   cluster: auroraStack.auroraCluster,
 });
+
+
 
