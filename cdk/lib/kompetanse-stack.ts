@@ -332,49 +332,29 @@ export class KompetanseStack extends Stack {
 
     // Express Lambda API
 
-    const expressLambda = new gateway.RestApi(this, "expressLambdaApi", {
-      restApiName: "expressLambdaApi",
+    const expressLambdaNodejs = new nodejs.NodejsFunction(this, 'expressLambda', {
+      entry: path.join(__dirname, "/../backend/function/expressLambda/index.ts"),
+      depsLockFilePath: path.join(__dirname, "/../backend/function/expressLambda/package-lock.json"),
+    });
+
+    const expressLambdaApi = new gateway.RestApi(this, "kompetanseExpressLambdaApi", {
+      restApiName: "ExpressLambda",
       deployOptions: {
-        stageName: (isProd) ? "prod" : "dev"
-      }
-    });
-
-    const expressLambdaProxy = expressLambda.root.addProxy({
-      anyMethod: false,
-    });
-
-    const expressLambdaResponseModel = expressLambda.addModel("externalAPIResponseModel", {
-      contentType: "application/json",
-      modelName: "ResponseSchema",
-      schema: {
-        "type" : gateway.JsonSchemaType.OBJECT,
-        "required" : [ "response" ],
-        "properties" : {
-          "response" : {
-            "type" : gateway.JsonSchemaType.STRING
-          }
-        },
-        "title" : "Response Schema"
-      }
-    })
-
-    const expressLambdaAnyMethod = expressLambdaProxy.addMethod("ANY", new gateway.LambdaIntegration(
-      externalAPILambda
-    ),
-    {
-      apiKeyRequired: true,
-      requestModels: {
-        "application/json": expressLambdaResponseModel
+        stageName: "dev"
       },
-      methodResponses: [
-        {
-          statusCode: "200",
-          responseModels: {
-            "application/json": expressLambdaResponseModel
-          }
-        }
-      ]
-    })
+    });
+
+    const expressLambdaProxy = expressLambdaApi.root.addProxy({
+      anyMethod: false
+    });
+    expressLambdaProxy.addMethod("ANY", new gateway.LambdaIntegration(expressLambdaNodejs), {
+      authorizer: new gateway.CognitoUserPoolsAuthorizer(this, "CognitoExpressLambda", {
+        authorizerName: "COGNITO",
+        cognitoUserPools: [pool],
+      }),
+      authorizationScopes: ["aws.cognito.signin.user.admin"],
+    });
+
     expressLambdaProxy.addMethod("OPTIONS", new gateway.MockIntegration({
       passthroughBehavior: gateway.PassthroughBehavior.WHEN_NO_MATCH,
       requestTemplates: {
@@ -398,6 +378,7 @@ export class KompetanseStack extends Stack {
           'method.response.header.Access-Control-Allow-Credentials': true,
           'method.response.header.Access-Control-Allow-Methods': true
         },
+        responseModels: {"application/json": gateway.Model.EMPTY_MODEL}
       }],
     });
 
