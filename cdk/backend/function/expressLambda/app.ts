@@ -26,8 +26,11 @@ app.get("/", async (req, res) => {
   }
 })
 
-app.get("/debug", (req, res) => {
-  return res.json({ message: "Buggin'" })
-})
+app.get<unknown, unknown, unknown, { debugName: string }>(
+  "/debug",
+  (req, res) => {
+    return res.json({ name: req.query.debugName, message: "Buggin'" })
+  }
+)
 
 module.exports = app
