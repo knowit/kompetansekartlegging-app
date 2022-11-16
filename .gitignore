@@ -66,3 +66,7 @@ __pycache__
 .vscode
 
 *.xlsx
+
+# SSO script
+
+aws_sso.ps1
