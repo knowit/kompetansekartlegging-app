@@ -1,12 +1,9 @@
-import express from "express";
+const awsServerlessExpress = require('aws-serverless-express');
+const app = require('./app.ts');
 
-const app = express()
+const server = awsServerlessExpress.createServer(app);
 
-app.get("/", async (req, res) => {
-    try {
-        const response = "hei, det funket"
-        res.status(200).json()
-    } catch (err) {
-        console.error(err)
-    }
-})
+exports.handler = (event: any, context: any) => {
+  console.log(`EVENT: ${JSON.stringify(event)}`);
+  awsServerlessExpress.proxy(server, event, context);
+};
