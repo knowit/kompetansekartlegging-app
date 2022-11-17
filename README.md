@@ -25,7 +25,8 @@ To run the project locally:
 3. Run `$ ./install.sh`
 4. Run `cd cdk` \
    a. If you are using aws sso profiles you need to run `python sync_sso.py aws-cli-profile` after step 4
-5. Run `export AWS_PROFILE={aws cli profilename}` followed by `cdk bootstrap`
+5. Set the AWS_PROFILE variable to the profile name. On linux or mac run `export AWS_PROFILE={aws cli profilename}`
+   and on windows run `set AWS_PROFILE={aws cli profilename}`. Then bootstrap CDK by running `cdk bootstrap`
 6. Create a `cdk.context.json` file 
    * Add ENV to it. If you are deploying to a sandbox account, you can give it any value you want. These have to be unique, so you might get a conflict if it already exists on AWS. IF YOU ARE DEPLOYING TO PROD OR DEVELOPMENT the ENV value should be `prod` or `dev`.
    * IF DEPLOYING TO PROD OR DEVELOPMENT: Add GOOGLE_ID, GOOGLE_SECRET and AZURE to it, where GOOGLE_ID is the GCP App Id, GOOGLE_SECRET is the GCP App secret key, and AZURE is the Azure AD metadata url
