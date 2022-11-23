@@ -1,42 +1,57 @@
-import setAppSyncAuth from "./setAppSyncAuth";
-import initializeDatabase from "./initializeDatabase";
+import setAppSyncAuth from "./setAppSyncAuth"
+import initializeDatabase from "./initializeDatabase"
 import * as fs from "fs"
 
-const file = fs.readFileSync("outputs.json", {encoding: "utf-8"})
+const file = fs.readFileSync("outputs.json", { encoding: "utf-8" })
 
-const json = JSON.parse(file);
-const kompetanseStackKey = Object.keys(json).find(key => key.startsWith("KompetanseStack"));
-const auroraStackKey = Object.keys(json).find(key => key.startsWith("AuroraStack"));
+const json = JSON.parse(file)
+const kompetanseStackKey = Object.keys(json).find((key) =>
+  key.startsWith("KompetanseStack")
+)
+const auroraStackKey = Object.keys(json).find((key) =>
+  key.includes("AuroraStack")
+)
 if (kompetanseStackKey === undefined) {
-    throw new ReferenceError("Kunne ikke finne KompetanseStack i outputs.json");
+  throw new ReferenceError("Kunne ikke finne KompetanseStack i outputs.json")
 } else if (auroraStackKey === undefined) {
-    throw new ReferenceError("Kunne ikke finne AuroraStack i outputs.json");
+  throw new ReferenceError("Kunne ikke finne AuroraStack i outputs.json")
 }
 
 // AuroraStack
 
-let auroraStack: any = json[auroraStackKey];
-initializeDatabase(auroraStack.initDbFunctionName);
-
+let auroraStack: any = json[auroraStackKey]
+initializeDatabase(auroraStack.initDbFunctionName)
 
 // KompetanseStack
 
-let kompetanseStack: any;
-kompetanseStack = json[kompetanseStackKey];
+let kompetanseStack: any
+kompetanseStack = json[kompetanseStackKey]
 // console.log(stack);
-kompetanseStack.oauth = JSON.parse(kompetanseStack.oauth);
-kompetanseStack.functionMap = JSON.parse(kompetanseStack.functionMap);
-const functionMap = Object.keys(kompetanseStack.functionMap).map(key => {
-    // stack.functionMap[key].endpoint = stack.functionMap[key].endpoint.substring(0, stack.functionMap[key].endpoint.length - 1) 
-    return {
-        ...kompetanseStack.functionMap[key],
-        endpoint: kompetanseStack.functionMap[key].endpoint.substring(0, kompetanseStack.functionMap[key].endpoint.length - 1) // Remove / from endpoint 
-    }
-});
+kompetanseStack.oauth = JSON.parse(kompetanseStack.oauth)
+kompetanseStack.functionMap = JSON.parse(kompetanseStack.functionMap)
+const functionMap = Object.keys(kompetanseStack.functionMap).map((key) => {
+  // stack.functionMap[key].endpoint = stack.functionMap[key].endpoint.substring(0, stack.functionMap[key].endpoint.length - 1)
+  return {
+    ...kompetanseStack.functionMap[key],
+    endpoint: kompetanseStack.functionMap[key].endpoint.substring(
+      0,
+      kompetanseStack.functionMap[key].endpoint.length - 1
+    ), // Remove / from endpoint
+  }
+})
 
-setAppSyncAuth(kompetanseStack.awsuserpoolsid, kompetanseStack.awsuserpoolswebclientid, kompetanseStack.outputAppSyncId, kompetanseStack.outputCreateBatch, kompetanseStack.tablenamemap, kompetanseStack.tableArns)
+setAppSyncAuth(
+  kompetanseStack.awsuserpoolsid,
+  kompetanseStack.awsuserpoolswebclientid,
+  kompetanseStack.outputAppSyncId,
+  kompetanseStack.outputCreateBatch,
+  kompetanseStack.tablenamemap,
+  kompetanseStack.tableArns
+)
 
-fs.writeFileSync("../frontend/src/exports.js", `
+fs.writeFileSync(
+  "../frontend/src/exports.js",
+  `
 const exports = {
     aws_project_region: "eu-central-1",
     aws_cognito_region: "eu-central-1",
@@ -56,7 +71,9 @@ const exports = {
         redirectSignIn: "",
         redirectSignOut: ""
     },
-    aws_appsync_graphqlEndpoint: "${kompetanseStack.appsyncGraphQLEndpointOutput}",
+    aws_appsync_graphqlEndpoint: "${
+      kompetanseStack.appsyncGraphQLEndpointOutput
+    }",
     aws_cloud_logic_custom: ${JSON.stringify(functionMap, null, 2)},
     "federationTarget": "COGNITO_USER_AND_IDENTITY_POOLS",
     "aws_cognito_username_attributes": [],
@@ -79,7 +96,8 @@ const exports = {
     "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
 }
 export default exports;
-`);
+`
+)
 
 // awsconfig.aws_cognito_identity_pool_id = outputs.awscognitoidentitypoolid;
 // awsconfig.aws_user_pools_id = outputs.awsuserpoolsid;

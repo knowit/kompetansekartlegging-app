@@ -1,4 +1,11 @@
 import express from "express"
+import {
+  ExecuteStatementCommand,
+  RDSDataClient,
+} from "@aws-sdk/client-rds-data"
+
+const rds = new RDSDataClient({ region: "eu-central-1" })
+
 const awsServerlessExpressMiddleware = require("aws-serverless-express/middleware")
 const bodyParser = require("body-parser")
 
@@ -19,7 +26,18 @@ app.use((req, res, next) => {
 
 app.get("/", async (req, res) => {
   try {
-    const response = { data: "hei, det funket" }
+    const sqlString = "SELECT * FROM 'users'"
+    const cmd = new ExecuteStatementCommand({
+      sql: sqlString,
+      resourceArn:
+        "arn:aws:rds:eu-central-1:531535354565:cluster:aurora-cluster",
+      secretArn:
+        "arn:aws:secretsmanager:eu-central-1:531535354565:secret:AuroraClusterSecret8E4F2BC8-3hLcdJ4Tf4Ec-uCb4Tv",
+    })
+
+    const dbResponse = await rds.send(cmd)
+
+    const response = { data: dbResponse }
     res.status(200).json(response)
   } catch (err) {
     console.error(err)
