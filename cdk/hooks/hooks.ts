@@ -1,7 +1,6 @@
 import setAppSyncAuth from './setAppSyncAuth'
 import initializeDatabase from './initializeDatabase'
 import * as fs from 'fs'
-import { Key } from 'aws-cdk-lib/aws-kms'
 
 const file = fs.readFileSync('outputs.json', { encoding: 'utf-8' })
 
@@ -10,7 +9,7 @@ const kompetanseStackKey = Object.keys(json).find((key) =>
   key.startsWith('KompetanseStack')
 )
 const auroraStackKey = Object.keys(json).find((key) =>
-  key.startsWith('AuroraStack')
+  key.includes('AuroraStack')
 )
 if (kompetanseStackKey === undefined) {
   throw new ReferenceError('Kunne ikke finne KompetanseStack i outputs.json')
@@ -27,7 +26,7 @@ initializeDatabase(auroraStack.initDbFunctionName)
 
 let kompetanseStack: any
 kompetanseStack = json[kompetanseStackKey]
-
+// console.log(stack);
 kompetanseStack.oauth = JSON.parse(kompetanseStack.oauth)
 kompetanseStack.functionMap = JSON.parse(kompetanseStack.functionMap)
 const functionMap = Object.keys(kompetanseStack.functionMap).map((key) => {

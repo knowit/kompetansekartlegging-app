@@ -30,6 +30,7 @@
     "@aws-cdk/aws-lambda-python-alpha": "^2.63.2-alpha.0",
     "@aws-sdk/client-appsync": "^3.264.0",
     "@aws-sdk/client-iam": "^3.264.0",
+    "@aws-sdk/client-rds-data": "^3.216.0",
     "@aws-sdk/client-lambda": "^3.264.0",
     "@aws-sdk/credential-providers": "^3.264.0",
     "@graphql-codegen/cli": "^3.0.0",
