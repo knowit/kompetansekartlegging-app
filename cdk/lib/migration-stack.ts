@@ -15,10 +15,12 @@ import * as rds from 'aws-cdk-lib/aws-rds'
 
 interface MigrationStackProps extends StackProps {
   cluster: rds.ServerlessCluster
+  databaseName: string
 }
 
 export class MigrationStack extends Stack {
   constructor(scope: Construct, id: string, props: MigrationStackProps) {
+    super(scope, id, props)
     super(scope, id, props)
     const tableArns: any = {}
     const ENV = this.node.tryGetContext('ENV')
@@ -56,7 +58,7 @@ export class MigrationStack extends Stack {
         TRANSFORMED_DATA_BUCKET: transformedDataBucket.bucketName,
         DATABASE_ARN: cluster.clusterArn,
         SECRET_ARN: cluster.secret!.secretArn,
-        DATABASE_NAME: 'auroraTestDB',
+        DATABASE_NAME: props.databaseName,
         SOURCE_NAME: 'KompetanseStack',
       },
       timeout: Duration.seconds(25),

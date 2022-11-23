@@ -44,10 +44,14 @@ export class KompetanseStack extends Stack {
     const isProd = ENV === 'prod'
     const isDev = ENV === 'dev'
 
-    const auroraStack = new AuroraStack(this, `AuroraStack-${ENV}`, {})
+    const auroraStack = new AuroraStack(this, `AuroraStack-${ENV}`, {
+      stackName: `AuroraStack-${ENV}`,
+    })
 
     new MigrationStack(this, `MigrationStack-${ENV}`, {
       cluster: auroraStack.auroraCluster,
+      stackName: `MigrationStack-${ENV}`,
+      databaseName: auroraStack.defaultDatabaseName,
     })
 
     // COGNITO SetUp
@@ -388,9 +392,12 @@ export class KompetanseStack extends Stack {
     // Express Lambda API
 
     const expressLambdaPolicyStatement = new iam.PolicyStatement({
-      actions: ['rds-data:ExecuteStatement'],
+      actions: ['rds-data:ExecuteStatement', 'secretsmanager:GetSecretValue'],
       effect: iam.Effect.ALLOW,
-      resources: [auroraStack.auroraCluster.clusterArn],
+      resources: [
+        auroraStack.auroraCluster.clusterArn,
+        auroraStack.auroraCluster.secret!.secretArn,
+      ],
     })
 
     const expressLambdaNodejs = new nodejs.NodejsFunction(
@@ -406,6 +413,11 @@ export class KompetanseStack extends Stack {
           '/../backend/function/expressLambda/package-lock.json'
         ),
         initialPolicy: [expressLambdaPolicyStatement],
+        environment: {
+          DATABASE_ARN: auroraStack.auroraCluster.clusterArn,
+          SECRET_ARN: auroraStack.auroraCluster.secret!.secretArn,
+          DATABASE_NAME: auroraStack.defaultDatabaseName,
+        },
       }
     )
 
