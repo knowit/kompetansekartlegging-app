@@ -26,13 +26,12 @@ app.use((req, res, next) => {
 
 app.get("/", async (req, res) => {
   try {
-    const sqlString = "SELECT * FROM 'users'"
+    const sqlString = "SELECT * FROM question"
     const cmd = new ExecuteStatementCommand({
       sql: sqlString,
-      resourceArn:
-        "arn:aws:rds:eu-central-1:531535354565:cluster:aurora-cluster",
-      secretArn:
-        "arn:aws:secretsmanager:eu-central-1:531535354565:secret:AuroraClusterSecret8E4F2BC8-3hLcdJ4Tf4Ec-uCb4Tv",
+      resourceArn: process.env.DATABASE_ARN,
+      secretArn: process.env.SECRET_ARN,
+      database: process.env.DATABASE_NAME,
     })
 
     const dbResponse = await rds.send(cmd)

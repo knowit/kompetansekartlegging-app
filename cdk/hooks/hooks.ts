@@ -9,7 +9,7 @@ const kompetanseStackKey = Object.keys(json).find((key) =>
   key.startsWith("KompetanseStack")
 )
 const auroraStackKey = Object.keys(json).find((key) =>
-  key.includes("AuroraStack")
+  key.startsWith("AuroraStack")
 )
 if (kompetanseStackKey === undefined) {
   throw new ReferenceError("Kunne ikke finne KompetanseStack i outputs.json")

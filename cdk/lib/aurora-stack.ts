@@ -6,10 +6,14 @@ import * as path from "path"
 
 export class AuroraStack extends Stack {
   public readonly auroraCluster: rds.ServerlessCluster
+  public readonly defaultDatabaseName: string
 
   constructor(scope: Construct, id: string, props: StackProps) {
     super(scope, id, props)
+    const ENV = this.node.tryGetContext("ENV")
 
+    // Split to remove - from db-name
+    this.defaultDatabaseName = `kompetanseDB${ENV.split("-").join("")}`
     this.auroraCluster = new rds.ServerlessCluster(this, "AuroraCluster", {
       engine: rds.DatabaseClusterEngine.AURORA_POSTGRESQL,
       parameterGroup: rds.ParameterGroup.fromParameterGroupName(
@@ -18,8 +22,8 @@ export class AuroraStack extends Stack {
         "default.aurora-postgresql10"
       ),
       credentials: { username: "clusteradmin" },
-      clusterIdentifier: "aurora-cluster",
-      defaultDatabaseName: "auroraTestDB",
+      clusterIdentifier: `aurora-cluster-${ENV}`,
+      defaultDatabaseName: this.defaultDatabaseName,
       enableDataApi: true,
       scaling: {
         autoPause: Duration.minutes(10), // default is to pause after 5 minutes of idle time
@@ -32,7 +36,7 @@ export class AuroraStack extends Stack {
       code: lambda.Code.fromAsset(
         path.join(__dirname, "/../backend/function/initDb")
       ),
-      functionName: "KompetanseAuroraInitDb",
+      functionName: `KompetanseAuroraInitDb-${ENV}`,
       handler: "index.handler",
       runtime: lambda.Runtime.PYTHON_3_9,
       timeout: Duration.seconds(60),
@@ -40,7 +44,7 @@ export class AuroraStack extends Stack {
       environment: {
         DATABASE_ARN: this.auroraCluster.clusterArn,
         SECRET_ARN: this.auroraCluster.secret!.secretArn,
-        DATABASE_NAME: "auroraTestDB",
+        DATABASE_NAME: this.defaultDatabaseName,
       },
     })
     this.auroraCluster.grantDataApiAccess(initializeDB)
