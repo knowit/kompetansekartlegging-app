@@ -16,18 +16,20 @@ router.get('/list', async (req, res, next) => {
   }
 })
 
-interface addOrganization {
+interface addOrganizationParams {
   id: string
   orgname: string
   identifierAttribute: string
 }
-router.get<unknown, unknown, unknown, addOrganization>(
+
+router.post<unknown, unknown, addOrganizationParams>(
   '/add',
   async (req, res, next) => {
-    const { id, orgname, identifierAttribute } = req.query
+    const { id, orgname, identifierAttribute } = req.body
     try {
       const query =
         'INSERT INTO organization VALUES(:id, :orgname, :identifierAttribute);'
+
       const parameters: SqlParameter[] = [
         {
           name: 'id',
@@ -47,7 +49,14 @@ router.get<unknown, unknown, unknown, addOrganization>(
             stringValue: identifierAttribute,
           },
         },
+        {
+          name: 'createdAt',
+          value: {
+            stringValue: new Date().toISOString(),
+          },
+        },
       ]
+
       const { records } = await sqlQuery(query, parameters)
 
       const response = { data: records }
