@@ -3,13 +3,13 @@ import { sqlQuery } from "../../app"
 
 const router = express.Router()
 
-router.get("/debug", async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
-    const query = "debugging"
-    const { records } = await sqlQuery(query)
+    // const query = "SELECT * from organization"
+    // const { records } = await sqlQuery(query)
 
-    const response = { data: records }
-
+    // const response = { data: records }
+    const response = "Buggin"
     res.status(200).json(response)
   } catch (err) {
     next(err)
