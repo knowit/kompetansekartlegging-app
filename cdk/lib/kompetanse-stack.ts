@@ -420,6 +420,7 @@ export class KompetanseStack extends Stack {
           "/../backend/function/expressLambda/package-lock.json"
         ),
         initialPolicy: [expressLambdaPolicyStatement],
+        timeout: Duration.seconds(isProd ? 5 : 60),
         environment: {
           DATABASE_ARN: auroraStack.auroraCluster.clusterArn,
           SECRET_ARN: auroraStack.auroraCluster.secret!.secretArn,
