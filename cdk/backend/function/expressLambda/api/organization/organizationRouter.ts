@@ -1,6 +1,6 @@
 import { SqlParameter } from "@aws-sdk/client-rds-data"
 import express from "express"
-import { sqlQuery } from "../../app"
+import { SqlParameterInput, sqlQuery } from "../../app"
 
 const router = express.Router()
 
@@ -30,34 +30,15 @@ router.post<unknown, unknown, addOrganizationParams>(
       const query =
         "INSERT INTO organization VALUES(:id, DEFAULT, :owner, :orgname, :identifierAttribute);"
 
-      const parameters: SqlParameter[] = [
-        {
-          name: "id",
-          value: {
-            stringValue: id,
-          },
-        },
-        {
-          name: "orgname",
-          value: {
-            stringValue: orgname,
-          },
-        },
-        {
-          name: "identifierAttribute",
-          value: {
-            stringValue: identifierAttribute,
-          },
-        },
-        {
-          name: "owner",
-          value: {
-            stringValue: "TestOwner"
-          }
-        }
-      ]
+      // Fra SqlParameter-typen så skal key her samsvare med name, og value være value.
+      const params: SqlParameterInput = {
+        id: { stringValue: id },
+        orgname: { stringValue: orgname },
+        identifierAttribute: { stringValue: identifierAttribute },
+        owner: { stringValue: "owner"}
+      }
 
-      const response = await sqlQuery(query, parameters)
+      const response = await sqlQuery(query, params)
 
       res.status(200).json(response)
     } catch (err) {
