@@ -1,16 +1,16 @@
-import express from "express"
+import express from 'express'
 import {
   ExecuteStatementCommand,
   ExecuteStatementRequest,
   RDSDataClient,
   SqlParameter,
-} from "@aws-sdk/client-rds-data"
-import { apiRouter } from "./api/router"
+} from '@aws-sdk/client-rds-data'
+import { apiRouter } from './api/router'
 
-const rds = new RDSDataClient({ region: "eu-central-1" })
+const rds = new RDSDataClient({ region: 'eu-central-1' })
 
-const awsServerlessExpressMiddleware = require("aws-serverless-express/middleware")
-const bodyParser = require("body-parser")
+const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
+const bodyParser = require('body-parser')
 
 const app = express()
 
@@ -20,16 +20,15 @@ app.use(awsServerlessExpressMiddleware.eventContext())
 
 // Enable CORS for all methods
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*")
+  res.header('Access-Control-Allow-Origin', '*')
   res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
   )
   next()
 })
 
-// Add all API routerse
-app.use("/api", apiRouter)
+app.use('/api', apiRouter)
 
 const cmdConstants = {
   resourceArn: process.env.DATABASE_ARN,
