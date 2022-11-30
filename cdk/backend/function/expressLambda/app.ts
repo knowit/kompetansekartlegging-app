@@ -1,9 +1,9 @@
 import express from "express"
 import {
   ExecuteStatementCommand,
-  ExecuteStatementRequest,
   RDSDataClient,
   SqlParameter,
+  RecordsFormatType,
 } from "@aws-sdk/client-rds-data"
 import { apiRouter } from "./api/router"
 
@@ -23,7 +23,7 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*")
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    "Origin, X-Requested-With, Content-Type, Accept",
   )
   next()
 })
@@ -42,9 +42,14 @@ export const sqlQuery = async (query: string, parameters?: SqlParameter[]) => {
     sql: query,
     parameters,
     ...cmdConstants,
+    formatRecordsAs: RecordsFormatType.JSON,
   })
-
-  return await rds.send(cmd)
+  const response = await rds.send(cmd)
+  if (response.formattedRecords) {
+    return JSON.parse(response.formattedRecords)
+  } else {
+    throw new Error(`Records not found for query ${query}`)
+  }
 }
 
 export default app

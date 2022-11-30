@@ -6,9 +6,7 @@ const router = express.Router()
 router.get("/listOrganizations", async (req, res, next) => {
   try {
     const query = "SELECT * FROM organization"
-    const { records } = await sqlQuery(query)
-
-    const response = { data: records }
+    const response = await sqlQuery(query)
 
     res.status(200).json(response)
   } catch (err) {
