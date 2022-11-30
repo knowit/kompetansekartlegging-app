@@ -14,12 +14,18 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(awsServerlessExpressMiddleware.eventContext())
 
+const cmdConstants = {
+  resourceArn: process.env.DATABASE_ARN,
+  secretArn: process.env.SECRET_ARN,
+  database: process.env.DATABASE_NAME,
+}
+
 // Enable CORS for all methods
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*")
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    "Origin, X-Requested-With, Content-Type, Accept",
   )
   next()
 })
@@ -29,9 +35,7 @@ app.get("/", async (req, res) => {
     const sqlString = "SELECT * FROM question"
     const cmd = new ExecuteStatementCommand({
       sql: sqlString,
-      resourceArn: process.env.DATABASE_ARN,
-      secretArn: process.env.SECRET_ARN,
-      database: process.env.DATABASE_NAME,
+      ...cmdConstants,
     })
 
     const dbResponse = await rds.send(cmd)
@@ -47,7 +51,7 @@ app.get<unknown, unknown, unknown, { debugName: string }>(
   "/debug",
   (req, res) => {
     return res.json({ name: req.query.debugName, message: "Buggin'" })
-  }
+  },
 )
 
 module.exports = app
