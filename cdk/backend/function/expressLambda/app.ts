@@ -1,7 +1,9 @@
 import express from "express"
 import {
   ExecuteStatementCommand,
+  ExecuteStatementRequest,
   RDSDataClient,
+  SqlParameter,
 } from "@aws-sdk/client-rds-data"
 import { apiRouter } from "./api/router"
 
@@ -26,6 +28,7 @@ app.use((req, res, next) => {
   next()
 })
 
+// Add all API routerse
 app.use("/api", apiRouter)
 
 const cmdConstants = {
@@ -34,9 +37,10 @@ const cmdConstants = {
   database: process.env.DATABASE_NAME,
 }
 
-export const sqlQuery = async (query: string) => {
+export const sqlQuery = async (query: string, parameters?: SqlParameter[]) => {
   const cmd = new ExecuteStatementCommand({
     sql: query,
+    parameters,
     ...cmdConstants,
   })
 
