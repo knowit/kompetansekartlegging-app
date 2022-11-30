@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.get('/list', async (req, res, next) => {
   try {
-    const query = 'SELECT * FROM organization'
+    const query = 'SELECT id, orgname, identifierAttribute FROM organization'
     const response = await sqlQuery(query)
 
     res.status(200).json(response)
@@ -28,7 +28,7 @@ router.post<unknown, unknown, addOrganizationParams>(
     const { id, orgname, identifierAttribute } = req.body
     try {
       const query =
-        'INSERT INTO organization VALUES(:id, :orgname, :identifierAttribute);'
+        'INSERT INTO organization VALUES(:id, DEFAULT, :owner, :orgname, :identifierAttribute);'
 
       const parameters: SqlParameter[] = [
         {
@@ -50,16 +50,15 @@ router.post<unknown, unknown, addOrganizationParams>(
           },
         },
         {
-          name: 'createdAt',
+          name: 'owner',
           value: {
-            stringValue: new Date().toISOString(),
+            stringValue: 'TestOwner',
           },
         },
       ]
 
-      const { records } = await sqlQuery(query, parameters)
+      const response = await sqlQuery(query, parameters)
 
-      const response = { data: records }
       res.status(200).json(response)
     } catch (err) {
       next(err)
@@ -68,6 +67,13 @@ router.post<unknown, unknown, addOrganizationParams>(
   }
 )
 
-router.get('/remove')
+router.delete('/remove', async (req, res, next) => {
+  try {
+    const query = 'DELETE FROM organization WHERE id=:id;'
+  } catch (err) {
+    next(err)
+    console.error(err)
+  }
+})
 
 export { router as organizationRouter }
