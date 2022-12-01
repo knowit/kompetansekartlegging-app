@@ -62,10 +62,6 @@ cdk/cdk.out
 # Python cache
 __pycache__
 
-# Poetry
-.tool-versions
-poetry.lock
-pyproject.toml
 
 # Visual Code
 .vscode
@@ -73,5 +69,10 @@ pyproject.toml
 *.xlsx
 
 # SSO script
-
 aws_sso.ps1
+
+# Tooling
+Makefile
+.tool-versions
+poetry.lock
+pyproject.toml
