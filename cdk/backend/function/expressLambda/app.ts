@@ -1,10 +1,10 @@
-import express from 'express'
 import {
   ExecuteStatementCommand,
   RDSDataClient,
-  SqlParameter,
   RecordsFormatType,
+  SqlParameter,
 } from '@aws-sdk/client-rds-data'
+import express from 'express'
 import { apiRouter } from './api/router'
 
 const rds = new RDSDataClient({ region: 'eu-central-1' })
