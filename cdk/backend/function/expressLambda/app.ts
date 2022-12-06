@@ -37,18 +37,7 @@ const cmdConstants = {
   database: process.env.DATABASE_NAME,
 }
 
-export type SqlParameterInput = Record<string, SqlParameter["value"]>
-
-export const sqlQuery = async (query: string, params?: SqlParameterInput) => {
-  let parameters: SqlParameter[] | undefined
-
-  if (params) {
-    parameters = Object.entries(params).map(([name, value]) => ({
-      name,
-      value,
-    }))
-  }
-
+export const sqlQuery = async (query: string, parameters?: SqlParameter[]) => {
   const cmd = new ExecuteStatementCommand({
     sql: query,
     parameters,
@@ -57,6 +46,7 @@ export const sqlQuery = async (query: string, params?: SqlParameterInput) => {
   })
 
   const response = await rds.send(cmd)
+
   if (response.formattedRecords) {
     return JSON.parse(response.formattedRecords)
   } else {
