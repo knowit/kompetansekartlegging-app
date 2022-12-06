@@ -4,6 +4,7 @@ import { sqlQuery } from '../../app'
 
 const router = express.Router()
 
+// List all groups with groupLeaderUsername
 router.get('/list', async (req, res, next) => {
   try {
     const query = 'SELECT id, groupLeaderUsername FROM "group"'
@@ -18,11 +19,12 @@ router.get('/list', async (req, res, next) => {
   }
 })
 
-interface GetUsersInGroupParams {
+interface GetReqParams {
   groupId: string
 }
 
-router.get<unknown, unknown, unknown, GetUsersInGroupParams>(
+// Get all users in a group
+router.get<unknown, unknown, unknown, GetReqParams>(
   '/:groupId/users',
   async (req, res, next) => {
     try {
@@ -50,84 +52,117 @@ router.get<unknown, unknown, unknown, GetUsersInGroupParams>(
   }
 )
 
-interface AddUserToGroupReqParams {
+interface AddReqParams {
   groupId: string
 }
-interface AddUserToGroupBodyParams {
+
+interface AddBodyParams {
   userId: string
   orgId: string
 }
 
-router.post<
-  unknown,
-  unknown,
-  AddUserToGroupBodyParams,
-  AddUserToGroupReqParams
->('/:groupId/user/add', async (req, res, next) => {
-  try {
-    const { groupId } = req.query
-    const { userId, orgId } = req.body
+// Add user to group (essentialy creates/updates a user with groupid)
+router.post<unknown, unknown, AddBodyParams, AddReqParams>(
+  '/:groupId/user/add',
+  async (req, res, next) => {
+    try {
+      const { groupId } = req.query
+      const { userId, orgId } = req.body
 
-    // Check if user exists
-    const user = await sqlQuery('SELECT * FROM "user" WHERE id = :id', [
-      {
-        name: 'id',
-        value: {
-          stringValue: userId,
+      // Check if user exists
+      const user = await sqlQuery('SELECT * FROM "user" WHERE id = :id', [
+        {
+          name: 'id',
+          value: {
+            stringValue: userId,
+          },
         },
-      },
-    ])
+      ])
 
-    const parameters: SqlParameter[] = [
-      {
-        name: 'id',
-        value: {
-          stringValue: userId,
+      const parameters: SqlParameter[] = [
+        {
+          name: 'id',
+          value: {
+            stringValue: userId,
+          },
         },
-      },
-      {
-        name: 'groupid',
-        value: {
-          stringValue: groupId,
+        {
+          name: 'groupid',
+          value: {
+            stringValue: groupId,
+          },
+          typeHint: TypeHint.UUID,
         },
-        typeHint: TypeHint.UUID,
-      },
-      {
-        name: 'organizationid',
-        value: {
-          stringValue: orgId,
+        {
+          name: 'organizationid',
+          value: {
+            stringValue: orgId,
+          },
         },
-      },
-    ]
+      ]
 
-    // If user does not exist
-    if (user.length == 0) {
-      console.log('🚀 ~ > ~ User does not exist, creating new.')
+      // If user does not exist
+      if (user.length == 0) {
+        console.log('🚀 ~ > ~ User does not exist, creating new.')
+        const response = await sqlQuery(
+          'INSERT INTO "user" (id, groupid, organizationid) VALUES (:id, :groupid, :organizationid) RETURNING *',
+          parameters
+        )
+
+        return res.status(200).json({
+          message: '🚀 ~ > User did not exist, - created new.',
+          response,
+        })
+      }
+
+      // If user exists
+      console.log('🚀 ~ > ~ User does exist, updating.')
       const response = await sqlQuery(
-        'INSERT INTO "user" (id, groupid, organizationid) VALUES (:id, :groupid, :organizationid) RETURNING *',
+        'UPDATE "user" SET groupid = :groupid, organizationid = :organizationid WHERE id=:id RETURNING *',
         parameters
       )
 
-      return res.status(200).json({
-        message: '🚀 ~ > User did not exist, - created new.',
-        response,
-      })
+      res
+        .status(200)
+        .json({ message: '🚀 ~ > User does exist, updated.', response })
+    } catch (err) {
+      console.error(err)
+      next(err)
     }
-
-    // If user exists
-    console.log('🚀 ~ > ~ User does exist, updating.')
-    const response = await sqlQuery(
-      'UPDATE "user" SET groupid = :groupid, organizationid = :organizationid WHERE id=:id RETURNING *',
-      parameters
-    )
-
-    res
-      .status(200)
-      .json({ message: '🚀 ~ > User does exist, updated.', response })
-  } catch (err) {
-    console.error(err)
-    next(err)
   }
-})
+)
+
+interface DelReqParams {
+  userId: string
+}
+
+// Delete user from group (essentially deletes user)
+router.delete<unknown, unknown, unknown, DelReqParams>(
+  '/user/:userId/delete',
+  async (req, res, next) => {
+    try {
+      const { userId } = req.query
+
+      const response = await sqlQuery(
+        'DELETE FROM "user" WHERE id = :id RETURNING *',
+        [
+          {
+            name: 'id',
+            value: {
+              stringValue: userId,
+            },
+          },
+        ]
+      )
+
+      res
+        .status(200)
+        .json({ message: `🚀 ~ > User ${userId} deleted.`, response })
+    } catch (err) {
+      console.error(err)
+      next(err)
+    }
+  }
+)
 
 export { router as groupRouter }
