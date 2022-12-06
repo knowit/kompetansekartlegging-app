@@ -69,17 +69,14 @@ router.post<unknown, unknown, AddBodyParams, AddReqParams>(
       const { groupId } = req.query
       const { userId, orgId } = req.body
 
-      // Check if user exists
-      const user = await sqlQuery('SELECT * FROM "user" WHERE id = :id', [
-        {
-          name: 'id',
-          value: {
-            stringValue: userId,
-          },
-        },
-      ])
+      const UPSERT_QUERY = `INSERT INTO "user" (id, groupid, organizationid) 
+        VALUES (:id, :groupid, :organizationid) 
+        ON CONFLICT (id) 
+        DO UPDATE SET groupid = :groupid, organizationid = :organizationid 
+        WHERE excluded.id=:id 
+        RETURNING *`
 
-      const parameters: SqlParameter[] = [
+      const response = await sqlQuery(UPSERT_QUERY, [
         {
           name: 'id',
           value: {
@@ -99,32 +96,12 @@ router.post<unknown, unknown, AddBodyParams, AddReqParams>(
             stringValue: orgId,
           },
         },
-      ]
+      ])
 
-      // If user does not exist
-      if (user.length == 0) {
-        console.log('🚀 ~ > ~ User does not exist, creating new.')
-        const response = await sqlQuery(
-          'INSERT INTO "user" (id, groupid, organizationid) VALUES (:id, :groupid, :organizationid) RETURNING *',
-          parameters
-        )
-
-        return res.status(200).json({
-          message: '🚀 ~ > User did not exist, - created new.',
-          response,
-        })
-      }
-
-      // If user exists
-      console.log('🚀 ~ > ~ User does exist, updating.')
-      const response = await sqlQuery(
-        'UPDATE "user" SET groupid = :groupid, organizationid = :organizationid WHERE id=:id RETURNING *',
-        parameters
-      )
-
-      res
-        .status(200)
-        .json({ message: '🚀 ~ > User does exist, updated.', response })
+      res.status(200).json({
+        message: `🚀 ~ > User '${userId}' is now in group '${groupId}'.`,
+        response,
+      })
     } catch (err) {
       console.error(err)
       next(err)
