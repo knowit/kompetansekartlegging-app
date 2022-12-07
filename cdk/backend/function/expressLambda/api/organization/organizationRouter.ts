@@ -1,4 +1,4 @@
-import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
+import { TypeHint } from '@aws-sdk/client-rds-data'
 import express from 'express'
 import { sqlQuery } from '../../app'
 import Organization from './organizationQueries'
