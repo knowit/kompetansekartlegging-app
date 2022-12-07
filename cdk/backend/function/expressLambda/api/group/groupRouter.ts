@@ -37,22 +37,22 @@ router.get<unknown, unknown, unknown, GetReqParams>(
   }
 )
 
-interface AddReqParams {
+interface UpdateGroupReqParams {
   groupId: string
 }
 
-interface AddBodyParams {
-  userId: string
+interface UpdateGroupBodyParams {
+  groupLeaderUsername: string
   orgId: string
 }
 
 // Add user to group (essentialy creates/updates a user with groupid)
-router.post<unknown, unknown, AddBodyParams, AddReqParams>(
+router.post<unknown, unknown, UpdateGroupBodyParams, UpdateGroupReqParams>(
   '/:groupId/user/add',
   async (req, res, next) => {
     try {
       const { groupId } = req.query
-      const { userId, orgId } = req.body
+      const { groupLeaderUsername: userId, orgId } = req.body
       const upsertResponse = await Group.upsert(userId, groupId, orgId)
 
       res.status(200).json(upsertResponse)
@@ -118,6 +118,33 @@ router.delete<unknown, unknown, unknown, DelGroupReqParams>(
       const deleteResponse = await Group.deleteGroup(groupId)
 
       res.status(200).json(deleteResponse)
+    } catch (err) {
+      console.error(err)
+      next(err)
+    }
+  }
+)
+
+interface UpdateGroupReqParams {
+  groupId: string
+}
+
+interface UpdateGroupBodyParams {
+  groupLeaderUsername: string
+}
+
+router.patch<unknown, unknown, UpdateGroupBodyParams, UpdateGroupReqParams>(
+  '/:groupId/update',
+  async (req, res, next) => {
+    try {
+      const { groupId } = req.query
+      const { groupLeaderUsername } = req.body
+      const updateResponse = await Group.updateGroupLeader(
+        groupId,
+        groupLeaderUsername
+      )
+
+      res.status(200).json(updateResponse)
     } catch (err) {
       console.error(err)
       next(err)
