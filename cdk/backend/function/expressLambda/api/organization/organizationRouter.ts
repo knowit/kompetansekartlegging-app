@@ -1,6 +1,4 @@
-import { TypeHint } from '@aws-sdk/client-rds-data'
 import express from 'express'
-import { sqlQuery } from '../../app'
 import Organization from './organizationQueries'
 
 const router = express.Router()
