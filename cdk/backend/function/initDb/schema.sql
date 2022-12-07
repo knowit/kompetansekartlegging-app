@@ -4,7 +4,7 @@
 
 CREATE TABLE IF NOT EXISTS organization(
     id VARCHAR(255) PRIMARY KEY NOT NULL,
-    createdAt TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    createdAt TIMESTAMPTZ NOT NULL,
     owner VARCHAR(255),
     orgname VARCHAR(255) NOT NULL,
     identifierAttribute VARCHAR(255) NOT NULL
@@ -19,15 +19,15 @@ CREATE TABLE IF NOT EXISTS apiKeyPermission(
 CREATE TABLE IF NOT EXISTS formDefinition(
     id UUID PRIMARY KEY NOT NULL,
     label VARCHAR(255),
-    createdAt TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    updatedAt TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    createdAt TIMESTAMPTZ NOT NULL,
+    updatedAt TIMESTAMPTZ,
     organizationID VARCHAR(255) NOT NULL references organization(id)
 );
 
 CREATE TABLE IF NOT EXISTS userForm(
     id UUID PRIMARY KEY NOT NULL,
-    createdAt TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    updatedAt TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    createdAt TIMESTAMPTZ NOT NULL,
+    updatedAt TIMESTAMPTZ,
     owner VARCHAR(255),
     formDefinitionID UUID NOT NULL references formDefinition(id)
 );
