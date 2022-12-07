@@ -27,44 +27,14 @@ router.post<unknown, unknown, addOrganizationParams>(
   '/add',
   async (req, res, next) => {
     const { id, orgname, identifierAttribute } = req.body
-    let owner = 'DefaultOwner'
     try {
-      const INSERT_QUERY =
-        "INSERT INTO organization(id, createdAt owner, orgname, identifierattribute) VALUES(:id, CAST(date '2020-10-10' AS TIMESTAMPTZ), :owner, :orgname, :identifierAttribute);"
+      const addOrganizationResponse = await Organization.addOrganization(
+        id,
+        orgname,
+        identifierAttribute
+      )
 
-      const response = await sqlQuery(INSERT_QUERY, [
-        {
-          name: 'id',
-          value: {
-            stringValue: id,
-          },
-          typeHint: TypeHint.UUID,
-        },
-        {
-          name: 'orgname',
-          value: {
-            stringValue: orgname,
-          },
-        },
-        {
-          name: 'identifierAttribute',
-          value: {
-            stringValue: identifierAttribute,
-          },
-        },
-        {
-          name: 'owner',
-          value: {
-            stringValue: owner,
-          },
-          typeHint: TypeHint.UUID,
-        },
-      ])
-
-      res.status(200).json({
-        message: `🚀 ~ > Organization '${id}' is now in created with owner '${owner}'.`,
-        response,
-      })
+      res.status(200).json(addOrganizationResponse)
     } catch (err) {
       next(err)
       console.error(err)
@@ -75,19 +45,9 @@ router.post<unknown, unknown, addOrganizationParams>(
 router.delete('/remove', async (req, res, next) => {
   const { id } = req.body
   try {
-    const DELETE_QUERY = 'DELETE FROM organization WHERE id=:id;'
-    const response = await sqlQuery(DELETE_QUERY, [
-      {
-        name: 'id',
-        value: {
-          stringValue: id,
-        },
-      },
-    ])
-    res.status(200).json({
-      message: `🚀 ~ > Organization '${id}' is now deleted.`,
-      response,
-    })
+    const removeOrganizationResponse = await Organization.removeOrganization(id)
+
+    res.status(200).json(removeOrganizationResponse)
   } catch (err) {
     next(err)
     console.error(err)
