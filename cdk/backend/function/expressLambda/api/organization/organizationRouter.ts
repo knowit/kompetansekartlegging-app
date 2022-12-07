@@ -1,4 +1,4 @@
-import { SqlParameter } from '@aws-sdk/client-rds-data'
+import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
 import express from 'express'
 import { sqlQuery } from '../../app'
 
@@ -42,6 +42,7 @@ router.post<unknown, unknown, addOrganizationParams>(
           value: {
             stringValue: id,
           },
+          typeHint: TypeHint.UUID,
         },
         {
           name: 'orgname',
@@ -60,6 +61,7 @@ router.post<unknown, unknown, addOrganizationParams>(
           value: {
             stringValue: owner,
           },
+          typeHint: TypeHint.UUID,
         },
       ])
 
