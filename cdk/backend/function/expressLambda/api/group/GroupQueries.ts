@@ -1,4 +1,5 @@
 import { SqlParameter, TypeHint } from "@aws-sdk/client-rds-data"
+import { v4 as uuidv4 } from "uuid"
 import { sqlQuery } from "../../app"
 
 const listGroups = async () => {
@@ -83,9 +84,46 @@ const deleteUser = async (userId: string) => {
   }
 }
 
+const createGroup = async (groupLeaderUsername: string, orgId: string) => {
+  const generatedGroupId = uuidv4()
+
+  const params: SqlParameter[] = [
+    {
+      name: "id",
+      value: {
+        stringValue: generatedGroupId,
+      },
+      typeHint: TypeHint.UUID,
+    },
+    {
+      name: "organizationid",
+      value: {
+        stringValue: orgId,
+      },
+    },
+    {
+      name: "groupleaderusername",
+      value: {
+        stringValue: groupLeaderUsername,
+      },
+    },
+  ]
+
+  const query = `INSERT INTO "group" (id, organizationid, groupleaderusername)
+  VALUES (:id, :organizationid, :groupleaderusername)
+  RETURNING *`
+  const records = await sqlQuery(query, params)
+
+  return {
+    message: `🚀 ~ > Created group with id '${generatedGroupId}' and group leader '${groupLeaderUsername}'.`,
+    data: records,
+  }
+}
+
 export default {
-  listGroups,
-  listUsersInGroup,
   upsert,
   deleteUser,
+  listGroups,
+  listUsersInGroup,
+  createGroup,
 }

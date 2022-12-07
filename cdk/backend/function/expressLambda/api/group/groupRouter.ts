@@ -83,4 +83,27 @@ router.delete<unknown, unknown, unknown, DelReqParams>(
   }
 )
 
+interface CreateGroupBodyParams {
+  groupLeaderUsername: string
+  orgId: string
+}
+
+router.post<unknown, unknown, CreateGroupBodyParams>(
+  "/create",
+  async (req, res, next) => {
+    try {
+      const { groupLeaderUsername, orgId } = req.body
+      const addGroupResponse = await Group.createGroup(
+        groupLeaderUsername,
+        orgId
+      )
+
+      res.status(200).json(addGroupResponse)
+    } catch (err) {
+      console.error(err)
+      next(err)
+    }
+  }
+)
+
 export { router as groupRouter }
