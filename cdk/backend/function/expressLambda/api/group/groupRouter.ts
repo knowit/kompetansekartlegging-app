@@ -1,18 +1,16 @@
-import { SqlParameter, TypeHint } from "@aws-sdk/client-rds-data"
-import express from "express"
-import { sqlQuery } from "../../app"
+import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
+import express from 'express'
+import { sqlQuery } from '../../app'
+import Group from './groupQueries'
 
 const router = express.Router()
 
 // List all groups with groupLeaderUsername
-router.get("/list", async (req, res, next) => {
+router.get('/list', async (req, res, next) => {
   try {
-    const query = 'SELECT id, groupLeaderUsername FROM "group"'
-    const records = await sqlQuery(query)
+    const listGroupsResponse = await Group.listGroups()
 
-    const response = { data: records }
-
-    res.status(200).json(response)
+    res.status(200).json(listGroupsResponse)
   } catch (err) {
     next(err)
     console.error(err)
@@ -25,26 +23,13 @@ interface GetReqParams {
 
 // Get all users in a group
 router.get<unknown, unknown, unknown, GetReqParams>(
-  "/:groupId/users",
+  '/:groupId/users',
   async (req, res, next) => {
     try {
       const { groupId } = req.query
-      const query = 'SELECT id, groupid FROM "user" WHERE groupid = :groupId'
+      const listUserResponse = await Group.listUsersInGroup(groupId)
 
-      const params: SqlParameter[] = [
-        {
-          name: "groupId",
-          value: {
-            stringValue: groupId,
-          },
-          typeHint: TypeHint.UUID,
-        },
-      ]
-
-      const records = await sqlQuery(query, params)
-      const response = { data: records }
-
-      res.status(200).json(response)
+      res.status(200).json(listUserResponse)
     } catch (err) {
       console.error(err)
       next(err)
@@ -52,56 +37,25 @@ router.get<unknown, unknown, unknown, GetReqParams>(
   }
 )
 
-interface AddReqParams {
+interface UpdateGroupReqParams {
   groupId: string
 }
 
-interface AddBodyParams {
-  userId: string
+interface UpdateGroupBodyParams {
+  groupLeaderUsername: string
   orgId: string
 }
 
 // Add user to group (essentialy creates/updates a user with groupid)
-router.post<unknown, unknown, AddBodyParams, AddReqParams>(
-  "/:groupId/user/add",
+router.post<unknown, unknown, UpdateGroupBodyParams, UpdateGroupReqParams>(
+  '/:groupId/user/add',
   async (req, res, next) => {
     try {
       const { groupId } = req.query
-      const { userId, orgId } = req.body
+      const { groupLeaderUsername: userId, orgId } = req.body
+      const upsertResponse = await Group.upsert(userId, groupId, orgId)
 
-      const UPSERT_QUERY = `INSERT INTO "user" (id, groupid, organizationid) 
-        VALUES (:id, :groupid, :organizationid) 
-        ON CONFLICT (id) 
-        DO UPDATE SET groupid = :groupid, organizationid = :organizationid 
-        WHERE excluded.id=:id 
-        RETURNING *`
-
-      const response = await sqlQuery(UPSERT_QUERY, [
-        {
-          name: "id",
-          value: {
-            stringValue: userId,
-          },
-        },
-        {
-          name: "groupid",
-          value: {
-            stringValue: groupId,
-          },
-          typeHint: TypeHint.UUID,
-        },
-        {
-          name: "organizationid",
-          value: {
-            stringValue: orgId,
-          },
-        },
-      ])
-
-      res.status(200).json({
-        message: `🚀 ~ > User '${userId}' is now in group '${groupId}'.`,
-        response,
-      })
+      res.status(200).json(upsertResponse)
     } catch (err) {
       console.error(err)
       next(err)
@@ -115,26 +69,82 @@ interface DelReqParams {
 
 // Delete user from group (essentially deletes user)
 router.delete<unknown, unknown, unknown, DelReqParams>(
-  "/user/:userId/delete",
+  '/user/:userId/delete',
   async (req, res, next) => {
     try {
       const { userId } = req.query
+      const deleteResponse = await Group.deleteUser(userId)
 
-      const response = await sqlQuery(
-        'DELETE FROM "user" WHERE id = :id RETURNING *',
-        [
-          {
-            name: "id",
-            value: {
-              stringValue: userId,
-            },
-          },
-        ]
+      res.status(200).json(deleteResponse)
+    } catch (err) {
+      console.error(err)
+      next(err)
+    }
+  }
+)
+
+interface CreateGroupBodyParams {
+  groupLeaderUsername: string
+  orgId: string
+}
+
+router.post<unknown, unknown, CreateGroupBodyParams>(
+  '/create',
+  async (req, res, next) => {
+    try {
+      const { groupLeaderUsername, orgId } = req.body
+      const addGroupResponse = await Group.createGroup(
+        groupLeaderUsername,
+        orgId
       )
 
-      res
-        .status(200)
-        .json({ message: `🚀 ~ > User ${userId} deleted.`, response })
+      res.status(200).json(addGroupResponse)
+    } catch (err) {
+      console.error(err)
+      next(err)
+    }
+  }
+)
+
+interface DelGroupReqParams {
+  groupId: string
+}
+
+router.delete<unknown, unknown, unknown, DelGroupReqParams>(
+  '/:groupId/delete',
+  async (req, res, next) => {
+    try {
+      const { groupId } = req.query
+      const deleteResponse = await Group.deleteGroup(groupId)
+
+      res.status(200).json(deleteResponse)
+    } catch (err) {
+      console.error(err)
+      next(err)
+    }
+  }
+)
+
+interface UpdateGroupReqParams {
+  groupId: string
+}
+
+interface UpdateGroupBodyParams {
+  groupLeaderUsername: string
+}
+
+router.patch<unknown, unknown, UpdateGroupBodyParams, UpdateGroupReqParams>(
+  '/:groupId/update',
+  async (req, res, next) => {
+    try {
+      const { groupId } = req.query
+      const { groupLeaderUsername } = req.body
+      const updateResponse = await Group.updateGroupLeader(
+        groupId,
+        groupLeaderUsername
+      )
+
+      res.status(200).json(updateResponse)
     } catch (err) {
       console.error(err)
       next(err)
