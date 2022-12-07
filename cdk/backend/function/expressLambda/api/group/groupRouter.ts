@@ -1,7 +1,7 @@
 import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
 import express from 'express'
 import { sqlQuery } from '../../app'
-import Group from './GroupQueries'
+import Group from './groupQueries'
 
 const router = express.Router()
 
@@ -89,7 +89,7 @@ interface CreateGroupBodyParams {
 }
 
 router.post<unknown, unknown, CreateGroupBodyParams>(
-  "/create",
+  '/create',
   async (req, res, next) => {
     try {
       const { groupLeaderUsername, orgId } = req.body
@@ -99,6 +99,25 @@ router.post<unknown, unknown, CreateGroupBodyParams>(
       )
 
       res.status(200).json(addGroupResponse)
+    } catch (err) {
+      console.error(err)
+      next(err)
+    }
+  }
+)
+
+interface DelGroupReqParams {
+  groupId: string
+}
+
+router.delete<unknown, unknown, unknown, DelGroupReqParams>(
+  '/:groupId/delete',
+  async (req, res, next) => {
+    try {
+      const { groupId } = req.query
+      const deleteResponse = await Group.deleteGroup(groupId)
+
+      res.status(200).json(deleteResponse)
     } catch (err) {
       console.error(err)
       next(err)
