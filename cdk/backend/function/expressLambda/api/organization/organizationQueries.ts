@@ -15,23 +15,12 @@ const addOrganization = async (
   organizationName: string,
   identifierAttribute: string
 ) => {
-  let date = new Date()
-  let createdAt =
-    date.getUTCFullYear() +
-    '-' +
-    date.getUTCMonth() +
-    '-' +
-    date.getUTCDay() /*+
-    ' ' +
-    date.getUTCHours() +
-    ':' +
-    date.getUTCMinutes() +
-    ':' +
-    date.getUTCSeconds() */
-
-  console.log('🚀 ~ file: organizationQueries.ts:33 ~ createdAt', createdAt)
-
-  createdAt = '2020-10-10 00:00:00'
+  // Denne tar ikke hensyn til norsk tid.
+  // Kan evt. gjøre new Date(Date.now() + 60 * 60 * 1000).toISO....
+  const timestamp = new Date()
+    .toISOString()
+    .replace('T', ' ')
+    .replace(/\..+/, '')
 
   const params: SqlParameter[] = [
     {
@@ -39,12 +28,11 @@ const addOrganization = async (
       value: {
         stringValue: organizationId,
       },
-      typeHint: TypeHint.UUID,
     },
     {
       name: 'createdat',
       value: {
-        stringValue: createdAt,
+        stringValue: timestamp,
       },
       typeHint: TypeHint.TIMESTAMP,
     },
@@ -62,11 +50,8 @@ const addOrganization = async (
     },
   ]
 
-  /*const INSERT_QUERY = `INSERT INTO organization (id, createdat, orgname, identifierattribute) 
-  VALUES (:organizationid, CAST(date '${createdAt}' AS TIMESTAMPTZ), :organizationname, :identifierattribute)
-  RETURNING *`*/
   const INSERT_QUERY = `INSERT INTO organization (id, createdat, orgname, identifierattribute) 
-  VALUES (:organizationid, :createdat, :organizationname, :identifierattribute)
+  VALUES (:organizationid, to_timestamp(:createdat, 'YYYY-MM-DD HH24:MI:SS'), :organizationname, :identifierattribute)
   RETURNING *`
   const records = await sqlQuery(INSERT_QUERY, params)
 
