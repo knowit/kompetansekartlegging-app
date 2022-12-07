@@ -1,16 +1,16 @@
-import { SqlParameter, TypeHint } from "@aws-sdk/client-rds-data"
-import express from "express"
-import { sqlQuery } from "../../app"
-import Organization from "./organizationQueries"
+import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
+import express from 'express'
+import { sqlQuery } from '../../app'
+import Organization from './organizationQueries'
 
 const router = express.Router()
 
-router.get("/list", async (_req, res, next) => {
+router.get('/list', async (_req, res, next) => {
   try {
     const listOrganizationsResponse = await Organization.listOrganizations()
 
     res.status(200).json(listOrganizationsResponse)
-    } catch (err) {
+  } catch (err) {
     next(err)
     console.error(err)
   }
@@ -24,36 +24,36 @@ interface addOrganizationParams {
 }
 
 router.post<unknown, unknown, addOrganizationParams>(
-  "/add",
+  '/add',
   async (req, res, next) => {
     const { id, orgname, identifierAttribute } = req.body
-    let owner = "DefaultOwner"
+    let owner = 'DefaultOwner'
     try {
       const INSERT_QUERY =
         "INSERT INTO organization(id, createdAt owner, orgname, identifierattribute) VALUES(:id, CAST(date '2020-10-10' AS TIMESTAMPTZ), :owner, :orgname, :identifierAttribute);"
 
       const response = await sqlQuery(INSERT_QUERY, [
         {
-          name: "id",
+          name: 'id',
           value: {
             stringValue: id,
           },
           typeHint: TypeHint.UUID,
         },
         {
-          name: "orgname",
+          name: 'orgname',
           value: {
             stringValue: orgname,
           },
         },
         {
-          name: "identifierAttribute",
+          name: 'identifierAttribute',
           value: {
             stringValue: identifierAttribute,
           },
         },
         {
-          name: "owner",
+          name: 'owner',
           value: {
             stringValue: owner,
           },
@@ -62,36 +62,35 @@ router.post<unknown, unknown, addOrganizationParams>(
       ])
 
       res.status(200).json({
-        message: `🚀 ~ > Organization '${id}' is now in created with owner '${owner}'.`, 
+        message: `🚀 ~ > Organization '${id}' is now in created with owner '${owner}'.`,
         response,
       })
     } catch (err) {
       next(err)
       console.error(err)
+    }
   }
-})
+)
 
-router.delete("/remove", 
-async (req, res, next) =>{
+router.delete('/remove', async (req, res, next) => {
   const { id } = req.body
-    try {
-    const DELETE_QUERY = "DELETE FROM organization WHERE id=:id;"
+  try {
+    const DELETE_QUERY = 'DELETE FROM organization WHERE id=:id;'
     const response = await sqlQuery(DELETE_QUERY, [
       {
-        name: "id",
+        name: 'id',
         value: {
           stringValue: id,
-        }
+        },
       },
     ])
     res.status(200).json({
-      message: `🚀 ~ > Organization '${id}' is now deleted.`, 
+      message: `🚀 ~ > Organization '${id}' is now deleted.`,
       response,
     })
   } catch (err) {
     next(err)
     console.error(err)
-    
   }
 })
 
