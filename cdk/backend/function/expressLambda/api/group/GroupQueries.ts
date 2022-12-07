@@ -1,18 +1,18 @@
-import { SqlParameter, TypeHint } from "@aws-sdk/client-rds-data"
-import { v4 as uuidv4 } from "uuid"
-import { sqlQuery } from "../../app"
+import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
+import { v4 as uuidv4 } from 'uuid'
+import { sqlQuery } from '../../app'
 
 const listGroups = async () => {
   const query = 'SELECT id, groupLeaderUsername FROM "group"'
   const records = await sqlQuery(query)
 
-  return { message: "🚀 ~ > All groups.", data: records }
+  return { message: '🚀 ~ > All groups.', data: records }
 }
 
 const listUsersInGroup = async (groupId: string) => {
   const params: SqlParameter[] = [
     {
-      name: "groupId",
+      name: 'groupId',
       value: {
         stringValue: groupId,
       },
@@ -32,20 +32,20 @@ const listUsersInGroup = async (groupId: string) => {
 const upsert = async (userId: string, groupId: string, orgId: string) => {
   const params: SqlParameter[] = [
     {
-      name: "id",
+      name: 'id',
       value: {
         stringValue: userId,
       },
     },
     {
-      name: "groupid",
+      name: 'groupid',
       value: {
         stringValue: groupId,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: "organizationid",
+      name: 'organizationid',
       value: {
         stringValue: orgId,
       },
@@ -69,7 +69,7 @@ const upsert = async (userId: string, groupId: string, orgId: string) => {
 const deleteUser = async (userId: string) => {
   const params: SqlParameter[] = [
     {
-      name: "id",
+      name: 'id',
       value: {
         stringValue: userId,
       },
@@ -89,20 +89,20 @@ const createGroup = async (groupLeaderUsername: string, orgId: string) => {
 
   const params: SqlParameter[] = [
     {
-      name: "id",
+      name: 'id',
       value: {
         stringValue: generatedGroupId,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: "organizationid",
+      name: 'organizationid',
       value: {
         stringValue: orgId,
       },
     },
     {
-      name: "groupleaderusername",
+      name: 'groupleaderusername',
       value: {
         stringValue: groupLeaderUsername,
       },
@@ -123,7 +123,7 @@ const createGroup = async (groupLeaderUsername: string, orgId: string) => {
 const deleteGroup = async (groupId: string) => {
   const params: SqlParameter[] = [
     {
-      name: "id",
+      name: 'id',
       value: {
         stringValue: groupId,
       },
@@ -139,6 +139,39 @@ const deleteGroup = async (groupId: string) => {
   }
 }
 
+const updateGroupLeader = async (
+  groupId: string,
+  groupLeaderUsername: string
+) => {
+  const params: SqlParameter[] = [
+    {
+      name: 'id',
+      value: {
+        stringValue: groupId,
+      },
+      typeHint: TypeHint.UUID,
+    },
+    {
+      name: 'groupleaderusername',
+      value: {
+        stringValue: groupLeaderUsername,
+      },
+    },
+  ]
+
+  const query = `UPDATE "group"
+  SET groupleaderusername = :groupleaderusername
+  WHERE id = :id 
+  RETURNING *`
+
+  const records = await sqlQuery(query, params)
+
+  return {
+    message: `🚀 ~ > '${groupLeaderUsername}' is now leader for group with id '${groupId}'.`,
+    data: records,
+  }
+}
+
 export default {
   upsert,
   deleteUser,
@@ -146,4 +179,5 @@ export default {
   listUsersInGroup,
   createGroup,
   deleteGroup,
+  updateGroupLeader,
 }
