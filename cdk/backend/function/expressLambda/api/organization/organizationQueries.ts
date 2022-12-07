@@ -3,8 +3,9 @@ import { v4 as uuidv4 } from 'uuid'
 import { sqlQuery } from '../../app'
 
 const listOrganizations = async () => {
-    const SELECT_QUERY = "SELECT id, orgname, identifierAttribute FROM organization"
-    const records = await sqlQuery(SELECT_QUERY)
+  const SELECT_QUERY =
+    'SELECT id, orgname, identifierAttribute FROM organization'
+  const records = await sqlQuery(SELECT_QUERY)
 
   return { message: '🚀 ~ > All organizations.', data: records }
 }
@@ -33,15 +34,10 @@ const addOrganization = async (
       value: {
         stringValue: identifierAttribute,
       },
-      /*{
-        name: "owner",
-        value: {
-          stringValue: owner,
-        },
-        typeHint: TypeHint.UUID,
-      }*/
+    },
   ]
-  const INSERT_QUERY = "INSERT INTO organization(id, createdAt owner, orgname, identifierattribute) VALUES(:id, CAST(date '2020-10-10' AS TIMESTAMPTZ), DefaultOwner, :orgname, :identifierAttribute);"
+  const INSERT_QUERY =
+    "INSERT INTO organization(id, createdAt owner, orgname, identifierattribute) VALUES(:id, CAST(date '2020-10-10' AS TIMESTAMPTZ), DefaultOwner, :orgname, :identifierAttribute);"
   const records = await sqlQuery(INSERT_QUERY, params)
 
   return {
@@ -60,18 +56,18 @@ const removeOrganization = async (organizationID: string) => {
     },
   ]
 
-  const DELETE_QUERY = "DELETE FROM organization WHERE id=:id;"
+  const DELETE_QUERY = 'DELETE FROM organization WHERE id=:id;'
 
   const records = await sqlQuery(DELETE_QUERY, params)
 
   return {
-    message: `🚀 ~ > Organization '${organizationID}' is now deleted.`, 
+    message: `🚀 ~ > Organization '${organizationID}' is now deleted.`,
     data: records,
   }
 }
 
 export default {
-    listOrganizations,
-    addOrganization,
-    removeOrganization,
+  listOrganizations,
+  addOrganization,
+  removeOrganization,
 }
