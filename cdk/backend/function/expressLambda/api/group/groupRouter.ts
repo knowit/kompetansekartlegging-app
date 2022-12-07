@@ -1,18 +1,16 @@
 import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
 import express from 'express'
 import { sqlQuery } from '../../app'
+import Group from './GroupQueries'
 
 const router = express.Router()
 
 // List all groups with groupLeaderUsername
 router.get('/list', async (req, res, next) => {
   try {
-    const query = 'SELECT id, groupLeaderUsername FROM "group"'
-    const records = await sqlQuery(query)
+    const listGroupsResponse = await Group.listGroups()
 
-    const response = { data: records }
-
-    res.status(200).json(response)
+    res.status(200).json(listGroupsResponse)
   } catch (err) {
     next(err)
     console.error(err)
@@ -29,22 +27,9 @@ router.get<unknown, unknown, unknown, GetReqParams>(
   async (req, res, next) => {
     try {
       const { groupId } = req.query
-      const query = 'SELECT id, groupid FROM "user" WHERE groupid = :groupId'
+      const listUserResponse = await Group.listUsersInGroup(groupId)
 
-      const params: SqlParameter[] = [
-        {
-          name: 'groupId',
-          value: {
-            stringValue: groupId,
-          },
-          typeHint: TypeHint.UUID,
-        },
-      ]
-
-      const records = await sqlQuery(query, params)
-      const response = { data: records }
-
-      res.status(200).json(response)
+      res.status(200).json(listUserResponse)
     } catch (err) {
       console.error(err)
       next(err)
@@ -68,40 +53,9 @@ router.post<unknown, unknown, AddBodyParams, AddReqParams>(
     try {
       const { groupId } = req.query
       const { userId, orgId } = req.body
+      const upsertResponse = await Group.upsert(userId, groupId, orgId)
 
-      const UPSERT_QUERY = `INSERT INTO "user" (id, groupid, organizationid) 
-        VALUES (:id, :groupid, :organizationid) 
-        ON CONFLICT (id) 
-        DO UPDATE SET groupid = :groupid, organizationid = :organizationid 
-        WHERE excluded.id=:id 
-        RETURNING *`
-
-      const response = await sqlQuery(UPSERT_QUERY, [
-        {
-          name: 'id',
-          value: {
-            stringValue: userId,
-          },
-        },
-        {
-          name: 'groupid',
-          value: {
-            stringValue: groupId,
-          },
-          typeHint: TypeHint.UUID,
-        },
-        {
-          name: 'organizationid',
-          value: {
-            stringValue: orgId,
-          },
-        },
-      ])
-
-      res.status(200).json({
-        message: `🚀 ~ > User '${userId}' is now in group '${groupId}'.`,
-        response,
-      })
+      res.status(200).json(upsertResponse)
     } catch (err) {
       console.error(err)
       next(err)
@@ -119,22 +73,9 @@ router.delete<unknown, unknown, unknown, DelReqParams>(
   async (req, res, next) => {
     try {
       const { userId } = req.query
+      const deleteResponse = await Group.deleteUser(userId)
 
-      const response = await sqlQuery(
-        'DELETE FROM "user" WHERE id = :id RETURNING *',
-        [
-          {
-            name: 'id',
-            value: {
-              stringValue: userId,
-            },
-          },
-        ]
-      )
-
-      res
-        .status(200)
-        .json({ message: `🚀 ~ > User ${userId} deleted.`, response })
+      res.status(200).json(deleteResponse)
     } catch (err) {
       console.error(err)
       next(err)
