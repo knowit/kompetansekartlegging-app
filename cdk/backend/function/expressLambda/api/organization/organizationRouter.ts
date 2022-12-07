@@ -27,19 +27,40 @@ router.post<unknown, unknown, addOrganizationParams>(
   async (req, res, next) => {
     const { id, orgname, identifierAttribute } = req.body
     try {
-      const query =
+      const INSERT_QUERY =
         "INSERT INTO organization(id, createdAt owner, orgname, identifierattribute) VALUES(:id, CAST(date '2020-10-10' AS TIMESTAMPTZ), :owner, :orgname, :identifierAttribute);"
 
-      // Fra SqlParameter-typen så skal key her samsvare med name, og value være value.
-      const params: SqlParameterInput = {
-        id: { stringValue: id },
-        orgname: { stringValue: orgname },
-        identifierAttribute: { stringValue: identifierAttribute },
-      }
+      const response = await sqlQuery(INSERT_QUERY, [
+        {
+          name: 'id',
+          value: {
+            stringValue: id,
+          },
+        },
+        {
+          name: 'orgname',
+          value: {
+            stringValue: orgname,
+          },
+        },
+        {
+          name: 'identifierAttribute',
+          value: {
+            stringValue: identifierAttribute,
+          },
+        },
+        {
+          name: 'owner',
+          value: {
+            stringValue: 'owner',
+          },
+        },
+      ])
 
-      const { records } = await sqlQuery(query, params)
-
-      res.status(200).json(records)
+      res.status(200).json({
+        message: `🚀 ~ > Organization '${userId}' is now in created with owner '${owner}'.`,
+        response,
+      })
     } catch (err) {
       next(err)
       console.error(err)
