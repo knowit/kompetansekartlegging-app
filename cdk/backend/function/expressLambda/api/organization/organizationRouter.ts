@@ -28,7 +28,7 @@ router.post<unknown, unknown, addOrganizationParams>(
     const { id, orgname, identifierAttribute } = req.body
     try {
       const query =
-        'INSERT INTO organization VALUES(:id, DEFAULT, :owner, :orgname, :identifierAttribute);'
+        "INSERT INTO organization(id, createdAt owner, orgname, identifierattribute) VALUES(:id, CAST(date '2020-10-10' AS TIMESTAMPTZ), :owner, :orgname, :identifierAttribute);"
 
       // Fra SqlParameter-typen så skal key her samsvare med name, og value være value.
       const params: SqlParameterInput = {
