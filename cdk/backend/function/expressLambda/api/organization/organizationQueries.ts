@@ -12,36 +12,66 @@ const listOrganizations = async () => {
 
 const addOrganization = async (
   organizationId: string,
-  orgname: string,
+  organizationName: string,
   identifierAttribute: string
 ) => {
+  let date = new Date()
+  let createdAt =
+    date.getUTCFullYear() +
+    '-' +
+    date.getUTCMonth() +
+    '-' +
+    date.getUTCDay() /*+
+    ' ' +
+    date.getUTCHours() +
+    ':' +
+    date.getUTCMinutes() +
+    ':' +
+    date.getUTCSeconds() */
+
+  console.log('🚀 ~ file: organizationQueries.ts:33 ~ createdAt', createdAt)
+
+  createdAt = '2020-10-10 00:00:00'
+
   const params: SqlParameter[] = [
     {
-      name: 'organizationID',
+      name: 'organizationid',
       value: {
         stringValue: organizationId,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'orgname',
+      name: 'createdat',
       value: {
-        stringValue: orgname,
+        stringValue: createdAt,
+      },
+      typeHint: TypeHint.TIMESTAMP,
+    },
+    {
+      name: 'organizationname',
+      value: {
+        stringValue: organizationName,
       },
     },
     {
-      name: 'identifierAttribute',
+      name: 'identifierattribute',
       value: {
         stringValue: identifierAttribute,
       },
     },
   ]
-  const INSERT_QUERY =
-    "INSERT INTO organization(id, createdAt owner, orgname, identifierattribute) VALUES(:id, CAST(date '2020-10-10' AS TIMESTAMPTZ), DefaultOwner, :orgname, :identifierAttribute);"
+
+  /*const INSERT_QUERY = `INSERT INTO organization (id, createdat, orgname, identifierattribute) 
+  VALUES (:organizationid, CAST(date '${createdAt}' AS TIMESTAMPTZ), :organizationname, :identifierattribute)
+  RETURNING *`*/
+  const INSERT_QUERY = `INSERT INTO organization (id, createdat, orgname, identifierattribute) 
+  VALUES (:organizationid, :createdat, :organizationname, :identifierattribute)
+  RETURNING *`
   const records = await sqlQuery(INSERT_QUERY, params)
 
   return {
-    message: `🚀 ~ > Organization '${orgname}' with the id '${organizationId}' inserted.`,
+    message: `🚀 ~ > Organization '${organizationName}' with the id '${organizationId}' inserted.`,
     data: records,
   }
 }
@@ -56,7 +86,7 @@ const removeOrganization = async (organizationID: string) => {
     },
   ]
 
-  const DELETE_QUERY = 'DELETE FROM organization WHERE id=:id;'
+  const DELETE_QUERY = 'DELETE FROM organization WHERE id=:id RETURNING *;'
 
   const records = await sqlQuery(DELETE_QUERY, params)
 

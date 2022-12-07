@@ -3,6 +3,7 @@ import Organization from './organizationQueries'
 
 const router = express.Router()
 
+//Get all organizations
 router.get('/list', async (_req, res, next) => {
   try {
     const listOrganizationsResponse = await Organization.listOrganizations()
@@ -14,21 +15,21 @@ router.get('/list', async (_req, res, next) => {
   }
 })
 
-interface addOrganizationParams {
-  id: string
-  orgname: string
+interface CreateOrganizationParams {
+  organizationId: string
+  organizationName: string
   identifierAttribute: string
-  owner: string
 }
 
-router.post<unknown, unknown, addOrganizationParams>(
+//Add a new organization
+router.post<unknown, unknown, CreateOrganizationParams>(
   '/add',
   async (req, res, next) => {
-    const { id, orgname, identifierAttribute } = req.body
+    const { organizationId, organizationName, identifierAttribute } = req.body
     try {
       const addOrganizationResponse = await Organization.addOrganization(
-        id,
-        orgname,
+        organizationId,
+        organizationName,
         identifierAttribute
       )
 
@@ -40,16 +41,26 @@ router.post<unknown, unknown, addOrganizationParams>(
   }
 )
 
-router.delete('/remove', async (req, res, next) => {
-  const { id } = req.body
-  try {
-    const removeOrganizationResponse = await Organization.removeOrganization(id)
+interface DelReqParams {
+  organizationId: string
+}
 
-    res.status(200).json(removeOrganizationResponse)
-  } catch (err) {
-    next(err)
-    console.error(err)
+//Delete organization
+router.delete<unknown, unknown, DelReqParams>(
+  '/remove',
+  async (req, res, next) => {
+    const { organizationId } = req.body
+    try {
+      const removeOrganizationResponse = await Organization.removeOrganization(
+        organizationId
+      )
+
+      res.status(200).json(removeOrganizationResponse)
+    } catch (err) {
+      next(err)
+      console.error(err)
+    }
   }
-})
+)
 
 export { router as organizationRouter }
