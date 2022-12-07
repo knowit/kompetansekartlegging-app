@@ -28,6 +28,7 @@ app.use((req, res, next) => {
   next()
 })
 
+// Add all API routerse
 app.use('/api', apiRouter)
 
 const cmdConstants = {
@@ -37,14 +38,18 @@ const cmdConstants = {
 }
 
 export const sqlQuery = async (query: string, parameters?: SqlParameter[]) => {
+  console.log('🚀 ~ file: app.ts:41 ~ sqlQuery ~ parameters', parameters)
+  console.log('🚀 ~ file: app.ts:41 ~ sqlQuery ~ query', query)
   const cmd = new ExecuteStatementCommand({
     sql: query,
     parameters,
     ...cmdConstants,
     formatRecordsAs: RecordsFormatType.JSON,
   })
+  console.log('🚀 ~ file: app.ts:49 ~ sqlQuery ~ cmd', cmd)
 
   const response = await rds.send(cmd)
+  console.log('🚀 ~ file: app.ts:52 ~ sqlQuery ~ response', response)
 
   if (response.formattedRecords) {
     return JSON.parse(response.formattedRecords)
