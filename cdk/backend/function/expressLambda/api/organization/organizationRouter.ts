@@ -1,15 +1,19 @@
-import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
+import { SqlParameter } from '@aws-sdk/client-rds-data'
 import express from 'express'
 import { sqlQuery } from '../../app'
-import Organization from './organizationQueries'
 
 const router = express.Router()
 
 router.get('/list', async (_req, res, next) => {
   try {
-    const listOrganizationsResponse = await Organization.listOrganizations()
+    const SELECT_QUERY =
+      'SELECT id, orgname, identifierAttribute FROM organization'
+    const response = await sqlQuery(SELECT_QUERY)
 
-    res.status(200).json(listOrganizationsResponse)
+    res.status(200).json({
+      message: `🚀 ~ > All organizations selected.`,
+      response,
+    })
   } catch (err) {
     next(err)
     console.error(err)
