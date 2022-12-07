@@ -1,10 +1,10 @@
-import express from "express"
 import {
   ExecuteStatementCommand,
   RDSDataClient,
-  SqlParameter,
   RecordsFormatType,
+  SqlParameter,
 } from "@aws-sdk/client-rds-data"
+import express from "express"
 import { apiRouter } from "./api/router"
 
 const rds = new RDSDataClient({ region: "eu-central-1" })
@@ -46,6 +46,7 @@ export const sqlQuery = async (query: string, parameters?: SqlParameter[]) => {
   })
 
   const response = await rds.send(cmd)
+
   if (response.formattedRecords) {
     return JSON.parse(response.formattedRecords)
   } else {
