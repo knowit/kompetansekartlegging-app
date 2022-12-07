@@ -120,10 +120,30 @@ const createGroup = async (groupLeaderUsername: string, orgId: string) => {
   }
 }
 
+const deleteGroup = async (groupId: string) => {
+  const params: SqlParameter[] = [
+    {
+      name: "id",
+      value: {
+        stringValue: groupId,
+      },
+      typeHint: TypeHint.UUID,
+    },
+  ]
+  const query = 'DELETE FROM "group" WHERE id = :id RETURNING *'
+  const records = await sqlQuery(query, params)
+
+  return {
+    message: `🚀 ~ > Group with id '${groupId}' deleted.`,
+    data: records,
+  }
+}
+
 export default {
   upsert,
   deleteUser,
   listGroups,
   listUsersInGroup,
   createGroup,
+  deleteGroup,
 }
