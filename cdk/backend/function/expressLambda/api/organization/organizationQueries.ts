@@ -1,6 +1,7 @@
 import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
 import { v4 as uuidv4 } from 'uuid'
 import { sqlQuery } from '../../app'
+import { createTimestampNow } from '../utils'
 
 const listOrganizations = async () => {
   const SELECT_QUERY =
@@ -15,13 +16,6 @@ const addOrganization = async (
   organizationName: string,
   identifierAttribute: string
 ) => {
-  // Denne tar ikke hensyn til norsk tid.
-  // Kan evt. gjøre new Date(Date.now() + 60 * 60 * 1000).toISO....
-  const timestamp = new Date()
-    .toISOString()
-    .replace('T', ' ')
-    .replace(/\..+/, '')
-
   const params: SqlParameter[] = [
     {
       name: 'organizationid',
@@ -32,7 +26,7 @@ const addOrganization = async (
     {
       name: 'createdat',
       value: {
-        stringValue: timestamp,
+        stringValue: createTimestampNow(),
       },
       typeHint: TypeHint.TIMESTAMP,
     },
