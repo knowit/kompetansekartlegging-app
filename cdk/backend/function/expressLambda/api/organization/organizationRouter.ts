@@ -1,48 +1,39 @@
-import { SqlParameter } from "@aws-sdk/client-rds-data"
-import express from "express"
-import { SqlParameterInput, sqlQuery } from "../../app"
+import express from 'express'
+import Organization from './organizationQueries'
 
 const router = express.Router()
 
-router.get("/list", async (req, res, next) => {
+//Get all organizations
+router.get('/list', async (_req, res, next) => {
   try {
-    const query = "SELECT id, orgname, identifierAttribute FROM organization"
-    const { records } = await sqlQuery(query)
+    const listOrganizationsResponse = await Organization.listOrganizations()
 
-    const response = { data: records }
-
-    res.status(200).json(response)
+    res.status(200).json(listOrganizationsResponse)
   } catch (err) {
     next(err)
     console.error(err)
   }
 })
 
-interface addOrganizationParams {
-  id: string
-  orgname: string
+interface CreateOrganizationParams {
+  organizationId: string
+  organizationName: string
   identifierAttribute: string
 }
 
-router.post<unknown, unknown, addOrganizationParams>(
-  "/add",
+//Add a new organization
+router.post<unknown, unknown, CreateOrganizationParams>(
+  '/add',
   async (req, res, next) => {
-    const { id, orgname, identifierAttribute } = req.body
+    const { organizationId, organizationName, identifierAttribute } = req.body
     try {
-      const query =
-        "INSERT INTO organization VALUES(:id, :orgname, :identifierAttribute);"
+      const addOrganizationResponse = await Organization.addOrganization(
+        organizationId,
+        organizationName,
+        identifierAttribute
+      )
 
-      // Fra SqlParameter-typen så skal key her samsvare med name, og value være value.
-      const params: SqlParameterInput = {
-        id: { stringValue: id },
-        orgname: { stringValue: orgname },
-        identifierAttribute: { stringValue: identifierAttribute },
-      }
-
-      const { records } = await sqlQuery(query, params)
-
-      const response = { data: records }
-      res.status(200).json(response)
+      res.status(200).json(addOrganizationResponse)
     } catch (err) {
       next(err)
       console.error(err)
@@ -50,6 +41,26 @@ router.post<unknown, unknown, addOrganizationParams>(
   }
 )
 
-router.get("/remove")
+interface DelReqParams {
+  organizationId: string
+}
+
+//Delete organization
+router.delete<unknown, unknown, DelReqParams>(
+  '/remove',
+  async (req, res, next) => {
+    const { organizationId } = req.body
+    try {
+      const removeOrganizationResponse = await Organization.removeOrganization(
+        organizationId
+      )
+
+      res.status(200).json(removeOrganizationResponse)
+    } catch (err) {
+      next(err)
+      console.error(err)
+    }
+  }
+)
 
 export { router as organizationRouter }
