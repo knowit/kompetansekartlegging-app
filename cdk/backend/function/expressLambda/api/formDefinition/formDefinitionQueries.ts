@@ -1,4 +1,8 @@
-import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
+import {
+  SqlParameter,
+  TypeHint,
+  UpdateResultFilterSensitiveLog,
+} from '@aws-sdk/client-rds-data'
 import { v4 as uuidv4 } from 'uuid'
 import { sqlQuery } from '../../app'
 import { createTimestampNow } from '../utils'
@@ -83,8 +87,74 @@ const deleteFormDefinition = async ({ id }: DeleteFormDefinitionInput) => {
   }
 }
 
+interface UpdateFormDefinitionInput {
+  label?: string
+  organizationId?: string
+  createdAt?: string
+  updatedAt?: string
+}
+
+const updateFormDefinition = async (
+  id: string,
+  values: UpdateFormDefinitionInput
+) => {
+  let columnString = ''
+  const lastEntryIndex = Object.keys(values).length - 1
+
+  const params: SqlParameter[] = [
+    {
+      name: 'id',
+      value: {
+        stringValue: id,
+      },
+      typeHint: TypeHint.UUID,
+    },
+  ]
+
+  const typeHints: Record<string, TypeHint> = {
+    createdAt: TypeHint.TIMESTAMP,
+    updatedAt: TypeHint.TIMESTAMP,
+  }
+
+  if (!values.createdAt) {
+    values.createdAt = createTimestampNow()
+  }
+
+  Object.entries(values).forEach(([field, value], i) => {
+    // Generate columnString of query
+    columnString += `${field}=:${field}`
+    if (i !== lastEntryIndex) {
+      columnString += ', '
+    }
+
+    // Populate params list
+    const param: SqlParameter = {
+      name: field,
+      value: {
+        stringValue: value,
+      },
+    }
+
+    if (field in typeHints) {
+      param.typeHint = typeHints[field]
+    }
+
+    params.push(param)
+  })
+
+  // ! This is not safe due to user input in query string.
+  const UPDATE_QUERY = `UPDATE formDefinition SET ${columnString} WHERE id=:id RETURNING *`
+  const records = await sqlQuery(UPDATE_QUERY, params)
+
+  return {
+    message: `🚀 ~ > formDefinition with id '${id}' is now updated.`,
+    data: records,
+  }
+}
+
 export default {
   createFormDefinition,
   deleteFormDefinition,
   listFormDefinitions,
+  updateFormDefinition,
 }
