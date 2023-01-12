@@ -7,7 +7,9 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import * as backup from 'aws-cdk-lib/aws-backup';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
 import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as sns from 'aws-cdk-lib/aws-sns'
 import { ComparisonOperator, Statistic, TreatMissingData, Unit } from 'aws-cdk-lib/aws-cloudwatch';
+import { SnsAction } from 'aws-cdk-lib/aws-cloudwatch-actions';
 // import * as appsync from 'aws-cdk-lib/aws-appsync';
 import * as gateway from 'aws-cdk-lib/aws-apigateway';
 // import { CfnUserPoolIdentityProvider } from 'aws-cdk-lib/aws-cognito';
@@ -476,7 +478,7 @@ export class KompetanseStack extends Stack {
       unit: Unit.SECONDS
     });
 
-    new aws_cloudwatch.Alarm(this, "lambda-createUserFormBatch-timeout-alarm", {
+    const batchCreateUserAlarm = new aws_cloudwatch.Alarm(this, `${ENV}-lambda-createUserFormBatch-timeout-alarm`, {
       alarmName: `${ENV}-lambda-createUserFormBatch-timeout-alarm`,
       metric: batchCreateUserMetric,
       threshold: batchCreateUserTimeoutSeconds,
@@ -485,7 +487,14 @@ export class KompetanseStack extends Stack {
       evaluationPeriods: 1,
       alarmDescription: `Alarm when lambda createUserFormBatch times out (${batchCreateUserTimeoutSeconds} ${batchCreateUserMetric.unit!.toLowerCase()})`
     });
-    
+
+    const batchCreateUserTopic = new sns.Topic(this, `${ENV}-system-admin-topic`, {
+      displayName: `Kompetansekartlegging ${ENV} systemadministrator`,
+      topicName: `${ENV}-system-admin-topic`,
+    });
+
+    batchCreateUserAlarm.addAlarmAction(new SnsAction(batchCreateUserTopic));
+
     // Admin API Setup
     
     const adminQueryApi = new gateway.RestApi(this, "kompetanseAdminQueriesRestApi", {
