@@ -488,12 +488,12 @@ export class KompetanseStack extends Stack {
       alarmDescription: `Alarm when lambda createUserFormBatch times out (${batchCreateUserTimeoutSeconds} ${batchCreateUserMetric.unit!.toLowerCase()})`
     });
 
-    const batchCreateUserTopic = new sns.Topic(this, `${ENV}-system-admin-topic`, {
+    const systemAdminTopic = new sns.Topic(this, `${ENV}-system-admin-topic`, {
       displayName: `Kompetansekartlegging ${ENV} systemadministrator`,
       topicName: `${ENV}-system-admin-topic`,
     });
 
-    batchCreateUserAlarm.addAlarmAction(new SnsAction(batchCreateUserTopic));
+    batchCreateUserAlarm.addAlarmAction(new SnsAction(systemAdminTopic));
 
     // Admin API Setup
     
