@@ -472,7 +472,7 @@ export class KompetanseStack extends Stack {
     
     if (batchCreateUser.role) createUserFormPolicy.attachToRole(batchCreateUser.role);
 
-    const batchCreateUserMetric: aws_cloudwatch.Metric = batchCreateUser.metricDuration({
+    const batchCreateUserMetric = batchCreateUser.metricDuration({
       statistic: Statistic.MAXIMUM,
       period: Duration.minutes(5),
       unit: Unit.SECONDS
