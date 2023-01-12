@@ -7,10 +7,7 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import * as backup from 'aws-cdk-lib/aws-backup';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
 import * as s3 from 'aws-cdk-lib/aws-s3';
-import * as sns from 'aws-cdk-lib/aws-sns'
-import * as subscription from 'aws-cdk-lib/aws-sns-subscriptions';
 import { ComparisonOperator, Statistic, TreatMissingData, Unit } from 'aws-cdk-lib/aws-cloudwatch';
-import { SnsAction } from 'aws-cdk-lib/aws-cloudwatch-actions';
 // import * as appsync from 'aws-cdk-lib/aws-appsync';
 import * as gateway from 'aws-cdk-lib/aws-apigateway';
 // import { CfnUserPoolIdentityProvider } from 'aws-cdk-lib/aws-cognito';
@@ -473,34 +470,21 @@ export class KompetanseStack extends Stack {
     
     if (batchCreateUser.role) createUserFormPolicy.attachToRole(batchCreateUser.role);
 
-    if (["dev", "prod", "sandboxrebner"].includes(ENV)) { // TODO: fjern sandboxrebner
-      const batchCreateUserMetric: aws_cloudwatch.Metric = batchCreateUser.metricDuration({
-        statistic: Statistic.MAXIMUM,
-        period: Duration.minutes(1), // TODO: 5
-        unit: Unit.MILLISECONDS // TODO: seconds
-      });
-  
-      const batchCreateUserAlarm = new aws_cloudwatch.Alarm(this, "lambda-createUserFormBatch-timeout-alarm", {
-        alarmName: `${ENV}-lambda-createUserFormBatch-timeout-alarm`,
-        metric: batchCreateUserMetric,
-        threshold: 5, // TODO: batchCreateUserTimeoutSeconds
-        comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
-        treatMissingData: TreatMissingData.NOT_BREACHING,
-        evaluationPeriods: 1,
-        alarmDescription: `Alarm when lambda createUserFormBatch times out (${batchCreateUserTimeoutSeconds} ${batchCreateUserMetric.unit!.toLowerCase()})`
-      });
-  
-      // TODO: potensielt bruke eksisterende "dev-CloudwatchAlarms"-topic?
-      const batchCreateUserTopic = new sns.Topic(this, "topic", {
-        displayName: "Kompetansekartlegging system admin",
-        topicName: "system-admin-subscription-topic",
-      });
+    const batchCreateUserMetric: aws_cloudwatch.Metric = batchCreateUser.metricDuration({
+      statistic: Statistic.MAXIMUM,
+      period: Duration.minutes(5),
+      unit: Unit.SECONDS
+    });
 
-      batchCreateUserTopic.addSubscription(
-        new subscription.EmailSubscription("email@email.no"));
-  
-      batchCreateUserAlarm.addAlarmAction(new SnsAction(batchCreateUserTopic));
-    }
+    new aws_cloudwatch.Alarm(this, "lambda-createUserFormBatch-timeout-alarm", {
+      alarmName: `${ENV}-lambda-createUserFormBatch-timeout-alarm`,
+      metric: batchCreateUserMetric,
+      threshold: batchCreateUserTimeoutSeconds,
+      comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+      treatMissingData: TreatMissingData.NOT_BREACHING,
+      evaluationPeriods: 1,
+      alarmDescription: `Alarm when lambda createUserFormBatch times out (${batchCreateUserTimeoutSeconds} ${batchCreateUserMetric.unit!.toLowerCase()})`
+    });
     
     // Admin API Setup
     
