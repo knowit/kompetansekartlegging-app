@@ -52,6 +52,12 @@ def get_aws_profile(profile_name):
     config = read_config(AWS_CONFIG_PATH)
     profile_opts = config.items(f"profile {profile_name}")
     profile = dict(profile_opts)
+
+    try:
+        session_opts = config.items(f"sso-session {profile_name}")
+        profile.update(dict(session_opts))
+    except:
+        print("Old version of cli detected")
     return profile
 
 def update_aws_credentials(profile_name, profile, credentials):
