@@ -1,4 +1,4 @@
-import { CfnOutput, Duration, Stack, StackProps } from 'aws-cdk-lib';
+import { aws_cloudwatch, CfnOutput, Duration, Stack, StackProps } from 'aws-cdk-lib';
 import * as cam from 'aws-cdk-lib/aws-certificatemanager';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
@@ -7,6 +7,9 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import * as backup from 'aws-cdk-lib/aws-backup';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
 import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as sns from 'aws-cdk-lib/aws-sns'
+import { ComparisonOperator, Statistic, TreatMissingData, Unit } from 'aws-cdk-lib/aws-cloudwatch';
+import { SnsAction } from 'aws-cdk-lib/aws-cloudwatch-actions';
 // import * as appsync from 'aws-cdk-lib/aws-appsync';
 import * as gateway from 'aws-cdk-lib/aws-apigateway';
 // import { CfnUserPoolIdentityProvider } from 'aws-cdk-lib/aws-cognito';
@@ -458,16 +461,40 @@ export class KompetanseStack extends Stack {
 
     // CreateUserFormBatch Setup
 
+    const batchCreateUserTimeoutSeconds = 25;
     const batchCreateUser = new lambda.Function(this, "kompetansebatchuserform", {
       code: lambda.Code.fromAsset(path.join(__dirname, "/../backend/function/createUserformBatch")),
       handler: "index.handler",
       runtime: lambda.Runtime.NODEJS_14_X,
-      timeout: Duration.seconds(25)
+      timeout: Duration.seconds(batchCreateUserTimeoutSeconds)
     });
     appSync.addLambdaDataSourceAndResolvers("createUserformBatch", "BatchCreateUserDataSource", batchCreateUser);
     
     if (batchCreateUser.role) createUserFormPolicy.attachToRole(batchCreateUser.role);
-    
+
+    const batchCreateUserMetric = batchCreateUser.metricDuration({
+      statistic: Statistic.MAXIMUM,
+      period: Duration.minutes(5),
+      unit: Unit.SECONDS
+    });
+
+    const batchCreateUserAlarm = new aws_cloudwatch.Alarm(this, `${ENV}-lambda-createUserFormBatch-timeout-alarm`, {
+      alarmName: `${ENV}-lambda-createUserFormBatch-timeout-alarm`,
+      metric: batchCreateUserMetric,
+      threshold: batchCreateUserTimeoutSeconds,
+      comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+      treatMissingData: TreatMissingData.NOT_BREACHING,
+      evaluationPeriods: 1,
+      alarmDescription: `Alarm when lambda createUserFormBatch times out (${batchCreateUserTimeoutSeconds} ${batchCreateUserMetric.unit!.toLowerCase()})`
+    });
+
+    const systemAdminTopic = new sns.Topic(this, `${ENV}-system-admin-topic`, {
+      displayName: `Kompetansekartlegging ${ENV} systemadministrator`,
+      topicName: `${ENV}-system-admin-topic`,
+    });
+
+    batchCreateUserAlarm.addAlarmAction(new SnsAction(systemAdminTopic));
+
     // Admin API Setup
     
     const adminQueryApi = new gateway.RestApi(this, "kompetanseAdminQueriesRestApi", {
