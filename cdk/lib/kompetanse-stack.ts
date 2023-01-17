@@ -494,6 +494,7 @@ export class KompetanseStack extends Stack {
     });
 
     batchCreateUserAlarm.addAlarmAction(new SnsAction(systemAdminTopic));
+    batchCreateUserAlarm.addOkAction(new SnsAction(systemAdminTopic));
 
     // SlackAlarmForwarder setup
 
