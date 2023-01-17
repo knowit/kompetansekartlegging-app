@@ -1,4 +1,4 @@
-import { aws_cloudwatch, CfnOutput, Duration, Stack, StackProps } from 'aws-cdk-lib';
+import { aws_cloudwatch, aws_secretsmanager, aws_sns_subscriptions, CfnOutput, Duration, Stack, StackProps } from 'aws-cdk-lib';
 import * as cam from 'aws-cdk-lib/aws-certificatemanager';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
@@ -26,6 +26,7 @@ export class KompetanseStack extends Stack {
     const GOOGLE_SECRET = this.node.tryGetContext("GOOGLE_SECRET");
     const EXCEL = this.node.tryGetContext("EXCEL");
     const ENV = this.node.tryGetContext("ENV");
+    const SLACK_WEBHOOK_URL = this.node.tryGetContext("SLACK_WEBHOOK_URL")
     const isProd = ENV === "prod";
 
     // COGNITO SetUp
@@ -494,6 +495,32 @@ export class KompetanseStack extends Stack {
     });
 
     batchCreateUserAlarm.addAlarmAction(new SnsAction(systemAdminTopic));
+
+    // SlackAlarmForwarder setup
+
+    const slackAlarmForwarderPermissions = new iam.PolicyStatement({
+      actions: ["secretsmanager:GetSecretValue"],
+      resources: ["arn:aws:secretsmanager:eu-central-1:*:secret:slack_webhook_url-*"]
+    });
+
+    const slackAlarmForwarder = new python.PythonFunction(this, "slackAlarmForwarder", {
+      entry: path.join(__dirname, "/../backend/function/slackAlarmForwarder"),
+      runtime: lambda.Runtime.PYTHON_3_9,
+      initialPolicy: [slackAlarmForwarderPermissions],
+      timeout: Duration.seconds(10)
+    });
+
+    new aws_secretsmanager.Secret(this, "slack_webhook_url", {
+      secretName: "slack_webhook_url",
+      generateSecretString: {
+        secretStringTemplate: '{"url": "value must be set using AWS Console or CLI"}',
+        generateStringKey: "url"
+      }
+    })
+    
+    systemAdminTopic.addSubscription(
+      new aws_sns_subscriptions.LambdaSubscription(slackAlarmForwarder)
+    )
 
     // Admin API Setup
     
