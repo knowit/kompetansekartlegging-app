@@ -26,7 +26,6 @@ export class KompetanseStack extends Stack {
     const GOOGLE_SECRET = this.node.tryGetContext("GOOGLE_SECRET");
     const EXCEL = this.node.tryGetContext("EXCEL");
     const ENV = this.node.tryGetContext("ENV");
-    const SLACK_WEBHOOK_URL = this.node.tryGetContext("SLACK_WEBHOOK_URL")
     const isProd = ENV === "prod";
 
     // COGNITO SetUp
