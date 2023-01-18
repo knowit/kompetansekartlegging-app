@@ -1,5 +1,5 @@
-import express from "express"
-import Category from "./categoryQueries"
+import express from 'express'
+import Category from './categoryQueries'
 
 const router = express.Router()
 
@@ -8,7 +8,7 @@ interface GetReqParams {
 }
 
 // Get all categories
-router.get("/", async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const listCategoriesResponse = await Category.listCategories()
 
@@ -19,11 +19,11 @@ router.get("/", async (req, res, next) => {
 })
 
 // Get single category from id
-router.get<GetReqParams, unknown, unknown, unknown>(
-  "/:categoryId",
+router.get<unknown, unknown, unknown, GetReqParams>(
+  '/:categoryId',
   async (req, res, next) => {
     try {
-      const { categoryId } = req.params
+      const { categoryId } = req.query
       const getCategoryResponse = await Category.getCategory(categoryId)
 
       res.status(200).json(getCategoryResponse)
@@ -35,7 +35,6 @@ router.get<GetReqParams, unknown, unknown, unknown>(
 )
 
 interface createCategoryBodyParams {
-  id: string
   text: string
   description: string
   index: number
@@ -45,7 +44,7 @@ interface createCategoryBodyParams {
 
 // Create category
 router.post<unknown, unknown, createCategoryBodyParams, unknown>(
-  "/",
+  '/',
   async (req, res, next) => {
     try {
       const createCategoryResponse = await Category.createCategory(req.body)
@@ -59,13 +58,13 @@ router.post<unknown, unknown, createCategoryBodyParams, unknown>(
 )
 
 // Update category with given id
-router.patch<GetReqParams, unknown, createCategoryBodyParams, unknown>(
-  "/:categoryId",
+router.patch<unknown, unknown, createCategoryBodyParams, GetReqParams>(
+  '/:categoryId',
   async (req, res, next) => {
+    const { categoryId } = req.query
     try {
-      const updateCategoryResponse = await Category.updateCategory({
+      const updateCategoryResponse = await Category.updateCategory(categoryId, {
         ...req.body,
-        ...req.params,
       })
 
       res.status(200).json(updateCategoryResponse)
@@ -77,12 +76,12 @@ router.patch<GetReqParams, unknown, createCategoryBodyParams, unknown>(
 )
 
 // Delete category with given id
-router.delete<GetReqParams, unknown, unknown, unknown>(
-  "/:categoryId",
+router.delete<unknown, unknown, unknown, GetReqParams>(
+  '/:categoryId',
   async (req, res, next) => {
     try {
       const deleteCategoryResponse = await Category.deleteCategory(
-        req.params.categoryId
+        req.query.categoryId
       )
 
       res.status(200).json(deleteCategoryResponse)
