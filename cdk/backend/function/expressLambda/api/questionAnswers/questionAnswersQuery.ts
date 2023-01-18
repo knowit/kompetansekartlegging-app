@@ -1,24 +1,18 @@
-import {
-  BadRequestException,
-  SqlParameter,
-  TypeHint,
-} from "@aws-sdk/client-rds-data"
+import { SqlParameter, TypeHint } from "@aws-sdk/client-rds-data"
 import { sqlQuery } from "../../app"
+import { v4 as uuidv4 } from "uuid"
 
 export interface CreateQuestionAnswerProp {
-  id: string
   userFormId: string
   questionId: string
   knowledge: number
   motivation: number
-  customScaleValue: number
-  formDefinitionId: string
-  orgAdmins: string
-  orgGroupLeaders: string
+  customScaleValue?: number
+  textValue?: string
 }
 
 const listQuestionAnswers = async () => {
-  const query = "SELECT * FROM questionAnswer"
+  const query = "SELECT id FROM questionAnswer"
   const response = await sqlQuery(query)
 
   return {
@@ -37,8 +31,8 @@ const getQuestionAnswer = async (id: string) => {
       typeHint: TypeHint.UUID,
     },
   ]
-  const query = 'SELECT * FROM "questionAnswer" WHERE id = :id'
-  const response = await sqlQuery(query)
+  const query = "SELECT * FROM questionAnswer WHERE id = :id"
+  const response = await sqlQuery(query, params)
 
   return {
     message: `🚀 ~ > QuestionAnswer with id: ${id}`,
@@ -47,16 +41,15 @@ const getQuestionAnswer = async (id: string) => {
 }
 
 const createQuestionAnswer = async ({
-  id,
   userFormId,
   questionId,
   knowledge,
   motivation,
   customScaleValue,
-  formDefinitionId,
-  orgAdmins,
-  orgGroupLeaders,
+  textValue,
 }: CreateQuestionAnswerProp) => {
+  const id = uuidv4()
+
   const params: SqlParameter[] = [
     {
       name: "id",
@@ -93,33 +86,20 @@ const createQuestionAnswer = async ({
     },
     {
       name: "customScaleValue",
-      value: {
-        longValue: customScaleValue,
-      },
+      value: customScaleValue
+        ? {
+            longValue: customScaleValue,
+          }
+        : { isNull: true },
     },
     {
-      name: "formDefinitionId",
-      value: {
-        stringValue: formDefinitionId,
-      },
-      typeHint: TypeHint.UUID,
-    },
-    {
-      name: "orgAdmins",
-      value: {
-        stringValue: orgAdmins,
-      },
-    },
-    {
-      name: "orgGroupLeaders",
-      value: {
-        stringValue: orgGroupLeaders,
-      },
+      name: "textValue",
+      value: textValue ? { stringValue: textValue } : { isNull: true },
     },
   ]
 
-  const query = `INSERT INTO "questionAnswer" (id, userFormID, questionID, knowledge, motivation, customScaleValue, formDefinitionID, orgAdmins, orgGroupLeaders)
-    VALUES(:id, :userFormId, :questionId, :knowledge, :motivation, :customScaleValue, :formDefinitionId, :orgAdmins, :orgGroupLeaders)
+  const query = `INSERT INTO questionAnswer (id, userFormID, questionID, knowledge, motivation, customScaleValue)
+    VALUES(:id, :userFormId, :questionId, :knowledge, :motivation, :customScaleValue)
     RETURNING *`
   const response = await sqlQuery(query, params)
 
@@ -130,27 +110,21 @@ const createQuestionAnswer = async ({
 }
 
 const updateQuestionAnswer = async (
-  questionAnswerId: string,
+  id: string,
   {
-    id,
     userFormId,
     questionId,
     knowledge,
     motivation,
     customScaleValue,
-    formDefinitionId,
-    orgAdmins,
-    orgGroupLeaders,
+    textValue,
   }: CreateQuestionAnswerProp
 ) => {
-  if (id !== questionAnswerId) {
-    throw BadRequestException
-  }
   const params: SqlParameter[] = [
     {
       name: "id",
       value: {
-        stringValue: questionAnswerId,
+        stringValue: id,
       },
       typeHint: TypeHint.UUID,
     },
@@ -182,34 +156,21 @@ const updateQuestionAnswer = async (
     },
     {
       name: "customScaleValue",
-      value: {
-        longValue: customScaleValue,
-      },
+      value: customScaleValue
+        ? {
+            longValue: customScaleValue,
+          }
+        : { isNull: true },
     },
     {
-      name: "formDefinitionId",
-      value: {
-        stringValue: formDefinitionId,
-      },
-      typeHint: TypeHint.UUID,
-    },
-    {
-      name: "orgAdmins",
-      value: {
-        stringValue: orgAdmins,
-      },
-    },
-    {
-      name: "orgGroupLeaders",
-      value: {
-        stringValue: orgGroupLeaders,
-      },
+      name: "textValue",
+      value: textValue ? { stringValue: textValue } : { isNull: true },
     },
   ]
 
-  const query = `UPDATE "questionAnswer"
+  const query = `UPDATE questionAnswer
         SET userFormID=:userFormId, questionID=:questionId, knowledge=:knowledge, motivation=:motivation,
-        customScaleValue=:customScaleValue, formDefinitionID=:formDefinitionId, orgAdmins=:orgAdmins, orgGroupLeaders=:orgGroupLeaders
+        customScaleValue=:customScaleValue, textValue=:textValue
         WHERE id=:id
         RETURNING *`
 
@@ -231,7 +192,7 @@ const deleteQuestionAnswer = async (id: string) => {
     },
   ]
 
-  const query = `DELETE FROM "questionAnswer" WHERE id=:id RETURNING`
+  const query = `DELETE FROM questionAnswer WHERE id=:id RETURNING *`
   const response = sqlQuery(query, params)
 
   return {
@@ -241,16 +202,15 @@ const deleteQuestionAnswer = async (id: string) => {
 }
 
 const createQuestionAnswerFromBatch = async ({
-  id,
   userFormId,
   questionId,
   knowledge,
   motivation,
   customScaleValue,
-  formDefinitionId,
-  orgAdmins,
-  orgGroupLeaders,
+  textValue,
 }: CreateQuestionAnswerProp) => {
+  const id = uuidv4()
+
   const params: SqlParameter[] = [
     {
       name: "id",
@@ -287,37 +247,20 @@ const createQuestionAnswerFromBatch = async ({
     },
     {
       name: "customScaleValue",
-      value: {
-        longValue: customScaleValue,
-      },
+      value: customScaleValue
+        ? {
+            longValue: customScaleValue,
+          }
+        : { isNull: true },
     },
     {
-      name: "formDefinitionId",
-      value: {
-        stringValue: formDefinitionId,
-      },
-      typeHint: TypeHint.UUID,
-    },
-    {
-      name: "orgAdmins",
-      value: {
-        stringValue: orgAdmins,
-      },
-    },
-    {
-      name: "orgGroupLeaders",
-      value: {
-        stringValue: orgGroupLeaders,
-      },
+      name: "textValue",
+      value: textValue ? { stringValue: textValue } : { isNull: true },
     },
   ]
 
-  const query = `INSERT INTO "questionAnswer" (id, userFormID, questionID, knowledge, motivation, customScaleValue, formDefinitionID, orgAdmins, orgGroupLeaders)
-  VALUES(:id, :userFormId, :questionId, :knowledge, :motivation, :customScaleValue, :formDefinitionId, :orgAdmins, :orgGroupLeaders)
-  ON CONFLICT (id)
-  DO UPDATE SET userFormID=:userFormId, questionID=:questionId, knowledge=:knowledge, motivation=:motivation,
-  customScaleValue=:customScaleValue, formDefinitionID=:formDefinitionId, orgAdmins=:orgAdmins, orgGroupLeaders=:orgGroupLeaders
-  WHERE excluded.id=:id
+  const query = `INSERT INTO questionAnswer (id, userFormID, questionID, knowledge, motivation, customScaleValue, textValue)
+  VALUES(:id, :userFormId, :questionId, :knowledge, :motivation, :customScaleValue, :textValue)
   RETURNING *`
 
   const response = sqlQuery(query, params)

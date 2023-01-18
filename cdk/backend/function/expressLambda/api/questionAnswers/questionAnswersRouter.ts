@@ -1,6 +1,7 @@
 import express from "express"
-import { sqlQuery } from "../../app"
-import QuestionAnswer, { CreateQuestionAnswerProp } from "./questionAnswerQuery"
+import QuestionAnswer, {
+  CreateQuestionAnswerProp,
+} from "./questionAnswersQuery"
 
 const router = express.Router()
 
@@ -82,16 +83,26 @@ router.delete<ReqParams>("/:questionAnswerId", async (req, res, next) => {
   }
 })
 
+interface Response {
+  message: string
+  data: {}
+}
+
 // Batch create questionAnswers
 router.post<unknown, unknown, CreateQuestionAnswerProp[]>(
   "/batch",
   async (req, res, next) => {
     try {
-      const responses = []
-      req.body.forEach(async (qa) => {
-        responses.push(await QuestionAnswer.createQuestionAnswerFromBatch(qa))
-      })
-      res.status(200).json()
+      const responses: Response[] = []
+      await Promise.all(
+        req.body.map(async (qa) => {
+          const createQuestionAnswerResponse: Response = await QuestionAnswer.createQuestionAnswer(
+            qa
+          )
+          responses.push(createQuestionAnswerResponse)
+        })
+      )
+      res.status(200).json(responses)
     } catch (err) {
       console.error(err)
       next(err)
@@ -99,19 +110,4 @@ router.post<unknown, unknown, CreateQuestionAnswerProp[]>(
   }
 )
 
-// Get all question in a category
-// Get all question
-// Get question (id)
-
-// Get questionsAnswer (id)
-// Get all questionAnswers
-
-// Put batch create questionAnswer
-// Post create questionAnswer
-// Patch update questionAnswer
-// Delete questionAnswer (id)
-
-//Post Create question
-// Patch update question
-// Delete question
-export { router as questionAnswerRouter }
+export { router as questionAnswersRouter }
