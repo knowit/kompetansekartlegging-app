@@ -30,29 +30,19 @@ const createFormDefinition = async ({
   const params: SqlParameter[] = [
     {
       name: 'id',
-      value: {
-        stringValue: uuidv4(),
-      },
-      typeHint: TypeHint.UUID,
+      ...kindToParam(uuidv4(), 'uuid'),
     },
     {
       name: 'label',
-      value: {
-        stringValue: name,
-      },
+      ...kindToParam(name, 'string'),
     },
     {
       name: 'organizationID',
-      value: {
-        stringValue: organizationID,
-      },
+      ...kindToParam(organizationID, 'string'),
     },
     {
       name: 'createdAt',
-      value: {
-        stringValue: createTimestampNow(),
-      },
-      typeHint: TypeHint.TIMESTAMP,
+      ...kindToParam(createTimestampNow(), 'timestamp'),
     },
   ]
 
@@ -72,10 +62,7 @@ const deleteFormDefinition = async ({ id }: DeleteFormDefinitionInput) => {
   const params: SqlParameter[] = [
     {
       name: 'id',
-      value: {
-        stringValue: id,
-      },
-      typeHint: TypeHint.UUID,
+      ...kindToParam(id, 'uuid'),
     },
   ]
 
