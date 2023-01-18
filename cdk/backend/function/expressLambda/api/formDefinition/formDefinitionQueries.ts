@@ -6,6 +6,7 @@ import {
 import { v4 as uuidv4 } from 'uuid'
 import { sqlQuery } from '../../app'
 import { createTimestampNow } from '../utils'
+import { formDefinitionColumns, kindToParam } from './helpers'
 
 const listFormDefinitions = async () => {
   const LIST_QUERY = `SELECT * FROM formDefinition`
@@ -98,51 +99,38 @@ const updateFormDefinition = async (
   id: string,
   values: UpdateFormDefinitionInput
 ) => {
+  if (!values.updatedAt) {
+    values.updatedAt = createTimestampNow()
+  }
+
   let columnString = ''
   const lastEntryIndex = Object.keys(values).length - 1
 
   const params: SqlParameter[] = [
     {
       name: 'id',
-      value: {
-        stringValue: id,
-      },
-      typeHint: TypeHint.UUID,
+      ...kindToParam(id, 'uuid'),
     },
   ]
 
-  const typeHints: Record<string, TypeHint> = {
-    createdAt: TypeHint.TIMESTAMP,
-    updatedAt: TypeHint.TIMESTAMP,
-  }
-
-  if (!values.createdAt) {
-    values.createdAt = createTimestampNow()
-  }
-
   Object.entries(values).forEach(([field, value], i) => {
-    // Generate columnString of query
+    if (!(field in formDefinitionColumns)) {
+      throw new Error(`Invalid field: ${field}. Potential SQL injection?`)
+    }
+
     columnString += `${field}=:${field}`
     if (i !== lastEntryIndex) {
       columnString += ', '
     }
 
-    // Populate params list
     const param: SqlParameter = {
       name: field,
-      value: {
-        stringValue: value,
-      },
-    }
-
-    if (field in typeHints) {
-      param.typeHint = typeHints[field]
+      ...kindToParam(value, formDefinitionColumns[field].kind),
     }
 
     params.push(param)
   })
 
-  // ! This is not safe due to user input in query string.
   const UPDATE_QUERY = `UPDATE formDefinition SET ${columnString} WHERE id=:id RETURNING *`
   const records = await sqlQuery(UPDATE_QUERY, params)
 
