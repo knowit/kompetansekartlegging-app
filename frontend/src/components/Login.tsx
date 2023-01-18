@@ -157,18 +157,7 @@ const Login = (props: { isMobile: boolean }) => {
                         Kompetansekartlegging
                     </h1>
                 </div>
-                <div className={style.buttonAlign}>
-                    <Button
-                        className={style.loginButton}
-                        onClick={() =>
-                            Auth.federatedSignIn({
-                                customProvider:
-                                    CognitoHostedUIIdentityProvider.Google,
-                            })
-                        }
-                    >
-                        Logg inn (Knowit Objectnet)
-                    </Button>
+                <div className={style.buttonAlign}> 
                     <Button
                         className={style.loginButton}
                         onClick={() =>
@@ -177,7 +166,7 @@ const Login = (props: { isMobile: boolean }) => {
                             })
                         }
                     >
-                        Logg inn (Andre Knowit Selskaper)
+                        Logg inn
                     </Button>
                     {isNotProd && (
                         <Button
