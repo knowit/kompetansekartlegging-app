@@ -10,7 +10,7 @@ const router = express.Router()
 
 router.use('/debug', debugRouter)
 router.use('/organization', organizationRouter)
-router.use('/group', groupRouter)
+router.use('/groups', groupRouter)
 router.use('/categories', categoryRouter)
 router.use('/questionAnswer', questionAnswerRouter)
 router.use('/formDefinitions', formDefinitionRouter)

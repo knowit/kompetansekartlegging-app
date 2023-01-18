@@ -6,7 +6,7 @@ import Group from './groupQueries'
 const router = express.Router()
 
 // List all groups with groupLeaderUsername
-router.get('/list', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const listGroupsResponse = await Group.listGroups()
 
@@ -48,7 +48,7 @@ interface UpdateGroupBodyParams {
 
 // Add user to group (essentialy creates/updates a user with groupid)
 router.post<unknown, unknown, UpdateGroupBodyParams, UpdateGroupReqParams>(
-  '/:groupId/user/add',
+  '/:groupId/user',
   async (req, res, next) => {
     try {
       const { groupId } = req.query
@@ -69,7 +69,7 @@ interface DelReqParams {
 
 // Delete user from group (essentially deletes user)
 router.delete<unknown, unknown, unknown, DelReqParams>(
-  '/user/:userId/delete',
+  '/user/:userId',
   async (req, res, next) => {
     try {
       const { userId } = req.query
@@ -87,9 +87,9 @@ interface CreateGroupBodyParams {
   groupLeaderUsername: string
   orgId: string
 }
-
+// Create a group
 router.post<unknown, unknown, CreateGroupBodyParams>(
-  '/create',
+  '/',
   async (req, res, next) => {
     try {
       const { groupLeaderUsername, orgId } = req.body
@@ -109,9 +109,9 @@ router.post<unknown, unknown, CreateGroupBodyParams>(
 interface DelGroupReqParams {
   groupId: string
 }
-
+// Delete a group
 router.delete<unknown, unknown, unknown, DelGroupReqParams>(
-  '/:groupId/delete',
+  '/:groupId',
   async (req, res, next) => {
     try {
       const { groupId } = req.query
@@ -133,8 +133,9 @@ interface UpdateGroupBodyParams {
   groupLeaderUsername: string
 }
 
+// Update group leader
 router.patch<unknown, unknown, UpdateGroupBodyParams, UpdateGroupReqParams>(
-  '/:groupId/update',
+  '/:groupId',
   async (req, res, next) => {
     try {
       const { groupId } = req.query
