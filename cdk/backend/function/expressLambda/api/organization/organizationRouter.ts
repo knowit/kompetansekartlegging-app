@@ -4,7 +4,7 @@ import Organization from './organizationQueries'
 const router = express.Router()
 
 //Get all organizations
-router.get('/list', async (_req, res, next) => {
+router.get('/', async (_req, res, next) => {
   try {
     const listOrganizationsResponse = await Organization.listOrganizations()
 
@@ -21,9 +21,9 @@ interface CreateOrganizationParams {
   identifierAttribute: string
 }
 
-//Add a new organization
+// Create a new organization
 router.post<unknown, unknown, CreateOrganizationParams>(
-  '/add',
+  '/',
   async (req, res, next) => {
     const { organizationId, organizationName, identifierAttribute } = req.body
     try {
@@ -42,17 +42,18 @@ router.post<unknown, unknown, CreateOrganizationParams>(
 )
 
 interface DelReqParams {
-  organizationId: string
+  orgId: string
 }
 
-//Delete organization
-router.delete<unknown, unknown, DelReqParams>(
-  '/remove',
+// Delete organization
+router.delete<unknown, unknown, unknown, DelReqParams>(
+  '/:orgId',
   async (req, res, next) => {
-    const { organizationId } = req.body
+    const { orgId } = req.query
+    console.log(orgId)
     try {
       const removeOrganizationResponse = await Organization.removeOrganization(
-        organizationId
+        orgId
       )
 
       res.status(200).json(removeOrganizationResponse)

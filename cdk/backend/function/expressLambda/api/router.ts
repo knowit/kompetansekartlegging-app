@@ -9,7 +9,7 @@ import { questionAnswerRouter } from './questionAnswer/questionAnswerRouter'
 const router = express.Router()
 
 router.use('/debug', debugRouter)
-router.use('/organization', organizationRouter)
+router.use('/organizations', organizationRouter)
 router.use('/groups', groupRouter)
 router.use('/categories', categoryRouter)
 router.use('/questionAnswer', questionAnswerRouter)
