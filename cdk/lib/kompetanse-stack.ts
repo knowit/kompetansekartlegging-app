@@ -22,8 +22,6 @@ export class KompetanseStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
     const AZURE = this.node.tryGetContext("AZURE");
-    const GOOGLE_ID = this.node.tryGetContext("GOOGLE_ID");
-    const GOOGLE_SECRET = this.node.tryGetContext("GOOGLE_SECRET");
     const EXCEL = this.node.tryGetContext("EXCEL");
     const ENV = this.node.tryGetContext("ENV");
     const isProd = ENV === "prod";
@@ -49,22 +47,6 @@ export class KompetanseStack extends Stack {
     })
 
     const supportedProviders = [];
-
-    // Federation Providers
-    if (GOOGLE_SECRET && GOOGLE_ID) {
-      const googlePorvider = new cognito.UserPoolIdentityProviderGoogle(this, "Google", {
-        clientId: GOOGLE_ID,
-        clientSecret: GOOGLE_SECRET,
-        userPool: pool,
-        scopes: ["profile", "email", "openid"],
-        attributeMapping: {
-          email: cognito.ProviderAttribute.GOOGLE_EMAIL,
-          fullname: cognito.ProviderAttribute.GOOGLE_NAME,
-          profilePicture: cognito.ProviderAttribute.GOOGLE_PICTURE
-        }
-      })
-      supportedProviders.push({ name: googlePorvider.providerName });
-    }
 
     if (AZURE) {
       const samlProvider = new cognito.CfnUserPoolIdentityProvider(this, "Saml", {
