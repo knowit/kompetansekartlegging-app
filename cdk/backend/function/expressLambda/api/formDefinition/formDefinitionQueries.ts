@@ -103,6 +103,7 @@ const updateFormDefinition = async (
     values.updatedAt = createTimestampNow()
   }
 
+  // Generate the column string based on provided values
   let columnString = ''
   const lastEntryIndex = Object.keys(values).length - 1
 
@@ -114,6 +115,7 @@ const updateFormDefinition = async (
   ]
 
   Object.entries(values).forEach(([field, value], i) => {
+    // Check if provided field exists in table definition
     if (!(field in formDefinitionColumns)) {
       throw new Error(`Invalid field: ${field}. Potential SQL injection?`)
     }
