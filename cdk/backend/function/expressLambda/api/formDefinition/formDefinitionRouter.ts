@@ -3,7 +3,8 @@ import FormDefinition from './formDefinitionQueries'
 
 const router = express.Router()
 
-router.get('/list', async (req, res, next) => {
+// Get all form definitions
+router.get('/', async (req, res, next) => {
   try {
     const listResponse = await FormDefinition.listFormDefinitions()
 
@@ -19,28 +20,27 @@ interface CreateBodyParams {
   organizationID: string
 }
 
-router.post<unknown, unknown, CreateBodyParams>(
-  '/create',
-  async (req, res, next) => {
-    try {
-      const createResponse = await FormDefinition.createFormDefinition({
-        ...req.body,
-      })
+// Create
+router.post<unknown, unknown, CreateBodyParams>('/', async (req, res, next) => {
+  try {
+    const createResponse = await FormDefinition.createFormDefinition({
+      ...req.body,
+    })
 
-      res.status(200).json(createResponse)
-    } catch (err) {
-      console.error(err)
-      next(err)
-    }
+    res.status(200).json(createResponse)
+  } catch (err) {
+    console.error(err)
+    next(err)
   }
-)
+})
 
 interface DelReqParams {
   id: string
 }
 
+// Delete
 router.delete<unknown, unknown, unknown, DelReqParams>(
-  '/:id/delete',
+  '/:id',
   async (req, res, next) => {
     try {
       const deleteResponse = await FormDefinition.deleteFormDefinition({
@@ -66,12 +66,13 @@ interface UpdateFormDefinitionBodyParams {
   organizationId?: string
 }
 
+// Update
 router.patch<
   unknown,
   unknown,
   UpdateFormDefinitionBodyParams,
   UpdateFormDefinitionReqParams
->('/:id/update', async (req, res, next) => {
+>('/:id', async (req, res, next) => {
   try {
     const { id } = req.query
     const updateResponse = await FormDefinition.updateFormDefinition(
