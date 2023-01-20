@@ -1,0 +1,43 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      aws_environment:
+        description: AWS environment
+        type: choice
+        options:
+          - dev
+          - prod
+      deploy_backend_only:
+        description: Deploy backend only
+        type: boolean
+        default: false
+
+jobs: 
+  deploy_to_dev_on_push_main:
+    if: github.event_name == 'push'
+    name: Deploy dev on push to main
+    uses: ./.github/workflows/callable-deploy.yml
+    with:
+      aws_environment: dev
+      deploy_backend_only: false
+    secrets:
+      aws_access_key_id: ${{ secrets.DEV_AWS_ACCESS_KEY_ID }}
+      aws_secret_access_key: ${{ secrets.DEV_AWS_SECRET_ACCESS_KEY}}
+      azure: ${{ secrets.DEV_AZURE }}
+
+  deploy_on_workflow_dispatch:
+    if: github.event_name == 'workflow_dispatch'
+    name: Deploy on dispatch
+    uses: ./.github/workflows/callable-deploy.yml
+    with:
+      aws_environment: ${{ inputs.aws_environment }}
+      deploy_backend_only: ${{ inputs.deploy_backend_only }}
+    secrets:
+      aws_access_key_id: ${{ inputs.aws_environment == 'prod' && secrets.PROD_AWS_ACCESS_KEY_ID || secrets.DEV_AWS_ACCESS_KEY_ID }}
+      aws_secret_access_key: ${{ inputs.aws_environment == 'prod' && secrets.PROD_AWS_SECRET_ACCESS_KEY || secrets.DEV_AWS_SECRET_ACCESS_KEY}}
+      azure: ${{ inputs.aws_environment == 'prod' && secrets.PROD_AZURE || secrets.DEV_AZURE }}

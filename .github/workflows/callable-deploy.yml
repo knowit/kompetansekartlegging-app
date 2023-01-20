@@ -1,0 +1,71 @@
+name: Callable deploy workflow
+run-name: Deploy to ${{ inputs.aws_environment }}
+
+on:
+  workflow_call:
+    inputs:
+      aws_environment:
+        type: string
+        required: true
+      deploy_backend_only:
+        type: boolean
+        default: false
+      aws_region:
+        type: string
+        default: 'eu-central-1'
+      excel:
+        type: boolean
+        default: true
+    secrets:
+      aws_access_key_id:
+        required: true
+      aws_secret_access_key:
+        required: true
+      azure:
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy ${{ inputs.aws_environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.aws_access_key_id }}
+          aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
+          aws-region: ${{ inputs.aws_region }}
+
+      - name: Install packages
+        run: ./install.sh
+
+      - name: Update CDK Toolkit
+        run: cd cdk && npx cdk bootstrap
+
+      - name: Deploy backend to ${{ inputs.aws_environment }}
+        run: |
+          cd cdk && npx cdk deploy \
+          --require-approval never \
+          --outputs-file outputs.json \
+          --context ENV=${{ inputs.aws_environment }} \
+          --context AZURE=${{ secrets.azure }} \
+          --context EXCEL=${{ inputs.excel }} && \
+          npx ts-node --prefer-ts-exts hooks/hooks.ts
+
+      - name: Prepare frontend ${{ inputs.aws_environment }} deployment
+        if: inputs.deploy_backend_only == false
+        env:
+          REACT_APP_USER_BRANCH: ${{ inputs.aws_environment == 'prod' && 'master' || 'dev' }}
+        run: |
+          cd cdk && npm run codegen && \
+          cd ../frontend && echo $REACT_APP_USER_BRANCH >> .env && \
+          CI='' npm run build \
+
+      - name: Deploy frontend to ${{ inputs.aws_environment }}
+        if: inputs.deploy_backend_only == false
+        run: cd frontend-cdk && npx cdk deploy --require-approval never
