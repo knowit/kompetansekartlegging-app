@@ -6,12 +6,12 @@ on:
       aws_environment:
         type: string
         required: true
-      deploy_backend_only:
-        type: boolean
-        default: false
       aws_region:
         type: string
         default: 'eu-central-1'
+      deploy_backend_only:
+        type: boolean
+        default: false
       excel:
         type: boolean
         default: true
