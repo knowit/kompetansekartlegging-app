@@ -1,5 +1,4 @@
 name: Callable deploy workflow
-run-name: Deploy to ${{ inputs.aws_environment }}
 
 on:
   workflow_call:

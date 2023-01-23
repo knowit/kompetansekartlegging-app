@@ -18,7 +18,7 @@ on:
         default: false
 
 jobs: 
-  deploy_to_dev_on_push_main:
+  deploy_dev_on_push_main:
     if: github.event_name == 'push'
     name: Deploy dev on push to main
     uses: ./.github/workflows/callable-deploy.yml
