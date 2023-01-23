@@ -53,15 +53,15 @@ jobs:
           --outputs-file outputs.json \
           --context ENV=${{ inputs.aws_environment }} \
           --context AZURE=${{ secrets.azure }} \
-          --context EXCEL=${{ inputs.excel }} && \
-          npx ts-node --prefer-ts-exts hooks/hooks.ts
+          --context EXCEL=${{ inputs.excel }}
 
       - name: Prepare frontend ${{ inputs.aws_environment }} deployment
         if: inputs.deploy_backend_only == false
         env:
           REACT_APP_USER_BRANCH: ${{ inputs.aws_environment == 'prod' && 'master' || 'dev' }}
         run: |
-          cd cdk && npm run codegen && \
+          cd cdk && npx ts-node --prefer-ts-exts hooks/hooks.ts && \
+          npm run codegen && \
           cd ../frontend && echo $REACT_APP_USER_BRANCH >> .env && \
           CI='' npm run build \
 
