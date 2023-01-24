@@ -5,7 +5,6 @@ import {
     AmplifySignIn,
     AmplifySignUp,
 } from "@aws-amplify/ui-react";
-import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth/lib/types";
 import { Auth } from "aws-amplify";
 import { KnowitColors } from "../styles";
 import { ReactComponent as KnowitLogo } from "../Logotype-Knowit-Digital-white 1.svg";
