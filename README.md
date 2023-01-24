@@ -21,10 +21,11 @@ To run the project locally:
 
 1. Clone the GitHub repo.
 2. Run `$ cd kompetansekartlegging-app` (or whatever you've chosen to
-   name the project in the cloning process).
+   name the project in the cloning process)
 3. Run `$ ./install.sh`
 4. Run `cd cdk` \
-   a. If you are using aws sso profiles you need to run `python sync_sso.py aws-cli-profile` after step 4
+   a. If you are using aws sso profiles you need to run `python sync_sso.py aws-cli-profile` after step 4 \
+   b. If not, configure AWS CLI credentials by running `aws configure` followed by `export AWS_PROFILE={aws cli profilename}`, where `{aws cli profilename}=default` if you have not configured additional profiles
 5. Run `cdk bootstrap`
 6. Create a cdk.context.json file with an `ENV` key:
    ```
@@ -32,15 +33,16 @@ To run the project locally:
       "ENV": "exampleenv"
    }
    ```
-   * <b>Deploy to sandbox</b>: Give ENV any value you want, but it has to be unique, so you might get a conflict if it already exists on AWS.
-   * <b>Deploy to dev or prod</b>: The ENV value must be `dev` or `prod`. You also need to add the keys `GOOGLE_ID` (GCP App Id), `GOOGLE_SECRET` (GCP App secret key) and `AZURE` (Azure AD metadata url).
-7. Run `export AWS_PROFILE={aws cli profilename}` followed by `npm run deploy` and `npm run codegen` (Alternatively, go to root directory and run `./deploybackend.sh full`). For most `{aws cli profilename}=default` if you have not configured additional aws cli profiles.
-8. Change directory to frontend and run `npm start`
+   * <b>Deploy to sandbox?</b> Give ENV any value you want, but it has to be unique, so you might get a conflict if it already exists on AWS
+   * <b>Deploy to dev or prod?</b> The ENV value must be `dev` or `prod`. You also need to add the keys `GOOGLE_ID` (GCP App Id), `GOOGLE_SECRET` (GCP App secret key) and `AZURE` (Azure AD metadata url)
+7. Run `npm run deploy` followed by `npm run codegen` (Alternatively, go to root directory and run `./deploybackend.sh full`)
+8. Run `cd ../frontend` followed by `npm start`
 
 
 ### After Setup:
 * Run `./deploybackend.sh` to deploy changes to the backend
 * Run `npm start` in frontend folder to run frontend locally
+* For testing purposes, you can add data to your sandbox by running scripts located inside the scripts-folder, such as `create_test_data.py`
 
 ### Production deployment instructions can be found [here](https://github.com/knowit/Dataplattform-issues/wiki/Kompetansekartlegging:-Deployment-Guide-(CDK))
 
