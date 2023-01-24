@@ -27,8 +27,8 @@ To run the project locally:
 5. Configure AWS CLI credentials: \
    a. If you are using aws sso profiles you need to run `python sync_sso.py aws-cli-profile` \
    b. If not, run `aws configure` followed by `export AWS_PROFILE={aws cli profilename}`, where `{aws cli profilename}=default` if you have not configured additional profiles
-5. Run `cdk bootstrap`
-6. Create a cdk.context.json file with an `ENV` key:
+6. Run `cdk bootstrap`
+7. Create a cdk.context.json file with an `ENV` key:
    ```
    {
       "ENV": "exampleenv"
@@ -36,8 +36,8 @@ To run the project locally:
    ```
    * <b>Deploy to sandbox?</b> Give ENV any value you want, but it has to be unique, so you might get a conflict if it already exists on AWS
    * <b>Deploy to dev or prod?</b> The ENV value must be `dev` or `prod`. You also need to add the keys `GOOGLE_ID` (GCP App Id), `GOOGLE_SECRET` (GCP App secret key) and `AZURE` (Azure AD metadata url)
-7. Run `npm run deploy` followed by `npm run codegen` (Alternatively, go to root directory and run `./deploybackend.sh full`)
-8. Run `cd ../frontend` followed by `npm start`
+8. Run `npm run deploy` followed by `npm run codegen` (Alternatively, go to root directory and run `./deploybackend.sh full`)
+9. Run `cd ../frontend` followed by `npm start`
 
 
 ### After Setup:
