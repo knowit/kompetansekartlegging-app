@@ -1,208 +1,205 @@
-import { ModelSortDirection } from "../API";
+import { ModelSortDirection } from '../API'
 
 export const listUserFormsWithAnswers = /* GraphQL */ `
-    query ListUserFormsWithAnswers(
-        $filter: ModelUserFormFilterInput
-        $limit: Int
-        $nextToken: String
-    ) {
-        listUserForms(filter: $filter, limit: $limit, nextToken: $nextToken) {
-            items {
+  query ListUserFormsWithAnswers(
+    $filter: ModelUserFormFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUserForms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        createdAt
+        formDefinitionID
+        questionAnswers {
+          items {
+            id
+            knowledge
+            motivation
+            createdAt
+            question {
+              id
+              category {
+                text
                 id
-                createdAt
-                formDefinitionID
-                questionAnswers {
-                    items {
-                        id
-                        knowledge
-                        motivation
-                        createdAt
-                        question {
-                            id
-                            category {
-                                text
-                                id
-                            }
-                        }
-                    }
-                }
+              }
             }
-            nextToken
+          }
         }
+      }
+      nextToken
     }
-`;
+  }
+`
 
 export const createFormDefinitionInputConsts = {
-    input: {
-        sortKeyConstant: "formDefinitionConstant",
-    },
-};
+  input: {
+    sortKeyConstant: 'formDefinitionConstant',
+  },
+}
 
 export const formByCreatedAtInputConsts = {
-    limit: 1,
-    sortKeyConstant: "formDefinitionConstant",
-    sortDirection: ModelSortDirection.Desc,
-};
+  limit: 1,
+  sortKeyConstant: 'formDefinitionConstant',
+  sortDirection: ModelSortDirection.Desc,
+}
 
 export const formByCreatedAtt = /* GraphQL */ `
-    query FormByCreatedAtt(
-        $sortKeyConstant: String
-        $createdAt: ModelStringKeyConditionInput
-        $sortDirection: ModelSortDirection
-        $filter: ModelFormDefinitionFilterInput
-        $limit: Int
-        $nextToken: String
+  query FormByCreatedAtt(
+    $sortKeyConstant: String
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelFormDefinitionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    formByCreatedAt(
+      sortKeyConstant: $sortKeyConstant
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
     ) {
-        formByCreatedAt(
-            sortKeyConstant: $sortKeyConstant
-            createdAt: $createdAt
-            sortDirection: $sortDirection
-            filter: $filter
-            limit: $limit
-            nextToken: $nextToken
-        ) {
-            items {
-                id
-                createdAt
-                questions {
-                    items {
-                        category {
-                            id
-                            text
-                            description
-                            index
-                        }
-                        index
-                        id
-                        createdAt
-                        text
-                        topic
-                    }
-                }
+      items {
+        id
+        createdAt
+        questions {
+          items {
+            category {
+              id
+              text
+              description
+              index
             }
-            nextToken
+            index
+            id
+            createdAt
+            text
+            topic
+          }
         }
+      }
+      nextToken
     }
-`;
+  }
+`
 
 export const formByCreatedAtPaginated = /* GraphQL */ `
-    query FormByCreatedAtPaginated(
-        $sortKeyConstant: String
-        $createdAt: ModelStringKeyConditionInput
-        $sortDirection: ModelSortDirection
-        $filter: ModelFormDefinitionFilterInput
-        $limit: Int
-        $nextToken: String
-        $nextFormToken: String
+  query FormByCreatedAtPaginated(
+    $sortKeyConstant: String
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelFormDefinitionFilterInput
+    $limit: Int
+    $nextToken: String
+    $nextFormToken: String
+  ) {
+    formByCreatedAt(
+      sortKeyConstant: $sortKeyConstant
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextFormToken
     ) {
-        formByCreatedAt(
-            sortKeyConstant: $sortKeyConstant
-            createdAt: $createdAt
-            sortDirection: $sortDirection
-            filter: $filter
-            limit: $limit
-            nextToken: $nextFormToken
-        ) {
-            items {
-                id
-                createdAt
-                questions(nextToken: $nextToken) {
-                    items {
-                        category {
-                            id
-                            text
-                            description
-                            index
-                        }
-                        index
-                        id
-                        createdAt
-                        text
-                        topic
-
-                        type
-                        scaleStart
-                        scaleMiddle
-                        scaleEnd
-                    }
-                    nextToken
-                }
+      items {
+        id
+        createdAt
+        questions(nextToken: $nextToken) {
+          items {
+            category {
+              id
+              text
+              description
+              index
             }
-            nextToken
+            index
+            id
+            createdAt
+            text
+            topic
+
+            type
+            scaleStart
+            scaleMiddle
+            scaleEnd
+          }
+          nextToken
         }
+      }
+      nextToken
     }
-`;
+  }
+`
 
 export const userFormByCreatedAtInputConsts = {
-    limit: 1,
-    sortDirection: ModelSortDirection.Desc,
-};
+  limit: 1,
+  sortDirection: ModelSortDirection.Desc,
+}
 
 export const customUserFormByCreatedAt = /* GraphQL */ `
-    query CustomUserFormByCreatedAt(
-        $owner: String
-        $createdAt: ModelStringKeyConditionInput
-        $sortDirection: ModelSortDirection
-        $filter: ModelUserFormFilterInput
-        $limit: Int
-        $nextToken: String
+  query CustomUserFormByCreatedAt(
+    $owner: String
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserFormFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userFormByCreatedAt(
+      owner: $owner
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
     ) {
-        userFormByCreatedAt(
-            owner: $owner
-            createdAt: $createdAt
-            sortDirection: $sortDirection
-            filter: $filter
-            limit: $limit
-        ) {
-            items {
+      items {
+        id
+        formDefinitionID
+        questionAnswers(nextToken: $nextToken) {
+          items {
+            id
+            knowledge
+            motivation
+            updatedAt
+            customScaleValue
+            question {
+              id
+              text
+              topic
+              type
+              category {
                 id
-                formDefinitionID
-                questionAnswers(nextToken: $nextToken) {
-                    items {
-                        id
-                        knowledge
-                        motivation
-                        updatedAt
-                        customScaleValue
-                        question {
-                            id
-                            text
-                            topic
-                            type
-                            category {
-                                id
-                                text
-                                description
-                                index
-                            }
-                        }
-                    }
-                    nextToken
-                }
+                text
+                description
+                index
+              }
             }
+          }
+          nextToken
         }
+      }
     }
-`;
+  }
+`
 
 export const batchCreateQuestionAnswer2 = /* GraphQL */ `
-    mutation BatchCreateQuestionAnswer2(
-        $input: [CreateQuestionAnswerInput]
-        $organizationID: String
-    ) {
-        batchCreateQuestionAnswer(
-            input: $input
-            organizationID: $organizationID
-        ) {
-            status
-            error
-            failedInputs {
-                id
-                userFormID
-                questionID
-                knowledge
-                motivation
-                formDefinitionID
-            }
-        }
+  mutation BatchCreateQuestionAnswer2(
+    $input: [CreateQuestionAnswerInput]
+    $organizationID: String
+  ) {
+    batchCreateQuestionAnswer(input: $input, organizationID: $organizationID) {
+      status
+      error
+      failedInputs {
+        id
+        userFormID
+        questionID
+        knowledge
+        motivation
+        formDefinitionID
+      }
     }
-`;
+  }
+`
