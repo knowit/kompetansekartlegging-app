@@ -1,5 +1,5 @@
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .App {
@@ -7,7 +7,7 @@
 }
 
 body {
-    height: 100%;
+  height: 100%;
 }
 
 /* width */
@@ -17,8 +17,8 @@ body {
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: #f2f2f2;
-    border-radius: 10px;
+  background: #f2f2f2;
+  border-radius: 10px;
 }
 
 /* Handle */
