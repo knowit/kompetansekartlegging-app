@@ -12,7 +12,8 @@ interface ReqParams {
 // List all questionAnswers
 router.get('/', async (req, res, next) => {
   try {
-    const listQuestionAnswerResponse = await QuestionAnswer.listQuestionAnswers()
+    const listQuestionAnswerResponse =
+      await QuestionAnswer.listQuestionAnswers()
     res.status(200).json(listQuestionAnswerResponse)
   } catch (err) {
     console.error(err)
@@ -40,9 +41,8 @@ router.post<unknown, unknown, CreateQuestionAnswerProp>(
   '/',
   async (req, res, next) => {
     try {
-      const createQuestionAnswerResponse = await QuestionAnswer.createQuestionAnswer(
-        req.body
-      )
+      const createQuestionAnswerResponse =
+        await QuestionAnswer.createQuestionAnswer(req.body)
       res.status(201).json(createQuestionAnswerResponse)
     } catch (err) {
       console.error(err)
@@ -57,10 +57,8 @@ router.patch<ReqParams, unknown, CreateQuestionAnswerProp>(
   async (req, res, next) => {
     try {
       const { questionAnswerId } = req.params
-      const updateQuestionAnswerResponse = await QuestionAnswer.updateQuestionAnswer(
-        questionAnswerId,
-        req.body
-      )
+      const updateQuestionAnswerResponse =
+        await QuestionAnswer.updateQuestionAnswer(questionAnswerId, req.body)
       res.status(200).json(updateQuestionAnswerResponse)
     } catch (err) {
       console.error(err)
@@ -73,9 +71,8 @@ router.patch<ReqParams, unknown, CreateQuestionAnswerProp>(
 router.delete<ReqParams>('/:questionAnswerId', async (req, res, next) => {
   try {
     const { questionAnswerId } = req.params
-    const deleteQuestionAnswerResponse = await QuestionAnswer.deleteQuestionAnswer(
-      questionAnswerId
-    )
+    const deleteQuestionAnswerResponse =
+      await QuestionAnswer.deleteQuestionAnswer(questionAnswerId)
     res.status(200).json(deleteQuestionAnswerResponse)
   } catch (err) {
     console.error(err)
@@ -96,9 +93,8 @@ router.post<unknown, unknown, CreateQuestionAnswerProp[]>(
       const responses: Response[] = []
       await Promise.all(
         req.body.map(async (qa) => {
-          const createQuestionAnswerResponse: Response = await QuestionAnswer.createQuestionAnswer(
-            qa
-          )
+          const createQuestionAnswerResponse: Response =
+            await QuestionAnswer.createQuestionAnswer(qa)
           responses.push(createQuestionAnswerResponse)
         })
       )
