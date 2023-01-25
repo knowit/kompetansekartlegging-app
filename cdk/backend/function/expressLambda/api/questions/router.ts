@@ -1,5 +1,5 @@
 import express from 'express'
-import Question, { CreateQuestionProps } from './questionsQuery'
+import Question, { CreateQuestionProps } from './queries'
 
 const router = express.Router()
 
@@ -38,8 +38,9 @@ router.get<CategoryReqParams>(
     try {
       const { categoryId } = req.params
       console.log(categoryId)
-      const listQuestionsInCategoryResponse =
-        await Question.getQuestionsInCategory(categoryId)
+      const listQuestionsInCategoryResponse = await Question.getQuestionsInCategory(
+        categoryId
+      )
       res.status(200).json(listQuestionsInCategoryResponse)
     } catch (err) {
       console.error(err)

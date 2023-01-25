@@ -1,11 +1,11 @@
 import express from 'express'
-import { categoryRouter } from './category/categoryRouter'
+import { categoryRouter } from './categories/router'
 import { debugRouter } from './debug/debugRouter'
-import { groupRouter } from './group/groupRouter'
-import { organizationRouter } from './organization/organizationRouter'
-import { questionsRouter } from './questions/questionsRouter'
-import { questionAnswersRouter } from './questionAnswers/questionAnswersRouter'
-import { formDefinitionRouter } from './formDefinition/formDefinitionRouter'
+import { groupRouter } from './groups/router'
+import { organizationRouter } from './organizations/router'
+import { questionsRouter } from './questions/router'
+import { questionAnswersRouter } from './questionAnswers/router'
+import { formDefinitionRouter } from './formDefinitions/router'
 
 const router = express.Router()
 
