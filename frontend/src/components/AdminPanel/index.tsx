@@ -1,2 +1,2 @@
-export { AdminPanel } from "./AdminPanel";
-export { AdminMenu } from "./AdminMenu";
+export { AdminPanel } from './AdminPanel'
+export { AdminMenu } from './AdminMenu'
