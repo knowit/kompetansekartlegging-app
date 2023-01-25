@@ -9,10 +9,10 @@ import { questionAnswerRouter } from './questionAnswer/questionAnswerRouter'
 const router = express.Router()
 
 router.use('/debug', debugRouter)
-router.use('/organization', organizationRouter)
-router.use('/group', groupRouter)
-router.use('/category', categoryRouter)
+router.use('/organizations', organizationRouter)
+router.use('/groups', groupRouter)
+router.use('/categories', categoryRouter)
 router.use('/questionAnswer', questionAnswerRouter)
-router.use('/formDefinition', formDefinitionRouter)
+router.use('/formDefinitions', formDefinitionRouter)
 
 export { router as apiRouter }

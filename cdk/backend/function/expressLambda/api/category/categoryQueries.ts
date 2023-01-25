@@ -2,11 +2,12 @@ import {
   BadRequestException,
   SqlParameter,
   TypeHint,
-} from "@aws-sdk/client-rds-data"
-import { sqlQuery } from "../../app"
+} from '@aws-sdk/client-rds-data'
 
-interface CreateCategoryProps {
-  id: string
+import { v4 as uuidv4 } from 'uuid'
+import { sqlQuery } from '../../app'
+
+interface CategoryProps {
   text: string
   description: string
   index: number
@@ -14,16 +15,12 @@ interface CreateCategoryProps {
   organizationId: string
 }
 
-interface UpdateCategoryProps extends CreateCategoryProps {
-  categoryId: string
-}
-
 const listCategories = async () => {
   const query = 'SELECT * FROM "category"'
   const records = await sqlQuery(query)
 
   return {
-    message: "🚀 ~ > All categories.",
+    message: '🚀 ~ > All categories.',
     data: records,
   }
 }
@@ -31,7 +28,7 @@ const listCategories = async () => {
 const getCategory = async (id: string) => {
   const params: SqlParameter[] = [
     {
-      name: "id",
+      name: 'id',
       value: {
         stringValue: id,
       },
@@ -49,48 +46,49 @@ const getCategory = async (id: string) => {
 }
 
 const createCategory = async ({
-  id,
   text,
   description,
   index,
   formDefinitionId,
   organizationId,
-}: CreateCategoryProps) => {
+}: CategoryProps) => {
+  const id = uuidv4()
+
   const params: SqlParameter[] = [
     {
-      name: "id",
+      name: 'id',
       value: {
         stringValue: id,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: "text",
+      name: 'text',
       value: {
         stringValue: text,
       },
     },
     {
-      name: "description",
+      name: 'description',
       value: {
         stringValue: description,
       },
     },
     {
-      name: "index",
+      name: 'index',
       value: {
         longValue: index,
       },
     },
     {
-      name: "formDefinitionId",
+      name: 'formDefinitionId',
       value: {
         stringValue: formDefinitionId,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: "organizationId",
+      name: 'organizationId',
       value: {
         stringValue: organizationId,
       },
@@ -108,53 +106,45 @@ const createCategory = async ({
   }
 }
 
-const updateCategory = async ({
-  id,
-  categoryId,
-  text,
-  description,
-  index,
-  formDefinitionId,
-  organizationId,
-}: UpdateCategoryProps) => {
-  if (id !== categoryId) {
-    throw BadRequestException
-  }
+const updateCategory = async (
+  id: string,
+  { text, description, index, formDefinitionId, organizationId }: CategoryProps
+) => {
   const params: SqlParameter[] = [
     {
-      name: "id",
+      name: 'id',
       value: {
-        stringValue: categoryId,
+        stringValue: id,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: "text",
+      name: 'text',
       value: {
         stringValue: text,
       },
     },
     {
-      name: "description",
+      name: 'description',
       value: {
         stringValue: description,
       },
     },
     {
-      name: "index",
+      name: 'index',
       value: {
         longValue: index,
       },
     },
     {
-      name: "formDefinitionId",
+      name: 'formDefinitionId',
       value: {
         stringValue: formDefinitionId,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: "organizationId",
+      name: 'organizationId',
       value: {
         stringValue: organizationId,
       },
@@ -167,7 +157,7 @@ const updateCategory = async ({
     RETURNING *`
   const response = await sqlQuery(query, params)
   return {
-    message: `🚀 ~ > Category with id ${categoryId} was updated`,
+    message: `🚀 ~ > Category with id ${id} was updated`,
     data: response,
   }
 }
@@ -175,7 +165,7 @@ const updateCategory = async ({
 const deleteCategory = async (id: string) => {
   const params: SqlParameter[] = [
     {
-      name: "id",
+      name: 'id',
       value: {
         stringValue: id,
       },
@@ -188,6 +178,7 @@ const deleteCategory = async (id: string) => {
 
   return {
     message: `🚀 ~ > Category with id ${id} was deleted`,
+    data: response,
   }
 }
 
