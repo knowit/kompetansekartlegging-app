@@ -34,6 +34,7 @@
     "@aws-sdk/client-rds-data": "^3.216.0",
     "@aws-sdk/credential-providers": "^3.53.0",
     "@graphql-codegen/cli": "^2.6.2",
+    "@tanstack/react-query": "^4.23.0",
     "amplify-graphql-docs-generator": "^2.2.4",
     "aws-cdk-lib": "2.19.0",
     "cdk-appsync-transformer": "^2.0.0-alpha.0",
