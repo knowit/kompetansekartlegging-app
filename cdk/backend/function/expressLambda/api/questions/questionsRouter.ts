@@ -1,5 +1,5 @@
-import express from "express"
-import Question, { CreateQuestionProps } from "./questionsQuery"
+import express from 'express'
+import Question, { CreateQuestionProps } from './questionsQuery'
 
 const router = express.Router()
 
@@ -11,7 +11,7 @@ interface CategoryReqParams {
   categoryId: string
 }
 
-router.get("/", async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const listQuestionsResponse = await Question.listQuestions()
     res.status(200).json(listQuestionsResponse)
@@ -21,7 +21,7 @@ router.get("/", async (req, res, next) => {
   }
 })
 
-router.get<ReqParams>("/:id", async (req, res, next) => {
+router.get<ReqParams>('/:id', async (req, res, next) => {
   try {
     const { id } = req.params
     const getQuestionResponse = await Question.getQuestion(id)
@@ -33,7 +33,7 @@ router.get<ReqParams>("/:id", async (req, res, next) => {
 })
 
 router.get<CategoryReqParams>(
-  "/:categoryId/questions",
+  '/:categoryId/questions',
   async (req, res, next) => {
     try {
       const { categoryId } = req.params
@@ -50,10 +50,10 @@ router.get<CategoryReqParams>(
 )
 
 router.post<unknown, unknown, CreateQuestionProps>(
-  "/",
+  '/',
   async (req, res, next) => {
     try {
-      console.log("HI: " + JSON.stringify(req.body))
+      console.log('HI: ' + JSON.stringify(req.body))
       const createQuestionResponse = await Question.createQuestion(req.body)
       res.status(201).json(createQuestionResponse)
     } catch (err) {
@@ -64,7 +64,7 @@ router.post<unknown, unknown, CreateQuestionProps>(
 )
 
 router.patch<ReqParams, unknown, CreateQuestionProps>(
-  "/:id",
+  '/:id',
   async (req, res, next) => {
     try {
       const { id } = req.params
@@ -77,7 +77,7 @@ router.patch<ReqParams, unknown, CreateQuestionProps>(
   }
 )
 
-router.delete<ReqParams>("/:id", async (req, res, next) => {
+router.delete<ReqParams>('/:id', async (req, res, next) => {
   try {
     const { id } = req.params
     const deleteQuestionResponse = await Question.deleteQuestion(id)

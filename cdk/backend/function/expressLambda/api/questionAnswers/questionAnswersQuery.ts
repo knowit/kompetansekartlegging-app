@@ -1,6 +1,6 @@
-import { SqlParameter, TypeHint } from "@aws-sdk/client-rds-data"
-import { sqlQuery } from "../../app"
-import { v4 as uuidv4 } from "uuid"
+import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
+import { sqlQuery } from '../../app'
+import { v4 as uuidv4 } from 'uuid'
 
 export interface CreateQuestionAnswerProp {
   userFormId: string
@@ -12,11 +12,11 @@ export interface CreateQuestionAnswerProp {
 }
 
 const listQuestionAnswers = async () => {
-  const query = "SELECT id FROM questionAnswer"
+  const query = 'SELECT id FROM questionAnswer'
   const response = await sqlQuery(query)
 
   return {
-    message: "🚀 ~ > All questionAnswers",
+    message: '🚀 ~ > All questionAnswers',
     data: response,
   }
 }
@@ -24,14 +24,14 @@ const listQuestionAnswers = async () => {
 const getQuestionAnswer = async (id: string) => {
   const params: SqlParameter[] = [
     {
-      name: "id",
+      name: 'id',
       value: {
         stringValue: id,
       },
       typeHint: TypeHint.UUID,
     },
   ]
-  const query = "SELECT * FROM questionAnswer WHERE id = :id"
+  const query = 'SELECT * FROM questionAnswer WHERE id = :id'
   const response = await sqlQuery(query, params)
 
   return {
@@ -52,40 +52,40 @@ const createQuestionAnswer = async ({
 
   const params: SqlParameter[] = [
     {
-      name: "id",
+      name: 'id',
       value: {
         stringValue: id,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: "userFormId",
+      name: 'userFormId',
       value: {
         stringValue: userFormId,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: "questionId",
+      name: 'questionId',
       value: {
         stringValue: questionId,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: "knowledge",
+      name: 'knowledge',
       value: {
         longValue: knowledge,
       },
     },
     {
-      name: "motivation",
+      name: 'motivation',
       value: {
         longValue: motivation,
       },
     },
     {
-      name: "customScaleValue",
+      name: 'customScaleValue',
       value: customScaleValue
         ? {
             longValue: customScaleValue,
@@ -93,7 +93,7 @@ const createQuestionAnswer = async ({
         : { isNull: true },
     },
     {
-      name: "textValue",
+      name: 'textValue',
       value: textValue ? { stringValue: textValue } : { isNull: true },
     },
   ]
@@ -122,40 +122,40 @@ const updateQuestionAnswer = async (
 ) => {
   const params: SqlParameter[] = [
     {
-      name: "id",
+      name: 'id',
       value: {
         stringValue: id,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: "userFormId",
+      name: 'userFormId',
       value: {
         stringValue: userFormId,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: "questionId",
+      name: 'questionId',
       value: {
         stringValue: questionId,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: "knowledge",
+      name: 'knowledge',
       value: {
         longValue: knowledge,
       },
     },
     {
-      name: "motivation",
+      name: 'motivation',
       value: {
         longValue: motivation,
       },
     },
     {
-      name: "customScaleValue",
+      name: 'customScaleValue',
       value: customScaleValue
         ? {
             longValue: customScaleValue,
@@ -163,7 +163,7 @@ const updateQuestionAnswer = async (
         : { isNull: true },
     },
     {
-      name: "textValue",
+      name: 'textValue',
       value: textValue ? { stringValue: textValue } : { isNull: true },
     },
   ]
@@ -184,7 +184,7 @@ const updateQuestionAnswer = async (
 const deleteQuestionAnswer = async (id: string) => {
   const params: SqlParameter[] = [
     {
-      name: "id",
+      name: 'id',
       value: {
         stringValue: id,
       },
@@ -213,40 +213,40 @@ const createQuestionAnswerFromBatch = async ({
 
   const params: SqlParameter[] = [
     {
-      name: "id",
+      name: 'id',
       value: {
         stringValue: id,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: "userFormId",
+      name: 'userFormId',
       value: {
         stringValue: userFormId,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: "questionId",
+      name: 'questionId',
       value: {
         stringValue: questionId,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: "knowledge",
+      name: 'knowledge',
       value: {
         longValue: knowledge,
       },
     },
     {
-      name: "motivation",
+      name: 'motivation',
       value: {
         longValue: motivation,
       },
     },
     {
-      name: "customScaleValue",
+      name: 'customScaleValue',
       value: customScaleValue
         ? {
             longValue: customScaleValue,
@@ -254,7 +254,7 @@ const createQuestionAnswerFromBatch = async ({
         : { isNull: true },
     },
     {
-      name: "textValue",
+      name: 'textValue',
       value: textValue ? { stringValue: textValue } : { isNull: true },
     },
   ]

@@ -1,7 +1,7 @@
-import { SqlParameter, TypeHint } from "@aws-sdk/client-rds-data"
-import { sqlQuery } from "../../app"
+import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
+import { sqlQuery } from '../../app'
 
-import { v4 as uuidv4 } from "uuid"
+import { v4 as uuidv4 } from 'uuid'
 
 export interface CreateQuestionProps {
   categoryId: string
@@ -14,13 +14,13 @@ export interface CreateQuestionProps {
   text: string
   topic: string
   type2: QuestionType
-  type: "customScaleValue" | "knowledgeMotivation" | "text"
+  type: 'customScaleValue' | 'knowledgeMotivation' | 'text'
 }
 
 export enum QuestionType {
-  customScaleValue = "customScaleValue",
-  knowledgeMotivation = "knowledgeMotivation",
-  text = "text",
+  customScaleValue = 'customScaleValue',
+  knowledgeMotivation = 'knowledgeMotivation',
+  text = 'text',
 }
 
 const listQuestions = async () => {
@@ -28,7 +28,7 @@ const listQuestions = async () => {
   const response = await sqlQuery(query)
 
   return {
-    message: "🚀 ~ > All questions",
+    message: '🚀 ~ > All questions',
     data: response,
   }
 }
@@ -36,7 +36,7 @@ const listQuestions = async () => {
 const getQuestion = async (id: string) => {
   const params: SqlParameter[] = [
     {
-      name: "id",
+      name: 'id',
       value: {
         stringValue: id,
       },
@@ -56,7 +56,7 @@ const getQuestion = async (id: string) => {
 const getQuestionsInCategory = async (categoryId: string) => {
   const params: SqlParameter[] = [
     {
-      name: "categoryId",
+      name: 'categoryId',
       value: {
         stringValue: categoryId,
       },
@@ -89,40 +89,40 @@ const createQuestion = async ({
 
   const params: SqlParameter[] = [
     {
-      name: "id",
+      name: 'id',
       value: {
         stringValue: id,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: "categoryId",
+      name: 'categoryId',
       value: {
         stringValue: categoryId,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: "formDefinitionId",
+      name: 'formDefinitionId',
       value: { stringValue: formDefinitionId },
       typeHint: TypeHint.UUID,
     },
-    { name: "index", value: { longValue: index } },
-    { name: "organizationId", value: { stringValue: organizationId } },
+    { name: 'index', value: { longValue: index } },
+    { name: 'organizationId', value: { stringValue: organizationId } },
     {
-      name: "scaleStart",
+      name: 'scaleStart',
       value: scaleStart ? { stringValue: scaleStart } : { isNull: true },
     },
     {
-      name: "scaleMiddle",
+      name: 'scaleMiddle',
       value: scaleMiddle ? { stringValue: scaleMiddle } : { isNull: true },
     },
     {
-      name: "scaleEnd",
+      name: 'scaleEnd',
       value: scaleEnd ? { stringValue: scaleEnd } : { isNull: true },
     },
-    { name: "text", value: { stringValue: text } },
-    { name: "topic", value: { stringValue: topic } },
+    { name: 'text', value: { stringValue: text } },
+    { name: 'topic', value: { stringValue: topic } },
   ]
 
   const questionType = QuestionType[type]
@@ -156,40 +156,40 @@ const updateQuestion = async (
 ) => {
   const params: SqlParameter[] = [
     {
-      name: "id",
+      name: 'id',
       value: {
         stringValue: id,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: "categoryId",
+      name: 'categoryId',
       value: {
         stringValue: categoryId,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: "formDefinitionId",
+      name: 'formDefinitionId',
       value: { stringValue: formDefinitionId },
       typeHint: TypeHint.UUID,
     },
-    { name: "index", value: { longValue: index } },
-    { name: "organizationId", value: { stringValue: organizationId } },
+    { name: 'index', value: { longValue: index } },
+    { name: 'organizationId', value: { stringValue: organizationId } },
     {
-      name: "scaleStart",
+      name: 'scaleStart',
       value: scaleStart ? { stringValue: scaleStart } : { isNull: true },
     },
     {
-      name: "scaleMiddle",
+      name: 'scaleMiddle',
       value: scaleMiddle ? { stringValue: scaleMiddle } : { isNull: true },
     },
     {
-      name: "scaleEnd",
+      name: 'scaleEnd',
       value: scaleEnd ? { stringValue: scaleEnd } : { isNull: true },
     },
-    { name: "text", value: { stringValue: text } },
-    { name: "topic", value: { stringValue: topic } },
+    { name: 'text', value: { stringValue: text } },
+    { name: 'topic', value: { stringValue: topic } },
   ]
 
   const questionType = QuestionType[type]
@@ -212,7 +212,7 @@ const updateQuestion = async (
 const deleteQuestion = async (id: string) => {
   const params: SqlParameter[] = [
     {
-      name: "id",
+      name: 'id',
       value: { stringValue: id },
       typeHint: TypeHint.UUID,
     },

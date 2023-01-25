@@ -1,7 +1,7 @@
-import express from "express"
+import express from 'express'
 import QuestionAnswer, {
   CreateQuestionAnswerProp,
-} from "./questionAnswersQuery"
+} from './questionAnswersQuery'
 
 const router = express.Router()
 
@@ -10,7 +10,7 @@ interface ReqParams {
 }
 
 // List all questionAnswers
-router.get("/", async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const listQuestionAnswerResponse = await QuestionAnswer.listQuestionAnswers()
     res.status(200).json(listQuestionAnswerResponse)
@@ -21,7 +21,7 @@ router.get("/", async (req, res, next) => {
 })
 
 // Get questionAnswer from id
-router.get<ReqParams>("/:questionAnswerId", async (req, res, next) => {
+router.get<ReqParams>('/:questionAnswerId', async (req, res, next) => {
   try {
     const { questionAnswerId } = req.params
     const getQuestionAnswerResponse = await QuestionAnswer.getQuestionAnswer(
@@ -37,7 +37,7 @@ router.get<ReqParams>("/:questionAnswerId", async (req, res, next) => {
 
 // Create questionAnswer
 router.post<unknown, unknown, CreateQuestionAnswerProp>(
-  "/",
+  '/',
   async (req, res, next) => {
     try {
       const createQuestionAnswerResponse = await QuestionAnswer.createQuestionAnswer(
@@ -53,7 +53,7 @@ router.post<unknown, unknown, CreateQuestionAnswerProp>(
 
 // Update questionAnswer with given id
 router.patch<ReqParams, unknown, CreateQuestionAnswerProp>(
-  "/:questionAnswerId",
+  '/:questionAnswerId',
   async (req, res, next) => {
     try {
       const { questionAnswerId } = req.params
@@ -70,7 +70,7 @@ router.patch<ReqParams, unknown, CreateQuestionAnswerProp>(
 )
 
 // Delete questionAnswer with given id
-router.delete<ReqParams>("/:questionAnswerId", async (req, res, next) => {
+router.delete<ReqParams>('/:questionAnswerId', async (req, res, next) => {
   try {
     const { questionAnswerId } = req.params
     const deleteQuestionAnswerResponse = await QuestionAnswer.deleteQuestionAnswer(
@@ -90,7 +90,7 @@ interface Response {
 
 // Batch create questionAnswers
 router.post<unknown, unknown, CreateQuestionAnswerProp[]>(
-  "/batch",
+  '/batch',
   async (req, res, next) => {
     try {
       const responses: Response[] = []
