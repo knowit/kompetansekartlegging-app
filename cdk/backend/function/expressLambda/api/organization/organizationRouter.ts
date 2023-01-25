@@ -46,22 +46,18 @@ interface DelReqParams {
 }
 
 // Delete organization
-router.delete<unknown, unknown, unknown, DelReqParams>(
-  '/:orgId',
-  async (req, res, next) => {
-    const { orgId } = req.query
-    console.log(orgId)
-    try {
-      const removeOrganizationResponse = await Organization.removeOrganization(
-        orgId
-      )
+router.delete<DelReqParams>('/:orgId', async (req, res, next) => {
+  const { orgId } = req.params
+  try {
+    const removeOrganizationResponse = await Organization.removeOrganization(
+      orgId
+    )
 
-      res.status(200).json(removeOrganizationResponse)
-    } catch (err) {
-      next(err)
-      console.error(err)
-    }
+    res.status(200).json(removeOrganizationResponse)
+  } catch (err) {
+    next(err)
+    console.error(err)
   }
-)
+})
 
 export { router as organizationRouter }
