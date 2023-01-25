@@ -168,6 +168,7 @@ const updateQuestionAnswer = async (
     },
   ]
 
+  // TODO: Se kommentar fra @Lekesoldat
   const query = `UPDATE questionAnswer
         SET userFormID=:userFormId, questionID=:questionId, knowledge=:knowledge, motivation=:motivation,
         customScaleValue=:customScaleValue, textValue=:textValue
