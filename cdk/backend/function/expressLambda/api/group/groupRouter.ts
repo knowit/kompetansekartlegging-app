@@ -47,11 +47,11 @@ interface UpdateGroupBodyParams {
 }
 
 // Add user to group (essentialy creates/updates a user with groupid)
-router.post<unknown, unknown, UpdateGroupBodyParams, UpdateGroupReqParams>(
+router.post<UpdateGroupReqParams, unknown, UpdateGroupBodyParams>(
   '/:groupId/user',
   async (req, res, next) => {
     try {
-      const { groupId } = req.query
+      const { groupId } = req.params
       const { groupLeaderUsername: userId, orgId } = req.body
       const upsertResponse = await Group.upsert(userId, groupId, orgId)
 
@@ -68,20 +68,17 @@ interface DelReqParams {
 }
 
 // Delete user from group (essentially deletes user)
-router.delete<unknown, unknown, unknown, DelReqParams>(
-  '/user/:userId',
-  async (req, res, next) => {
-    try {
-      const { userId } = req.query
-      const deleteResponse = await Group.deleteUser(userId)
+router.delete<DelReqParams>('/user/:userId', async (req, res, next) => {
+  try {
+    const { userId } = req.params
+    const deleteResponse = await Group.deleteUser(userId)
 
-      res.status(200).json(deleteResponse)
-    } catch (err) {
-      console.error(err)
-      next(err)
-    }
+    res.status(200).json(deleteResponse)
+  } catch (err) {
+    console.error(err)
+    next(err)
   }
-)
+})
 
 interface CreateGroupBodyParams {
   groupLeaderUsername: string
@@ -110,20 +107,17 @@ interface DelGroupReqParams {
   groupId: string
 }
 // Delete a group
-router.delete<unknown, unknown, unknown, DelGroupReqParams>(
-  '/:groupId',
-  async (req, res, next) => {
-    try {
-      const { groupId } = req.query
-      const deleteResponse = await Group.deleteGroup(groupId)
+router.delete<DelGroupReqParams>('/:groupId', async (req, res, next) => {
+  try {
+    const { groupId } = req.params
+    const deleteResponse = await Group.deleteGroup(groupId)
 
-      res.status(200).json(deleteResponse)
-    } catch (err) {
-      console.error(err)
-      next(err)
-    }
+    res.status(200).json(deleteResponse)
+  } catch (err) {
+    console.error(err)
+    next(err)
   }
-)
+})
 
 interface UpdateGroupReqParams {
   groupId: string
@@ -134,11 +128,11 @@ interface UpdateGroupBodyParams {
 }
 
 // Update group leader
-router.patch<unknown, unknown, UpdateGroupBodyParams, UpdateGroupReqParams>(
+router.patch<UpdateGroupReqParams, unknown, UpdateGroupBodyParams>(
   '/:groupId',
   async (req, res, next) => {
     try {
-      const { groupId } = req.query
+      const { groupId } = req.params
       const { groupLeaderUsername } = req.body
       const updateResponse = await Group.updateGroupLeader(
         groupId,

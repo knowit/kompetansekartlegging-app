@@ -39,21 +39,18 @@ interface DelReqParams {
 }
 
 // Delete
-router.delete<unknown, unknown, unknown, DelReqParams>(
-  '/:id',
-  async (req, res, next) => {
-    try {
-      const deleteResponse = await FormDefinition.deleteFormDefinition({
-        ...req.query,
-      })
+router.delete<DelReqParams>('/:id', async (req, res, next) => {
+  try {
+    const deleteResponse = await FormDefinition.deleteFormDefinition({
+      ...req.params,
+    })
 
-      res.status(200).json(deleteResponse)
-    } catch (err) {
-      console.error(err)
-      next(err)
-    }
+    res.status(200).json(deleteResponse)
+  } catch (err) {
+    console.error(err)
+    next(err)
   }
-)
+})
 
 interface UpdateFormDefinitionReqParams {
   id: string
@@ -68,13 +65,12 @@ interface UpdateFormDefinitionBodyParams {
 
 // Update
 router.patch<
+  UpdateFormDefinitionReqParams,
   unknown,
-  unknown,
-  UpdateFormDefinitionBodyParams,
-  UpdateFormDefinitionReqParams
+  UpdateFormDefinitionBodyParams
 >('/:id', async (req, res, next) => {
   try {
-    const { id } = req.query
+    const { id } = req.params
     const updateResponse = await FormDefinition.updateFormDefinition(
       id,
       req.body
