@@ -22,7 +22,7 @@
         "react-router-dom": "^5.3.4",
         "react-scripts": "^4.0.3",
         "react-swipeable": "^6.2.2",
-        "recharts": "^1.8.6",
+        "recharts": "^2.3.2",
         "uuid": "^9.0.0"
     },
     "scripts": {
