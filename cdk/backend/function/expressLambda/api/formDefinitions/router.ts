@@ -1,5 +1,5 @@
 import express from 'express'
-import FormDefinition from './formDefinitionQueries'
+import FormDefinition from './queries'
 
 const router = express.Router()
 

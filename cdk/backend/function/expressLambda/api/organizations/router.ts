@@ -1,5 +1,5 @@
 import express from 'express'
-import Organization from './organizationQueries'
+import Organization from './queries'
 
 const router = express.Router()
 

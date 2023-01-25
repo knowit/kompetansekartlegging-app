@@ -1,7 +1,7 @@
 import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
 import express from 'express'
 import { sqlQuery } from '../../app'
-import Group from './groupQueries'
+import Group from './queries'
 
 const router = express.Router()
 

@@ -1,5 +1,5 @@
 import express from 'express'
-import Category from './categoryQueries'
+import Category from './queries'
 
 const router = express.Router()
 
