@@ -241,6 +241,7 @@ export const CombinedChartMobile = ({
                         axisLine={false}
                         dataKey="name"
                         type="category"
+                        domain={[]}
                         interval={0}
                         tickLine={false}
                         tick={renderLabelTick}
