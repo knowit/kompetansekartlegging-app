@@ -14,7 +14,7 @@
         "clsx": "^1.2.1",
         "react": "^16.14.0",
         "react-chartjs-2": "^2.11.2",
-        "react-device-detect": "^1.17.0",
+        "react-device-detect": "^2.2.2",
         "react-dom": "^16.14.0",
         "react-markdown": "^8.0.5",
         "react-redux": "^8.0.5",
