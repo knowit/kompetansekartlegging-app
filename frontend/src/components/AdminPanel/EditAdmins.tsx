@@ -30,7 +30,7 @@ import { getAttribute } from "./helpers";
 import Button from "../mui/Button";
 import Table from "../mui/Table";
 import PictureAndNameCell from "./PictureAndNameCell";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../redux/hooks";
 import { selectAdminCognitoGroupName } from "../../redux/User";
 import { API, Auth } from "aws-amplify";
 import exports from "../../exports";
@@ -89,7 +89,7 @@ const AdminTable = ({ admins, deleteAdmin }: any) => {
 };
 
 const EditAdmins = () => {
-    const adminCognitoGroupName = useSelector(selectAdminCognitoGroupName);
+    const adminCognitoGroupName = useAppSelector(selectAdminCognitoGroupName);
     const [isExcelLoading, setIsExcelLoading] = useState<boolean>(false);
 
     const {

@@ -29,7 +29,7 @@ import AddUserToGroupDialog from "./AddUserToGroupDialog";
 import DeleteUserFromGroupDialog from "./DeleteUserFromGroupDialog";
 import Button from "../mui/Button";
 import Table from "../mui/Table";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../redux/hooks";
 import {
     selectGroupLeaderCognitoGroupName,
     selectUserState,
@@ -90,10 +90,10 @@ const GroupLeaderTable = ({ groupLeaders, deleteGroupLeader }: any) => {
 };
 
 const EditGroupLeaders = () => {
-    const groupLeaderCognitoGroupName = useSelector(
+    const groupLeaderCognitoGroupName = useAppSelector(
         selectGroupLeaderCognitoGroupName
     );
-    const userState = useSelector(selectUserState);
+    const userState = useAppSelector(selectUserState);
 
     const {
         result: groupLeaders,

@@ -46,7 +46,7 @@ import Button from "../mui/Button";
 import Table from "../mui/Table";
 import TableRow from "../mui/TableRow";
 import { ORGANIZATION_ID_ATTRIBUTE } from "../../constants";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../redux/hooks";
 import { selectUserState } from "../../redux/User";
 
 const useRowStyles = makeStyles({
@@ -220,7 +220,7 @@ const GroupsTable = ({
 };
 
 const EditGroups = () => {
-    const userState = useSelector(selectUserState);
+    const userState = useAppSelector(selectUserState);
 
     const {
         result: users,
