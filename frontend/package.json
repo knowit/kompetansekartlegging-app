@@ -4,11 +4,11 @@
     "private": true,
     "dependencies": {
         "@aws-amplify/ui-react": "^4.3.5",
-        "@aws-sdk/client-lambda": "^3.257.0",
+        "@aws-sdk/client-lambda": "^3.259.0",
         "@material-ui/core": "^4.12.4",
         "@material-ui/icons": "^4.11.3",
         "@material-ui/lab": "^4.0.0-alpha.61",
-        "@reduxjs/toolkit": "^1.9.1",
+        "@reduxjs/toolkit": "^1.9.2",
         "aws-amplify": "^5.0.11",
         "clsx": "^1.2.1",
         "react": "^16.14.0",
