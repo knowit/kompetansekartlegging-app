@@ -984,6 +984,11 @@ export class KompetanseStack extends Stack {
           endpoint: '', // excelApi.url,
           region: this.region,
         },
+        expressLambda: {
+          name: expressLambdaApi.restApiName,
+          endpoint: expressLambdaApi.url,
+          region: this.region,
+        },
       }),
     })
 
