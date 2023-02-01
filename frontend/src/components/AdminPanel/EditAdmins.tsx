@@ -151,7 +151,7 @@ const DownloadExcelDialog = ({ open, onClose }: any) => {
 const DownloadExcelTable = ({formDefinitions} : FormDefinitions) => {
     const [idOfDownloadingForm, setIdOfDownloadingForm] = useState<string>("");
 
-    const downloadExcel = async (formDefId: string) => {
+    const downloadExcel = async (formDefId: string, formDefLabel: string) => {
         setIdOfDownloadingForm(formDefId);
 
         const data = await API.get("CreateExcelAPI", "", {
@@ -162,7 +162,8 @@ const DownloadExcelTable = ({formDefinitions} : FormDefinitions) => {
                     .getJwtToken()}`
             },
             queryStringParameters: {
-                formDefId: `${formDefId}`
+                formDefId: `${formDefId}`,
+                formDefLabel: `${formDefLabel}`
             }
         });
         download(data, "report.xlsx"); // TODO: more specific filename
@@ -208,7 +209,7 @@ return (
                                             variant="contained"
                                             color="primary"
                                             endIcon={<GetAppIcon/>}
-                                            onClick={() => {downloadExcel(formDef.id)}}>
+                                            onClick={() => {downloadExcel(formDef.id, formDef.label)}}>
                                             Last ned
                                         </Button>
                                 }
