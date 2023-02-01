@@ -286,7 +286,7 @@ export class KompetanseStack extends Stack {
 
     const tableArns: any = {}
 
-    Object.keys(appSync.tableMap).forEach((table) => {
+    Object.keys(appSync.tableMap).forEach(table => {
       tableArns[table] = appSync.tableMap[table].tableArn
     })
 
@@ -848,7 +848,7 @@ export class KompetanseStack extends Stack {
     if (isProd) {
       const plan = backup.BackupPlan.daily35DayRetention(this, 'Plan')
       plan.addSelection('Selection', {
-        resources: Object.keys(appSync.tableMap).map((tableName) =>
+        resources: Object.keys(appSync.tableMap).map(tableName =>
           backup.BackupResource.fromDynamoDbTable(appSync.tableMap[tableName])
         ),
       })
@@ -900,6 +900,11 @@ export class KompetanseStack extends Stack {
         excelApi: {
           name: '', //excelApi.restApiName,
           endpoint: '', // excelApi.url,
+          region: this.region,
+        },
+        expressLambda: {
+          name: expressLambdaApi.restApiName,
+          endpoint: expressLambdaApi.url,
           region: this.region,
         },
       }),
