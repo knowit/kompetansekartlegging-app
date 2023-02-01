@@ -10,11 +10,16 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import Dialog from "@material-ui/core/Dialog";
 import DeleteIcon from "@material-ui/icons/Delete";
+import GetAppIcon from '@material-ui/icons/GetApp';
+import { CloseIcon } from "../DescriptionTable";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import AssesmentIcon from "@material-ui/icons/BarChart";
 import Typography from "@material-ui/core/Typography";
 
+
+import { dialogStyles } from "../../styles";
 import commonStyles from "./common.module.css";
 import AddUserToGroupDialog from "./AddUserToGroupDialog";
 import DeleteUserFromGroupDialog from "./DeleteUserFromGroupDialog";
@@ -34,8 +39,9 @@ import { useSelector } from "react-redux";
 import { selectAdminCognitoGroupName } from "../../redux/User";
 import { API, Auth } from "aws-amplify";
 import exports from "../../exports";
-import { Box, Modal, Snackbar } from "@material-ui/core";
+import { Box, DialogContent, DialogTitle, Modal, Snackbar } from "@material-ui/core";
 import ReactMarkdown from "react-markdown";
+import { listAllFormDefinitionsForLoggedInUser } from "./catalogApi";
 
 const Admin = (props: any) => {
     const { admin, deleteAdmin } = props;
@@ -88,9 +94,127 @@ const AdminTable = ({ admins, deleteAdmin }: any) => {
     );
 };
 
+type FormDefinition = {
+    id: string
+    label: string
+    createdAt: string
+    updatedAt: string
+}
+
+interface FormDefinitions {
+    formDefinitions: FormDefinition[]
+}
+
+const DownloadExcelDialog = ({ open, onClose }: any) => {
+    //const [formDefinitions, setFormDefinitions] = useState<any>(null);
+    //const [isLoading, setIsLoading] = useState<boolean>(true);
+    
+    /*const getFormDefinitions = async () => {
+        const formDefs = await listAllFormDefinitionsForLoggedInUser()
+        .then((response: any) => {
+            //setFormDefinitions(response);
+            setIsLoading(false);
+        });
+    }*/
+    /*useEffect(() => {
+        const getFormDefinitions = async () => {
+            const formDefs = await listAllFormDefinitionsForLoggedInUser()
+            .then((response: any) => {
+                //setFormDefinitions(response);
+                setIsLoading(false);
+            });
+        }
+        
+        getFormDefinitions();
+    }, []);*/
+
+    const style = dialogStyles();
+    
+    const {
+        result: formDefinitions,
+        error,
+        loading,
+    } = useApiGet({
+        getFn: listAllFormDefinitionsForLoggedInUser
+    })
+
+
+    // TODO: Center CircularProgress
+    // TODO: Flere kolonner? "Opprettet"? "Sist oppdatert"?
+    // TODO: Gi tilbakemelding om at rapporten blir generert
+    // TODO: Sjekk sortering
+    return (
+        <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm" PaperProps={{
+            style: { borderRadius: 30 },
+        }}>
+            <DialogTitle>
+                <Box
+                    component="div"
+                    mb={1}
+                    display="flex"
+                    justifyContent="space-between"
+                >
+                    <span className={style.dialogTitleText}>
+                        Last ned resultater
+                    </span>
+                    <IconButton
+                        className={style.closeButton}
+                        onClick={onClose}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                </Box>
+            </DialogTitle>
+            <DialogContent>
+                {error && <p>An error occured: {error}</p>}
+                {loading && <CircularProgress />}
+                {!error && !loading && formDefinitions && (
+                    <DownloadExcelTable formDefinitions={formDefinitions}/>
+                )}
+            </DialogContent>
+        </Dialog>
+    );
+}
+
+const DownloadExcelTable = ({formDefinitions} : FormDefinitions) => {
+return (
+    <TableContainer>
+        <Table stickyHeader>
+            <TableHead>
+                <TableRow>
+                    <TableCell>Katalog</TableCell>
+                    <TableCell>Opprettet</TableCell>
+                    {/*<TableCell>Sist oppdatert</TableCell>*/}
+                    <TableCell/>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {formDefinitions.map((formDef: FormDefinition) => (
+                    <TableRow key={formDef.id}>
+                        <TableCell>{formDef.label}</TableCell>
+                        <TableCell>{new Date(formDef.createdAt).toLocaleString("nb-NO")}</TableCell>
+                        {/*<TableCell>{new Date(formDef.updatedAt).toLocaleString("nb-NO")}</TableCell>*/}
+                        <TableCell>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                endIcon={<GetAppIcon/>}
+                                onClick={() => {/*downloadExcel(formDef.id)}*/}}>
+                                Last ned
+                            </Button>
+                        </TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        </Table>
+    </TableContainer>
+    );
+}
+
 const EditAdmins = () => {
     const adminCognitoGroupName = useSelector(selectAdminCognitoGroupName);
     const [isExcelLoading, setIsExcelLoading] = useState<boolean>(false);
+    const [showDownloadExcel, setShowDownloadExcel] = useState<boolean>(false);
 
     const {
         result: admins,
@@ -127,7 +251,7 @@ const EditAdmins = () => {
                     .getJwtToken()}`,
             },
         });
-        download(data, "report.xlsx");
+        download(data, "report.xlsx"); // TODO: more specific filename
         setIsExcelLoading(false);
     };
 
@@ -169,6 +293,10 @@ const EditAdmins = () => {
             )}
             {!error && !loading && admins && (
                 <>
+                    <DownloadExcelDialog
+                        open={showDownloadExcel}
+                        onClose={() => setShowDownloadExcel(false)}
+                    />
                     <Card style={{ marginBottom: "24px" }} variant="outlined">
                         <CardContent>
                             <Typography color="textSecondary" gutterBottom>
@@ -195,7 +323,7 @@ const EditAdmins = () => {
                         color="primary"
                         startIcon={<AssesmentIcon />}
                         style={{ marginTop: "24px" }}
-                        onClick={() => downloadExcel()}
+                        onClick={() => setShowDownloadExcel(true)/*() => downloadExcel()*/}
                     >
                         Last ned resultater (Excel)
                     </Button>
