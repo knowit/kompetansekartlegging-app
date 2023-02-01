@@ -177,55 +177,30 @@ const DownloadExcelDialog = ({ open, onClose }: any) => {
 }
 
 const DownloadExcelTable = ({formDefinitions} : FormDefinitions) => {
-return (
-    <TableContainer>
-        <Table stickyHeader>
-            <TableHead>
-                <TableRow>
-                    <TableCell>Katalog</TableCell>
-                    <TableCell>Opprettet</TableCell>
-                    {/*<TableCell>Sist oppdatert</TableCell>*/}
-                    <TableCell/>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {formDefinitions.map((formDef: FormDefinition) => (
-                    <TableRow key={formDef.id}>
-                        <TableCell>{formDef.label}</TableCell>
-                        <TableCell>{new Date(formDef.createdAt).toLocaleString("nb-NO")}</TableCell>
-                        {/*<TableCell>{new Date(formDef.updatedAt).toLocaleString("nb-NO")}</TableCell>*/}
-                        <TableCell>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                endIcon={<GetAppIcon/>}
-                                onClick={() => {/*downloadExcel(formDef.id)}*/}}>
-                                Last ned
-                            </Button>
-                        </TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
-    </TableContainer>
-    );
-}
-
-const EditAdmins = () => {
-    const adminCognitoGroupName = useSelector(selectAdminCognitoGroupName);
     const [isExcelLoading, setIsExcelLoading] = useState<boolean>(false);
-    const [showDownloadExcel, setShowDownloadExcel] = useState<boolean>(false);
+    const [formDefIdDownloading, setFormDefIdDownloading] = useState<string>("");
 
-    const {
-        result: admins,
-        error,
-        loading,
-        refresh,
-    } = useApiGet({
-        getFn: listAllUsersInOrganization,
-        params: adminCognitoGroupName,
-    });
-    const [showAddAdmin, setShowAddAdmin] = useState<boolean>(false);
+    const downloadExcel = async (formDefId: string) => {
+        console.log(formDefId);
+        setIsExcelLoading(true);
+        setFormDefIdDownloading(formDefId);
+
+        const data = await API.get("CreateExcelAPI", "", {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `${(await Auth.currentSession())
+                    .getAccessToken()
+                    .getJwtToken()}`
+            },
+            queryStringParameters: {
+                formDefId: `${formDefId}`
+            }
+        });
+        download(data, "report.xlsx"); // TODO: more specific filename
+        setFormDefIdDownloading("");
+        setIsExcelLoading(false);
+    };
+
     const download = (path: string, filename: string) => {
         // Create a new link
         const anchor = document.createElement("a");
@@ -241,19 +216,70 @@ const EditAdmins = () => {
         // Remove element from DOM
         document.body.removeChild(anchor);
     };
-    const downloadExcel = async () => {
-        setIsExcelLoading(true);
-        const data = await API.get("CreateExcelAPI", "", {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `${(await Auth.currentSession())
-                    .getAccessToken()
-                    .getJwtToken()}`,
-            },
-        });
-        download(data, "report.xlsx"); // TODO: more specific filename
-        setIsExcelLoading(false);
-    };
+
+return (
+    <>
+    <TableContainer>
+        <Table stickyHeader>
+            <TableHead>
+                <TableRow>
+                    <TableCell>Katalog</TableCell>
+                    <TableCell>Opprettet</TableCell>
+                    {/*<TableCell>Sist oppdatert</TableCell>*/}
+                    <TableCell/>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {/*isExcelLoading && (
+                    <Snackbar
+                        open={isExcelLoading}
+                        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                    >
+                        <CircularProgress />
+                    </Snackbar>
+                )*/}
+                {formDefinitions.map((formDef: FormDefinition) => (
+                    <TableRow key={formDef.id}>
+                        <TableCell>{formDef.label}</TableCell>
+                        <TableCell>{new Date(formDef.createdAt).toLocaleString("nb-NO")}</TableCell>
+                        {/*<TableCell>{new Date(formDef.updatedAt).toLocaleString("nb-NO")}</TableCell>*/}
+                        <TableCell>
+                            {(isExcelLoading && formDef.id == formDefIdDownloading) ?
+                                <CircularProgress/>
+                            :
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    endIcon={<GetAppIcon/>}
+                                    onClick={() => {downloadExcel(formDef.id)}}>
+                                    Last ned
+                                </Button>
+                            }
+                        </TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        </Table>
+    </TableContainer>
+    </>
+    );
+}
+
+const EditAdmins = () => {
+    const adminCognitoGroupName = useSelector(selectAdminCognitoGroupName);
+    
+    const [showDownloadExcel, setShowDownloadExcel] = useState<boolean>(false);
+
+    const {
+        result: admins,
+        error,
+        loading,
+        refresh,
+    } = useApiGet({
+        getFn: listAllUsersInOrganization,
+        params: adminCognitoGroupName,
+    });
+    const [showAddAdmin, setShowAddAdmin] = useState<boolean>(false);
 
     const [showDeleteUserFromGroupDialog, setShowDeleteUserFromGroupDialog] =
         useState<boolean>(false);
@@ -283,14 +309,6 @@ const EditAdmins = () => {
         <Container maxWidth="md" className={commonStyles.container}>
             {error && <p>An error occured: {error}</p>}
             {loading && <CircularProgress />}
-            {isExcelLoading && (
-                <Snackbar
-                    open={isExcelLoading}
-                    anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                >
-                    <CircularProgress />
-                </Snackbar>
-            )}
             {!error && !loading && admins && (
                 <>
                     <DownloadExcelDialog
