@@ -29,7 +29,7 @@ export const apiGET = async <T>(
 ): Promise<ApiResponse<T>> => {
   try {
     const init = await createMyInit()
-    return await API.post(API_NAME, `/api/${path}`, {
+    return await API.get(API_NAME, `/api${path}`, {
       ...init,
       ...params,
     })
@@ -45,7 +45,7 @@ export const apiPOST = async <T>(
 ): Promise<ApiResponse<T>> => {
   try {
     const init = await createMyInit()
-    return await API.post(API_NAME, `/api/${path}`, {
+    return await API.post(API_NAME, `/api${path}`, {
       ...init,
       ...params,
     })
@@ -55,13 +55,14 @@ export const apiPOST = async <T>(
   }
 }
 
+// TODO: Denne får en CORS-feil
 export const apiDELETE = async <T>(
   path: string,
   params: { queryStringParameters: QSParameters }
 ): Promise<ApiResponse<T>> => {
   try {
     const init = await createMyInit()
-    return await API.del(API_NAME, `/api/${path}`, {
+    return await API.del(API_NAME, `/api${path}`, {
       ...init,
       ...params,
     })
@@ -77,7 +78,7 @@ export const apiPATCH = async <T>(
 ): Promise<ApiResponse<T>> => {
   try {
     const init = await createMyInit()
-    return await API.patch(API_NAME, `/api/${path}`, {
+    return await API.patch(API_NAME, `/api${path}`, {
       ...init,
       ...params,
     })

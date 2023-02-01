@@ -19,24 +19,27 @@ router.get('/', async (req, res, next) => {
 })
 
 // Get single category from id
-router.get<GetReqParams>('/:categoryId', async (req, res, next) => {
-  try {
-    const { categoryId } = req.params
-    const getCategoryResponse = await Category.getCategory(categoryId)
+router.get<unknown, unknown, unknown, GetReqParams>(
+  '/:categoryId',
+  async (req, res, next) => {
+    try {
+      const { categoryId } = req.query
+      const getCategoryResponse = await Category.getCategory(categoryId)
 
-    res.status(200).json(getCategoryResponse)
-  } catch (err) {
-    console.error(err)
-    next(err)
+      res.status(200).json(getCategoryResponse)
+    } catch (err) {
+      console.error(err)
+      next(err)
+    }
   }
-})
+)
 
 interface createCategoryBodyParams {
   text: string
   description: string
   index: number
-  formDefinitionId: string
-  organizationId: string
+  formdefinitionid: string
+  organizationid: string
 }
 
 // Create category
@@ -55,10 +58,10 @@ router.post<unknown, unknown, createCategoryBodyParams>(
 )
 
 // Update category with given id
-router.patch<GetReqParams, unknown, createCategoryBodyParams>(
+router.patch<unknown, unknown, createCategoryBodyParams, GetReqParams>(
   '/:categoryId',
   async (req, res, next) => {
-    const { categoryId } = req.params
+    const { categoryId } = req.query
     try {
       const updateCategoryResponse = await Category.updateCategory(categoryId, {
         ...req.body,
@@ -73,16 +76,19 @@ router.patch<GetReqParams, unknown, createCategoryBodyParams>(
 )
 
 // Delete category with given id
-router.delete<GetReqParams>('/:categoryId', async (req, res, next) => {
-  try {
-    const { categoryId } = req.params
-    const deleteCategoryResponse = await Category.deleteCategory(categoryId)
+router.delete<unknown, unknown, unknown, GetReqParams>(
+  '/:categoryId',
+  async (req, res, next) => {
+    try {
+      const { categoryId } = req.query
+      const deleteCategoryResponse = await Category.deleteCategory(categoryId)
 
-    res.status(200).json(deleteCategoryResponse)
-  } catch (err) {
-    console.error(err)
-    next(err)
+      res.status(200).json(deleteCategoryResponse)
+    } catch (err) {
+      console.error(err)
+      next(err)
+    }
   }
-})
+)
 
 export { router as categoryRouter }

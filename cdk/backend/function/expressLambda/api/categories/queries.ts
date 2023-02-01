@@ -11,8 +11,8 @@ interface CategoryProps {
   text: string
   description: string
   index: number
-  formDefinitionId: string
-  organizationId: string
+  formdefinitionid: string
+  organizationid: string
 }
 
 const listCategories = async () => {
@@ -49,8 +49,8 @@ const createCategory = async ({
   text,
   description,
   index,
-  formDefinitionId,
-  organizationId,
+  formdefinitionid,
+  organizationid,
 }: CategoryProps) => {
   const id = uuidv4()
 
@@ -83,14 +83,14 @@ const createCategory = async ({
     {
       name: 'formDefinitionId',
       value: {
-        stringValue: formDefinitionId,
+        stringValue: formdefinitionid,
       },
       typeHint: TypeHint.UUID,
     },
     {
       name: 'organizationId',
       value: {
-        stringValue: organizationId,
+        stringValue: organizationid,
       },
     },
   ]
@@ -108,7 +108,7 @@ const createCategory = async ({
 
 const updateCategory = async (
   id: string,
-  { text, description, index, formDefinitionId, organizationId }: CategoryProps
+  { text, description, index, formdefinitionid, organizationid }: CategoryProps
 ) => {
   const params: SqlParameter[] = [
     {
@@ -139,14 +139,14 @@ const updateCategory = async (
     {
       name: 'formDefinitionId',
       value: {
-        stringValue: formDefinitionId,
+        stringValue: formdefinitionid,
       },
       typeHint: TypeHint.UUID,
     },
     {
       name: 'organizationId',
       value: {
-        stringValue: organizationId,
+        stringValue: organizationid,
       },
     },
   ]

@@ -128,11 +128,11 @@ interface UpdateGroupBodyParams {
 }
 
 // Update group leader
-router.patch<UpdateGroupReqParams, unknown, UpdateGroupBodyParams>(
+router.patch<unknown, unknown, UpdateGroupBodyParams, UpdateGroupReqParams>(
   '/:groupId',
   async (req, res, next) => {
     try {
-      const { groupId } = req.params
+      const { groupId } = req.query
       const { groupLeaderUsername } = req.body
       const updateResponse = await Group.updateGroupLeader(
         groupId,
