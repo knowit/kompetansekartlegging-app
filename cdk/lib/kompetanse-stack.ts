@@ -15,14 +15,6 @@ import * as iam from 'aws-cdk-lib/aws-iam'
 import * as backup from 'aws-cdk-lib/aws-backup'
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
 import * as s3 from 'aws-cdk-lib/aws-s3'
-import * as sns from 'aws-cdk-lib/aws-sns'
-import {
-  ComparisonOperator,
-  Statistic,
-  TreatMissingData,
-  Unit,
-} from 'aws-cdk-lib/aws-cloudwatch'
-import { SnsAction } from 'aws-cdk-lib/aws-cloudwatch-actions'
 // import * as appsync from 'aws-cdk-lib/aws-appsync';
 import * as gateway from 'aws-cdk-lib/aws-apigateway'
 // import { CfnUserPoolIdentityProvider } from 'aws-cdk-lib/aws-cognito';
@@ -39,7 +31,8 @@ export class KompetanseStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props)
     const AZURE = this.node.tryGetContext('AZURE')
-    const EXCEL = this.node.tryGetContext('EXCEL')
+    const GOOGLE_ID = this.node.tryGetContext('GOOGLE_ID')
+    const GOOGLE_SECRET = this.node.tryGetContext('GOOGLE_SECRET')
     const ENV = this.node.tryGetContext('ENV')
     const isProd = ENV === 'prod'
     const isDev = ENV === 'dev'
@@ -55,7 +48,6 @@ export class KompetanseStack extends Stack {
     })
 
     // COGNITO SetUp
-
     const pool = new cognito.UserPool(this, 'Kompetansekartlegging', {
       customAttributes: {
         OrganizationID: new cognito.StringAttribute({ mutable: true }),
@@ -75,6 +67,26 @@ export class KompetanseStack extends Stack {
     })
 
     const supportedProviders = []
+
+    // Federation Providers
+    if (GOOGLE_SECRET && GOOGLE_ID) {
+      const googlePorvider = new cognito.UserPoolIdentityProviderGoogle(
+        this,
+        'Google',
+        {
+          clientId: GOOGLE_ID,
+          clientSecret: GOOGLE_SECRET,
+          userPool: pool,
+          scopes: ['profile', 'email', 'openid'],
+          attributeMapping: {
+            email: cognito.ProviderAttribute.GOOGLE_EMAIL,
+            fullname: cognito.ProviderAttribute.GOOGLE_NAME,
+            profilePicture: cognito.ProviderAttribute.GOOGLE_PICTURE,
+          },
+        }
+      )
+      supportedProviders.push({ name: googlePorvider.providerName })
+    }
 
     if (AZURE) {
       const samlProvider = new cognito.CfnUserPoolIdentityProvider(
@@ -148,6 +160,17 @@ export class KompetanseStack extends Stack {
         ),
       })
 
+      // authRole.addToPolicy(new iam.PolicyStatement({
+      //   actions: [
+      //     "execute-api:Invoke"
+      //   ],
+      //   resources: [
+      //     "arn:aws:execute-api:eu-central-1:153690382195:65iwvl3jha/migrate/GET//*",
+      //     "arn:aws:execute-api:eu-central-1:153690382195:65iwvl3jha/migrate/GET/"
+      //   ],
+      //   effect: iam.Effect.ALLOW
+      // }))
+
       const unauthRole = new iam.Role(this, 'UnauthRole', {
         assumedBy: new iam.FederatedPrincipal(
           'cognito-identity.amazonaws.com',
@@ -213,7 +236,7 @@ export class KompetanseStack extends Stack {
         code: lambda.Code.fromAsset(
           path.join(__dirname, '/../backend/presignup')
         ),
-        functionName: `KompetansePreSignupTrigger-${ENV}`,
+        functionName: 'KompetansePreSignupTrigger',
         handler: 'index.handler',
         runtime: lambda.Runtime.NODEJS_14_X,
         timeout: Duration.seconds(25),
@@ -265,7 +288,7 @@ export class KompetanseStack extends Stack {
 
     const tableArns: any = {}
 
-    Object.keys(appSync.tableMap).forEach((table) => {
+    Object.keys(appSync.tableMap).forEach(table => {
       tableArns[table] = appSync.tableMap[table].tableArn
     })
 
@@ -332,10 +355,6 @@ export class KompetanseStack extends Stack {
       resources: [
         tableArns['UserFormTable'],
         `${tableArns['UserFormTable']}/index/*`,
-        tableArns['GroupTable'],
-        `${tableArns['GroupTable']}/index/*`,
-        tableArns['UserTable'],
-        `${tableArns['GroupTable']}/index/*`,
         tableArns['QuestionTable'],
         `${tableArns['QuestionTable']}/index/*`,
         tableArns['QuestionAnswerTable'],
@@ -911,7 +930,7 @@ export class KompetanseStack extends Stack {
     if (isProd) {
       const plan = backup.BackupPlan.daily35DayRetention(this, 'Plan')
       plan.addSelection('Selection', {
-        resources: Object.keys(appSync.tableMap).map((tableName) =>
+        resources: Object.keys(appSync.tableMap).map(tableName =>
           backup.BackupResource.fromDynamoDbTable(appSync.tableMap[tableName])
         ),
       })
