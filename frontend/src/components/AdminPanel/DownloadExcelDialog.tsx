@@ -133,7 +133,7 @@ return (
                                 {formDef.id == idOfDownloadingForm
                                     ?   <CircularProgress style={{margin: "0 auto"}}/>
                                     :   <Button
-                                            style={{ margin: "0 auto" }}
+                                            style={{margin: "0 auto"}}
                                             variant="contained"
                                             color="primary"
                                             endIcon={<GetAppIcon/>}
