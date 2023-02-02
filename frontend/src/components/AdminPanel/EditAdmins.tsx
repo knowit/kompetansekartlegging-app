@@ -10,15 +10,11 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import Dialog from "@material-ui/core/Dialog";
 import DeleteIcon from "@material-ui/icons/Delete";
-import GetAppIcon from '@material-ui/icons/GetApp';
-import { CloseIcon } from "../DescriptionTable";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import AssesmentIcon from "@material-ui/icons/BarChart";
 import Typography from "@material-ui/core/Typography";
 
-import { dialogStyles } from "../../styles";
 import commonStyles from "./common.module.css";
 import AddUserToGroupDialog from "./AddUserToGroupDialog";
 import DeleteUserFromGroupDialog from "./DeleteUserFromGroupDialog";
@@ -36,11 +32,9 @@ import Table from "../mui/Table";
 import PictureAndNameCell from "./PictureAndNameCell";
 import { useSelector } from "react-redux";
 import { selectAdminCognitoGroupName } from "../../redux/User";
-import { API, Auth } from "aws-amplify";
 import exports from "../../exports";
-import { Box, DialogContent, DialogTitle, Modal } from "@material-ui/core";
 import ReactMarkdown from "react-markdown";
-import { listAllFormDefinitionsForLoggedInUser } from "./catalogApi";
+import DownloadExcelDialog from "./DownloadExcelDialog";
 
 const Admin = (props: any) => {
     const { admin, deleteAdmin } = props;
@@ -90,136 +84,6 @@ const AdminTable = ({ admins, deleteAdmin }: any) => {
         </TableContainer>
     );
 };
-
-type FormDefinition = {
-    id: string
-    label: string
-    createdAt: string
-    updatedAt: string
-}
-
-interface FormDefinitions {
-    formDefinitions: FormDefinition[]
-}
-
-const DownloadExcelDialog = ({ open, onClose }: any) => {
-    const style = dialogStyles();
-    
-    const {
-        result: formDefinitions,
-        error,
-        loading,
-    } = useApiGet({
-        getFn: listAllFormDefinitionsForLoggedInUser
-    })
-
-    return (
-        <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm" PaperProps={{
-            style: { borderRadius: 30 },
-        }}>
-            <DialogTitle>
-                <Box
-                    component="div"
-                    mb={1}
-                    display="flex"
-                    justifyContent="space-between"
-                >
-                    <span className={style.dialogTitleText}>
-                        Last ned resultater
-                    </span>
-                    <IconButton
-                        className={style.closeButton}
-                        onClick={onClose}
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                </Box>
-            </DialogTitle>
-            <DialogContent>
-                {error && <p>An error occured: {error}</p>}
-                {loading && <CircularProgress />}
-                {!error && !loading && formDefinitions && (
-                    <DownloadExcelTable formDefinitions={formDefinitions}/>
-                )}
-            </DialogContent>
-        </Dialog>
-    );
-}
-
-const DownloadExcelTable = ({formDefinitions} : FormDefinitions) => {
-    const [idOfDownloadingForm, setIdOfDownloadingForm] = useState<string>("");
-
-    const downloadExcel = async (formDefId: string, formDefLabel: string) => {
-        setIdOfDownloadingForm(formDefId);
-
-        const data = await API.get("CreateExcelAPI", "", {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `${(await Auth.currentSession())
-                    .getAccessToken()
-                    .getJwtToken()}`
-            },
-            queryStringParameters: {
-                formDefId: `${formDefId}`,
-                formDefLabel: `${formDefLabel}`
-            }
-        });
-        download(data, "report.xlsx");
-        setIdOfDownloadingForm("");
-    };
-
-    const download = (path: string, filename: string) => {
-        // Create a new link
-        const anchor = document.createElement("a");
-        anchor.href = path;
-        anchor.download = filename;
-
-        // Append to the DOM
-        document.body.appendChild(anchor);
-
-        // Trigger `click` event
-        anchor.click();
-
-        // Remove element from DOM
-        document.body.removeChild(anchor);
-    };
-    
-return (
-    <TableContainer>
-        <Table stickyHeader>
-            <TableHead>
-                <TableRow>
-                    <TableCell>Katalog</TableCell>
-                    <TableCell>Opprettet</TableCell>
-                    <TableCell/>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {formDefinitions.map((formDef: FormDefinition) => (
-                    <TableRow key={formDef.id}>
-                        <TableCell>{formDef.label}</TableCell>
-                        <TableCell>{new Date(formDef.createdAt).toLocaleString("nb-NO")}</TableCell>
-                        <TableCell align="center">
-                            <div style={{height: "5.65rem", display: "flex", alignItems: "center"}}>
-                                {formDef.id == idOfDownloadingForm
-                                    ?   <CircularProgress style={{margin: "0 auto"}}/>
-                                    :   <Button
-                                            variant="contained"
-                                            color="primary"
-                                            endIcon={<GetAppIcon/>}
-                                            onClick={() => {downloadExcel(formDef.id, formDef.label)}}>
-                                            Last ned
-                                        </Button>
-                                }
-                            </div>
-                        </TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
-    </TableContainer>
-    );
-}
 
 const EditAdmins = () => {
     const adminCognitoGroupName = useSelector(selectAdminCognitoGroupName);
