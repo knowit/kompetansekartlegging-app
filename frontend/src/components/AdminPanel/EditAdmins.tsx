@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Container from "@material-ui/core/Container";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -17,7 +17,6 @@ import { CloseIcon } from "../DescriptionTable";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import AssesmentIcon from "@material-ui/icons/BarChart";
 import Typography from "@material-ui/core/Typography";
-
 
 import { dialogStyles } from "../../styles";
 import commonStyles from "./common.module.css";
@@ -114,7 +113,6 @@ const DownloadExcelDialog = ({ open, onClose }: any) => {
         getFn: listAllFormDefinitionsForLoggedInUser
     })
 
-    // TODO: Sjekk sortering
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm" PaperProps={{
             style: { borderRadius: 30 },
@@ -166,7 +164,7 @@ const DownloadExcelTable = ({formDefinitions} : FormDefinitions) => {
                 formDefLabel: `${formDefLabel}`
             }
         });
-        download(data, "report.xlsx"); // TODO: more specific filename
+        download(data, "report.xlsx");
         setIdOfDownloadingForm("");
     };
 
@@ -225,7 +223,6 @@ return (
 
 const EditAdmins = () => {
     const adminCognitoGroupName = useSelector(selectAdminCognitoGroupName);
-    
     const [showDownloadExcel, setShowDownloadExcel] = useState<boolean>(false);
 
     const {
@@ -299,7 +296,7 @@ const EditAdmins = () => {
                         color="primary"
                         startIcon={<AssesmentIcon />}
                         style={{ marginTop: "24px" }}
-                        onClick={() => setShowDownloadExcel(true)/*() => downloadExcel()*/}
+                        onClick={() => setShowDownloadExcel(true)}
                     >
                         Last ned resultater (Excel)
                     </Button>

@@ -108,7 +108,7 @@ async def fetch_org_data(orgid, formDefId):
         TableName=categoryTable,
         IndexName="byFormDefinition",
         KeyConditionExpression="formDefinitionID = :formDef",
-        ExpressionAttributeValues={":formDef": {"S": formDefId}} #currentFormDef}},
+        ExpressionAttributeValues={":formDef": {"S": formDefId}}
     )
 
     categories = []
@@ -125,7 +125,7 @@ async def fetch_org_data(orgid, formDefId):
         IndexName="byFormDefinition",
         Select="ALL_ATTRIBUTES",
         KeyConditionExpression="formDefinitionID = :formDef",
-        ExpressionAttributeValues={":formDef": {"S": formDefId}} #currentFormDef}},
+        ExpressionAttributeValues={":formDef": {"S": formDefId}}
     )
 
     questions = []
@@ -176,7 +176,7 @@ async def fetch_org_data(orgid, formDefId):
     # with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
 
     for user in users:
-        userAnswers = asyncio.to_thread(fetch_user_answers, user["Username"], formDefId) #currentFormDef)
+        userAnswers = asyncio.to_thread(fetch_user_answers, user["Username"], formDefId)
         answerTasks.append(userAnswers)
 
     answers = await asyncio.gather(*answerTasks)
@@ -289,7 +289,7 @@ def add_user_row(data_sheet, aggregateSheet, row, user, questions, questionPosit
 
 async def make_workbook(orgid, formDefId):
     later = datetime.now()
-    #formDefs, categories, questions, users = await fetch_org_data(orgid, formDefId)
+    #formDefs, categories, questions, users = await fetch_org_data(orgid)
     categories, questions, users = await fetch_org_data(orgid, formDefId)
     print("Time passed fetching data:", datetime.now() - later)
     later = datetime.now()
