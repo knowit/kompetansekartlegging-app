@@ -41,7 +41,7 @@ export const apiGET = async <T>(
 
 export const apiPOST = async <T>(
   path: string,
-  params: { body: Body }
+  params: { queryStringParameters?: QSParameters; body: Body }
 ): Promise<ApiResponse<T>> => {
   try {
     const init = await createMyInit()

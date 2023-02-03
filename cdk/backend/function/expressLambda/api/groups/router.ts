@@ -1,6 +1,4 @@
-import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
 import express from 'express'
-import { sqlQuery } from '../../app'
 import Group from './queries'
 
 const router = express.Router()
@@ -23,7 +21,7 @@ interface GetReqParams {
 
 // Get all users in a group
 router.get<unknown, unknown, unknown, GetReqParams>(
-  '/:groupId/users',
+  '/users',
   async (req, res, next) => {
     try {
       const { groupId } = req.query
@@ -41,19 +39,19 @@ interface UpdateGroupReqParams {
   groupId: string
 }
 
-interface UpdateGroupBodyParams {
-  groupLeaderUsername: string
-  orgId: string
+interface AddUserBodyParams {
+  id: string
+  orgid: string
 }
 
 // Add user to group (essentialy creates/updates a user with groupid)
-router.post<UpdateGroupReqParams, unknown, UpdateGroupBodyParams>(
-  '/:groupId/user',
+router.post<unknown, unknown, AddUserBodyParams, UpdateGroupReqParams>(
+  '/user',
   async (req, res, next) => {
     try {
-      const { groupId } = req.params
-      const { groupLeaderUsername: userId, orgId } = req.body
-      const upsertResponse = await Group.upsert(userId, groupId, orgId)
+      const { groupId } = req.query
+      const { id, orgid } = req.body
+      const upsertResponse = await Group.upsert(id, groupId, orgid)
 
       res.status(200).json(upsertResponse)
     } catch (err) {
@@ -64,35 +62,38 @@ router.post<UpdateGroupReqParams, unknown, UpdateGroupBodyParams>(
 )
 
 interface DelReqParams {
-  userId: string
+  id: string
 }
 
 // Delete user from group (essentially deletes user)
-router.delete<DelReqParams>('/user/:userId', async (req, res, next) => {
-  try {
-    const { userId } = req.params
-    const deleteResponse = await Group.deleteUser(userId)
+router.delete<unknown, unknown, unknown, DelReqParams>(
+  '/user',
+  async (req, res, next) => {
+    try {
+      const { id } = req.query
+      const deleteResponse = await Group.deleteUser(id)
 
-    res.status(200).json(deleteResponse)
-  } catch (err) {
-    console.error(err)
-    next(err)
+      res.status(200).json(deleteResponse)
+    } catch (err) {
+      console.error(err)
+      next(err)
+    }
   }
-})
+)
 
 interface CreateGroupBodyParams {
-  groupLeaderUsername: string
-  orgId: string
+  groupleaderusername: string
+  orgid: string
 }
 // Create a group
 router.post<unknown, unknown, CreateGroupBodyParams>(
-  '/',
+  '',
   async (req, res, next) => {
     try {
-      const { groupLeaderUsername, orgId } = req.body
+      const { groupleaderusername, orgid } = req.body
       const addGroupResponse = await Group.createGroup(
-        groupLeaderUsername,
-        orgId
+        groupleaderusername,
+        orgid
       )
 
       res.status(200).json(addGroupResponse)
@@ -107,36 +108,39 @@ interface DelGroupReqParams {
   groupId: string
 }
 // Delete a group
-router.delete<DelGroupReqParams>('/:groupId', async (req, res, next) => {
-  try {
-    const { groupId } = req.params
-    const deleteResponse = await Group.deleteGroup(groupId)
+router.delete<unknown, unknown, unknown, DelGroupReqParams>(
+  '',
+  async (req, res, next) => {
+    try {
+      const { groupId } = req.query
+      const deleteResponse = await Group.deleteGroup(groupId)
 
-    res.status(200).json(deleteResponse)
-  } catch (err) {
-    console.error(err)
-    next(err)
+      res.status(200).json(deleteResponse)
+    } catch (err) {
+      console.error(err)
+      next(err)
+    }
   }
-})
+)
 
 interface UpdateGroupReqParams {
-  groupId: string
+  groupid: string
 }
 
 interface UpdateGroupBodyParams {
-  groupLeaderUsername: string
+  groupleaderusername: string
 }
 
 // Update group leader
 router.patch<unknown, unknown, UpdateGroupBodyParams, UpdateGroupReqParams>(
-  '/:groupId',
+  '',
   async (req, res, next) => {
     try {
       const { groupId } = req.query
-      const { groupLeaderUsername } = req.body
+      const { groupleaderusername } = req.body
       const updateResponse = await Group.updateGroupLeader(
         groupId,
-        groupLeaderUsername
+        groupleaderusername
       )
 
       res.status(200).json(updateResponse)

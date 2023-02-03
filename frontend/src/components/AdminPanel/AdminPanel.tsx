@@ -13,6 +13,15 @@ import {
   getAllCategories,
   getCategoryById,
 } from '../../api/categories'
+import {
+  getAllGroups,
+  getAllUsersInGroup,
+  createGroup,
+  addUserToGroup,
+  updateGroupLeader,
+  deleteGroup,
+  deleteUserFromGroup,
+} from '../../api/groups'
 
 type AdminPanelProps = {
   activeSubmenuItem: string
@@ -59,6 +68,26 @@ const AdminPanel = ({ activeSubmenuItem }: AdminPanelProps) => {
       //     categoryId: CAT_ID,
       //   },
       // })
+
+      //const res = await getAllCategories()
+      // const res = await getAllUsersInGroup(
+      //   'f861818a-8019-4207-b8c9-026404d988e5'
+      // )
+      // const res = await createGroup({
+      //   groupleaderusername: 'testing123',
+      //   orgid: 'knowitobjectnet',
+      // })
+      // const res = await addUserToGroup('826d06f9-9d84-4cfe-94d1-901ccc4988c9', {
+      //   id: 'testing123',
+      //   orgid: 'knowitobjectnet',
+      // })
+      // const res = await updateGroupLeader(
+      //   '826d06f9-9d84-4cfe-94d1-901ccc4988c9',
+      //   'testing123'
+      // )
+      // const res = await deleteGroup('7dac7072-2452-46bb-9913-d8df4140399b')
+      // const res = await deleteUserFromGroup('testing123')
+
       console.log(res)
     }
 

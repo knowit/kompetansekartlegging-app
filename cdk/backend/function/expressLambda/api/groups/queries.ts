@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { sqlQuery } from '../../app'
 
 const listGroups = async () => {
-  const query = 'SELECT id, groupLeaderUsername FROM "group"'
+  const query = 'SELECT * FROM "group"'
   const records = await sqlQuery(query)
 
   return { message: '🚀 ~ > All groups.', data: records }
@@ -29,49 +29,49 @@ const listUsersInGroup = async (groupId: string) => {
   }
 }
 
-const upsert = async (userId: string, groupId: string, orgId: string) => {
+const upsert = async (id: string, groupId: string, orgid: string) => {
   const params: SqlParameter[] = [
     {
       name: 'id',
       value: {
-        stringValue: userId,
+        stringValue: id,
       },
     },
     {
-      name: 'groupid',
+      name: 'groupId',
       value: {
         stringValue: groupId,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'organizationid',
+      name: 'organizationId',
       value: {
-        stringValue: orgId,
+        stringValue: orgid,
       },
     },
   ]
 
-  const UPSERT_QUERY = `INSERT INTO "user" (id, groupid, organizationid) 
-        VALUES (:id, :groupid, :organizationid) 
+  const UPSERT_QUERY = `INSERT INTO "user" (id, groupID, organizationID) 
+        VALUES (:id, :groupId, :organizationId) 
         ON CONFLICT (id) 
-        DO UPDATE SET groupid = :groupid, organizationid = :organizationid 
+        DO UPDATE SET groupID = :groupId, organizationID = :organizationId 
         WHERE excluded.id=:id 
         RETURNING *`
   const records = await sqlQuery(UPSERT_QUERY, params)
 
   return {
-    message: `🚀 ~ > User with id '${userId}' is now in group with id '${groupId}'.`,
+    message: `🚀 ~ > User with id '${id}' is now in group with id '${groupId}'.`,
     data: records,
   }
 }
 
-const deleteUser = async (userId: string) => {
+const deleteUser = async (id: string) => {
   const params: SqlParameter[] = [
     {
       name: 'id',
       value: {
-        stringValue: userId,
+        stringValue: id,
       },
     },
   ]
@@ -79,7 +79,7 @@ const deleteUser = async (userId: string) => {
   const records = await sqlQuery(query, params)
 
   return {
-    message: `🚀 ~ > User with id '${userId}' deleted.`,
+    message: `🚀 ~ > User with id '${id}' deleted.`,
     data: records,
   }
 }
@@ -96,21 +96,21 @@ const createGroup = async (groupLeaderUsername: string, orgId: string) => {
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'organizationid',
+      name: 'organizationId',
       value: {
         stringValue: orgId,
       },
     },
     {
-      name: 'groupleaderusername',
+      name: 'groupLeaderUsername',
       value: {
         stringValue: groupLeaderUsername,
       },
     },
   ]
 
-  const query = `INSERT INTO "group" (id, organizationid, groupleaderusername)
-  VALUES (:id, :organizationid, :groupleaderusername)
+  const query = `INSERT INTO "group" (id, organizationID, groupLeaderUsername)
+  VALUES (:id, :organizationId, :groupLeaderUsername)
   RETURNING *`
   const records = await sqlQuery(query, params)
 
@@ -141,7 +141,7 @@ const deleteGroup = async (groupId: string) => {
 
 const updateGroupLeader = async (
   groupId: string,
-  groupLeaderUsername: string
+  groupleaderusername: string
 ) => {
   const params: SqlParameter[] = [
     {
@@ -152,22 +152,22 @@ const updateGroupLeader = async (
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'groupleaderusername',
+      name: 'groupLeaderUsername',
       value: {
-        stringValue: groupLeaderUsername,
+        stringValue: groupleaderusername,
       },
     },
   ]
 
   const query = `UPDATE "group"
-  SET groupleaderusername = :groupleaderusername
+  SET groupLeaderUsername = :groupLeaderUsername
   WHERE id = :id 
   RETURNING *`
 
   const records = await sqlQuery(query, params)
 
   return {
-    message: `🚀 ~ > '${groupLeaderUsername}' is now leader for group with id '${groupId}'.`,
+    message: `🚀 ~ > '${groupleaderusername}' is now leader for group with id '${groupId}'.`,
     data: records,
   }
 }
