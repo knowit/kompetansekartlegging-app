@@ -19,24 +19,24 @@
     "@graphql-codegen/typescript-operations": "2.3.2",
     "@types/jest": "^26.0.10",
     "@types/node": "10.17.27",
-    "aws-cdk": "2.12.0",
+    "aws-cdk": "2.63.2",
     "jest": "^26.4.2",
     "ts-jest": "^26.2.0",
     "ts-node": "^9.0.0",
     "typescript": "~3.9.7"
   },
   "dependencies": {
-    "@aws-cdk/aws-lambda-python-alpha": "^2.19.0-alpha.0",
-    "@aws-sdk/client-appsync": "^3.53.0",
-    "@aws-sdk/client-iam": "^3.53.0",
-    "@aws-sdk/client-lambda": "^3.53.0",
-    "@aws-sdk/credential-providers": "^3.53.0",
+    "@aws-cdk/aws-lambda-python-alpha": "^2.63.2-alpha.0",
+    "@aws-sdk/client-appsync": "^3.264.0",
+    "@aws-sdk/client-iam": "^3.264.0",
+    "@aws-sdk/client-lambda": "^3.264.0",
+    "@aws-sdk/credential-providers": "^3.264.0",
     "@graphql-codegen/cli": "^2.6.2",
     "amplify-graphql-docs-generator": "^2.2.4",
-    "aws-cdk-lib": "2.19.0",
+    "aws-cdk-lib": "2.63.2",
     "cdk-appsync-transformer": "^2.0.0-alpha.0",
-    "constructs": "^10.0.0",
-    "graphql": "^16.3.0",
+    "constructs": "^10.1.242",
+    "graphql": "^16.6.0",
     "source-map-support": "^0.5.16"
   }
 }
