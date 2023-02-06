@@ -11,7 +11,6 @@ from openpyxl.chart.bar_chart import BarChart
 from openpyxl.chart.reference import Reference
 from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl.utils import get_column_letter, FORMULAE
-from openpyxl.writer.excel import save_virtual_workbook
 from dateutil import parser
 from datetime import datetime
 from os import environ
