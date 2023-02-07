@@ -1,9 +1,28 @@
+# Configuration options:
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
 version: 2
 updates:
+
+  # cdk
   - package-ecosystem: "npm"
-    directory: "/"
+    directory: "/cdk"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     # Always increase the version requirement
     # to match the new version.
+    versioning-strategy: increase
+
+  # frontend
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+    versioning-strategy: increase
+
+  # frontend-cdk
+  - package-ecosystem: "npm"
+    directory: "/frontend-cdk"
+    schedule:
+      interval: "weekly"
     versioning-strategy: increase
