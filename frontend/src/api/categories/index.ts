@@ -1,5 +1,5 @@
 import { apiDELETE, apiGET, apiPOST } from '../client'
-import { Category, CategoryList } from './types'
+import { Category, CategoryInput, CategoryList } from './types'
 
 export const getAllCategories = async () => apiGET<CategoryList>('/categories')
 
@@ -8,7 +8,6 @@ export const getCategoryById = async (categoryId: string) =>
     queryStringParameters: { categoryId },
   })
 
-type CategoryInput = Omit<Category, 'id'>
 export const createCategory = async (categoryInfo: CategoryInput) =>
   apiPOST<Category>('/categories', {
     body: categoryInfo,

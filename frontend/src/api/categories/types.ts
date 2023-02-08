@@ -8,3 +8,5 @@ export interface Category {
 }
 
 export type CategoryList = Category[]
+
+export type CategoryInput = Omit<Category, 'id'>
