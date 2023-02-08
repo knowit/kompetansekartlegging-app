@@ -1,15 +1,11 @@
 import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
 import { sqlQuery } from '../../app'
 import { v4 as uuidv4 } from 'uuid'
-
-export interface CreateQuestionAnswerProp {
-  userFormId: string
-  questionId: string
-  knowledge: number
-  motivation: number
-  customScaleValue?: number
-  textValue?: string
-}
+import {
+  DeleteQuestionAnswerInput,
+  GetQuestionAnswerInput,
+  QuestionAnswerInput,
+} from './types'
 
 const listQuestionAnswers = async () => {
   const query = 'SELECT id FROM questionAnswer'
@@ -17,7 +13,7 @@ const listQuestionAnswers = async () => {
   return await sqlQuery({ message: '🚀 ~ > All questionAnswers', query })
 }
 
-const getQuestionAnswer = async (id: string) => {
+const getQuestionAnswer = async ({ id }: GetQuestionAnswerInput) => {
   const parameters: SqlParameter[] = [
     {
       name: 'id',
@@ -37,13 +33,13 @@ const getQuestionAnswer = async (id: string) => {
 }
 
 const createQuestionAnswer = async ({
-  userFormId,
-  questionId,
+  userformid,
+  questionid,
   knowledge,
   motivation,
-  customScaleValue,
-  textValue,
-}: CreateQuestionAnswerProp) => {
+  customscalevalue,
+  textvalue,
+}: QuestionAnswerInput) => {
   const id = uuidv4()
 
   const parameters: SqlParameter[] = [
@@ -55,16 +51,16 @@ const createQuestionAnswer = async ({
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'userFormId',
+      name: 'userformid',
       value: {
-        stringValue: userFormId,
+        stringValue: userformid,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'questionId',
+      name: 'questionid',
       value: {
-        stringValue: questionId,
+        stringValue: questionid,
       },
       typeHint: TypeHint.UUID,
     },
@@ -81,21 +77,21 @@ const createQuestionAnswer = async ({
       },
     },
     {
-      name: 'customScaleValue',
-      value: customScaleValue
+      name: 'customscalevalue',
+      value: customscalevalue
         ? {
-            longValue: customScaleValue,
+            longValue: customscalevalue,
           }
         : { isNull: true },
     },
     {
-      name: 'textValue',
-      value: textValue ? { stringValue: textValue } : { isNull: true },
+      name: 'textvalue',
+      value: textvalue ? { stringValue: textvalue } : { isNull: true },
     },
   ]
 
-  const query = `INSERT INTO questionAnswer (id, userFormID, questionID, knowledge, motivation, customScaleValue)
-    VALUES(:id, :userFormId, :questionId, :knowledge, :motivation, :customScaleValue)
+  const query = `INSERT INTO questionAnswer (id, userformid, questionid, knowledge, motivation, customscalevalue)
+    VALUES(:id, :userformid, :questionid, :knowledge, :motivation, :customscalevalue)
     RETURNING *`
 
   return await sqlQuery({
@@ -106,15 +102,15 @@ const createQuestionAnswer = async ({
 }
 
 const updateQuestionAnswer = async (
-  id: string,
+  { id }: GetQuestionAnswerInput,
   {
-    userFormId,
-    questionId,
+    userformid,
+    questionid,
     knowledge,
     motivation,
-    customScaleValue,
-    textValue,
-  }: CreateQuestionAnswerProp
+    customscalevalue,
+    textvalue,
+  }: QuestionAnswerInput
 ) => {
   const parameters: SqlParameter[] = [
     {
@@ -125,16 +121,16 @@ const updateQuestionAnswer = async (
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'userFormId',
+      name: 'userformid',
       value: {
-        stringValue: userFormId,
+        stringValue: userformid,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'questionId',
+      name: 'questionid',
       value: {
-        stringValue: questionId,
+        stringValue: questionid,
       },
       typeHint: TypeHint.UUID,
     },
@@ -151,23 +147,23 @@ const updateQuestionAnswer = async (
       },
     },
     {
-      name: 'customScaleValue',
-      value: customScaleValue
+      name: 'customscalevalue',
+      value: customscalevalue
         ? {
-            longValue: customScaleValue,
+            longValue: customscalevalue,
           }
         : { isNull: true },
     },
     {
-      name: 'textValue',
-      value: textValue ? { stringValue: textValue } : { isNull: true },
+      name: 'textvalue',
+      value: textvalue ? { stringValue: textvalue } : { isNull: true },
     },
   ]
 
   // TODO: Se kommentar fra @Lekesoldat
   const query = `UPDATE questionAnswer
-        SET userFormID=:userFormId, questionID=:questionId, knowledge=:knowledge, motivation=:motivation,
-        customScaleValue=:customScaleValue, textValue=:textValue
+        SET userformid=:userformid, questionid=:questionid, knowledge=:knowledge, motivation=:motivation,
+        customscalevalue=:customscalevalue, textvalue=:textvalue
         WHERE id=:id
         RETURNING *`
 
@@ -178,7 +174,7 @@ const updateQuestionAnswer = async (
   })
 }
 
-const deleteQuestionAnswer = async (id: string) => {
+const deleteQuestionAnswer = async ({ id }: DeleteQuestionAnswerInput) => {
   const parameters: SqlParameter[] = [
     {
       name: 'id',
@@ -199,13 +195,13 @@ const deleteQuestionAnswer = async (id: string) => {
 }
 
 const createQuestionAnswerFromBatch = async ({
-  userFormId,
-  questionId,
+  userformid,
+  questionid,
   knowledge,
   motivation,
-  customScaleValue,
-  textValue,
-}: CreateQuestionAnswerProp) => {
+  customscalevalue,
+  textvalue,
+}: QuestionAnswerInput) => {
   const id = uuidv4()
 
   const parameters: SqlParameter[] = [
@@ -217,16 +213,16 @@ const createQuestionAnswerFromBatch = async ({
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'userFormId',
+      name: 'userformid',
       value: {
-        stringValue: userFormId,
+        stringValue: userformid,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'questionId',
+      name: 'questionid',
       value: {
-        stringValue: questionId,
+        stringValue: questionid,
       },
       typeHint: TypeHint.UUID,
     },
@@ -243,21 +239,21 @@ const createQuestionAnswerFromBatch = async ({
       },
     },
     {
-      name: 'customScaleValue',
-      value: customScaleValue
+      name: 'customscalevalue',
+      value: customscalevalue
         ? {
-            longValue: customScaleValue,
+            longValue: customscalevalue,
           }
         : { isNull: true },
     },
     {
-      name: 'textValue',
-      value: textValue ? { stringValue: textValue } : { isNull: true },
+      name: 'textvalue',
+      value: textvalue ? { stringValue: textvalue } : { isNull: true },
     },
   ]
 
-  const query = `INSERT INTO questionAnswer (id, userFormID, questionID, knowledge, motivation, customScaleValue, textValue)
-  VALUES(:id, :userFormId, :questionId, :knowledge, :motivation, :customScaleValue, :textValue)
+  const query = `INSERT INTO questionAnswer (id, userformid, userformid, knowledge, motivation, customscalevalue, textvalue)
+  VALUES(:id, :userformid, :questionid, :knowledge, :motivation, :customscalevalue, :textvalue)
   RETURNING *`
 
   return await sqlQuery({
