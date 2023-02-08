@@ -10,7 +10,6 @@
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@reduxjs/toolkit": "^1.7.1",
     "aws-amplify": "^4.3.11",
-    "axios": "^1.2.4",
     "chart.js": "^2.9.4",
     "clsx": "^1.1.1",
     "react": "^16.13.1",
