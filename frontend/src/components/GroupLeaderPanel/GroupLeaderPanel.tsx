@@ -134,7 +134,7 @@ const GroupLeaderPanel = ({
         useState<any[]>([]);
 
     const addLastAnsweredAt = async (users: any[]) => {
-        if (users.length > 0) {
+        if (users.length > 0 && formDefinitions.length > 0) {
             const activeFormDefId = formDefinitions[0].id;
 
             const usersAnnotated = await Promise.all(users.map(async (u: any) => {
@@ -146,7 +146,6 @@ const GroupLeaderPanel = ({
                     return u;
                 }
             }));
-
             setAllAvailableUsersAnnotated(usersAnnotated);
         }
     };
@@ -167,7 +166,11 @@ const GroupLeaderPanel = ({
                     return u;
                 }
             });
-            addLastAnsweredAt(annotated);
+            if (formDefinitions.length > 0) {
+                addLastAnsweredAt(annotated);
+            } else {
+                setAllAvailableUsersAnnotated(annotated);
+            }
         }
     }, [allAvailableUsers, groupLeaders, groups, users, formDefinitions]);
 
