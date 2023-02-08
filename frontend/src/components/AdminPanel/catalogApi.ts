@@ -326,7 +326,6 @@ const copyFormDefinition = async (
         }
 }
 
-
 const createFormDefinition = async (
   name: string
 ): Promise<ApiResponse<FormDefinition>> => {
