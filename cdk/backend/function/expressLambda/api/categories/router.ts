@@ -1,11 +1,8 @@
 import express from 'express'
 import Category from './queries'
+import { CategoryInput, DeleteCategoryInput, GetCategoryInput } from './types'
 
 const router = express.Router()
-
-interface CategoryParams {
-  categoryId: string
-}
 
 // Get all categories
 router.get('/', async (req, res, next) => {
@@ -19,12 +16,11 @@ router.get('/', async (req, res, next) => {
 })
 
 // Get single category from id
-router.get<unknown, unknown, unknown, CategoryParams>(
-  '/:categoryId',
+router.get<unknown, unknown, unknown, GetCategoryInput>(
+  '/:id',
   async (req, res, next) => {
     try {
-      const { categoryId } = req.query
-      const getCategoryResponse = await Category.getCategory(categoryId)
+      const getCategoryResponse = await Category.getCategory({ ...req.query })
 
       res.status(200).json(getCategoryResponse)
     } catch (err) {
@@ -34,36 +30,25 @@ router.get<unknown, unknown, unknown, CategoryParams>(
   }
 )
 
-interface createCategoryBodyParams {
-  text: string
-  description: string
-  index: number
-  formdefinitionid: string
-  organizationid: string
-}
-
 // Create category
-router.post<unknown, unknown, createCategoryBodyParams>(
-  '/',
-  async (req, res, next) => {
-    try {
-      const createCategoryResponse = await Category.createCategory(req.body)
+router.post<unknown, unknown, CategoryInput>('/', async (req, res, next) => {
+  try {
+    const createCategoryResponse = await Category.createCategory(req.body)
 
-      res.status(201).json(createCategoryResponse)
-    } catch (err) {
-      console.error(err)
-      next(err)
-    }
+    res.status(201).json(createCategoryResponse)
+  } catch (err) {
+    console.error(err)
+    next(err)
   }
-)
+})
 
 // Update category with given id
-router.patch<unknown, unknown, createCategoryBodyParams, CategoryParams>(
-  '/:categoryId',
+router.patch<unknown, unknown, CategoryInput, GetCategoryInput>(
+  '/:id',
   async (req, res, next) => {
-    const { categoryId } = req.query
+    const { id } = req.query
     try {
-      const updateCategoryResponse = await Category.updateCategory(categoryId, {
+      const updateCategoryResponse = await Category.updateCategory(id, {
         ...req.body,
       })
 
@@ -76,16 +61,20 @@ router.patch<unknown, unknown, createCategoryBodyParams, CategoryParams>(
 )
 
 // Delete category with given id
-router.delete<unknown, unknown, CategoryParams>('/', async (req, res, next) => {
-  try {
-    const { categoryId } = req.body
-    const deleteCategoryResponse = await Category.deleteCategory(categoryId)
+router.delete<unknown, unknown, DeleteCategoryInput>(
+  '/',
+  async (req, res, next) => {
+    try {
+      const deleteCategoryResponse = await Category.deleteCategory({
+        ...req.body,
+      })
 
-    res.status(200).json(deleteCategoryResponse)
-  } catch (err) {
-    console.error(err)
-    next(err)
+      res.status(200).json(deleteCategoryResponse)
+    } catch (err) {
+      console.error(err)
+      next(err)
+    }
   }
-})
+)
 
 export { router as categoryRouter }

@@ -6,21 +6,14 @@ import {
 
 import { v4 as uuidv4 } from 'uuid'
 import { sqlQuery } from '../../app'
-
-interface CategoryProps {
-  text: string
-  description: string
-  index: number
-  formdefinitionid: string
-  organizationid: string
-}
+import { CategoryInput, DeleteCategoryInput, GetCategoryInput } from './types'
 
 const listCategories = async () => {
   const query = 'SELECT * FROM "category"'
   return await sqlQuery({ message: '🚀 ~ > All categories.', query })
 }
 
-const getCategory = async (id: string) => {
+const getCategory = async ({ id }: GetCategoryInput) => {
   const parameters: SqlParameter[] = [
     {
       name: 'id',
@@ -46,7 +39,7 @@ const createCategory = async ({
   index,
   formdefinitionid,
   organizationid,
-}: CategoryProps) => {
+}: CategoryInput) => {
   const id = uuidv4()
 
   const parameters: SqlParameter[] = [
@@ -103,7 +96,7 @@ const createCategory = async ({
 
 const updateCategory = async (
   id: string,
-  { text, description, index, formdefinitionid, organizationid }: CategoryProps
+  { text, description, index, formdefinitionid, organizationid }: CategoryInput
 ) => {
   const parameters: SqlParameter[] = [
     {
@@ -158,7 +151,7 @@ const updateCategory = async (
   })
 }
 
-const deleteCategory = async (id: string) => {
+const deleteCategory = async ({ id }: DeleteCategoryInput) => {
   const parameters: SqlParameter[] = [
     {
       name: 'id',

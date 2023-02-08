@@ -1,6 +1,6 @@
 import express from 'express'
 import Organization from './queries'
-import { CreateOrganizationInput, DeleteOrganizationInput } from './types'
+import { OrganizationInput, DeleteOrganizationInput } from './types'
 
 const router = express.Router()
 
@@ -17,7 +17,7 @@ router.get('/', async (_req, res, next) => {
 })
 
 // Create a new organization
-router.post<unknown, unknown, CreateOrganizationInput>(
+router.post<unknown, unknown, OrganizationInput>(
   '/',
   async (req, res, next) => {
     try {

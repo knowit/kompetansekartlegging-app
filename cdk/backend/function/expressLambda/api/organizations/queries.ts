@@ -1,7 +1,7 @@
 import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
 import { sqlQuery } from '../../app'
 import { createTimestampNow } from '../utils'
-import { CreateOrganizationInput, DeleteOrganizationInput } from './types'
+import { OrganizationInput, DeleteOrganizationInput } from './types'
 
 const listOrganizations = async () => {
   const query = 'SELECT id, orgname, identifierAttribute FROM organization'
@@ -16,7 +16,7 @@ const createOrganization = async ({
   id,
   orgname,
   identifierattribute,
-}: CreateOrganizationInput) => {
+}: OrganizationInput) => {
   const parameters: SqlParameter[] = [
     {
       name: 'id',

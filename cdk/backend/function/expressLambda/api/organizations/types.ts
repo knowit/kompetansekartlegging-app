@@ -6,6 +6,6 @@ export interface Organization {
   identifierattribute: string
 }
 
-export type CreateOrganizationInput = Omit<Organization, 'createdat' | 'owner'>
+export type OrganizationInput = Omit<Organization, 'createdat' | 'owner'>
 
 export type DeleteOrganizationInput = Pick<Organization, 'id'>
