@@ -1,7 +1,7 @@
 import { apiDELETE, apiGET, apiPATCH, apiPOST } from '../client'
 import { Question, QuestionList } from './types'
 
-export const getAllQuestionss = async () => apiGET<QuestionList>('/questions')
+export const getAllQuestions = async () => apiGET<QuestionList>('/questions')
 
 export const getQuestionById = async (questionId: string) =>
   apiGET<QuestionList>('/questions/:questionId', {
