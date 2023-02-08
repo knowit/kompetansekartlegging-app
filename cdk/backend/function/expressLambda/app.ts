@@ -37,34 +37,42 @@ const cmdConstants = {
   database: process.env.DATABASE_NAME,
 }
 
-export const sqlQuery = async (query: string, parameters?: SqlParameter[]) => {
-  console.log('🚀 ~ file: app.ts:41 ~ sqlQuery')
-  console.log({ query })
-  console.log({ parameters })
+interface SqlQueryInput {
+  query: string
+  parameters?: SqlParameter[]
+  message: string
+}
 
+export const sqlQuery = async ({
+  query,
+  parameters,
+  message,
+}: SqlQueryInput) => {
   const cmd = new ExecuteStatementCommand({
     sql: query,
     parameters,
     ...cmdConstants,
     formatRecordsAs: RecordsFormatType.JSON,
   })
-  console.log('🚀 ~ file: app.ts:50 ~ sqlQuery ~ cmd', cmd)
 
   const response = await rds.send(cmd)
-  console.log('🚀 ~ file: app.ts:53 ~ sqlQuery ~ response', response)
+  console.log('🚀 ~ response', response)
 
   if (response.formattedRecords) {
     const records = JSON.parse(response.formattedRecords)
-    let output = records
-    if (output.length === 1) {
-      console.log(
-        '🚀 ~ file: app.ts:59 ~ sqlQuery ~ Output is a single record!'
-      )
-      output = records[0]
+    if (records.length === 0) {
+      return {
+        message: '🧨 ~ No records returned from the query.',
+        data: null,
+      }
     }
-    return output
+
+    return {
+      message,
+      data: records.length === 1 ? records[0] : records,
+    }
   } else {
-    throw new Error(`Records not found for query ${query}`)
+    throw new Error(`Something went wrong in sqlQuery(...)`)
   }
 }
 
