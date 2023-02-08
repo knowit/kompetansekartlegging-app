@@ -21,9 +21,9 @@ router.post<unknown, unknown, OrganizationInput>(
   '/',
   async (req, res, next) => {
     try {
-      const addOrganizationResponse = await Organization.createOrganization({
-        ...req.body,
-      })
+      const addOrganizationResponse = await Organization.createOrganization(
+        req.body
+      )
 
       res.status(200).json(addOrganizationResponse)
     } catch (err) {
@@ -38,9 +38,9 @@ router.delete<unknown, unknown, DeleteOrganizationInput>(
   '/',
   async (req, res, next) => {
     try {
-      const removeOrganizationResponse = await Organization.deleteOrganization({
-        ...req.body,
-      })
+      const removeOrganizationResponse = await Organization.deleteOrganization(
+        req.body
+      )
 
       res.status(200).json(removeOrganizationResponse)
     } catch (err) {

@@ -9,9 +9,9 @@ type Table = Record<string, Field>
 
 export const formDefinitionColumns: Table = {
   id: { kind: 'uuid' },
-  createdAt: { kind: 'timestamp' },
-  updatedAt: { kind: 'timestamp' },
-  organizationId: { kind: 'string' },
+  createdat: { kind: 'timestamp' },
+  updatedat: { kind: 'timestamp' },
+  organizationid: { kind: 'string' },
   label: { kind: 'string' },
 }
 
