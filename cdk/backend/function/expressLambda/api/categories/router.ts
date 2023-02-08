@@ -3,7 +3,7 @@ import Category from './queries'
 
 const router = express.Router()
 
-interface GetReqParams {
+interface CategoryParams {
   categoryId: string
 }
 
@@ -19,7 +19,7 @@ router.get('/', async (req, res, next) => {
 })
 
 // Get single category from id
-router.get<unknown, unknown, unknown, GetReqParams>(
+router.get<unknown, unknown, unknown, CategoryParams>(
   '/:categoryId',
   async (req, res, next) => {
     try {
@@ -58,7 +58,7 @@ router.post<unknown, unknown, createCategoryBodyParams>(
 )
 
 // Update category with given id
-router.patch<unknown, unknown, createCategoryBodyParams, GetReqParams>(
+router.patch<unknown, unknown, createCategoryBodyParams, CategoryParams>(
   '/:categoryId',
   async (req, res, next) => {
     const { categoryId } = req.query
@@ -76,19 +76,16 @@ router.patch<unknown, unknown, createCategoryBodyParams, GetReqParams>(
 )
 
 // Delete category with given id
-router.delete<unknown, unknown, unknown, GetReqParams>(
-  '/:categoryId',
-  async (req, res, next) => {
-    try {
-      const { categoryId } = req.query
-      const deleteCategoryResponse = await Category.deleteCategory(categoryId)
+router.delete<unknown, unknown, CategoryParams>('/', async (req, res, next) => {
+  try {
+    const { categoryId } = req.body
+    const deleteCategoryResponse = await Category.deleteCategory(categoryId)
 
-      res.status(200).json(deleteCategoryResponse)
-    } catch (err) {
-      console.error(err)
-      next(err)
-    }
+    res.status(200).json(deleteCategoryResponse)
+  } catch (err) {
+    console.error(err)
+    next(err)
   }
-)
+})
 
 export { router as categoryRouter }

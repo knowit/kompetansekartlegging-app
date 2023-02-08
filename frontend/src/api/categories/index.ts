@@ -14,8 +14,7 @@ export const createCategory = async (categoryInfo: CategoryInput) =>
     body: categoryInfo,
   })
 
-// TODO: Denne får en CORS-feil. Vet ikke hvorfor enda, - gjelder alle delete requests.
 export const deleteCategory = async (categoryId: string) =>
   apiDELETE<CategoryList>('/categories/:categoryId', {
-    queryStringParameters: { categoryId },
+    body: { categoryId },
   })

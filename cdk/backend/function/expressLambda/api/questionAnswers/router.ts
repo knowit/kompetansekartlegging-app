@@ -10,8 +10,7 @@ interface ReqParams {
 // List all questionAnswers
 router.get('/', async (req, res, next) => {
   try {
-    const listQuestionAnswerResponse =
-      await QuestionAnswer.listQuestionAnswers()
+    const listQuestionAnswerResponse = await QuestionAnswer.listQuestionAnswers()
     res.status(200).json(listQuestionAnswerResponse)
   } catch (err) {
     console.error(err)
@@ -20,27 +19,31 @@ router.get('/', async (req, res, next) => {
 })
 
 // Get questionAnswer from id
-router.get<ReqParams>('/:questionAnswerId', async (req, res, next) => {
-  try {
-    const { questionAnswerId } = req.params
-    const getQuestionAnswerResponse = await QuestionAnswer.getQuestionAnswer(
-      questionAnswerId
-    )
+router.get<unknown, unknown, unknown, ReqParams>(
+  '/:questionAnswerId',
+  async (req, res, next) => {
+    try {
+      const { questionAnswerId } = req.query
+      const getQuestionAnswerResponse = await QuestionAnswer.getQuestionAnswer(
+        questionAnswerId
+      )
 
-    res.status(200).json(getQuestionAnswerResponse)
-  } catch (err) {
-    console.error(err)
-    next(err)
+      res.status(200).json(getQuestionAnswerResponse)
+    } catch (err) {
+      console.error(err)
+      next(err)
+    }
   }
-})
+)
 
 // Create questionAnswer
 router.post<unknown, unknown, CreateQuestionAnswerProp>(
   '/',
   async (req, res, next) => {
     try {
-      const createQuestionAnswerResponse =
-        await QuestionAnswer.createQuestionAnswer(req.body)
+      const createQuestionAnswerResponse = await QuestionAnswer.createQuestionAnswer(
+        req.body
+      )
       res.status(201).json(createQuestionAnswerResponse)
     } catch (err) {
       console.error(err)
@@ -55,8 +58,10 @@ router.patch<ReqParams, unknown, CreateQuestionAnswerProp>(
   async (req, res, next) => {
     try {
       const { questionAnswerId } = req.params
-      const updateQuestionAnswerResponse =
-        await QuestionAnswer.updateQuestionAnswer(questionAnswerId, req.body)
+      const updateQuestionAnswerResponse = await QuestionAnswer.updateQuestionAnswer(
+        questionAnswerId,
+        req.body
+      )
       res.status(200).json(updateQuestionAnswerResponse)
     } catch (err) {
       console.error(err)
@@ -66,11 +71,12 @@ router.patch<ReqParams, unknown, CreateQuestionAnswerProp>(
 )
 
 // Delete questionAnswer with given id
-router.delete<ReqParams>('/:questionAnswerId', async (req, res, next) => {
+router.delete<unknown, unknown, ReqParams>('/', async (req, res, next) => {
   try {
-    const { questionAnswerId } = req.params
-    const deleteQuestionAnswerResponse =
-      await QuestionAnswer.deleteQuestionAnswer(questionAnswerId)
+    const { questionAnswerId } = req.body
+    const deleteQuestionAnswerResponse = await QuestionAnswer.deleteQuestionAnswer(
+      questionAnswerId
+    )
     res.status(200).json(deleteQuestionAnswerResponse)
   } catch (err) {
     console.error(err)
@@ -90,9 +96,10 @@ router.post<unknown, unknown, CreateQuestionAnswerProp[]>(
     try {
       const responses: Response[] = []
       await Promise.all(
-        req.body.map(async (qa) => {
-          const createQuestionAnswerResponse: Response =
-            await QuestionAnswer.createQuestionAnswer(qa)
+        req.body.map(async qa => {
+          const createQuestionAnswerResponse: Response = await QuestionAnswer.createQuestionAnswer(
+            qa
+          )
           responses.push(createQuestionAnswerResponse)
         })
       )

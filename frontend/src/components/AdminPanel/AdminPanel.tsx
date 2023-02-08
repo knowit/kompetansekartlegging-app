@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
-import EditGroupLeaders from './EditGroupLeaders'
-import EditAdmins from './EditAdmins'
-import EditGroups from './EditGroups'
-import EditCatalogsRouter from './EditCatalogsRouter'
+import { deleteCategory } from '../../api/categories'
 import style from './AdminPanel.module.css'
 import { Auth } from 'aws-amplify'
 import DownloadExcel from './DownloadExcel'
