@@ -59,9 +59,8 @@ router.patch<
   GetFormDefinitionInput
 >('/:id', async (req, res, next) => {
   try {
-    const { id } = req.query
     const updateResponse = await FormDefinition.updateFormDefinition(
-      id,
+      req.query,
       req.body
     )
 

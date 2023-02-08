@@ -10,5 +10,4 @@ export interface Category {
 export type CategoryInput = Omit<Category, 'id'>
 
 export type GetCategoryInput = Pick<Category, 'id'>
-
 export type DeleteCategoryInput = Pick<Category, 'id'>
