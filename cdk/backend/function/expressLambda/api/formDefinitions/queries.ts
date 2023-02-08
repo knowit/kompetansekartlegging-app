@@ -6,6 +6,7 @@ import { formDefinitionColumns, kindToParam } from './helpers'
 import {
   DeleteFormDefinitionInput,
   FormDefinitionInput,
+  GetFormDefinitionInput,
   UpdateFormDefinitionInput,
 } from './types'
 
@@ -69,7 +70,7 @@ const deleteFormDefinition = async ({ id }: DeleteFormDefinitionInput) => {
 }
 
 const updateFormDefinition = async (
-  id: string,
+  { id }: GetFormDefinitionInput,
   values: UpdateFormDefinitionInput
 ) => {
   if (!values.updatedat) {

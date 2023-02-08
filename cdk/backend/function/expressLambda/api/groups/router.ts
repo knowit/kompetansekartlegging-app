@@ -1,5 +1,14 @@
 import express from 'express'
 import Group from './queries'
+import {
+  AddUserInput,
+  DeleteGroupInput,
+  DeleteUserInput,
+  GetGroupInput,
+  GetUsersInput,
+  GroupInput,
+  UpdateGroupLeaderInput,
+} from './types'
 
 const router = express.Router()
 
@@ -15,17 +24,12 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-interface GetReqParams {
-  groupId: string
-}
-
 // Get all users in a group
-router.get<unknown, unknown, unknown, GetReqParams>(
+router.get<unknown, unknown, unknown, GetUsersInput>(
   '/users',
   async (req, res, next) => {
     try {
-      const { groupId } = req.query
-      const listUserResponse = await Group.listUsersInGroup(groupId)
+      const listUserResponse = await Group.listUsersInGroup(req.query)
 
       res.status(200).json(listUserResponse)
     } catch (err) {
@@ -35,23 +39,14 @@ router.get<unknown, unknown, unknown, GetReqParams>(
   }
 )
 
-interface UpdateGroupReqParams {
-  groupId: string
-}
-
-interface AddUserBodyParams {
-  id: string
-  orgid: string
-}
-
 // Add user to group (essentialy creates/updates a user with groupid)
-router.post<unknown, unknown, AddUserBodyParams, UpdateGroupReqParams>(
-  '/user',
+router.post<unknown, unknown, AddUserInput, GetGroupInput>(
+  '/:id/user',
   async (req, res, next) => {
     try {
-      const { groupId } = req.query
-      const { id, orgid } = req.body
-      const upsertResponse = await Group.upsert(id, groupId, orgid)
+      const { id: groupid } = req.query
+      const { id, organizationid } = req.body
+      const upsertResponse = await Group.upsert({ groupid, id, organizationid })
 
       res.status(200).json(upsertResponse)
     } catch (err) {
@@ -61,17 +56,12 @@ router.post<unknown, unknown, AddUserBodyParams, UpdateGroupReqParams>(
   }
 )
 
-interface DelReqParams {
-  id: string
-}
-
 // Delete user from group (essentially deletes user)
-router.delete<unknown, unknown, DelReqParams>(
+router.delete<unknown, unknown, DeleteUserInput>(
   '/user',
   async (req, res, next) => {
     try {
-      const { id } = req.body
-      const deleteResponse = await Group.deleteUser(id)
+      const deleteResponse = await Group.deleteUser(req.body)
 
       res.status(200).json(deleteResponse)
     } catch (err) {
@@ -81,39 +71,24 @@ router.delete<unknown, unknown, DelReqParams>(
   }
 )
 
-interface CreateGroupBodyParams {
-  groupleaderusername: string
-  orgid: string
-}
 // Create a group
-router.post<unknown, unknown, CreateGroupBodyParams>(
-  '',
-  async (req, res, next) => {
-    try {
-      const { groupleaderusername, orgid } = req.body
-      const addGroupResponse = await Group.createGroup(
-        groupleaderusername,
-        orgid
-      )
+router.post<unknown, unknown, GroupInput>('', async (req, res, next) => {
+  try {
+    const addGroupResponse = await Group.createGroup(req.body)
 
-      res.status(200).json(addGroupResponse)
-    } catch (err) {
-      console.error(err)
-      next(err)
-    }
+    res.status(200).json(addGroupResponse)
+  } catch (err) {
+    console.error(err)
+    next(err)
   }
-)
+})
 
-interface DelGroupReqParams {
-  groupId: string
-}
 // Delete a group
-router.delete<unknown, unknown, DelGroupReqParams>(
-  '',
+router.delete<unknown, unknown, DeleteGroupInput>(
+  '/',
   async (req, res, next) => {
     try {
-      const { groupId } = req.body
-      const deleteResponse = await Group.deleteGroup(groupId)
+      const deleteResponse = await Group.deleteGroup(req.body)
 
       res.status(200).json(deleteResponse)
     } catch (err) {
@@ -122,26 +97,13 @@ router.delete<unknown, unknown, DelGroupReqParams>(
     }
   }
 )
-
-interface UpdateGroupReqParams {
-  groupid: string
-}
-
-interface UpdateGroupBodyParams {
-  groupleaderusername: string
-}
 
 // Update group leader
-router.patch<unknown, unknown, UpdateGroupBodyParams, UpdateGroupReqParams>(
-  '',
+router.patch<unknown, unknown, UpdateGroupLeaderInput, GetGroupInput>(
+  '/',
   async (req, res, next) => {
     try {
-      const { groupId } = req.query
-      const { groupleaderusername } = req.body
-      const updateResponse = await Group.updateGroupLeader(
-        groupId,
-        groupleaderusername
-      )
+      const updateResponse = await Group.updateGroupLeader(req.query, req.body)
 
       res.status(200).json(updateResponse)
     } catch (err) {
