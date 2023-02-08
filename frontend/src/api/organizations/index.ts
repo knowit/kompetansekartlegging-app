@@ -4,7 +4,7 @@ import { Organization, OrganizationList } from './types'
 export const getAllOrganizations = async () =>
   apiGET<OrganizationList>('/organizations')
 
-type OrganizationInput = Omit<Organization, 'id'>
+type OrganizationInput = Omit<Organization, 'timestamp' | 'owner'>
 export const createOrganization = async (organizationInfo: OrganizationInput) =>
   apiPOST<OrganizationList>('/organizations', {
     body: organizationInfo,
