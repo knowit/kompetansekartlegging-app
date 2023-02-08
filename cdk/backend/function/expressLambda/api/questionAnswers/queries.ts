@@ -13,16 +13,12 @@ export interface CreateQuestionAnswerProp {
 
 const listQuestionAnswers = async () => {
   const query = 'SELECT id FROM questionAnswer'
-  const response = await sqlQuery(query)
 
-  return {
-    message: '🚀 ~ > All questionAnswers',
-    data: response,
-  }
+  return await sqlQuery({ message: '🚀 ~ > All questionAnswers', query })
 }
 
 const getQuestionAnswer = async (id: string) => {
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       value: {
@@ -32,12 +28,12 @@ const getQuestionAnswer = async (id: string) => {
     },
   ]
   const query = 'SELECT * FROM questionAnswer WHERE id = :id'
-  const response = await sqlQuery(query, params)
 
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > QuestionAnswer with id: ${id}`,
-    data: response,
-  }
+    query,
+    parameters,
+  })
 }
 
 const createQuestionAnswer = async ({
@@ -50,7 +46,7 @@ const createQuestionAnswer = async ({
 }: CreateQuestionAnswerProp) => {
   const id = uuidv4()
 
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       value: {
@@ -101,12 +97,12 @@ const createQuestionAnswer = async ({
   const query = `INSERT INTO questionAnswer (id, userFormID, questionID, knowledge, motivation, customScaleValue)
     VALUES(:id, :userFormId, :questionId, :knowledge, :motivation, :customScaleValue)
     RETURNING *`
-  const response = await sqlQuery(query, params)
 
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > QuestionAnswer with id: ${id} was successfully created`,
-    data: response,
-  }
+    query,
+    parameters,
+  })
 }
 
 const updateQuestionAnswer = async (
@@ -120,7 +116,7 @@ const updateQuestionAnswer = async (
     textValue,
   }: CreateQuestionAnswerProp
 ) => {
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       value: {
@@ -175,15 +171,15 @@ const updateQuestionAnswer = async (
         WHERE id=:id
         RETURNING *`
 
-  const response = await sqlQuery(query, params)
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > questionAnswer with id: ${id} was updated`,
-    data: response,
-  }
+    query,
+    parameters,
+  })
 }
 
 const deleteQuestionAnswer = async (id: string) => {
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       value: {
@@ -194,12 +190,12 @@ const deleteQuestionAnswer = async (id: string) => {
   ]
 
   const query = `DELETE FROM questionAnswer WHERE id=:id RETURNING *`
-  const response = sqlQuery(query, params)
 
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > QuestionAnswer with id: ${id} was deleted`,
-    data: response,
-  }
+    query,
+    parameters,
+  })
 }
 
 const createQuestionAnswerFromBatch = async ({
@@ -212,7 +208,7 @@ const createQuestionAnswerFromBatch = async ({
 }: CreateQuestionAnswerProp) => {
   const id = uuidv4()
 
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       value: {
@@ -264,12 +260,11 @@ const createQuestionAnswerFromBatch = async ({
   VALUES(:id, :userFormId, :questionId, :knowledge, :motivation, :customScaleValue, :textValue)
   RETURNING *`
 
-  const response = sqlQuery(query, params)
-
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > QuestionAnswer with id: ${id} has been added or updated`,
-    data: response,
-  }
+    query,
+    parameters,
+  })
 }
 
 export default {

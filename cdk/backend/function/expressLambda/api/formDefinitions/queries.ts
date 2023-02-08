@@ -9,13 +9,12 @@ import { createTimestampNow } from '../utils'
 import { formDefinitionColumns, kindToParam } from './helpers'
 
 const listFormDefinitions = async () => {
-  const LIST_QUERY = `SELECT * FROM formDefinition`
-  const records = await sqlQuery(LIST_QUERY)
+  const query = `SELECT * FROM formDefinition`
 
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > All Form Definitions:`,
-    data: records,
-  }
+    query,
+  })
 }
 
 interface CreateFormDefinitionInput {
@@ -27,7 +26,7 @@ const createFormDefinition = async ({
   name,
   organizationID,
 }: CreateFormDefinitionInput) => {
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       ...kindToParam(uuidv4(), 'uuid'),
@@ -46,12 +45,15 @@ const createFormDefinition = async ({
     },
   ]
 
-  const CREATE_QUERY = `INSERT INTO formDefinition (id, label, createdAt, organizationID) 
+  const query = `INSERT INTO formDefinition (id, label, createdAt, organizationID) 
         VALUES (:id, :label, :createdAt, :organizationID) 
         RETURNING *`
-  const records = await sqlQuery(CREATE_QUERY, params)
 
-  return { message: `🚀 ~ > Form Definition '${name}' created.`, data: records }
+  return await sqlQuery({
+    message: `🚀 ~ > Form Definition '${name}' created.`,
+    query,
+    parameters,
+  })
 }
 
 interface DeleteFormDefinitionInput {
@@ -59,20 +61,19 @@ interface DeleteFormDefinitionInput {
 }
 
 const deleteFormDefinition = async ({ id }: DeleteFormDefinitionInput) => {
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       ...kindToParam(id, 'uuid'),
     },
   ]
 
-  const DELETE_QUERY = `DELETE FROM formDefinition WHERE id = :id RETURNING *`
-  const records = await sqlQuery(DELETE_QUERY, params)
-
-  return {
+  const query = `DELETE FROM formDefinition WHERE id = :id RETURNING *`
+  return await sqlQuery({
     message: `🚀 ~ > Form Definition with id '${id}' deleted.`,
-    data: records,
-  }
+    query,
+    parameters,
+  })
 }
 
 interface UpdateFormDefinitionInput {
@@ -94,7 +95,7 @@ const updateFormDefinition = async (
   let columnString = ''
   const lastEntryIndex = Object.keys(values).length - 1
 
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       ...kindToParam(id, 'uuid'),
@@ -117,16 +118,16 @@ const updateFormDefinition = async (
       ...kindToParam(value, formDefinitionColumns[field].kind),
     }
 
-    params.push(param)
+    parameters.push(param)
   })
 
-  const UPDATE_QUERY = `UPDATE formDefinition SET ${columnString} WHERE id=:id RETURNING *`
-  const records = await sqlQuery(UPDATE_QUERY, params)
+  const query = `UPDATE formDefinition SET ${columnString} WHERE id=:id RETURNING *`
 
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > formDefinition with id '${id}' is now updated.`,
-    data: records,
-  }
+    query,
+    parameters,
+  })
 }
 
 export default {

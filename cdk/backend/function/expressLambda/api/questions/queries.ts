@@ -25,16 +25,15 @@ export enum QuestionType {
 
 const listQuestions = async () => {
   const query = `SELECT * FROM question`
-  const response = await sqlQuery(query)
 
-  return {
+  return await sqlQuery({
     message: '🚀 ~ > All questions',
-    data: response,
-  }
+    query,
+  })
 }
 
 const getQuestion = async (id: string) => {
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       value: {
@@ -45,7 +44,12 @@ const getQuestion = async (id: string) => {
   ]
 
   const query = `SELECT * FROM question WHERE id = :id`
-  const response = await sqlQuery(query, params)
+
+  const response = await sqlQuery({
+    message: `🚀 ~ > Question with id: ${id}`,
+    query,
+    parameters,
+  })
 
   return {
     message: `🚀 ~ > Question with id: ${id}`,
@@ -54,7 +58,7 @@ const getQuestion = async (id: string) => {
 }
 
 const getQuestionsInCategory = async (categoryId: string) => {
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'categoryId',
       value: {
@@ -65,12 +69,12 @@ const getQuestionsInCategory = async (categoryId: string) => {
   ]
 
   const query = `SELECT * FROM question WHERE categoryID = :categoryId`
-  const response = await sqlQuery(query, params)
 
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > All questions with categoryId: ${categoryId}`,
-    data: response,
-  }
+    query,
+    parameters,
+  })
 }
 
 const createQuestion = async ({
@@ -87,7 +91,7 @@ const createQuestion = async ({
 }: CreateQuestionProps) => {
   const id = uuidv4()
 
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       value: {
@@ -131,12 +135,11 @@ const createQuestion = async ({
     VALUES(:id, :categoryId, :formDefinitionId, :index, :organizationId, :scaleStart, :scaleMiddle, :scaleEnd, :text, :topic, '${questionType}')
     RETURNING *`
 
-  const response = await sqlQuery(query, params)
-
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > Question with id: ${id} was successfully created`,
-    data: response,
-  }
+    query,
+    parameters,
+  })
 }
 
 const updateQuestion = async (
@@ -154,7 +157,7 @@ const updateQuestion = async (
     type,
   }: CreateQuestionProps
 ) => {
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       value: {
@@ -201,16 +204,15 @@ const updateQuestion = async (
     WHERE id=:id
     RETURNING *`
 
-  const response = await sqlQuery(query, params)
-
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > Question with id: ${id} was updated`,
-    data: response,
-  }
+    query,
+    parameters,
+  })
 }
 
 const deleteQuestion = async (id: string) => {
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       value: { stringValue: id },
@@ -219,12 +221,12 @@ const deleteQuestion = async (id: string) => {
   ]
 
   const query = `DELETE FROM "question" WHERE id=:id RETURNING *`
-  const response = await sqlQuery(query, params)
 
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > Question with id: ${id} was successfully deleted`,
-    data: response,
-  }
+    query,
+    parameters,
+  })
 }
 
 export default {
