@@ -55,17 +55,18 @@ export const apiPOST = async <T>(
   }
 }
 
-// TODO: Denne får en CORS-feil
+// ? Det irriterer meg at denne må ha body-params for å fungere, men det er nå sånn så lenge API.del ikke aksepterer queryStringParams
 export const apiDELETE = async <T>(
   path: string,
-  params: { queryStringParameters: QSParameters }
+  params: { body: Body }
 ): Promise<ApiResponse<T>> => {
   try {
     const init = await createMyInit()
-    return await API.del(API_NAME, `/api${path}`, {
+    const res = await API.del(API_NAME, `/api${path}`, {
       ...init,
       ...params,
     })
+    return res
   } catch (error) {
     console.error('error', error)
     throw error

@@ -30,7 +30,7 @@ export const updateGroupLeader = async (
   })
 
 export const deleteGroup = async (groupId: string) =>
-  apiDELETE<Group>('/groups', { queryStringParameters: { groupId } })
+  apiDELETE<Group>('/groups', { body: { groupId } })
 
 export const deleteUserFromGroup = async (userId: string) =>
-  apiDELETE<User>('/groups/user', { queryStringParameters: { userId } })
+  apiDELETE<User>('/groups/user', { body: { userId } })

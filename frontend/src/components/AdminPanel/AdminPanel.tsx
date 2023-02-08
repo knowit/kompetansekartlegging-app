@@ -1,27 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
-import EditGroupLeaders from './EditGroupLeaders'
-import EditAdmins from './EditAdmins'
-import EditGroups from './EditGroups'
-import EditCatalogsRouter from './EditCatalogsRouter'
+import { deleteCategory } from '../../api/categories'
 import style from './AdminPanel.module.css'
-import { Auth } from 'aws-amplify'
-import { apiDELETE, apiGET, apiPATCH, apiPOST } from '../../api/client'
-import {
-  createCategory,
-  deleteCategory,
-  getAllCategories,
-  getCategoryById,
-} from '../../api/categories'
-import {
-  getAllGroups,
-  getAllUsersInGroup,
-  createGroup,
-  addUserToGroup,
-  updateGroupLeader,
-  deleteGroup,
-  deleteUserFromGroup,
-} from '../../api/groups'
+import EditAdmins from './EditAdmins'
+import EditCatalogsRouter from './EditCatalogsRouter'
+import EditGroupLeaders from './EditGroupLeaders'
+import EditGroups from './EditGroups'
 
 type AdminPanelProps = {
   activeSubmenuItem: string
@@ -55,20 +39,17 @@ const activeSubmenuItemToSubmenuCategory = (
   }
 }
 
-const CAT_ID = 'd43e5e40-1fdb-4a73-bb24-8ec12e1c5aed'
 const AdminPanel = ({ activeSubmenuItem }: AdminPanelProps) => {
   const category = activeSubmenuItemToSubmenuCategory(activeSubmenuItem)
 
   useEffect(() => {
     const fetchApi = async () => {
       // const res = await getCategoryById('af3764b5-5d9f-448c-beb1-7e8c7d8e80e5')
-      // const res = await deleteCategory('af3764b5-5d9f-448c-beb1-7e8c7d8e80e5')
       // const res = await apiDELETE('/categories/:categoryId', {
       //   queryStringParameters: {
       //     categoryId: CAT_ID,
       //   },
       // })
-
       //const res = await getAllCategories()
       // const res = await getAllUsersInGroup(
       //   'f861818a-8019-4207-b8c9-026404d988e5'
@@ -87,8 +68,6 @@ const AdminPanel = ({ activeSubmenuItem }: AdminPanelProps) => {
       // )
       // const res = await deleteGroup('7dac7072-2452-46bb-9913-d8df4140399b')
       // const res = await deleteUserFromGroup('testing123')
-
-      console.log(res)
     }
 
     fetchApi()

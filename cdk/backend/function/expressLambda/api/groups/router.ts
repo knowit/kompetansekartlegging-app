@@ -66,11 +66,11 @@ interface DelReqParams {
 }
 
 // Delete user from group (essentially deletes user)
-router.delete<unknown, unknown, unknown, DelReqParams>(
+router.delete<unknown, unknown, DelReqParams>(
   '/user',
   async (req, res, next) => {
     try {
-      const { id } = req.query
+      const { id } = req.body
       const deleteResponse = await Group.deleteUser(id)
 
       res.status(200).json(deleteResponse)
@@ -108,11 +108,11 @@ interface DelGroupReqParams {
   groupId: string
 }
 // Delete a group
-router.delete<unknown, unknown, unknown, DelGroupReqParams>(
+router.delete<unknown, unknown, DelGroupReqParams>(
   '',
   async (req, res, next) => {
     try {
-      const { groupId } = req.query
+      const { groupId } = req.body
       const deleteResponse = await Group.deleteGroup(groupId)
 
       res.status(200).json(deleteResponse)

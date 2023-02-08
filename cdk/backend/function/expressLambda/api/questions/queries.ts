@@ -223,6 +223,7 @@ const deleteQuestion = async (id: string) => {
 
   return {
     message: `🚀 ~ > Question with id: ${id} was successfully deleted`,
+    data: response,
   }
 }
 

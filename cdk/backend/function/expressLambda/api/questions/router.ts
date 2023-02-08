@@ -21,25 +21,30 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.get<ReqParams>('/:id', async (req, res, next) => {
-  try {
-    const { id } = req.params
-    const getQuestionResponse = await Question.getQuestion(id)
-    res.status(200).json(getQuestionResponse)
-  } catch (err) {
-    console.error(err)
-    next(err)
+router.get<unknown, unknown, unknown, ReqParams>(
+  '/:id',
+  async (req, res, next) => {
+    try {
+      const { id } = req.query
+      console.log('Get question with id ', id)
+      const getQuestionResponse = await Question.getQuestion(id)
+      res.status(200).json(getQuestionResponse)
+    } catch (err) {
+      console.error(err)
+      next(err)
+    }
   }
-})
+)
 
-router.get<CategoryReqParams>(
+router.get<unknown, unknown, unknown, CategoryReqParams>(
   '/:categoryId/questions',
   async (req, res, next) => {
     try {
-      const { categoryId } = req.params
+      const { categoryId } = req.query
       console.log(categoryId)
-      const listQuestionsInCategoryResponse =
-        await Question.getQuestionsInCategory(categoryId)
+      const listQuestionsInCategoryResponse = await Question.getQuestionsInCategory(
+        categoryId
+      )
       res.status(200).json(listQuestionsInCategoryResponse)
     } catch (err) {
       console.error(err)
@@ -76,9 +81,9 @@ router.patch<ReqParams, unknown, CreateQuestionProps>(
   }
 )
 
-router.delete<ReqParams>('/:id', async (req, res, next) => {
+router.delete<unknown, unknown, ReqParams>('/', async (req, res, next) => {
   try {
-    const { id } = req.params
+    const { id } = req.body
     const deleteQuestionResponse = await Question.deleteQuestion(id)
     res.status(200).json(deleteQuestionResponse)
   } catch (err) {

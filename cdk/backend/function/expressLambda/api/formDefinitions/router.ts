@@ -39,10 +39,10 @@ interface DelReqParams {
 }
 
 // Delete
-router.delete<DelReqParams>('/:id', async (req, res, next) => {
+router.delete<unknown, unknown, DelReqParams>('/', async (req, res, next) => {
   try {
     const deleteResponse = await FormDefinition.deleteFormDefinition({
-      ...req.params,
+      ...req.body,
     })
 
     res.status(200).json(deleteResponse)
