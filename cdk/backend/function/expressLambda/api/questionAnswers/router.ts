@@ -1,11 +1,12 @@
 import express from 'express'
-import QuestionAnswer, { CreateQuestionAnswerProp } from './queries'
+import QuestionAnswer from './queries'
+import {
+  DeleteQuestionAnswerInput,
+  GetQuestionAnswerInput,
+  QuestionAnswerInput,
+} from './types'
 
 const router = express.Router()
-
-interface ReqParams {
-  questionAnswerId: string
-}
 
 // List all questionAnswers
 router.get('/', async (req, res, next) => {
@@ -19,13 +20,12 @@ router.get('/', async (req, res, next) => {
 })
 
 // Get questionAnswer from id
-router.get<unknown, unknown, unknown, ReqParams>(
-  '/:questionAnswerId',
+router.get<unknown, unknown, unknown, GetQuestionAnswerInput>(
+  '/:id',
   async (req, res, next) => {
     try {
-      const { questionAnswerId } = req.query
       const getQuestionAnswerResponse = await QuestionAnswer.getQuestionAnswer(
-        questionAnswerId
+        req.query
       )
 
       res.status(200).json(getQuestionAnswerResponse)
@@ -37,7 +37,7 @@ router.get<unknown, unknown, unknown, ReqParams>(
 )
 
 // Create questionAnswer
-router.post<unknown, unknown, CreateQuestionAnswerProp>(
+router.post<unknown, unknown, QuestionAnswerInput>(
   '/',
   async (req, res, next) => {
     try {
@@ -53,13 +53,12 @@ router.post<unknown, unknown, CreateQuestionAnswerProp>(
 )
 
 // Update questionAnswer with given id
-router.patch<ReqParams, unknown, CreateQuestionAnswerProp>(
-  '/:questionAnswerId',
+router.patch<unknown, unknown, QuestionAnswerInput, GetQuestionAnswerInput>(
+  '/:id',
   async (req, res, next) => {
     try {
-      const { questionAnswerId } = req.params
       const updateQuestionAnswerResponse = await QuestionAnswer.updateQuestionAnswer(
-        questionAnswerId,
+        req.query,
         req.body
       )
       res.status(200).json(updateQuestionAnswerResponse)
@@ -71,18 +70,20 @@ router.patch<ReqParams, unknown, CreateQuestionAnswerProp>(
 )
 
 // Delete questionAnswer with given id
-router.delete<unknown, unknown, ReqParams>('/', async (req, res, next) => {
-  try {
-    const { questionAnswerId } = req.body
-    const deleteQuestionAnswerResponse = await QuestionAnswer.deleteQuestionAnswer(
-      questionAnswerId
-    )
-    res.status(200).json(deleteQuestionAnswerResponse)
-  } catch (err) {
-    console.error(err)
-    next(err)
+router.delete<unknown, unknown, DeleteQuestionAnswerInput>(
+  '/',
+  async (req, res, next) => {
+    try {
+      const deleteQuestionAnswerResponse = await QuestionAnswer.deleteQuestionAnswer(
+        req.body
+      )
+      res.status(200).json(deleteQuestionAnswerResponse)
+    } catch (err) {
+      console.error(err)
+      next(err)
+    }
   }
-})
+)
 
 interface Response {
   message: string
@@ -90,7 +91,7 @@ interface Response {
 }
 
 // Batch create questionAnswers
-router.post<unknown, unknown, CreateQuestionAnswerProp[]>(
+router.post<unknown, unknown, QuestionAnswerInput[]>(
   '/batch',
   async (req, res, next) => {
     try {
