@@ -23,6 +23,7 @@ import {
   updateFormDefinitionCreatedAt,
   deleteFormDefinition,
   createFormDefinition,
+  copyFormDefinition,
 } from '../catalogApi'
 import Button from '../../mui/Button'
 import Table from '../../mui/Table'
@@ -30,8 +31,10 @@ import TableRow from '../../mui/TableRow'
 import ActivateCatalogDialog from './ActivateCatalogDialog'
 import DeleteCatalogDialog from './DeleteCatalogDialog'
 import AddCatalogDialog from './AddCatalogDialog'
+import CopyCatalog from "./CopyCatalogDialog"
+import CopyCatalogDialog from "./CopyCatalogDialog"
 
-const Catalog = ({ catalog, deleteCatalog, active, activateCatalog }: any) => {
+const Catalog = ({ catalog, deleteCatalog, active, activateCatalog, copyCatalog }: any) => {
   const name = catalog.label || 'Ikke satt'
 
   return (
@@ -61,6 +64,14 @@ const Catalog = ({ catalog, deleteCatalog, active, activateCatalog }: any) => {
           </Link>
         </TableCell>
         <TableCell align="right">
+        <Button
+                endIcon={<AddIcon />}
+                onClick={() => copyCatalog(catalog)}
+            >
+                Kopier katalog
+            </Button>
+        </TableCell>
+        <TableCell align="right">
           <Button
             endIcon={<DeleteIcon />}
             onClick={() => deleteCatalog(catalog)}
@@ -73,7 +84,7 @@ const Catalog = ({ catalog, deleteCatalog, active, activateCatalog }: any) => {
   )
 }
 
-const CatalogTable = ({ catalogs, deleteCatalog, activateCatalog }: any) => {
+const CatalogTable = ({ catalogs, deleteCatalog, activateCatalog, copyCatalog }: any) => {
   return (
     <TableContainer className={commonStyles.tableContainer}>
       <Table stickyHeader>
@@ -93,6 +104,7 @@ const CatalogTable = ({ catalogs, deleteCatalog, activateCatalog }: any) => {
               catalog={c}
               deleteCatalog={deleteCatalog}
               activateCatalog={activateCatalog}
+              copyCatalog={copyCatalog}
               active={ind === 0}
             />
           ))}
@@ -142,6 +154,19 @@ const Root = () => {
     refresh()
   }
 
+  const [showCopyCatalogDialog, setShowCopyCatalogDialog] =
+    useState<boolean>(false)
+  const [catalogToCopy, setCatalogToCopy] = useState<any>()
+  const copyCatalog = (catalog: any) => {
+    setShowCopyCatalogDialog(true)
+    setCatalogToCopy(catalog)
+    }
+  const copyCatalogConfirm = async (newCatalogName: string) => {
+    await copyFormDefinition(catalogToCopy.id, newCatalogName)
+    setShowCopyCatalogDialog(false)
+    refresh()
+  }
+
   const [showAddCatalogDialog, setShowAddCatalogDialog] =
     useState<boolean>(false)
   const addCatalogConfirm = async (name: string) => {
@@ -169,6 +194,7 @@ const Root = () => {
             catalogs={catalogs}
             deleteCatalog={deleteCatalog}
             activateCatalog={activateCatalog}
+            copyCatalog={copyCatalog}
           />
           <Button
             variant="contained"
@@ -200,6 +226,14 @@ const Root = () => {
         onExited={() => setCatalogToDelete(null)}
         onConfirm={deleteCatalogConfirm}
       />
+      {showCopyCatalogDialog && (
+        <CopyCatalogDialog
+          open={showCopyCatalogDialog}
+          onCancel={() => setShowCopyCatalogDialog(false)}
+          onExited={() => setCatalogToCopy(null)}
+          onConfirm={copyCatalogConfirm}
+        />
+      )}
     </Container>
   )
 }
