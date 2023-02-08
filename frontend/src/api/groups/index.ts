@@ -1,36 +1,46 @@
+import { Group, User } from '../../API'
 import { apiGET, apiPOST, apiPATCH, apiDELETE } from '../client'
-import { Group, GroupList, User, UserList } from './types'
+import {
+  AddUserInput,
+  DeleteGroupInput,
+  DeleteUserInput,
+  GetGroupInput,
+  GetUsersInput,
+  GroupInput,
+  UpdateGroupLeaderInput,
+} from './types'
 
-export const getAllGroups = async () => apiGET<GroupList>('/groups')
+export const getAllGroups = async () => apiGET<Group[]>('/groups')
 
-export const getAllUsersInGroup = async (groupId: string) =>
-  apiGET<UserList>('/groups/users', { queryStringParameters: { groupId } })
+export const getAllUsersInGroup = async ({ groupid }: GetUsersInput) =>
+  apiGET<User[]>('/groups/users', { queryStringParameters: { groupid } })
 
-type CreateGroupInput = Omit<Group, 'id'>
-export const createGroup = async (groupInfo: CreateGroupInput) =>
-  apiPOST<Group>('/groups', { body: groupInfo })
-
-type AddUserToGroupInput = Omit<User, 'groupid'>
 export const addUserToGroup = async (
-  groupId: string,
-  userInfo: AddUserToGroupInput
+  { id: groupid }: GetGroupInput,
+  { id, organizationid }: AddUserInput
 ) =>
-  apiPOST<User>('/groups/user', {
-    queryStringParameters: { groupId },
-    body: userInfo,
+  apiPOST<User>('/groups/:id/user', {
+    queryStringParameters: { id: groupid },
+    body: { id, organizationid },
   })
 
+export const deleteUserFromGroup = async ({ id }: DeleteUserInput) =>
+  apiDELETE<User>('/groups/user', { body: { id } })
+
+export const createGroup = async ({
+  organizationid,
+  groupleaderusername,
+}: GroupInput) =>
+  apiPOST<Group>('/groups', { body: { organizationid, groupleaderusername } })
+
 export const updateGroupLeader = async (
-  groupId: string,
-  groupleaderusername: string
+  { id }: GetGroupInput,
+  { groupleaderusername }: UpdateGroupLeaderInput
 ) =>
   apiPATCH<Group>('/groups', {
-    queryStringParameters: { groupId },
+    queryStringParameters: { id },
     body: { groupleaderusername },
   })
 
-export const deleteGroup = async (groupId: string) =>
-  apiDELETE<Group>('/groups', { body: { groupId } })
-
-export const deleteUserFromGroup = async (userId: string) =>
-  apiDELETE<User>('/groups/user', { body: { userId } })
+export const deleteGroup = async ({ id }: DeleteGroupInput) =>
+  apiDELETE<Group>('/groups', { body: { id } })

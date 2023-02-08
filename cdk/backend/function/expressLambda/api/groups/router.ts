@@ -72,7 +72,7 @@ router.delete<unknown, unknown, DeleteUserInput>(
 )
 
 // Create a group
-router.post<unknown, unknown, GroupInput>('', async (req, res, next) => {
+router.post<unknown, unknown, GroupInput>('/', async (req, res, next) => {
   try {
     const addGroupResponse = await Group.createGroup(req.body)
 
