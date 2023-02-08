@@ -24,6 +24,9 @@ import {
     selectGroupLeaderCognitoGroupName,
     selectUserState,
 } from "../../redux/User";
+import { listAllFormDefinitionsForLoggedInUser } from "../AdminPanel/catalogApi";
+import { compareByCreatedAt } from "../AdminPanel/helpers";
+import { getLatestUserFormUpdatedAtForUser } from "../../helperFunctions";
 
 const GroupLeaderPanel = ({
     members,
@@ -32,6 +35,15 @@ const GroupLeaderPanel = ({
     setActiveSubmenuItem,
 }: any) => {
     const userState = useSelector(selectUserState);
+
+    const {
+        result: formDefinitions,
+        error: formDefinitionsError,
+        loading: formDefinitionsLoading,
+    } = useApiGet({
+        getFn: listAllFormDefinitionsForLoggedInUser,
+        cmpFn: compareByCreatedAt,
+    });
 
     const {
         result: groups,
@@ -109,18 +121,38 @@ const GroupLeaderPanel = ({
         groupsLoading ||
         usersLoading ||
         allAvailableUsersLoading ||
-        groupLeadersLoading;
+        groupLeadersLoading ||
+        formDefinitionsLoading;
     const isError =
         groupsError ||
         usersError ||
         allAvailableUsersError ||
-        groupLeadersError;
+        groupLeadersError ||
+        formDefinitionsError;
 
     const [allAvailableUsersAnnotated, setAllAvailableUsersAnnotated] =
         useState<any[]>([]);
 
+    const addLastAnsweredAt = async (users: any[]) => {
+        if (users.length > 0) {
+            const activeFormDefId = formDefinitions[0].id;
+
+            const usersAnnotated = await Promise.all(users.map(async (u: any) => {
+                const user = users.find((us: any) => us.Username === u.Username);
+                if (user) {
+                    const lastAnsweredAt = await getLatestUserFormUpdatedAtForUser(user.Username, activeFormDefId);
+                    return { ...user, lastAnsweredAt: lastAnsweredAt };
+                } else {
+                    return u;
+                }
+            }));
+
+            setAllAvailableUsersAnnotated(usersAnnotated);
+        }
+    };
+
     useEffect(() => {
-        if (allAvailableUsers && groupLeaders && groups && users) {
+        if (allAvailableUsers && groupLeaders && groups && users && formDefinitions) {
             const annotated = allAvailableUsers.map((u: any) => {
                 const user = users.find((us: any) => us.id === u.Username);
                 if (user) {
@@ -135,9 +167,9 @@ const GroupLeaderPanel = ({
                     return u;
                 }
             });
-            setAllAvailableUsersAnnotated(annotated);
+            addLastAnsweredAt(annotated);
         }
-    }, [allAvailableUsers, groupLeaders, groups, users]);
+    }, [allAvailableUsers, groupLeaders, groups, users, formDefinitions]);
 
     useEffect(() => {
         if (allAvailableUsersAnnotated) {

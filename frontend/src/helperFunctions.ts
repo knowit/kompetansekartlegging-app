@@ -185,7 +185,7 @@ new Promise<Maybe<UserForm>>(async (resolve, reject) => {
         });
         const sorted = res.data?.listUserForms?.items?.sort(sortUserFormsByDateAscending);
 
-        sorted ? resolve(sorted[sorted.length - 1]) : resolve(null);
+        sorted ? resolve(sorted[sorted.length - 1]?.updatedAt) : resolve(null);
     } catch (e) {
         console.log(e);
         reject("error fetching latest user form");
