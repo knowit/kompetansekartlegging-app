@@ -6,7 +6,7 @@ const API_NAME = 'ExpressLambda'
 
 interface ApiResponse<T> {
   message: string
-  data: T
+  data: T | null
 }
 
 async function createMyInit() {
