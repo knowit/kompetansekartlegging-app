@@ -171,26 +171,26 @@ export const getOrganizationNameByID = (organizationID: string) =>
     });
 
 export const getLatestUserFormUpdatedAtForUser = (userId: string, formDefId: string) =>
-new Promise<Maybe<UserForm>>(async (resolve, reject) => {
-    try {
-        const res = await callGraphQL<Query>(customQueries.listUserFormsUpdatedAt, {
-            filter: {
-                formDefinitionID: {
-                    eq: formDefId
-                },
-                owner: {
-                    eq: userId
+    new Promise<Maybe<UserForm>>(async (resolve, reject) => {
+        try {
+            const res = await callGraphQL<Query>(customQueries.listUserFormsUpdatedAt, {
+                filter: {
+                    formDefinitionID: {
+                        eq: formDefId
+                    },
+                    owner: {
+                        eq: userId
+                    }
                 }
-            }
-        });
-        const sorted = res.data?.listUserForms?.items?.sort(sortUserFormsByDateAscending);
+            });
+            const sorted = res.data?.listUserForms?.items?.sort(sortUserFormsByDateAscending);
 
-        sorted ? resolve(sorted[sorted.length - 1]?.updatedAt) : resolve(null);
-    } catch (e) {
-        console.log(e);
-        reject("error fetching latest user form");
-    }
-});
+            sorted ? resolve(sorted[sorted.length - 1]?.updatedAt) : resolve(null);
+        } catch (e) {
+            console.log(e);
+            reject("error fetching updatedAt from latest UserForm");
+        }
+    });
 
 const sortUserFormsByDateAscending = (a: Maybe<UserForm>, b: Maybe<UserForm>) => {
     const dateA = new Date(a?.updatedAt);
