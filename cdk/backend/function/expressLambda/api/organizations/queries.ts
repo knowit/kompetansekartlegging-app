@@ -4,11 +4,12 @@ import { sqlQuery } from '../../app'
 import { createTimestampNow } from '../utils'
 
 const listOrganizations = async () => {
-  const SELECT_QUERY =
-    'SELECT id, orgname, identifierAttribute FROM organization'
-  const records = await sqlQuery(SELECT_QUERY)
+  const query = 'SELECT id, orgname, identifierAttribute FROM organization'
 
-  return { message: '🚀 ~ > All organizations.', data: records }
+  return await sqlQuery({
+    message: '🚀 ~ > All organizations.',
+    query,
+  })
 }
 
 const addOrganization = async (
@@ -16,7 +17,7 @@ const addOrganization = async (
   organizationName: string,
   identifierAttribute: string
 ) => {
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'organizationid',
       value: {
@@ -44,19 +45,19 @@ const addOrganization = async (
     },
   ]
 
-  const INSERT_QUERY = `INSERT INTO organization (id, createdat, orgname, identifierattribute) 
+  const query = `INSERT INTO organization (id, createdat, orgname, identifierattribute) 
   VALUES (:organizationid, to_timestamp(:createdat, 'YYYY-MM-DD HH24:MI:SS'), :organizationname, :identifierattribute)
   RETURNING *`
-  const records = await sqlQuery(INSERT_QUERY, params)
 
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > Organization '${organizationName}' with the id '${organizationId}' inserted.`,
-    data: records,
-  }
+    query,
+    parameters,
+  })
 }
 
 const removeOrganization = async (organizationID: string) => {
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       value: {
@@ -65,14 +66,13 @@ const removeOrganization = async (organizationID: string) => {
     },
   ]
 
-  const DELETE_QUERY = 'DELETE FROM organization WHERE id=:id RETURNING *;'
+  const query = 'DELETE FROM organization WHERE id=:id RETURNING *;'
 
-  const records = await sqlQuery(DELETE_QUERY, params)
-
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > Organization '${organizationID}' is now deleted.`,
-    data: records,
-  }
+    query,
+    parameters,
+  })
 }
 
 export default {
