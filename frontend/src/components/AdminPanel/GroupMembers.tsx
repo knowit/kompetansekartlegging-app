@@ -16,7 +16,7 @@ import TableRow from "../mui/TableRow";
 const User = ({ user, deleteMember, viewMember }: any) => {
     const name = getAttribute(user, "name");
     const email = getAttribute(user, "email");
-    const formLastAnsweredAt = user.lastAnsweredAt == null ? "" : new Date(user.lastAnsweredAt).toLocaleDateString("nb-NO");
+    const formLastAnsweredAt = user.lastAnsweredAt == null ? "Ikke besvart" : new Date(user.lastAnsweredAt).toLocaleDateString("nb-NO");
     const picture = getAttribute(user, "picture");
     const onClick = () => {
         if (viewMember) viewMember(user.Username);
