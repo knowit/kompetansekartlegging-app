@@ -5,7 +5,6 @@ import uuid
 import boto3
 import argparse
 
-s3_client = boto3.client('s3')
 dynamodb_resource = boto3.client('dynamodb')
 lambda_client = boto3.client('lambda')
 
