@@ -20,7 +20,7 @@ router.get<unknown, unknown, unknown, GetCategoryInput>(
   '/:id',
   async (req, res, next) => {
     try {
-      const getCategoryResponse = await Category.getCategory({ ...req.query })
+      const getCategoryResponse = await Category.getCategory(req.query)
 
       res.status(200).json(getCategoryResponse)
     } catch (err) {
@@ -48,9 +48,7 @@ router.patch<unknown, unknown, CategoryInput, GetCategoryInput>(
   async (req, res, next) => {
     const { id } = req.query
     try {
-      const updateCategoryResponse = await Category.updateCategory(id, {
-        ...req.body,
-      })
+      const updateCategoryResponse = await Category.updateCategory(id, req.body)
 
       res.status(200).json(updateCategoryResponse)
     } catch (err) {
@@ -65,9 +63,7 @@ router.delete<unknown, unknown, DeleteCategoryInput>(
   '/',
   async (req, res, next) => {
     try {
-      const deleteCategoryResponse = await Category.deleteCategory({
-        ...req.body,
-      })
+      const deleteCategoryResponse = await Category.deleteCategory(req.body)
 
       res.status(200).json(deleteCategoryResponse)
     } catch (err) {

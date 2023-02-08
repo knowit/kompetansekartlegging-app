@@ -1,12 +1,13 @@
-import {
-  SqlParameter,
-  TypeHint,
-  UpdateResultFilterSensitiveLog,
-} from '@aws-sdk/client-rds-data'
+import { SqlParameter } from '@aws-sdk/client-rds-data'
 import { v4 as uuidv4 } from 'uuid'
 import { sqlQuery } from '../../app'
 import { createTimestampNow } from '../utils'
 import { formDefinitionColumns, kindToParam } from './helpers'
+import {
+  DeleteFormDefinitionInput,
+  FormDefinitionInput,
+  UpdateFormDefinitionInput,
+} from './types'
 
 const listFormDefinitions = async () => {
   const query = `SELECT * FROM formDefinition`
@@ -17,15 +18,10 @@ const listFormDefinitions = async () => {
   })
 }
 
-interface CreateFormDefinitionInput {
-  name: string
-  organizationID: string
-}
-
 const createFormDefinition = async ({
-  name,
-  organizationID,
-}: CreateFormDefinitionInput) => {
+  label,
+  organizationid,
+}: FormDefinitionInput) => {
   const parameters: SqlParameter[] = [
     {
       name: 'id',
@@ -33,31 +29,27 @@ const createFormDefinition = async ({
     },
     {
       name: 'label',
-      ...kindToParam(name, 'string'),
+      ...kindToParam(label, 'string'),
     },
     {
-      name: 'organizationID',
-      ...kindToParam(organizationID, 'string'),
+      name: 'organizationid',
+      ...kindToParam(organizationid, 'string'),
     },
     {
-      name: 'createdAt',
+      name: 'createdat',
       ...kindToParam(createTimestampNow(), 'timestamp'),
     },
   ]
 
-  const query = `INSERT INTO formDefinition (id, label, createdAt, organizationID) 
-        VALUES (:id, :label, :createdAt, :organizationID) 
+  const query = `INSERT INTO formDefinition (id, label, createdat, organizationid) 
+        VALUES (:id, :label, :createdat, :organizationid) 
         RETURNING *`
 
   return await sqlQuery({
-    message: `🚀 ~ > Form Definition '${name}' created.`,
+    message: `🚀 ~ > Form Definition '${label}' created.`,
     query,
     parameters,
   })
-}
-
-interface DeleteFormDefinitionInput {
-  id: string
 }
 
 const deleteFormDefinition = async ({ id }: DeleteFormDefinitionInput) => {
@@ -76,19 +68,12 @@ const deleteFormDefinition = async ({ id }: DeleteFormDefinitionInput) => {
   })
 }
 
-interface UpdateFormDefinitionInput {
-  label?: string
-  organizationId?: string
-  createdAt?: string
-  updatedAt?: string
-}
-
 const updateFormDefinition = async (
   id: string,
   values: UpdateFormDefinitionInput
 ) => {
-  if (!values.updatedAt) {
-    values.updatedAt = createTimestampNow()
+  if (!values.updatedat) {
+    values.updatedat = createTimestampNow()
   }
 
   // Generate the column string based on provided values
