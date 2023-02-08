@@ -4,13 +4,12 @@ import { sqlQuery } from '../../app'
 
 const listGroups = async () => {
   const query = 'SELECT * FROM "group"'
-  const records = await sqlQuery(query)
 
-  return { message: '🚀 ~ > All groups.', data: records }
+  return await sqlQuery({ message: '🚀 ~ > All groups.', query })
 }
 
 const listUsersInGroup = async (groupId: string) => {
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'groupId',
       value: {
@@ -21,16 +20,16 @@ const listUsersInGroup = async (groupId: string) => {
   ]
 
   const query = 'SELECT id, groupid FROM "user" WHERE groupid = :groupId'
-  const records = await sqlQuery(query, params)
 
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > All users in group with id '${groupId}'.`,
-    data: records,
-  }
+    query,
+    parameters,
+  })
 }
 
 const upsert = async (id: string, groupId: string, orgid: string) => {
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       value: {
@@ -52,22 +51,22 @@ const upsert = async (id: string, groupId: string, orgid: string) => {
     },
   ]
 
-  const UPSERT_QUERY = `INSERT INTO "user" (id, groupID, organizationID) 
+  const query = `INSERT INTO "user" (id, groupID, organizationID) 
         VALUES (:id, :groupId, :organizationId) 
         ON CONFLICT (id) 
         DO UPDATE SET groupID = :groupId, organizationID = :organizationId 
         WHERE excluded.id=:id 
         RETURNING *`
-  const records = await sqlQuery(UPSERT_QUERY, params)
 
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > User with id '${id}' is now in group with id '${groupId}'.`,
-    data: records,
-  }
+    query,
+    parameters,
+  })
 }
 
 const deleteUser = async (id: string) => {
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       value: {
@@ -76,18 +75,18 @@ const deleteUser = async (id: string) => {
     },
   ]
   const query = 'DELETE FROM "user" WHERE id = :id RETURNING *'
-  const records = await sqlQuery(query, params)
 
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > User with id '${id}' deleted.`,
-    data: records,
-  }
+    query,
+    parameters,
+  })
 }
 
 const createGroup = async (groupLeaderUsername: string, orgId: string) => {
   const generatedGroupId = uuidv4()
 
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       value: {
@@ -112,16 +111,16 @@ const createGroup = async (groupLeaderUsername: string, orgId: string) => {
   const query = `INSERT INTO "group" (id, organizationID, groupLeaderUsername)
   VALUES (:id, :organizationId, :groupLeaderUsername)
   RETURNING *`
-  const records = await sqlQuery(query, params)
 
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > Created group with id '${generatedGroupId}' and group leader '${groupLeaderUsername}'.`,
-    data: records,
-  }
+    query,
+    parameters,
+  })
 }
 
 const deleteGroup = async (groupId: string) => {
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       value: {
@@ -131,19 +130,19 @@ const deleteGroup = async (groupId: string) => {
     },
   ]
   const query = 'DELETE FROM "group" WHERE id = :id RETURNING *'
-  const records = await sqlQuery(query, params)
 
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > Group with id '${groupId}' deleted.`,
-    data: records,
-  }
+    query,
+    parameters,
+  })
 }
 
 const updateGroupLeader = async (
   groupId: string,
   groupleaderusername: string
 ) => {
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       value: {
@@ -164,12 +163,11 @@ const updateGroupLeader = async (
   WHERE id = :id 
   RETURNING *`
 
-  const records = await sqlQuery(query, params)
-
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > '${groupleaderusername}' is now leader for group with id '${groupId}'.`,
-    data: records,
-  }
+    query,
+    parameters,
+  })
 }
 
 export default {
