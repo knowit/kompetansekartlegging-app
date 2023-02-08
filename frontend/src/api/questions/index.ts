@@ -29,6 +29,6 @@ export const updateQuestion = async (
   })
 
 export const deleteQuestion = async (questionId: string) =>
-  apiDELETE<QuestionList>('/questions/:organizationId', {
+  apiDELETE<QuestionList>('/questions/:questionId', {
     body: { questionId },
   })
