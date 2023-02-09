@@ -2,7 +2,7 @@ import { API, Auth, graphqlOperation } from "aws-amplify";
 import { GraphQLResult } from "@aws-amplify/api";
 import { UserFormList, UserFormWithAnswers } from "./types";
 import * as customQueries from "./graphql/custom-queries";
-import { Query } from './API';
+import { Query } from "./API";
 import { getOrganization } from "./graphql/queries";
 
 /*
@@ -73,7 +73,7 @@ const splitArray = <T>(array: T[]): T[][] => {
 */
 export const callBatchGraphQL = async <T>(
     query: any,
-    variables: { input: any[], organizationID: String },
+    variables: { input: any[]; organizationID: String },
     table: string
 ): Promise<GraphQLResult<T>[]> => {
     if (variables.input.length === 0) {
@@ -86,7 +86,10 @@ export const callBatchGraphQL = async <T>(
     for (const element of split) {
         returnValue.push(
             (await API.graphql(
-                graphqlOperation(query, { input: element, organizationID: variables.organizationID })
+                graphqlOperation(query, {
+                    input: element,
+                    organizationID: variables.organizationID,
+                })
             )) as GraphQLResult<T>
         );
     }
@@ -148,22 +151,21 @@ export const Millisecs = {
     THREEMONTHS: 7889400000,
 };
 
-export const getOrganizationNameByID = (organizationID : string) => new Promise<string>(async (resolve, reject) => {
-    try{
+export const getOrganizationNameByID = (organizationID: string) =>
+    new Promise<string>(async (resolve, reject) => {
+        try {
+            const res = await callGraphQL<Query>(getOrganization, {
+                id: organizationID,
+            });
 
-        const res = await callGraphQL<Query>(getOrganization, {
-            id: organizationID
-        });
+            const organizationName = res.data?.getOrganization?.orgname;
 
-        const organizationName = res.data?.getOrganization?.orgname;
-
-        if (typeof organizationName === 'string'){
-            resolve(organizationName);
-        }else{
-            reject('no org found');
+            if (typeof organizationName === "string") {
+                resolve(organizationName);
+            } else {
+                reject("no org found");
+            }
+        } catch (e) {
+            reject("no org found");
         }
-
-    } catch(e) {
-        reject('no org found');
-    }
-});
+    });

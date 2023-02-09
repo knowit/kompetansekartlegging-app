@@ -49,7 +49,9 @@ const useStyles = makeStyles(() =>
 const EditCategory = () => {
     const [user, setUser] = useState<any | null>(null);
 
-    if (!user) {Auth.currentAuthenticatedUser().then(setUser);}
+    if (!user) {
+        Auth.currentAuthenticatedUser().then(setUser);
+    }
 
     const classes = useStyles();
     const { id, formDefinitionID } = useParams<Record<string, string>>();
@@ -81,9 +83,8 @@ const EditCategory = () => {
         cmpFn: compareByIndex,
     });
 
-    const [showAddQuestionDialog, setShowAddQuestionDialog] = useState<boolean>(
-        false
-    );
+    const [showAddQuestionDialog, setShowAddQuestionDialog] =
+        useState<boolean>(false);
     const addQuestionConfirm = async (
         topic: string,
         description: string,
@@ -100,7 +101,7 @@ const EditCategory = () => {
             formDefinitionID,
             id,
             questionConfig,
-            (user) ? user.attributes[ORGANIZATION_ID_ATTRIBUTE] : ""
+            user ? user.attributes[ORGANIZATION_ID_ATTRIBUTE] : ""
         );
         setShowAddQuestionDialog(false);
         refreshQuestions();

@@ -102,8 +102,7 @@ const COMPETENCE: ScaleContainerObject[] = [
     {
         icon: Icon.K5,
         heading: "Superstjerne",
-        text:
-            "En etterspurt spesialist, som fungerer som nyskapende eller strategisk kraft på området",
+        text: "En etterspurt spesialist, som fungerer som nyskapende eller strategisk kraft på området",
     },
     {
         icon: Icon.K4,
@@ -113,21 +112,18 @@ const COMPETENCE: ScaleContainerObject[] = [
     {
         icon: Icon.K3,
         heading: "Profesjonelt nivå",
-        text:
-            "Har god kontroll og kan jobbe selvstendig med ikke-trivielle problemstillinger innenfor området",
+        text: "Har god kontroll og kan jobbe selvstendig med ikke-trivielle problemstillinger innenfor området",
     },
     {
         icon: Icon.K2,
         heading: "Potensielt brukbar kompetanse",
-        text:
-            "Kompetanse som enten ikke er testet i oppdrag eller der man inntil videre trenger støtte fra andre i teamet",
+        text: "Kompetanse som enten ikke er testet i oppdrag eller der man inntil videre trenger støtte fra andre i teamet",
     },
 
     {
         icon: Icon.K1,
         heading: "Noe innsikt",
-        text:
-            "Har noe innsikt i området, samt evne til å resonnere over eller løse oppgaver på et ikke-profesjonelt nivå innenfor området",
+        text: "Har noe innsikt i området, samt evne til å resonnere over eller løse oppgaver på et ikke-profesjonelt nivå innenfor området",
     },
     {
         icon: Icon.K0,

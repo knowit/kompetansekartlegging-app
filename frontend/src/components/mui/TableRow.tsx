@@ -1,6 +1,6 @@
 import { createStyles, withStyles, Theme } from "@material-ui/core/styles";
 import TableRow from "@material-ui/core/TableRow";
-import {KnowitColors} from "../../styles"
+import { KnowitColors } from "../../styles";
 
 const StyledTableRow = withStyles((theme: Theme) =>
     createStyles({
@@ -9,7 +9,7 @@ const StyledTableRow = withStyles((theme: Theme) =>
         },
         selected: {
             backgroundColor: `${KnowitColors.beige} !important`,
-        }
+        },
     })
 )(TableRow);
 

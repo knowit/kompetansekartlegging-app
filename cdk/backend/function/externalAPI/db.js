@@ -96,7 +96,7 @@ const getAnswersForUser = async (user, formDefinitionID, questionMap) => {
     let lastUserForm = getNewestItem(allUserForms.Items);
 
     const answers = await getAnswersForUserForm(lastUserForm.id);
-    const answersWithQuestions = answers.map((a) =>
+    const answersWithQuestions = answers.filter((answer) => questionMap[answer.questionID]).map((a) =>
         mapQuestionToAnswer(questionMap, a)
     );
 
@@ -214,7 +214,7 @@ const getAllUsers = async (organization_ID) => {
         const organizationAttribute = user['Attributes'].filter((attribute) => (
             attribute['Name'] === 'custom:OrganizationID'))[0]
 
-        return organizationAttribute['Value'] === organization_ID
+        return organizationAttribute && organizationAttribute['Value'] === organization_ID
     });
 
     filteredUsersWithoutOrganizationID = filteredUsers.map((user) => {

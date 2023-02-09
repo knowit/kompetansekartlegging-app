@@ -7,6 +7,7 @@ import {
     updateCategoryIndex,
     updateCategoryTextAndDescription,
     deleteCategory as deleteCategoryApi,
+    listQuestionsByCategoryID,
 } from "../catalogApi";
 import { Category } from "../../../API";
 import CategoryListItem from "./CategoryListItem";
@@ -21,12 +22,17 @@ const CategoryList = ({
     const history = useHistory();
     const [enableUpdates, setEnableUpdates] = useState<boolean>(true);
 
-    const [
-        showDeleteCategoryDialog,
-        setShowDeleteCategoryDialog,
-    ] = useState<boolean>(false);
+    const [showDeleteCategoryDialog, setShowDeleteCategoryDialog] =
+        useState<boolean>(false);
     const [categoryToDelete, setCategoryToDelete] = useState<any>();
-    const deleteCategory = (category: any) => {
+    const [categoryToDeleteContainsQuestions, setCategoryToDeleteContainsQuestions] = useState<boolean>();
+
+    const deleteCategory = async (category: any) => {
+        const categoryContainsQuestions = await listQuestionsByCategoryID(category.id)
+        .then((response: any) => {
+            return response.result.length > 0
+        })
+        setCategoryToDeleteContainsQuestions(categoryContainsQuestions);
         setShowDeleteCategoryDialog(true);
         setCategoryToDelete(category);
     };
@@ -93,6 +99,7 @@ const CategoryList = ({
                     onExited={() => setCategoryToDelete(null)}
                     onConfirm={deleteCategoryConfirm}
                     category={categoryToDelete}
+                    categoryContainsQuestions={categoryToDeleteContainsQuestions}
                 />
             )}
         </>

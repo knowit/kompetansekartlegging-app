@@ -26,8 +26,6 @@ export class KompetanseFrontendStack extends Stack {
       priceClass: cloudfront.PriceClass.PRICE_CLASS_100 // Europe and NA only
     });
 
-    // distribution.addBehavior("", s3Origin, {viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS});
-
     new s3deploy.BucketDeployment(this, 'KompetansekartleggingFrontendBucketDeploy', {
       sources: [s3deploy.Source.asset('../frontend/build')],
       destinationBucket: websiteBucket,

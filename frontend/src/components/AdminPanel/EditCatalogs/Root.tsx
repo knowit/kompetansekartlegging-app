@@ -103,15 +103,18 @@ const CatalogTable = ({ catalogs, deleteCatalog, activateCatalog }: any) => {
 };
 
 const Root = () => {
-    const { result: catalogs, error, loading, refresh } = useApiGet({
+    const {
+        result: catalogs,
+        error,
+        loading,
+        refresh,
+    } = useApiGet({
         getFn: listAllFormDefinitionsForLoggedInUser,
         cmpFn: compareByCreatedAt,
     });
 
-    const [
-        showDeleteCatalogDialog,
-        setShowDeleteCatalogDialog,
-    ] = useState<boolean>(false);
+    const [showDeleteCatalogDialog, setShowDeleteCatalogDialog] =
+        useState<boolean>(false);
     const [catalogToDelete, setCatalogToDelete] = useState<any>();
     const deleteCatalog = (catalog: any) => {
         setShowDeleteCatalogDialog(true);
@@ -123,10 +126,8 @@ const Root = () => {
         refresh();
     };
 
-    const [
-        showActivateCatalogDialog,
-        setShowActivateCatalogDialog,
-    ] = useState<boolean>(false);
+    const [showActivateCatalogDialog, setShowActivateCatalogDialog] =
+        useState<boolean>(false);
     const [catalogToActivate, setCatalogToActivate] = useState<any>();
     const activateCatalog = (catalog: any) => {
         setShowActivateCatalogDialog(true);
@@ -141,9 +142,8 @@ const Root = () => {
         refresh();
     };
 
-    const [showAddCatalogDialog, setShowAddCatalogDialog] = useState<boolean>(
-        false
-    );
+    const [showAddCatalogDialog, setShowAddCatalogDialog] =
+        useState<boolean>(false);
     const addCatalogConfirm = async (name: string) => {
         await createFormDefinition(name);
         setShowAddCatalogDialog(false);

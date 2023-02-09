@@ -252,10 +252,7 @@ const CustomLabelSlider = ({
     question,
     isMobile,
 }: any) => {
-    const labels = [
-        question.scaleStart,
-        question.scaleEnd,
-    ].filter((l) => !!l);
+    const labels = [question.scaleStart, question.scaleEnd].filter((l) => !!l);
     return (
         <div>
             <div className={style.answerArea}>

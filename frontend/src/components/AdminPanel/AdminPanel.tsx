@@ -46,10 +46,10 @@ const AdminPanel = ({ activeSubmenuItem }: AdminPanelProps) => {
         <div className={style.container}>
             {(category === SubmenuCategory.MAIN ||
                 category === SubmenuCategory.EDIT_GROUP_LEADERS) && (
-                <EditGroupLeaders/>
+                <EditGroupLeaders />
             )}
-            {category === SubmenuCategory.EDIT_ADMINS && <EditAdmins/>}
-            {category === SubmenuCategory.EDIT_GROUPS && <EditGroups/>}
+            {category === SubmenuCategory.EDIT_ADMINS && <EditAdmins />}
+            {category === SubmenuCategory.EDIT_GROUPS && <EditGroups />}
             {category === SubmenuCategory.EDIT_CATALOGS && (
                 <EditCatalogsRouter />
             )}

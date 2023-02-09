@@ -17,22 +17,25 @@ import Button from "../mui/Button";
 import Table from "../mui/Table";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-
-import { getOrganizations, removeOrganization, addOrganization} from './SuperAdminAPI'; 
+import {
+    getOrganizations,
+    removeOrganization,
+    addOrganization,
+} from "./SuperAdminAPI";
 import { OrganizationInfo } from "./SuperAdminTypes";
 import AddIcon from "@material-ui/icons/Add";
-import AddOrganizationDialog from './AddOrganizationDialog';
+import AddOrganizationDialog from "./AddOrganizationDialog";
 import DeleteOrganizationDialog from "./DeleteOrganizationDialog";
 import useApiGet from "../AdminPanel/useApiGet";
 
-
 interface OrganizationProps {
-    organization: OrganizationInfo,
-    deleteOrganization: (id: OrganizationInfo) => void
-};
+    organization: OrganizationInfo;
+    deleteOrganization: (id: OrganizationInfo) => void;
+}
 
-const Organization : React.FC<OrganizationProps> = ({
-    organization, deleteOrganization
+const Organization: React.FC<OrganizationProps> = ({
+    organization,
+    deleteOrganization,
 }) => {
     return (
         <>
@@ -41,7 +44,10 @@ const Organization : React.FC<OrganizationProps> = ({
                 <TableCell>{organization.id}</TableCell>
                 <TableCell>{organization.identifierAttribute}</TableCell>
                 <TableCell align="center">
-                    <IconButton edge="end" onClick={() => deleteOrganization(organization)}>
+                    <IconButton
+                        edge="end"
+                        onClick={() => deleteOrganization(organization)}
+                    >
                         <DeleteIcon />
                     </IconButton>
                 </TableCell>
@@ -51,12 +57,13 @@ const Organization : React.FC<OrganizationProps> = ({
 };
 
 interface OrganizationTableProps {
-    organizations: OrganizationInfo[], 
-    deleteOrganization: (id: OrganizationInfo) => void
-};
+    organizations: OrganizationInfo[];
+    deleteOrganization: (id: OrganizationInfo) => void;
+}
 
-const OrganizationTable : React.FC<OrganizationTableProps> = ({
-    organizations, deleteOrganization
+const OrganizationTable: React.FC<OrganizationTableProps> = ({
+    organizations,
+    deleteOrganization,
 }) => {
     return (
         <TableContainer className={commonStyles.tableContainer}>
@@ -84,34 +91,36 @@ const OrganizationTable : React.FC<OrganizationTableProps> = ({
 };
 
 const EditOrganizations = () => {
-
-
     const {
         result: organizations,
         error: error,
         loading: loading,
-        refresh: refreshOrganizations
+        refresh: refreshOrganizations,
     } = useApiGet({
-        getFn: getOrganizations  
+        getFn: getOrganizations,
     });
-
 
     const [mutationError, setMutationError] = useState<string>("");
 
-    const [showAddOrganization, setShowAddOrganization] = useState<boolean>(false);
-    const [showDeleteOrganization, setShowDeleteOrganization] = useState<boolean>(false);
-    const [organizationToBeDeleted, setOrganizationToBeDeleted] = useState<OrganizationInfo | null>(null);
-
+    const [showAddOrganization, setShowAddOrganization] =
+        useState<boolean>(false);
+    const [showDeleteOrganization, setShowDeleteOrganization] =
+        useState<boolean>(false);
+    const [organizationToBeDeleted, setOrganizationToBeDeleted] =
+        useState<OrganizationInfo | null>(null);
 
     const addOrganizationConfirm = (organization: OrganizationInfo) => {
-        addOrganization(organization).then((res) => {
-            setMutationError("");
-        }).catch((err) => {
-            setMutationError(err);
-        }).finally(() => {
-            setShowAddOrganization(false);
-            refreshOrganizations();
-        })
+        addOrganization(organization)
+            .then((res) => {
+                setMutationError("");
+            })
+            .catch((err) => {
+                setMutationError(err);
+            })
+            .finally(() => {
+                setShowAddOrganization(false);
+                refreshOrganizations();
+            });
     };
 
     const openDeleteOrganizationDialog = (organization: OrganizationInfo) => {
@@ -119,51 +128,60 @@ const EditOrganizations = () => {
         setShowDeleteOrganization(true);
     };
 
-    const deleteOrganizationConfirm = (organization : OrganizationInfo) => {
-        removeOrganization(organization).then((res) => {
-            setMutationError("");
-        }).catch((err) => {
-            setMutationError(err);
-        }).finally(() => {
-            refreshOrganizations();
-        });
+    const deleteOrganizationConfirm = (organization: OrganizationInfo) => {
+        removeOrganization(organization)
+            .then((res) => {
+                setMutationError("");
+            })
+            .catch((err) => {
+                setMutationError(err);
+            })
+            .finally(() => {
+                refreshOrganizations();
+            });
     };
 
     return (
         <Container maxWidth="md" className={commonStyles.container}>
             {error && <p>An error occured: {error}</p>}
-            {mutationError && 
+            {mutationError && (
                 <>
                     <p>An error occured: {mutationError}</p>
                 </>
-            }
+            )}
             {loading && <CircularProgress />}
-            {!error && !loading &&
-            <>
-                <Card style={{ marginBottom: "24px" }} variant="outlined">
-                    <CardContent>
-                        <Typography color="textSecondary" gutterBottom>
-                            Rediger organisasjoner.
-                        </Typography>
-                        Her man man legge til, fjerne eller oppdatere organizasjoner. 
-                    </CardContent>
-                </Card>
-                <OrganizationTable organizations={organizations} deleteOrganization={openDeleteOrganizationDialog} />
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<AddIcon />}
-                    style={{ marginTop: "24px" }}
-                    onClick={() => setShowAddOrganization(true)}
-                >
-                    Legg til organisasjon
-                </Button>
-            </>
-            }   
+            {!error && !loading && (
+                <>
+                    <Card style={{ marginBottom: "24px" }} variant="outlined">
+                        <CardContent>
+                            <Typography color="textSecondary" gutterBottom>
+                                Rediger organisasjoner.
+                            </Typography>
+                            Her man man legge til, fjerne eller oppdatere
+                            organizasjoner.
+                        </CardContent>
+                    </Card>
+                    <OrganizationTable
+                        organizations={organizations}
+                        deleteOrganization={openDeleteOrganizationDialog}
+                    />
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<AddIcon />}
+                        style={{ marginTop: "24px" }}
+                        onClick={() => setShowAddOrganization(true)}
+                    >
+                        Legg til organisasjon
+                    </Button>
+                </>
+            )}
             {showAddOrganization && (
                 <AddOrganizationDialog
                     open={showAddOrganization}
-                    onCancel={() => {setShowAddOrganization(false)}}
+                    onCancel={() => {
+                        setShowAddOrganization(false);
+                    }}
                     onConfirm={addOrganizationConfirm}
                 />
             )}

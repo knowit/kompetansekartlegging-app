@@ -8,10 +8,7 @@ import {
     Tooltip,
     ResponsiveContainer,
 } from "recharts";
-import {
-    withStyles,
-    makeStyles,
-} from "@material-ui/core/styles";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Slider from "@material-ui/core/Slider";
 
 import { KnowitColors } from "../styles";
@@ -101,9 +98,9 @@ export const CustomScaleChart = ({ ...props }: CustomScaleChartProps) => {
                 const marks = new Array(11).fill(undefined).map((_v, i) => {
                     return { value: i * 0.5, label: "" };
                 });
-                marks[0].label = "0"
-                marks[5].label = "2.5"
-                marks[10].label = "5.0"
+                marks[0].label = "0";
+                marks[5].label = "2.5";
+                marks[10].label = "5.0";
                 const startLabel = props.payload[0]?.payload.startLabel;
                 const middleLabel = props.payload[0]?.payload.middleLabel;
                 const endLabel = props.payload[0]?.payload.endLabel;

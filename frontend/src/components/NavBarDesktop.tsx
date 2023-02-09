@@ -155,33 +155,35 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
         avatarMenuPrevOpen.current = avatarMenuOpen;
     }, [avatarMenuOpen]);
 
-    const [isHelpModalOpen, setHelpModalOpen] = useState<boolean>(false)
+    const [isHelpModalOpen, setHelpModalOpen] = useState<boolean>(false);
 
     const modalstyle = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
         minWidth: "20%",
-        bgcolor: 'background.paper',
-        border: '2px solid #000',
+        bgcolor: "background.paper",
+        border: "2px solid #000",
         // boxShadow: 24,
         maxHeight: "80%",
-        overflowY:"auto",
+        overflowY: "auto",
         p: 4,
-        borderRadius:10
-      };
+        borderRadius: 10,
+    };
 
-    const [helpMarkdown, setHelpMarkdown] = useState<any>()
-    
+    const [helpMarkdown, setHelpMarkdown] = useState<any>();
+
     useEffect(() => {
-        fetch("https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/frontend/markdown/help.md")
-        .then(async response => {
-            let markdown = await response.text();
-            setHelpMarkdown(markdown);
-        })
-        .catch(error => console.error(error));
-    }, [])
+        fetch(
+            "https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/frontend/markdown/help.md"
+        )
+            .then(async (response) => {
+                let markdown = await response.text();
+                setHelpMarkdown(markdown);
+            })
+            .catch((error) => console.error(error));
+    }, []);
 
     return (
         <div className={style.root}>
@@ -190,30 +192,42 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
                     <div className={style.logo}>
                         <KnowitLogo />
                     </div>
-                    <h1 className={style.title}>Kompetansekartlegging for {userState.organizationName}</h1>
+                    <h1 className={style.title}>
+                        Kompetansekartlegging for {userState.organizationName}
+                    </h1>
 
                     {/* <Button variant="contained" className={classes.logoutButton} onClick={() => Auth.signOut()}>Sign out</Button>  */}
                     <div className={style.dropdownMenuButton}>
-                        
-                    {(userState.roles.includes(UserRole.Admin)) ? <Modal open={isHelpModalOpen} onClose={() => setHelpModalOpen(false)}>
-                            <Box sx={modalstyle}>
-                                <ReactMarkdown>{helpMarkdown}</ReactMarkdown>
-                            </Box>
-                        </Modal> : null}
-                        {(userState.roles.includes(UserRole.Admin)) ? <Button
-                            ref={anchorRef}
-                            aria-controls={
-                                avatarMenuOpen ? "menu-list-grow" : undefined
-                            }
-                            // onClick={() => {console.log("Hahaha")}}
-                            aria-label="Help button"
-                            endIcon={<HelpIcon style={{color:"white"}}/>}
-                            onClick={() => setHelpModalOpen(true)}
+                        {userState.roles.includes(UserRole.Admin) ? (
+                            <Modal
+                                open={isHelpModalOpen}
+                                onClose={() => setHelpModalOpen(false)}
                             >
-                            <div className={style.userName}>
-                            Hjelp 
-                            </div>
-                        </Button> : null}
+                                <Box sx={modalstyle}>
+                                    <ReactMarkdown>
+                                        {helpMarkdown}
+                                    </ReactMarkdown>
+                                </Box>
+                            </Modal>
+                        ) : null}
+                        {userState.roles.includes(UserRole.Admin) ? (
+                            <Button
+                                ref={anchorRef}
+                                aria-controls={
+                                    avatarMenuOpen
+                                        ? "menu-list-grow"
+                                        : undefined
+                                }
+                                // onClick={() => {console.log("Hahaha")}}
+                                aria-label="Help button"
+                                endIcon={
+                                    <HelpIcon style={{ color: "white" }} />
+                                }
+                                onClick={() => setHelpModalOpen(true)}
+                            >
+                                <div className={style.userName}>Hjelp</div>
+                            </Button>
+                        ) : null}
                         <Button
                             ref={anchorRef}
                             aria-controls={
@@ -232,7 +246,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
                                 alt="Profile Picture"
                             />
                         </Button>
-                        
+
                         <Popper
                             open={avatarMenuOpen}
                             anchorEl={anchorRef.current}

@@ -26,7 +26,7 @@ import {
     listAllUsers as listAllAvailableUsers,
     listAllUsersInOrganization as listAllAvailableUsersInOrganization,
     // listGroupLeaders,
-    listGroupLeadersInOrganization
+    listGroupLeadersInOrganization,
 } from "./adminApi";
 import {
     listAllGroups,
@@ -45,8 +45,8 @@ import AddUserToGroupDialog from "./AddUserToGroupDialog";
 import Button from "../mui/Button";
 import Table from "../mui/Table";
 import TableRow from "../mui/TableRow";
-import {ORGANIZATION_ID_ATTRIBUTE} from "../../constants";
-import {useSelector} from 'react-redux';
+import { ORGANIZATION_ID_ATTRIBUTE } from "../../constants";
+import { useSelector } from "react-redux";
 import { selectUserState } from "../../redux/User";
 
 const useRowStyles = makeStyles({
@@ -220,7 +220,6 @@ const GroupsTable = ({
 };
 
 const EditGroups = () => {
-
     const userState = useSelector(selectUserState);
 
     const {
@@ -247,7 +246,7 @@ const EditGroups = () => {
         refresh: refreshGroupLeaders,
     } = useApiGet({
         getFn: listGroupLeadersInOrganization,
-        params: userState.organizationID
+        params: userState.organizationID,
     });
     const {
         result: groups,
@@ -261,10 +260,8 @@ const EditGroups = () => {
     const [groupToDelete, setGroupToDelete] = useState<any>();
     const [groupToEdit, setGroupToEdit] = useState<any>();
     const [memberToDelete, setMemberToDelete] = useState<any>();
-    const [
-        showDeleteUserFromGroupDialog,
-        setShowDeleteUserFromGroupDialog,
-    ] = useState<boolean>(false);
+    const [showDeleteUserFromGroupDialog, setShowDeleteUserFromGroupDialog] =
+        useState<boolean>(false);
 
     const deleteMember = (member: any, group: any) => {
         setMemberToDelete({ user: member, group });
@@ -312,7 +309,11 @@ const EditGroups = () => {
                 if (userHasGroup) {
                     return updateUserGroup(u.Username, groupId);
                 } else {
-                    return addUserToGroup(u.Username, groupId, userState.organizationID);
+                    return addUserToGroup(
+                        u.Username,
+                        groupId,
+                        userState.organizationID
+                    );
                 }
             })
         );

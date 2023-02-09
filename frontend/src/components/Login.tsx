@@ -111,7 +111,7 @@ const loginStyle = makeStyles({
     },
 });
 
-const userBranch = (process) ? process.env.REACT_APP_USER_BRANCH : "";
+const userBranch = process ? process.env.REACT_APP_USER_BRANCH : "";
 const isNotProd = userBranch !== "master";
 const Login = (props: { isMobile: boolean }) => {
     // console.log("/tree/", userBranch, isNotProd);
@@ -157,28 +157,16 @@ const Login = (props: { isMobile: boolean }) => {
                         Kompetansekartlegging
                     </h1>
                 </div>
-                <div className={style.buttonAlign}>
-                <Button
-                        className={style.loginButton}
-                        onClick={
-                            () => Auth.federatedSignIn({
-                                customProvider:
-                                CognitoHostedUIIdentityProvider.Google,
-                            })
-                        }
-                    >
-                        Logg inn (Knowit Objectnet)
-                    </Button>
+                <div className={style.buttonAlign}> 
                     <Button
                         className={style.loginButton}
-                        onClick={
-                            () => Auth.federatedSignIn({
-                                customProvider:
-                                    "AzureAD",
+                        onClick={() =>
+                            Auth.federatedSignIn({
+                                customProvider: "AzureAD",
                             })
                         }
                     >
-                        Logg inn (Andre Knowit Selskaper)
+                        Logg inn
                     </Button>
                     {isNotProd && (
                         <Button

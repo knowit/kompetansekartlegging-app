@@ -36,9 +36,15 @@ import {
     createQuestionAnswers,
     setFirstAnswers,
 } from "./answersApi";
-import {useSelector} from 'react-redux';
-import { selectUserState, selectIsSuperAdmin ,selectIsAdmin, selectIsGroupLeader, 
-     selectAdminCognitoGroupName, selectGroupLeaderCognitoGroupName } from "../redux/User";
+import { useSelector } from "react-redux";
+import {
+    selectUserState,
+    selectIsSuperAdmin,
+    selectIsAdmin,
+    selectIsGroupLeader,
+    selectAdminCognitoGroupName,
+    selectGroupLeaderCognitoGroupName,
+} from "../redux/User";
 import { SuperAdminMenu } from "./SuperAdminPanel/SuperAdminMenu";
 import { SuperAdminPanel } from "./SuperAdminPanel/SuperAdminPanel";
 
@@ -84,7 +90,7 @@ const contentStyle = makeStyles({
         width: "100%",
         display: "flex",
         flexDirection: "row",
-        overflow: "hidden",
+        overflow: "scroll",
     },
     menu: {
         background: KnowitColors.beige,
@@ -175,10 +181,11 @@ const updateCategoryAlerts = (
 };
 
 const Content = ({ ...props }: ContentProps) => {
-
     const userState = useSelector(selectUserState);
     const adminCognitoGroupName = useSelector(selectAdminCognitoGroupName);
-    const groupLeaderCognitoGroupName = useSelector(selectGroupLeaderCognitoGroupName);
+    const groupLeaderCognitoGroupName = useSelector(
+        selectGroupLeaderCognitoGroupName
+    );
 
     const [formDefinition, setFormDefinition] = useState<FormDefinition | null>(
         null
@@ -197,9 +204,8 @@ const Content = ({ ...props }: ContentProps) => {
     // const [historyViewOpen, setHistoryViewOpen] = useState<boolean>(false);
     const [answerLog, setAnswerLog] = useState<UserFormWithAnswers[]>([]);
     const [alertDialogOpen, setAlertDialogOpen] = useState<boolean>(false);
-    const [isCategorySubmitted, setIsCategorySubmitted] = useState<boolean>(
-        true
-    );
+    const [isCategorySubmitted, setIsCategorySubmitted] =
+        useState<boolean>(true);
     const [activePanel, setActivePanel] = useState<Panel>(Panel.Overview);
     const [activeCategory, setActiveCategory] = useState<string>("dkjfgdrjkg");
     const [answerEditMode, setAnswerEditMode] = useState<boolean>(false);
@@ -248,14 +254,14 @@ const Content = ({ ...props }: ContentProps) => {
                 quAns.question.type === QuestionType.CustomScaleLabels &&
                 quAns.customScaleValue !== -1
             ) {
-                console.log("Update found", quAns)
+                console.log("Update found", quAns);
                 quAnsInput.push({
                     userFormID: "",
                     questionID: quAns.question.id,
                     customScaleValue: quAns.customScaleValue,
                     formDefinitionID: formDefinition.id.toString(),
                     orgAdmins: adminCognitoGroupName,
-                    orgGroupLeaders: groupLeaderCognitoGroupName
+                    orgGroupLeaders: groupLeaderCognitoGroupName,
                 });
                 return;
             }
@@ -268,7 +274,7 @@ const Content = ({ ...props }: ContentProps) => {
                 motivation: quAns.motivation,
                 formDefinitionID: formDefinition.id.toString(),
                 orgAdmins: adminCognitoGroupName,
-                orgGroupLeaders: groupLeaderCognitoGroupName
+                orgGroupLeaders: groupLeaderCognitoGroupName,
             });
         });
         if (quAnsInput.length === 0) {
@@ -670,7 +676,9 @@ const Content = ({ ...props }: ContentProps) => {
             case Panel.Admin:
                 return <AdminPanel activeSubmenuItem={activeSubmenuItem} />;
             case Panel.SuperAdmin:
-                return <SuperAdminPanel activeSubmenuItem={activeSubmenuItem} />;
+                return (
+                    <SuperAdminPanel activeSubmenuItem={activeSubmenuItem} />
+                );
             case Panel.Other:
                 return <div>Hello! This is the "Other" panel :D</div>;
         }

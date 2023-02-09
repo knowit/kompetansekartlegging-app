@@ -12,20 +12,26 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import AssesmentIcon from "@material-ui/icons/BarChart"
+import AssesmentIcon from "@material-ui/icons/BarChart";
 import Typography from "@material-ui/core/Typography";
 
 import commonStyles from "./common.module.css";
 import AddUserToGroupDialog from "./AddUserToGroupDialog";
 import DeleteUserFromGroupDialog from "./DeleteUserFromGroupDialog";
 import useApiGet from "./useApiGet";
-import { listAllUsers, listAllUsersInOrganization, listAdmins, removeUserFromGroup, addUserToGroup } from "./adminApi";
+import {
+    listAllUsers,
+    listAllUsersInOrganization,
+    listAdmins,
+    removeUserFromGroup,
+    addUserToGroup,
+} from "./adminApi";
 import { getAttribute } from "./helpers";
 import Button from "../mui/Button";
 import Table from "../mui/Table";
 import PictureAndNameCell from "./PictureAndNameCell";
-import {useSelector} from 'react-redux';
-import {selectAdminCognitoGroupName } from '../../redux/User';
+import { useSelector } from "react-redux";
+import { selectAdminCognitoGroupName } from "../../redux/User";
 import { API, Auth } from "aws-amplify";
 import exports from "../../exports";
 import { Box, Modal, Snackbar } from "@material-ui/core";
@@ -83,30 +89,34 @@ const AdminTable = ({ admins, deleteAdmin }: any) => {
 };
 
 const EditAdmins = () => {
-
     const adminCognitoGroupName = useSelector(selectAdminCognitoGroupName);
-    const [isExcelLoading, setIsExcelLoading] = useState<boolean>(false); 
+    const [isExcelLoading, setIsExcelLoading] = useState<boolean>(false);
 
-    const { result: admins, error, loading, refresh } = useApiGet({
+    const {
+        result: admins,
+        error,
+        loading,
+        refresh,
+    } = useApiGet({
         getFn: listAllUsersInOrganization,
-        params: adminCognitoGroupName
+        params: adminCognitoGroupName,
     });
     const [showAddAdmin, setShowAddAdmin] = useState<boolean>(false);
     const download = (path: string, filename: string) => {
         // Create a new link
-        const anchor = document.createElement('a');
+        const anchor = document.createElement("a");
         anchor.href = path;
         anchor.download = filename;
-    
+
         // Append to the DOM
         document.body.appendChild(anchor);
-    
+
         // Trigger `click` event
         anchor.click();
-    
+
         // Remove element from DOM
         document.body.removeChild(anchor);
-    }; 
+    };
     const downloadExcel = async () => {
         setIsExcelLoading(true);
         const data = await API.get("CreateExcelAPI", "", {
@@ -119,12 +129,10 @@ const EditAdmins = () => {
         });
         download(data, "report.xlsx");
         setIsExcelLoading(false);
-    }
+    };
 
-    const [
-        showDeleteUserFromGroupDialog,
-        setShowDeleteUserFromGroupDialog,
-    ] = useState<boolean>(false);
+    const [showDeleteUserFromGroupDialog, setShowDeleteUserFromGroupDialog] =
+        useState<boolean>(false);
     const [adminToDelete, setAdminToDelete] = useState<any>();
 
     const deleteAdmin = (user: any) => {
@@ -132,7 +140,10 @@ const EditAdmins = () => {
         setAdminToDelete(user);
     };
     const deleteAdminConfirm = async () => {
-        await removeUserFromGroup(adminCognitoGroupName, adminToDelete.Username);
+        await removeUserFromGroup(
+            adminCognitoGroupName,
+            adminToDelete.Username
+        );
         setShowDeleteUserFromGroupDialog(false);
         refresh();
     };
@@ -144,13 +155,18 @@ const EditAdmins = () => {
         refresh();
     };
 
-
-    
     return (
         <Container maxWidth="md" className={commonStyles.container}>
             {error && <p>An error occured: {error}</p>}
             {loading && <CircularProgress />}
-            {isExcelLoading && <Snackbar open={isExcelLoading} anchorOrigin={{vertical: 'top', horizontal: 'center'}}><CircularProgress/></Snackbar>}
+            {isExcelLoading && (
+                <Snackbar
+                    open={isExcelLoading}
+                    anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                >
+                    <CircularProgress />
+                </Snackbar>
+            )}
             {!error && !loading && admins && (
                 <>
                     <Card style={{ marginBottom: "24px" }} variant="outlined">
@@ -179,7 +195,8 @@ const EditAdmins = () => {
                         color="primary"
                         startIcon={<AssesmentIcon />}
                         style={{ marginTop: "24px" }}
-                        onClick={() => downloadExcel()}>
+                        onClick={() => downloadExcel()}
+                    >
                         Last ned resultater (Excel)
                     </Button>
                 </>
