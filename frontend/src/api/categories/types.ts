@@ -1,12 +1,13 @@
 export interface Category {
   id: string
   text: string
-  description: string
-  index: number
+  description: string | null
+  index: number | null
   formdefinitionid: string
   organizationid: string
 }
 
-export type CategoryList = Category[]
-
 export type CategoryInput = Omit<Category, 'id'>
+
+export type GetCategoryInput = Pick<Category, 'id'>
+export type DeleteCategoryInput = Pick<Category, 'id'>

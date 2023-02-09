@@ -1,8 +1,8 @@
 export interface Category {
   id: string
   text: string
-  description: string
-  index: number
+  description: string | null
+  index: number | null
   formdefinitionid: string
   organizationid: string
 }

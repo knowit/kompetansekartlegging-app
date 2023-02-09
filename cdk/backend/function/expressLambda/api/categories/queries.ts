@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  SqlParameter,
-  TypeHint,
-} from '@aws-sdk/client-rds-data'
+import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
 
 import { v4 as uuidv4 } from 'uuid'
 import { sqlQuery } from '../../app'
@@ -58,15 +54,19 @@ const createCategory = async ({
     },
     {
       name: 'description',
-      value: {
-        stringValue: description,
-      },
+      value: description
+        ? {
+            stringValue: description,
+          }
+        : { isNull: true },
     },
     {
       name: 'index',
-      value: {
-        longValue: index,
-      },
+      value: index
+        ? {
+            longValue: index,
+          }
+        : { isNull: true },
     },
     {
       name: 'formDefinitionId',
@@ -114,15 +114,19 @@ const updateCategory = async (
     },
     {
       name: 'description',
-      value: {
-        stringValue: description,
-      },
+      value: description
+        ? {
+            stringValue: description,
+          }
+        : { isNull: true },
     },
     {
       name: 'index',
-      value: {
-        longValue: index,
-      },
+      value: index
+        ? {
+            longValue: index,
+          }
+        : { isNull: true },
     },
     {
       name: 'formDefinitionId',
