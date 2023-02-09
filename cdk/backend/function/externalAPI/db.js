@@ -245,7 +245,6 @@ const getAllFormDefs = async (organization_ID) => {
 
 // Get all groups
 const getAllGroups = async (organization_ID) => {
-
     return await docClient
         .scan({
             TableName: GROUP_TABLE_NAME,
@@ -255,6 +254,7 @@ const getAllGroups = async (organization_ID) => {
         .promise();
 };
 
+// Get members of group
 const getMembersOfGroup = async (group_ID) => {
     return await docClient
         .scan({
