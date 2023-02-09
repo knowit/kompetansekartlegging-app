@@ -1,7 +1,7 @@
 export interface Organization {
   id: string
   createdat: string
-  owner: string
+  owner: string | null
   orgname: string
   identifierattribute: string
 }

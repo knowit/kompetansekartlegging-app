@@ -1,16 +1,19 @@
 import { apiDELETE, apiGET, apiPOST } from '../client'
-import { Organization, OrganizationList } from './types'
+import {
+  DeleteOrganizationInput,
+  Organization,
+  OrganizationInput,
+} from './types'
 
 export const getAllOrganizations = async () =>
-  apiGET<OrganizationList>('/organizations')
+  apiGET<Organization[]>('/organizations')
 
-type OrganizationInput = Omit<Organization, 'timestamp' | 'owner'>
 export const createOrganization = async (organizationInfo: OrganizationInput) =>
-  apiPOST<OrganizationList>('/organizations', {
+  apiPOST<Organization>('/organizations', {
     body: organizationInfo,
   })
 
-export const deleteOrganization = async (organizationId: string) =>
-  apiDELETE<OrganizationList>('/organizations/:organizationId', {
-    body: { organizationId },
+export const deleteOrganization = async (id: DeleteOrganizationInput) =>
+  apiDELETE<Organization>('/organizations', {
+    body: id,
   })
