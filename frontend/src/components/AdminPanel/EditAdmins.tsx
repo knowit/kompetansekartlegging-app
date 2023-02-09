@@ -34,8 +34,10 @@ import { useSelector } from "react-redux";
 import { selectAdminCognitoGroupName } from "../../redux/User";
 import { API, Auth } from "aws-amplify";
 import exports from "../../exports";
-import { Box, Modal, Snackbar } from "@material-ui/core";
+import { Box, Dialog, DialogContent, DialogTitle, Snackbar } from "@material-ui/core";
 import ReactMarkdown from "react-markdown";
+import { dialogStyles } from "../../styles";
+import { CloseIcon } from "../DescriptionTable";
 
 const Admin = (props: any) => {
     const { admin, deleteAdmin } = props;
@@ -91,6 +93,7 @@ const AdminTable = ({ admins, deleteAdmin }: any) => {
 const EditAdmins = () => {
     const adminCognitoGroupName = useSelector(selectAdminCognitoGroupName);
     const [isExcelLoading, setIsExcelLoading] = useState<boolean>(false);
+    const [showDownloadExcelError, setShowDownloadExcelError] = useState<boolean>(false);
 
     const {
         result: admins,
@@ -102,6 +105,7 @@ const EditAdmins = () => {
         params: adminCognitoGroupName,
     });
     const [showAddAdmin, setShowAddAdmin] = useState<boolean>(false);
+
     const download = (path: string, filename: string) => {
         // Create a new link
         const anchor = document.createElement("a");
@@ -119,15 +123,19 @@ const EditAdmins = () => {
     };
     const downloadExcel = async () => {
         setIsExcelLoading(true);
-        const data = await API.get("CreateExcelAPI", "", {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `${(await Auth.currentSession())
-                    .getAccessToken()
-                    .getJwtToken()}`,
-            },
-        });
-        download(data, "report.xlsx");
+        try {
+            const data = await API.get("CreateExcelAPI", "", {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `${(await Auth.currentSession())
+                        .getAccessToken()
+                        .getJwtToken()}`,
+                },
+            });
+            download(data, "report.xlsx");
+        } catch (e) {
+            setShowDownloadExcelError(true);
+        }
         setIsExcelLoading(false);
     };
 
@@ -161,6 +169,7 @@ const EditAdmins = () => {
             {loading && <CircularProgress />}
             {isExcelLoading && (
                 <Snackbar
+                    style={{ height: "100%" }}
                     open={isExcelLoading}
                     anchorOrigin={{ vertical: "top", horizontal: "center" }}
                 >
@@ -219,8 +228,51 @@ const EditAdmins = () => {
                     roleName="administrator"
                 />
             )}
+            <DownloadExcelErrorDialog
+                open={showDownloadExcelError}
+                onClose={() => setShowDownloadExcelError(false)}
+            />
         </Container>
     );
 };
+
+type DownloadExcelErrorDialogProps = {
+    open: boolean,
+    onClose: () => void
+}
+
+const DownloadExcelErrorDialog = (props: DownloadExcelErrorDialogProps) => {
+    const dialogStyle = dialogStyles();
+
+    return (
+        <Dialog
+            open={props.open}
+            onClose={() => props.onClose()}
+            fullWidth
+            maxWidth="xs"
+            PaperProps={{style: { borderRadius: 30 }}}
+        >
+            <DialogTitle style= {{ paddingBottom: 0 }}>
+                <Box
+                    display="flex"
+                    justifyContent="space-between"
+                >
+                    <span className={dialogStyle.dialogTitleText}>
+                        Kunne ikke laste ned resultater
+                    </span>
+                    <IconButton
+                        className={dialogStyle.closeButton}
+                        onClick={() => props.onClose()}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                </Box>
+            </DialogTitle>
+            <DialogContent style={{ paddingTop: 0 }}>
+                <p>Inneholder den aktive katalogen spørsmål?</p>
+            </DialogContent>
+        </Dialog>
+    )
+}
 
 export default EditAdmins;
