@@ -77,24 +77,29 @@ const DownloadExcelDialog = ({ open, onClose }: any) => {
 
 const DownloadExcelTable = ({formDefinitions} : FormDefinitions) => {
     const [idOfDownloadingForm, setIdOfDownloadingForm] = useState<string>("");
+    const [isExcelError, setIsExcelError] = useState<boolean>(false);
 
     const downloadExcel = async (formDefId: string, formDefLabel: string) => {
+        setIsExcelError(false);
         setIdOfDownloadingForm(formDefId);
-
-        const data = await API.get("CreateExcelAPI", "", {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `${(await Auth.currentSession())
-                    .getAccessToken()
-                    .getJwtToken()}`
-            },
-            queryStringParameters: {
-                formDefId: `${formDefId}`,
-                formDefLabel: `${formDefLabel}`
-            }
-        });
-        download(data, "report.xlsx");
-        setIdOfDownloadingForm("");
+        try {
+            const data = await API.get("CreateExcelAPI", "", {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `${(await Auth.currentSession())
+                        .getAccessToken()
+                        .getJwtToken()}`
+                },
+                queryStringParameters: {
+                    formDefId: `${formDefId}`,
+                    formDefLabel: `${formDefLabel}`
+                }
+            });
+            download(data, "report.xlsx");
+            setIdOfDownloadingForm("");
+        } catch (e) {
+            setIsExcelError(true);
+        }
     };
 
     const download = (path: string, filename: string) => {
@@ -131,7 +136,12 @@ return (
                         <TableCell align="center">
                             <div style={{height: "5.65rem", display: "flex", alignItems: "center"}}>
                                 {formDef.id == idOfDownloadingForm
-                                    ?   <CircularProgress style={{margin: "0 auto"}}/>
+                                    ?   <>
+                                        {isExcelError
+                                            ? <p style={{ whiteSpace: "pre-wrap", margin: "0 auto" }}>{"Nedlasting feilet.\nEr katalogen tom?"}</p>
+                                            : <CircularProgress style={{margin: "0 auto"}}/>
+                                        }
+                                        </>
                                     :   <Button
                                             style={{margin: "0 auto"}}
                                             variant="contained"
