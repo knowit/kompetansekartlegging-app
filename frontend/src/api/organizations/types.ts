@@ -1,9 +1,11 @@
 export interface Organization {
   id: string
-  timestamp: string
-  owner: string
+  createdat: string
+  owner: string | null
   orgname: string
-  identifierAttribute: string
+  identifierattribute: string
 }
 
-export type OrganizationList = Organization[]
+export type OrganizationInput = Omit<Organization, 'createdat' | 'owner'>
+
+export type DeleteOrganizationInput = Pick<Organization, 'id'>
