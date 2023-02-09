@@ -132,7 +132,7 @@ return (
                 {formDefinitions.map((formDef: FormDefinition) => (
                     <TableRow key={formDef.id}>
                         <TableCell>{formDef.label}</TableCell>
-                        <TableCell>{new Date(formDef.createdAt).toLocaleString("nb-NO")}</TableCell>
+                        <TableCell>{new Date(formDef.createdAt).toLocaleDateString("nb-NO")}</TableCell>
                         <TableCell align="center">
                             <div style={{height: "5.65rem", display: "flex", alignItems: "center"}}>
                                 {formDef.id == idOfDownloadingForm
