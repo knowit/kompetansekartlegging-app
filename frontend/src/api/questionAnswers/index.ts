@@ -1,40 +1,39 @@
 import { apiDELETE, apiGET, apiPATCH, apiPOST } from '../client'
-import { QuestionAnswer, QuestionAnswerList } from './types'
+import {
+  DeleteQuestionAnswerInput,
+  GetQuestionAnswerInput,
+  QuestionAnswer,
+  QuestionAnswerInput,
+} from './types'
 
 export const getAllQuestionAnswers = async () =>
-  apiGET<QuestionAnswerList>('/questionAnswers')
+  apiGET<Pick<QuestionAnswer, 'id'>[]>('/questionAnswers')
 
-export const getQuestionAnswerById = async (questionAnswerId: string) =>
-  apiGET<QuestionAnswerList>('/questionAnswers/:questionAnswerId', {
-    queryStringParameters: { questionAnswerId },
+export const getQuestionAnswerById = async (id: GetQuestionAnswerInput) =>
+  apiGET<QuestionAnswer>('/questionAnswers/:id', {
+    queryStringParameters: id,
   })
 
-type QuestionAnswerInput = Omit<QuestionAnswer, 'id'>
-export const createQuestionAnswer = async (
-  questionAnswerInfo: QuestionAnswerInput
-) =>
-  apiPOST<QuestionAnswerList>('/questionAnswers', {
-    body: questionAnswerInfo,
+export const createQuestionAnswer = async (data: QuestionAnswerInput) =>
+  apiPOST<QuestionAnswer>('/questionAnswers', {
+    body: data,
   })
 
 export const updateQuestionAnswer = async (
-  questionAnswerId: string,
-  questionAnswerInfo: QuestionAnswerInput
+  id: GetQuestionAnswerInput,
+  data: QuestionAnswerInput
 ) =>
-  apiPATCH<QuestionAnswerList>('/questionAnswers', {
-    queryStringParameters: { questionAnswerId },
-    body: { questionAnswerInfo },
+  apiPATCH<QuestionAnswer>('/questionAnswers/:id', {
+    queryStringParameters: id,
+    body: data,
   })
 
-export const deleteQuestionAnswer = async (questionAnswerId: string) =>
-  apiDELETE<QuestionAnswerList>('/questionAnswers/:questionAnswerId', {
-    body: { questionAnswerId },
+export const deleteQuestionAnswer = async (id: DeleteQuestionAnswerInput) =>
+  apiDELETE<QuestionAnswer>('/questionAnswers', {
+    body: id,
   })
 
-type QuestionAnswerInputList = QuestionAnswerInput[]
-export const batchCreateQuestionAnswer = async (
-  questionAnswerInfoList: QuestionAnswerInputList
-) =>
-  apiPOST<QuestionAnswerInputList>('/questionAnswers/batch', {
-    body: questionAnswerInfoList,
+export const batchCreateQuestionAnswer = async (data: QuestionAnswerInput[]) =>
+  apiPOST<QuestionAnswerInput[]>('/questionAnswers/batch', {
+    body: data,
   })
