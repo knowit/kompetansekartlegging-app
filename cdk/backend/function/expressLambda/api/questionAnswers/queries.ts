@@ -66,15 +66,19 @@ const createQuestionAnswer = async ({
     },
     {
       name: 'knowledge',
-      value: {
-        longValue: knowledge,
-      },
+      value: knowledge
+        ? {
+            longValue: knowledge,
+          }
+        : { isNull: true },
     },
     {
       name: 'motivation',
-      value: {
-        longValue: motivation,
-      },
+      value: motivation
+        ? {
+            longValue: motivation,
+          }
+        : { isNull: true },
     },
     {
       name: 'customscalevalue',
@@ -136,15 +140,19 @@ const updateQuestionAnswer = async (
     },
     {
       name: 'knowledge',
-      value: {
-        longValue: knowledge,
-      },
+      value: knowledge
+        ? {
+            longValue: knowledge,
+          }
+        : { isNull: true },
     },
     {
       name: 'motivation',
-      value: {
-        longValue: motivation,
-      },
+      value: motivation
+        ? {
+            longValue: motivation,
+          }
+        : { isNull: true },
     },
     {
       name: 'customscalevalue',
@@ -228,15 +236,19 @@ const createQuestionAnswerFromBatch = async ({
     },
     {
       name: 'knowledge',
-      value: {
-        longValue: knowledge,
-      },
+      value: knowledge
+        ? {
+            longValue: knowledge,
+          }
+        : { isNull: true },
     },
     {
       name: 'motivation',
-      value: {
-        longValue: motivation,
-      },
+      value: motivation
+        ? {
+            longValue: motivation,
+          }
+        : { isNull: true },
     },
     {
       name: 'customscalevalue',
