@@ -2,10 +2,10 @@ interface QuestionAnswer {
   id: string
   userformid: string
   questionid: string
-  knowledge: number
-  motivation: number
-  customscalevalue: number
-  textvalue: string
+  knowledge: number | null
+  motivation: number | null
+  customscalevalue: number | null
+  textvalue: string | null
 }
 
 export type QuestionAnswerInput = Omit<QuestionAnswer, 'id'>
