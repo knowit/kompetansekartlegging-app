@@ -30,7 +30,7 @@ const activeSubmenuItemToSubmenuCategory = (
             return SubmenuCategory.EDIT_GROUPS;
         case "Rediger administratorer":
             return SubmenuCategory.EDIT_ADMINS;
-        case "Rediger katalog":
+        case "Rediger kataloger":
             return SubmenuCategory.EDIT_CATALOGS;
         case "hidden":
             return SubmenuCategory.HIDDEN;

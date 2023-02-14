@@ -32,10 +32,9 @@ import Table from "../mui/Table";
 import PictureAndNameCell from "./PictureAndNameCell";
 import { useSelector } from "react-redux";
 import { selectAdminCognitoGroupName } from "../../redux/User";
-import { API, Auth } from "aws-amplify";
 import exports from "../../exports";
-import { Box, Modal, Snackbar } from "@material-ui/core";
 import ReactMarkdown from "react-markdown";
+import DownloadExcelDialog from "./DownloadExcelDialog";
 
 const Admin = (props: any) => {
     const { admin, deleteAdmin } = props;
@@ -45,20 +44,18 @@ const Admin = (props: any) => {
     const picture = getAttribute(admin, "picture");
 
     return (
-        <>
-            <TableRow>
-                <TableCell>
-                    <PictureAndNameCell name={name} picture={picture} />
-                </TableCell>
-                <TableCell>{email}</TableCell>
-                <TableCell>{username}</TableCell>
-                <TableCell>
-                    <IconButton edge="end" onClick={() => deleteAdmin(admin)}>
-                        <DeleteIcon />
-                    </IconButton>
-                </TableCell>
-            </TableRow>
-        </>
+        <TableRow>
+            <TableCell>
+                <PictureAndNameCell name={name} picture={picture} />
+            </TableCell>
+            <TableCell>{email}</TableCell>
+            <TableCell>{username}</TableCell>
+            <TableCell>
+                <IconButton edge="end" onClick={() => deleteAdmin(admin)}>
+                    <DeleteIcon />
+                </IconButton>
+            </TableCell>
+        </TableRow>
     );
 };
 
@@ -90,7 +87,7 @@ const AdminTable = ({ admins, deleteAdmin }: any) => {
 
 const EditAdmins = () => {
     const adminCognitoGroupName = useSelector(selectAdminCognitoGroupName);
-    const [isExcelLoading, setIsExcelLoading] = useState<boolean>(false);
+    const [showDownloadExcel, setShowDownloadExcel] = useState<boolean>(false);
 
     const {
         result: admins,
@@ -102,34 +99,6 @@ const EditAdmins = () => {
         params: adminCognitoGroupName,
     });
     const [showAddAdmin, setShowAddAdmin] = useState<boolean>(false);
-    const download = (path: string, filename: string) => {
-        // Create a new link
-        const anchor = document.createElement("a");
-        anchor.href = path;
-        anchor.download = filename;
-
-        // Append to the DOM
-        document.body.appendChild(anchor);
-
-        // Trigger `click` event
-        anchor.click();
-
-        // Remove element from DOM
-        document.body.removeChild(anchor);
-    };
-    const downloadExcel = async () => {
-        setIsExcelLoading(true);
-        const data = await API.get("CreateExcelAPI", "", {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `${(await Auth.currentSession())
-                    .getAccessToken()
-                    .getJwtToken()}`,
-            },
-        });
-        download(data, "report.xlsx");
-        setIsExcelLoading(false);
-    };
 
     const [showDeleteUserFromGroupDialog, setShowDeleteUserFromGroupDialog] =
         useState<boolean>(false);
@@ -159,16 +128,12 @@ const EditAdmins = () => {
         <Container maxWidth="md" className={commonStyles.container}>
             {error && <p>An error occured: {error}</p>}
             {loading && <CircularProgress />}
-            {isExcelLoading && (
-                <Snackbar
-                    open={isExcelLoading}
-                    anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                >
-                    <CircularProgress />
-                </Snackbar>
-            )}
             {!error && !loading && admins && (
                 <>
+                    <DownloadExcelDialog
+                        open={showDownloadExcel}
+                        onClose={() => setShowDownloadExcel(false)}
+                    />
                     <Card style={{ marginBottom: "24px" }} variant="outlined">
                         <CardContent>
                             <Typography color="textSecondary" gutterBottom>
@@ -195,7 +160,7 @@ const EditAdmins = () => {
                         color="primary"
                         startIcon={<AssesmentIcon />}
                         style={{ marginTop: "24px" }}
-                        onClick={() => downloadExcel()}
+                        onClick={() => setShowDownloadExcel(true)}
                     >
                         Last ned resultater (Excel)
                     </Button>
