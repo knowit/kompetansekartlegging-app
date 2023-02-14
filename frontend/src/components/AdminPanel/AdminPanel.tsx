@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
+import { getAllQuestionAnswers } from '../../api/questionAnswers'
 
-import { deleteCategory } from '../../api/categories'
 import style from './AdminPanel.module.css'
 import { Auth } from 'aws-amplify'
 import DownloadExcel from './DownloadExcel'
