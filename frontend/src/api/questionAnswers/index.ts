@@ -6,7 +6,6 @@ import {
   QuestionAnswerInput,
 } from './types'
 
-// TODO: QuestionAnswers, Questions og formdefinitions gjenstår
 export const getAllQuestionAnswers = async () =>
   apiGET<Pick<QuestionAnswer, 'id'>[]>('/questionAnswers')
 
