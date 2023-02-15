@@ -63,3 +63,7 @@ CREATE TABLE IF NOT EXISTS "user"(
     group_id UUID references "group"(id),
     organization_id VARCHAR(255) NOT NULL references organization(id)
 );
+-- TODO: Oppdatere alle steder i repoet der SQL-endringene spiller en rolle
+-- Lambdaffunksjonen
+-- API-spørringer
+-- Sjekk diff i pr, gjør fullsøk i repo med gamle verdier på navn for å finne alle forekomster
