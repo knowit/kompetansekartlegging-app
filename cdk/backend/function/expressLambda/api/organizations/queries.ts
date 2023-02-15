@@ -4,7 +4,7 @@ import { createTimestampNow } from '../utils'
 import { OrganizationInput, DeleteOrganizationInput } from './types'
 
 const listOrganizations = async () => {
-  const query = 'SELECT id, orgname, identifierAttribute FROM organization'
+  const query = 'SELECT id, orgname, identifierattribute FROM organization'
 
   return await sqlQuery({
     message: '🚀 ~ > All organizations.',
