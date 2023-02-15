@@ -3,7 +3,7 @@
 	API_KOMPETANSEKARTLEGGIN_GRAPHQLAPIIDOUTPUT
 	ENV
 	REGION
-Amplify Params - DO NOT EDIT *//**
+Amplify Params - DO NOT EDIT */ /**
  * @fileoverview
  *
  * This CloudFormation Trigger creates a handler which awaits the other handlers
@@ -14,11 +14,11 @@ Amplify Params - DO NOT EDIT *//**
  * The names of modules to load are stored as a comma-delimited string in the
  * `MODULES` env var.
  */
-const moduleNames = ["custom"];//process.env.MODULES.split(',');
+const moduleNames = ['custom'] //process.env.MODULES.split(',');
 /**
  * The array of imported modules.
  */
-const modules = moduleNames.map(name => require(`./${name}`));
+const modules = moduleNames.map((name) => require(`./${name}`))
 
 /**
  * This async handler iterates over the given modules and awaits them.
@@ -34,14 +34,15 @@ const modules = moduleNames.map(name => require(`./${name}`));
  * The handler response.
  */
 
-
- exports.handler = async (event, context, callback) => {
+exports.handler = async (event, context, callback) => {
   /**
    * Instead of naively iterating over all handlers, run them concurrently with
    * `await Promise.all(...)`. This would otherwise just be determined by the
    * order of names in the `MODULES` var.
    */
   // await Promise.all(modules.map(module => module.handler(event)));  // bad
-  await Promise.all(modules.map(module => module.handler(event, context, callback)));
-  return event;
-};
+  await Promise.all(
+    modules.map((module) => module.handler(event, context, callback))
+  )
+  return event
+}

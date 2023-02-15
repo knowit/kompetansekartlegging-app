@@ -1,8 +1,8 @@
-import { CfnOutput, Stack, StackProps, Duration, Fn } from "aws-cdk-lib"
-import { Construct } from "constructs"
-import * as rds from "aws-cdk-lib/aws-rds"
-import * as lambda from "aws-cdk-lib/aws-lambda"
-import * as path from "path"
+import { CfnOutput, Stack, StackProps, Duration, Fn } from 'aws-cdk-lib'
+import { Construct } from 'constructs'
+import * as rds from 'aws-cdk-lib/aws-rds'
+import * as lambda from 'aws-cdk-lib/aws-lambda'
+import * as path from 'path'
 
 export class AuroraStack extends Stack {
   public readonly auroraCluster: rds.ServerlessCluster
@@ -10,18 +10,18 @@ export class AuroraStack extends Stack {
 
   constructor(scope: Construct, id: string, props: StackProps) {
     super(scope, id, props)
-    const ENV = this.node.tryGetContext("ENV")
+    const ENV = this.node.tryGetContext('ENV')
 
     // Split to remove - from db-name
-    this.defaultDatabaseName = `kompetanseDB${ENV.split("-").join("")}`
-    this.auroraCluster = new rds.ServerlessCluster(this, "AuroraCluster", {
+    this.defaultDatabaseName = `kompetanseDB${ENV.split('-').join('')}`
+    this.auroraCluster = new rds.ServerlessCluster(this, 'AuroraCluster', {
       engine: rds.DatabaseClusterEngine.AURORA_POSTGRESQL,
       parameterGroup: rds.ParameterGroup.fromParameterGroupName(
         this,
-        "ParameterGroup",
-        "default.aurora-postgresql10"
+        'ParameterGroup',
+        'default.aurora-postgresql10'
       ),
-      credentials: { username: "clusteradmin" },
+      credentials: { username: 'clusteradmin' },
       clusterIdentifier: `aurora-cluster-${ENV}`,
       defaultDatabaseName: this.defaultDatabaseName,
       enableDataApi: true,
@@ -32,12 +32,12 @@ export class AuroraStack extends Stack {
       },
     })
 
-    const initializeDB = new lambda.Function(this, "KompetanseAuroraInitDb", {
+    const initializeDB = new lambda.Function(this, 'KompetanseAuroraInitDb', {
       code: lambda.Code.fromAsset(
-        path.join(__dirname, "/../backend/function/initDb")
+        path.join(__dirname, '/../backend/function/initDb')
       ),
       functionName: `KompetanseAuroraInitDb-${ENV}`,
-      handler: "index.handler",
+      handler: 'index.handler',
       runtime: lambda.Runtime.PYTHON_3_9,
       timeout: Duration.seconds(60),
       memorySize: 512,
@@ -51,15 +51,15 @@ export class AuroraStack extends Stack {
 
     // Outputs
 
-    new CfnOutput(this, "AuroraClusterArn", {
+    new CfnOutput(this, 'AuroraClusterArn', {
       value: this.auroraCluster.clusterArn,
     })
 
-    new CfnOutput(this, "AuroraSecretArn", {
+    new CfnOutput(this, 'AuroraSecretArn', {
       value: this.auroraCluster.secret!.secretArn,
     })
 
-    new CfnOutput(this, "initDbFunctionName", {
+    new CfnOutput(this, 'initDbFunctionName', {
       value: initializeDB.functionName,
     })
   }

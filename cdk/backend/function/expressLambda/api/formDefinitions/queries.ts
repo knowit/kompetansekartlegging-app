@@ -1,100 +1,87 @@
-import {
-  SqlParameter,
-  TypeHint,
-  UpdateResultFilterSensitiveLog,
-} from '@aws-sdk/client-rds-data'
+import { SqlParameter } from '@aws-sdk/client-rds-data'
 import { v4 as uuidv4 } from 'uuid'
 import { sqlQuery } from '../../app'
 import { createTimestampNow } from '../utils'
 import { formDefinitionColumns, kindToParam } from './helpers'
+import {
+  DeleteFormDefinitionInput,
+  FormDefinitionInput,
+  GetFormDefinitionInput,
+  UpdateFormDefinitionInput,
+} from './types'
 
 const listFormDefinitions = async () => {
-  const LIST_QUERY = `SELECT * FROM formDefinition`
-  const records = await sqlQuery(LIST_QUERY)
+  const query = `SELECT * FROM formDefinition`
 
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > All Form Definitions:`,
-    data: records,
-  }
-}
-
-interface CreateFormDefinitionInput {
-  name: string
-  organizationID: string
+    query,
+  })
 }
 
 const createFormDefinition = async ({
-  name,
-  organizationID,
-}: CreateFormDefinitionInput) => {
-  const params: SqlParameter[] = [
+  label,
+  organizationid,
+}: FormDefinitionInput) => {
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       ...kindToParam(uuidv4(), 'uuid'),
     },
     {
       name: 'label',
-      ...kindToParam(name, 'string'),
+      ...kindToParam(label, 'string'),
     },
     {
-      name: 'organizationID',
-      ...kindToParam(organizationID, 'string'),
+      name: 'organizationid',
+      ...kindToParam(organizationid, 'string'),
     },
     {
-      name: 'createdAt',
+      name: 'createdat',
       ...kindToParam(createTimestampNow(), 'timestamp'),
     },
   ]
 
-  const CREATE_QUERY = `INSERT INTO formDefinition (id, label, createdAt, organizationID) 
-        VALUES (:id, :label, :createdAt, :organizationID) 
+  const query = `INSERT INTO formDefinition (id, label, createdat, organizationid) 
+        VALUES (:id, :label, :createdat, :organizationid) 
         RETURNING *`
-  const records = await sqlQuery(CREATE_QUERY, params)
 
-  return { message: `🚀 ~ > Form Definition '${name}' created.`, data: records }
-}
-
-interface DeleteFormDefinitionInput {
-  id: string
+  return await sqlQuery({
+    message: `🚀 ~ > Form Definition '${label}' created.`,
+    query,
+    parameters,
+  })
 }
 
 const deleteFormDefinition = async ({ id }: DeleteFormDefinitionInput) => {
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       ...kindToParam(id, 'uuid'),
     },
   ]
 
-  const DELETE_QUERY = `DELETE FROM formDefinition WHERE id = :id RETURNING *`
-  const records = await sqlQuery(DELETE_QUERY, params)
-
-  return {
+  const query = `DELETE FROM formDefinition WHERE id = :id RETURNING *`
+  return await sqlQuery({
     message: `🚀 ~ > Form Definition with id '${id}' deleted.`,
-    data: records,
-  }
-}
-
-interface UpdateFormDefinitionInput {
-  label?: string
-  organizationId?: string
-  createdAt?: string
-  updatedAt?: string
+    query,
+    parameters,
+  })
 }
 
 const updateFormDefinition = async (
-  id: string,
+  { id }: GetFormDefinitionInput,
   values: UpdateFormDefinitionInput
 ) => {
-  if (!values.updatedAt) {
-    values.updatedAt = createTimestampNow()
+  if (!values.updatedat) {
+    values.updatedat = createTimestampNow()
   }
 
   // Generate the column string based on provided values
   let columnString = ''
   const lastEntryIndex = Object.keys(values).length - 1
 
-  const params: SqlParameter[] = [
+  const parameters: SqlParameter[] = [
     {
       name: 'id',
       ...kindToParam(id, 'uuid'),
@@ -117,16 +104,16 @@ const updateFormDefinition = async (
       ...kindToParam(value, formDefinitionColumns[field].kind),
     }
 
-    params.push(param)
+    parameters.push(param)
   })
 
-  const UPDATE_QUERY = `UPDATE formDefinition SET ${columnString} WHERE id=:id RETURNING *`
-  const records = await sqlQuery(UPDATE_QUERY, params)
+  const query = `UPDATE formDefinition SET ${columnString} WHERE id=:id RETURNING *`
 
-  return {
+  return await sqlQuery({
     message: `🚀 ~ > formDefinition with id '${id}' is now updated.`,
-    data: records,
-  }
+    query,
+    parameters,
+  })
 }
 
 export default {
