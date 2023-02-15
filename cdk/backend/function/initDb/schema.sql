@@ -4,47 +4,38 @@
 
 CREATE TABLE IF NOT EXISTS organization(
     id VARCHAR(255) PRIMARY KEY NOT NULL,
-    createdAt TIMESTAMPTZ NOT NULL,
-    owner VARCHAR(255),
-    orgname VARCHAR(255) NOT NULL,
-    identifierAttribute VARCHAR(255) NOT NULL
+    created_at TIMESTAMPTZ NOT NULL,
+    organization_name VARCHAR(255) NOT NULL,
+    identifier_attribute VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS apiKeyPermission(
+CREATE TABLE IF NOT EXISTS api_key_permission(
     id VARCHAR(255) PRIMARY KEY NOT NULL,
-    APIKeyHashed VARCHAR(255) NOT NULL,
-    organizationID VARCHAR(255) NOT NULL references organization(id)
+    api_key_hashed VARCHAR(255) NOT NULL,
+    organization_id VARCHAR(255) NOT NULL references organization(id)
 );
 
-CREATE TABLE IF NOT EXISTS formDefinition(
+CREATE TABLE IF NOT EXISTS "catalog"(
     id UUID PRIMARY KEY NOT NULL,
     label VARCHAR(255),
-    createdAt TIMESTAMPTZ NOT NULL,
-    updatedAt TIMESTAMPTZ,
-    organizationID VARCHAR(255) NOT NULL references organization(id)
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ,
+    organization_id VARCHAR(255) NOT NULL references organization(id)
 );
 
-CREATE TABLE IF NOT EXISTS userForm(
-    id UUID PRIMARY KEY NOT NULL,
-    createdAt TIMESTAMPTZ NOT NULL,
-    updatedAt TIMESTAMPTZ,
-    owner VARCHAR(255),
-    formDefinitionID UUID NOT NULL references formDefinition(id)
-);
 
 CREATE TABLE IF NOT EXISTS category(
     id UUID PRIMARY KEY NOT NULL,
     text VARCHAR(255) NOT NULL,
     description TEXT,
     index INTEGER,
-    formDefinitionID UUID NOT NULL references formDefinition(id),
-    organizationID VARCHAR(255) NOT NULL references organization(id)
+    catalog_id UUID NOT NULL references "catalog"(id),
 );
 
 DO $$ BEGIN
-  CREATE TYPE questionType AS ENUM (
-    'knowledgeMotivation', 
-    'customScaleLabels', 
+  CREATE TYPE question_type AS ENUM (
+    'knowledge_motivation', 
+    'custom_scale_labels', 
     'text'
   );
 EXCEPTION
@@ -56,33 +47,32 @@ CREATE TABLE IF NOT EXISTS question(
     text TEXT,
     topic VARCHAR(255) NOT NULL,
     index INTEGER,
-    formDefinitionID UUID NOT NULL references formDefinition(id),
-    categoryID UUID NOT NULL references category(id),
-    type questionType,
-    scaleStart VARCHAR(255),
-    scaleMiddle VARCHAR(255),
-    scaleEnd VARCHAR(255),
-    organizationID VARCHAR(255) NOT NULL references organization(id)
+    type question_type,
+    scale_start VARCHAR(255),
+    scale_middle VARCHAR(255),
+    scale_end VARCHAR(255),
+    category_id UUID NOT NULL references category(id),
 );
 
-CREATE TABLE IF NOT EXISTS questionAnswer(
+CREATE TABLE IF NOT EXISTS question_answer(
     id UUID PRIMARY KEY NOT NULL,
-    userFormID UUID NOT NULL references userForm(id),
-    questionID UUID NOT NULL references question(id),
     knowledge REAL,
     motivation REAL,
-    customScaleValue REAL,
-    textValue TEXT
+    custom_scale_value REAL,
+    text_value TEXT
+    question_id UUID NOT NULL references question(id),
+    user_id UUID NOT NULL references "user"(id)
 );
 
 CREATE TABLE IF NOT EXISTS "group"(
     id UUID PRIMARY KEY NOT NULL,
-    organizationID VARCHAR(255) NOT NULL references organization(id),
-    groupLeaderUsername VARCHAR(255) NOT NULL 
+    organization_id VARCHAR(255) NOT NULL references organization(id),
+    group_leader_id VARCHAR(255) NOT NULL references "user"(id)  
 );
 
 CREATE TABLE IF NOT EXISTS "user"(
-    id VARCHAR(255) PRIMARY KEY NOT NULL,
-    groupID UUID NOT NULL references "group"(id),
-    organizationID VARCHAR(255) NOT NULL references organization(id)
+    id UUID PRIMARY KEY NOT NULL,
+    mail VARCHAR(255) NOT NULL UNIQUE,
+    group_id UUID references "group"(id),
+    organization_id VARCHAR(255) NOT NULL references organization(id)
 );
