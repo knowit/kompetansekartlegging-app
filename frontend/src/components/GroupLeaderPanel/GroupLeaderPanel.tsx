@@ -133,24 +133,24 @@ const GroupLeaderPanel = ({
     const [allAvailableUsersAnnotated, setAllAvailableUsersAnnotated] =
         useState<any[]>([]);
 
-    const addLastAnsweredAt = async (users: any[]) => {
-        if (users.length > 0 && formDefinitions.length > 0) {
-            const activeFormDefId = formDefinitions[0].id;
-
-            const usersAnnotated = await Promise.all(users.map(async (u: any) => {
-                const user = users.find((us: any) => us.Username === u.Username);
-                if (user) {
-                    const lastAnsweredAt = await getLatestUserFormUpdatedAtForUser(user.Username, activeFormDefId);
-                    return { ...user, lastAnsweredAt: lastAnsweredAt };
-                } else {
-                    return u;
-                }
-            }));
-            setAllAvailableUsersAnnotated(usersAnnotated);
-        }
-    };
-
     useEffect(() => {
+        const addLastAnsweredAt = async (users: any[]) => {
+            if (users.length > 0 && formDefinitions.length > 0) {
+                const activeFormDefId = formDefinitions[0].id;
+    
+                const usersAnnotated = await Promise.all(users.map(async (u: any) => {
+                    const user = users.find((us: any) => us.Username === u.Username);
+                    if (user) {
+                        const lastAnsweredAt = await getLatestUserFormUpdatedAtForUser(user.Username, activeFormDefId);
+                        return { ...user, lastAnsweredAt: lastAnsweredAt };
+                    } else {
+                        return u;
+                    }
+                }));
+                setAllAvailableUsersAnnotated(usersAnnotated);
+            }
+        };
+
         if (allAvailableUsers && groupLeaders && groups && users && formDefinitions) {
             const annotated = allAvailableUsers.map((u: any) => {
                 const user = users.find((us: any) => us.id === u.Username);
