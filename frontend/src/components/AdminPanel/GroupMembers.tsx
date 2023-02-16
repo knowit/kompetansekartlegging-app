@@ -16,7 +16,7 @@ import TableRow from "../mui/TableRow";
 const User = ({ user, deleteMember, viewMember }: any) => {
     const name = getAttribute(user, "name");
     const email = getAttribute(user, "email");
-    const formLastAnsweredAt = user.lastAnsweredAt == null ? "Ikke besvart" : new Date(user.lastAnsweredAt).toLocaleDateString("nb-NO");
+    //const formLastAnsweredAt = user.lastAnsweredAt == null ? "Ikke besvart" : new Date(user.lastAnsweredAt).toLocaleDateString("nb-NO");
     const picture = getAttribute(user, "picture");
     const onClick = () => {
         if (viewMember) viewMember(user.Username);
@@ -28,7 +28,7 @@ const User = ({ user, deleteMember, viewMember }: any) => {
                 <PictureAndNameCell name={name} picture={picture} />
             </TableCell>
             <TableCell onClick={onClick}>{email}</TableCell>
-            <TableCell>{formLastAnsweredAt}</TableCell>
+            {/*<TableCell>{formLastAnsweredAt}</TableCell>*/}
             <TableCell>
                 <Button
                     onClick={() => deleteMember(user)}
@@ -62,7 +62,7 @@ const GroupMembers = ({
                         <TableRow>
                             <TableCell>Ansatt</TableCell>
                             <TableCell>Email</TableCell>
-                            <TableCell>Sist besvart</TableCell>
+                            {/*<TableCell>Sist besvart</TableCell>*/}
                             <TableCell />
                         </TableRow>
                     </TableHead>
