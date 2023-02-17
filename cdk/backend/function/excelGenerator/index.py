@@ -83,7 +83,8 @@ def fetch_user_answers(username, formDef):
     return {"username": username, "userFormId": currentUserForm["id"], "answers": answers}
 
 
-async def fetch_org_data(orgid):
+async def fetch_org_data(orgid, formDefId):
+    """
     later = datetime.now()
     formDefsResponse = db_client.query(
             TableName=formDefTable,
@@ -101,12 +102,13 @@ async def fetch_org_data(orgid):
 
     currentFormDef = formDefs[-1]["id"]
     print("Time passed fetching form defs:", datetime.now() - later)
+    """
     later = datetime.now()
     catResponse = db_client.query(
         TableName=categoryTable,
         IndexName="byFormDefinition",
         KeyConditionExpression="formDefinitionID = :formDef",
-        ExpressionAttributeValues={":formDef": {"S": currentFormDef}},
+        ExpressionAttributeValues={":formDef": {"S": formDefId}}
     )
 
     categories = []
@@ -123,7 +125,7 @@ async def fetch_org_data(orgid):
         IndexName="byFormDefinition",
         Select="ALL_ATTRIBUTES",
         KeyConditionExpression="formDefinitionID = :formDef",
-        ExpressionAttributeValues={":formDef": {"S": currentFormDef}},
+        ExpressionAttributeValues={":formDef": {"S": formDefId}}
     )
 
     questions = []
@@ -174,7 +176,7 @@ async def fetch_org_data(orgid):
     # with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
 
     for user in users:
-        userAnswers = asyncio.to_thread(fetch_user_answers, user["Username"], currentFormDef)
+        userAnswers = asyncio.to_thread(fetch_user_answers, user["Username"], formDefId)
         answerTasks.append(userAnswers)
 
     answers = await asyncio.gather(*answerTasks)
@@ -185,12 +187,15 @@ async def fetch_org_data(orgid):
     
     print("Time passed fetching answers:", datetime.now() - later)
 
-    return formDefs, categories, questions, mappedUsers
+    #return formDefs, categories, questions, mappedUsers
+    return categories, questions, mappedUsers
 
 def handler(event, context):
     print(event)
     later = datetime.now()
     groups = event["requestContext"]["authorizer"]["claims"]["cognito:groups"].split(",")
+    formDefId = event["queryStringParameters"]["formDefId"]
+    formDefLabel = event["queryStringParameters"]["formDefLabel"]
     isAdmin = False
     orgid = ""
     print("Hello", groups)
@@ -203,14 +208,14 @@ def handler(event, context):
 
     if isAdmin:
         print("User is admin")
-        book = asyncio.run(make_workbook(orgid))
+        book = asyncio.run(make_workbook(orgid, formDefId))
         print("Time passed make_workbook:", datetime.now() - later)
         with NamedTemporaryFile(mode="w+b") as temp:
             book.save(temp.name)
             temp.seek(0)
             print("Time passed save workbook:", datetime.now() - later)
             # stream = temp.read()
-            key = f"{orgid}_report_{datetime.now().isoformat(sep='-',timespec='minutes')}.xlsx"
+            key = f"{orgid}_{formDefLabel}_report_{datetime.now().isoformat(sep='-',timespec='minutes')}.xlsx"
             s3_client.put_object(Bucket=bucketName, Key=key, Body=temp)
             presigned_url = s3_client.generate_presigned_url('get_object',
                                                         Params={'Bucket': bucketName,
@@ -282,9 +287,10 @@ def add_user_row(data_sheet, aggregateSheet, row, user, questions, questionPosit
         catCol += len(questionCategoryMap[category["id"]])
         aggCol += 4
 
-async def make_workbook(orgid):
+async def make_workbook(orgid, formDefId):
     later = datetime.now()
-    formDefs, categories, questions, users = await fetch_org_data(orgid)
+    #formDefs, categories, questions, users = await fetch_org_data(orgid)
+    categories, questions, users = await fetch_org_data(orgid, formDefId)
     print("Time passed fetching data:", datetime.now() - later)
     later = datetime.now()
     book = Workbook()

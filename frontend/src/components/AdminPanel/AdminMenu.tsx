@@ -34,7 +34,7 @@ const AdminMenu = ({
             text: "Rediger administratorer",
         },
         {
-            text: "Rediger katalog",
+            text: "Rediger kataloger",
             hasInternalRouting: true,
         },
         // refactor this one out once the whole app uses routing
