@@ -35,7 +35,6 @@ import { selectAdminCognitoGroupName } from "../../redux/User";
 import exports from "../../exports";
 import ReactMarkdown from "react-markdown";
 import DownloadExcelDialog from "./DownloadExcelDialog";
-import { useSelector } from "react-redux";
 
 const Admin = (props: any) => {
     const { admin, deleteAdmin } = props;
@@ -87,7 +86,7 @@ const AdminTable = ({ admins, deleteAdmin }: any) => {
 };
 
 const EditAdmins = () => {
-    const adminCognitoGroupName = useSelector(selectAdminCognitoGroupName);
+    const adminCognitoGroupName = useAppSelector(selectAdminCognitoGroupName);
     const [showDownloadExcel, setShowDownloadExcel] = useState<boolean>(false);
 
     const {
