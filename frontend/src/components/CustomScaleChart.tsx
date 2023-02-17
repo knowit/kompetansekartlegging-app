@@ -7,7 +7,9 @@ import {
     YAxis,
     Tooltip,
     ResponsiveContainer,
+    TooltipProps,
 } from "recharts";
+import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Slider from "@material-ui/core/Slider";
 
@@ -92,7 +94,7 @@ export const CustomScaleChart = ({ ...props }: CustomScaleChartProps) => {
     if (props.chartData.length === 0) return null;
 
     const RenderCustomTooltip = (classes: any) => {
-        return ({ ...props }: ToolTipProps) => {
+        return ({ ...props }: TooltipProps<ValueType, NameType>) => {
             if (props.active && props.payload) {
                 const value = props.payload[0]?.payload.value.toFixed(1);
                 const marks = new Array(11).fill(undefined).map((_v, i) => {
@@ -174,6 +176,7 @@ export const CustomScaleChart = ({ ...props }: CustomScaleChartProps) => {
                         tick={{ fill: KnowitColors.darkBrown }}
                     />
                     <Tooltip
+                        wrapperStyle={{ outline: "none" }}
                         content={RenderCustomTooltip(classes)}
                         cursor={{ fill: KnowitColors.ecaluptus, opacity: 0.3 }}
                     />
@@ -186,11 +189,4 @@ export const CustomScaleChart = ({ ...props }: CustomScaleChartProps) => {
             </ResponsiveContainer>
         </div>
     );
-};
-
-type ToolTipProps = {
-    className: string;
-    active: boolean;
-    payload: any;
-    label: any;
 };

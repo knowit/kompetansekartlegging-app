@@ -185,7 +185,7 @@ const FloatingScaleDescButton = ({
                 >
                     <Fab
                         size="medium"
-                        variant="round"
+                        variant="circular"
                         className={style.fab}
                         onClick={handleMobileFabClick}
                     >

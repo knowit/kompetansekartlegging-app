@@ -16,7 +16,7 @@ import { not, getAttribute } from "./helpers";
 import useApiGet from "./useApiGet";
 import UsersTable from "./UsersTable";
 import { CloseIcon } from "../DescriptionTable";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../redux/hooks";
 import { selectUserState } from "../../redux/User";
 
 const AddUserToGroupDialog = ({
@@ -31,7 +31,7 @@ const AddUserToGroupDialog = ({
     confirmButtonText,
 }: any) => {
     const style = dialogStyles();
-    const userState = useSelector(selectUserState);
+    const userState = useAppSelector(selectUserState);
 
     const {
         result: users,

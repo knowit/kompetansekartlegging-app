@@ -30,7 +30,7 @@ import { getAttribute } from "./helpers";
 import Button from "../mui/Button";
 import Table from "../mui/Table";
 import PictureAndNameCell from "./PictureAndNameCell";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../redux/hooks";
 import { selectAdminCognitoGroupName } from "../../redux/User";
 import exports from "../../exports";
 import ReactMarkdown from "react-markdown";
@@ -86,7 +86,7 @@ const AdminTable = ({ admins, deleteAdmin }: any) => {
 };
 
 const EditAdmins = () => {
-    const adminCognitoGroupName = useSelector(selectAdminCognitoGroupName);
+    const adminCognitoGroupName = useAppSelector(selectAdminCognitoGroupName);
     const [showDownloadExcel, setShowDownloadExcel] = useState<boolean>(false);
 
     const {

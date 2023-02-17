@@ -29,7 +29,7 @@ import { getAttribute } from "../AdminPanel/helpers";
 import Button from "../mui/Button";
 import Table from "../mui/Table";
 import PictureAndNameCell from "../AdminPanel/PictureAndNameCell";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../redux/hooks";
 import { selectAdminCognitoGroupName } from "../../redux/User";
 
 const Admin = (props: any) => {
@@ -84,7 +84,7 @@ const AdminTable = ({ admins, deleteAdmin }: any) => {
 };
 
 const EditSuperAdmins = () => {
-    const adminCognitoGroupName = useSelector(selectAdminCognitoGroupName);
+    const adminCognitoGroupName = useAppSelector(selectAdminCognitoGroupName);
 
     const {
         result: admins,

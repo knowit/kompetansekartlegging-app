@@ -36,7 +36,7 @@ import {
     createQuestionAnswers,
     setFirstAnswers,
 } from "./answersApi";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../redux/hooks";
 import {
     selectUserState,
     selectIsSuperAdmin,
@@ -181,9 +181,9 @@ const updateCategoryAlerts = (
 };
 
 const Content = ({ ...props }: ContentProps) => {
-    const userState = useSelector(selectUserState);
-    const adminCognitoGroupName = useSelector(selectAdminCognitoGroupName);
-    const groupLeaderCognitoGroupName = useSelector(
+    const userState = useAppSelector(selectUserState);
+    const adminCognitoGroupName = useAppSelector(selectAdminCognitoGroupName);
+    const groupLeaderCognitoGroupName = useAppSelector(
         selectGroupLeaderCognitoGroupName
     );
 
@@ -500,9 +500,9 @@ const Content = ({ ...props }: ContentProps) => {
      *
      *  NOTE: Active panel should be changed somehow to instead check if parent button is active or not
      */
-    const isSuperAdmin = useSelector(selectIsSuperAdmin);
-    const isAdmin = useSelector(selectIsAdmin);
-    const isGroupLeader = useSelector(selectIsGroupLeader);
+    const isSuperAdmin = useAppSelector(selectIsSuperAdmin);
+    const isAdmin = useAppSelector(selectIsAdmin);
+    const isGroupLeader = useAppSelector(selectIsGroupLeader);
 
     const buttonSetup = [
         { text: "OVERSIKT", buttonType: MenuButton.Overview, show: true },

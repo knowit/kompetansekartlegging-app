@@ -24,7 +24,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { KnowitColors } from "../styles";
 import { NavBarPropsDesktop, UserRole } from "../types";
 import { ReactComponent as KnowitLogo } from "../Logotype-Knowit-Digital-white 1.svg";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../redux/hooks";
 import { selectUserState } from "../redux/User";
 import ReactMarkdown from "react-markdown";
 import HelpIcon from "@material-ui/icons/Help";
@@ -79,7 +79,7 @@ const navbarStyles = makeStyles((theme) => ({
 }));
 
 const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
-    const userState = useSelector(selectUserState);
+    const userState = useAppSelector(selectUserState);
 
     const [avatarMenuOpen, setAvatarMenuOpen] = useState<boolean>(false);
     // return focus to the button when we transitioned from !avatarMenuOpen -> avatarMenuOpen

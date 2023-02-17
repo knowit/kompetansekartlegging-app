@@ -19,7 +19,7 @@ import {
 import Main from "./Main";
 import GroupMember from "./GroupMember";
 import { ORGANIZATION_ID_ATTRIBUTE } from "../../constants";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../redux/hooks";
 import {
     selectGroupLeaderCognitoGroupName,
     selectUserState,
@@ -34,7 +34,7 @@ const GroupLeaderPanel = ({
     activeSubmenuItem,
     setActiveSubmenuItem,
 }: any) => {
-    const userState = useSelector(selectUserState);
+    const userState = useAppSelector(selectUserState);
 
     const {
         result: formDefinitions,
