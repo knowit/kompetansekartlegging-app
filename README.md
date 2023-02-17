@@ -24,18 +24,18 @@ To run the project locally:
    name the project in the cloning process)
 3. Run `$ ./install.sh`
 4. Run `cd cdk`
-5. Configure AWS CLI credentials: \
-   * If you are using aws sso profiles you need to run `python sync_sso.py aws-cli-profile`
-   * If not, run `aws configure` followed by `export AWS_PROFILE={aws cli profilename}`, where `{aws cli profilename}=default` if you have not configured additional profiles
+5. Configure AWS CLI credentials:
+   * If you are using AWS SSO profiles you need to run `python sync_sso.py aws-cli-profile`
+   * If not, run `aws configure` followed by either `export AWS_PROFILE={aws cli profilename}` on Linux/macOS or `set AWS_PROFILE={aws cli profilename}` on Windows, where `{aws cli profilename}=default` if you have not configured additional profiles
 6. Run `cdk bootstrap`
 7. Create a cdk.context.json file with an `ENV` key:
+   * <b>Deploy to sandbox?</b> Give `ENV` any value you want, but it has to be unique, so you might get a conflict if it already exists on AWS
+   * <b>Deploy to dev or prod?</b> The `ENV` value must be `dev` or `prod`. You also need to add an `AZURE` key (Azure AD metadata url)
    ```
    {
       "ENV": "exampleenv"
    }
    ```
-   * <b>Deploy to sandbox?</b> Give ENV any value you want, but it has to be unique, so you might get a conflict if it already exists on AWS
-   * <b>Deploy to dev or prod?</b> The ENV value must be `dev` or `prod`. You also need to add an `AZURE` key (Azure AD metadata url)
 8. Run `npm run deploy` followed by `npm run codegen` (Alternatively, go to root directory and run `./deploybackend.sh full`)
 9. Run `cd ../frontend` followed by `npm start`
 
@@ -43,7 +43,7 @@ To run the project locally:
 ### After Setup:
 * Run `./deploybackend.sh` to deploy changes to the backend
 * Run `npm start` in frontend folder to run frontend locally
-* For testing purposes, you can add data to your sandbox by running scripts located inside the scripts-folder, such as `create_test_data.py`
+* For testing purposes, you can add data to your sandbox by running custom scripts such as `scripts/create_test_data.py`
 
 ### Production deployment instructions can be found [here](https://github.com/knowit/Dataplattform-issues/wiki/Kompetansekartlegging:-Deployment-Guide-(CDK))
 
