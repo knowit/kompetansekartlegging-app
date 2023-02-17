@@ -2,7 +2,7 @@ import { API, Auth, graphqlOperation } from "aws-amplify";
 import { GraphQLResult } from "@aws-amplify/api";
 import { UserFormList, UserFormWithAnswers } from "./types";
 import * as customQueries from "./graphql/custom-queries";
-import { Query } from "./API";
+import { Maybe, Query, UserForm } from "./API";
 import { getOrganization } from "./graphql/queries";
 
 /*
@@ -169,3 +169,31 @@ export const getOrganizationNameByID = (organizationID: string) =>
             reject("no org found");
         }
     });
+
+export const getLatestUserFormUpdatedAtForUser = (userId: string, formDefId: string) =>
+    new Promise<Maybe<UserForm>>(async (resolve, reject) => {
+        try {
+            const res = await callGraphQL<Query>(customQueries.listUserFormsUpdatedAt, {
+                filter: {
+                    formDefinitionID: {
+                        eq: formDefId
+                    },
+                    owner: {
+                        eq: userId
+                    }
+                }
+            });
+            const sorted = res.data?.listUserForms?.items?.sort(sortUserFormsByDateAscending);
+
+            sorted ? resolve(sorted[sorted.length - 1]?.updatedAt) : resolve(null);
+        } catch (e) {
+            console.log(e);
+            reject("error fetching updatedAt from latest UserForm");
+        }
+    });
+
+const sortUserFormsByDateAscending = (a: Maybe<UserForm>, b: Maybe<UserForm>) => {
+    const dateA = new Date(a?.updatedAt);
+    const dateB = new Date(b?.updatedAt);
+    return dateA.getTime() - dateB.getTime()
+};

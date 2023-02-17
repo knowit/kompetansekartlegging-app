@@ -18,9 +18,6 @@ import { isMobile } from "react-device-detect";
 import FloatingScaleDescButton from "./components/FloatingScaleDescButton";
 import NavBarDesktop from "./components/NavBarDesktop";
 import theme from "./theme";
-
-// redux
-import { useSelector, useDispatch } from "react-redux";
 import {
     setUserInfo,
     setUserInfoLogOut,
@@ -29,6 +26,7 @@ import {
 } from "./redux/User";
 import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth";
 import ReactMarkdown from "react-markdown";
+import { useAppSelector, useAppDispatch } from "./redux/hooks";
 
 const userBranch = process ? process.env.REACT_APP_USER_BRANCH : ""; // Process does not exist in Webpack 5?
 
@@ -92,8 +90,8 @@ const cognitoUserContainsAttributes = (data: any): boolean => {
 };
 
 const App = () => {
-    const dispatch = useDispatch();
-    const userState = useSelector(selectUserState);
+    const dispatch = useAppDispatch();
+    const userState = useAppSelector(selectUserState)
 
     const style = appStyle();
     const [showFab, setShowFab] = useState<boolean>(true);

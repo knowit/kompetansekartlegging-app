@@ -60,8 +60,8 @@ const AddCategoryDialog = ({ onCancel, onConfirm, open }: any) => {
                 <TextField
                     fullWidth
                     multiline
-                    rows={4}
-                    rowsMax={6}
+                    minRows={4}
+                    maxRows={6}
                     label="Beskrivelse"
                     variant="outlined"
                     value={description}

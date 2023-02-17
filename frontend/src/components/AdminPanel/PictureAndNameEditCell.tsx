@@ -30,6 +30,7 @@ const StyledBadge = withStyles((theme) => ({
 
 const GroupAvatar = ({ showBadge, onClick, name, picture }: any) => (
     <StyledBadge
+        overlap="rectangular"
         badgeContent={
             showBadge ? (
                 <IconButton size="small" onClick={onClick}>

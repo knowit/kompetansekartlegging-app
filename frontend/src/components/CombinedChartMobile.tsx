@@ -241,11 +241,12 @@ export const CombinedChartMobile = ({
                         axisLine={false}
                         dataKey="name"
                         type="category"
+                        domain={[]}
                         interval={0}
                         tickLine={false}
                         tick={renderLabelTick}
                     />
-                    {/* <Tooltip content={renderCustomTooltip(classes)}/> */}
+                    {/* <Tooltip wrapperStyle={{ outline: "none" }} content={renderCustomTooltip(classes)}/> */}
                     <Bar
                         radius={[10, 10, 0, 0]}
                         dataKey="valueKnowledge"
@@ -352,7 +353,7 @@ const renderLabelTick = ({ ...props }: TickLabelProps) => {
 };
 
 // const renderCustomTooltip = (classes: any) => {
-//     return ({ ...props }: ToolTipProps) => {
+//     return ({ ...props }: ToolTipProps<ValueType, NameType>) => {
 //         if (props.active && props.payload) {
 //             let knowledgeValue = props.payload[0]?.payload.valueKnowledge[1].toFixed(
 //                 1
@@ -394,10 +395,3 @@ type TickLabelProps = {
         value: any;
     };
 };
-
-// type ToolTipProps = {
-//     className: string;
-//     active: boolean;
-//     payload: any;
-//     label: any;
-// };
