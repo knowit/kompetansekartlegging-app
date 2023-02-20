@@ -69,6 +69,7 @@ const Group = ({
     users,
     open,
     setOpenId,
+    showLastAnsweredAt
 }: any) => {
     const hasGroupLeader = !!group.groupLeader;
     const name = hasGroupLeader
@@ -130,6 +131,7 @@ const Group = ({
                                 deleteMember={(user: any) =>
                                     deleteMember(user, group.id)
                                 }
+                                showLastAnsweredAt={showLastAnsweredAt}
                             />
                         </Box>
                     </Collapse>
@@ -148,6 +150,7 @@ const GroupsTable = ({
     editGroup,
     addMembersToGroup,
     deleteMember,
+    showLastAnsweredAt
 }: any) => {
     const [openId, setOpenId] = useState<string>("");
     const setOpenGroup = (groupId: string) => {
@@ -198,6 +201,7 @@ const GroupsTable = ({
                             addMembersToGroup={addMembersToGroup}
                             deleteMember={deleteMember}
                             editGroup={editGroup}
+                            showLastAnsweredAt={showLastAnsweredAt}
                         />
                     ))}
                 </TableBody>
@@ -206,7 +210,7 @@ const GroupsTable = ({
     );
 };
 
-const EditGroups = () => {
+const EditGroups = ({ showLastAnsweredAt }: any) => {
     const userState = useAppSelector(selectUserState);
 
     const {
@@ -316,7 +320,9 @@ const EditGroups = () => {
         refreshAllUsers();
     };
 
-    const [lastAnsweredAtLoading, setLastAnsweredAtLoading] = useState<boolean>(true);
+    const [lastAnsweredAtLoading, setLastAnsweredAtLoading] =
+        useState<boolean>(showLastAnsweredAt);
+
     const isLoading =
         loading ||
         allAvailableUsersLoading ||
@@ -366,13 +372,13 @@ const EditGroups = () => {
                     return u;
                 }
             });
-            if (formDefinitions.length > 0) {
+            if (showLastAnsweredAt && formDefinitions.length > 0) {
                 addLastAnsweredAt(annotated);
             } else {
                 setAllAvailableUsersAnnotated(annotated);
             }
         }
-    }, [allAvailableUsers, formDefinitions, groupLeaders, groups, users])
+    }, [allAvailableUsers, formDefinitions, groupLeaders, groups, users, showLastAnsweredAt]);
 
     return (
         <Container maxWidth="md" className={commonStyles.container}>
@@ -400,6 +406,7 @@ const EditGroups = () => {
                         addMembersToGroup={addMembersToGroup}
                         deleteMember={deleteMember}
                         editGroup={editGroup}
+                        showLastAnsweredAt={showLastAnsweredAt}
                     />
                     <Button
                         variant="contained"
