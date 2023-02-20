@@ -171,29 +171,44 @@ export const getOrganizationNameByID = (organizationID: string) =>
     });
 
 export const getLatestUserFormUpdatedAtForUser = (userId: string, formDefId: string) =>
-    new Promise<Maybe<UserForm>>(async (resolve, reject) => {
+    new Promise<Date | null>(async (resolve, reject) => {
         try {
-            const res = await callGraphQL<Query>(customQueries.listUserFormsUpdatedAt, {
-                filter: {
-                    formDefinitionID: {
-                        eq: formDefId
-                    },
-                    owner: {
-                        eq: userId
-                    }
-                }
-            });
-            const sorted = res.data?.listUserForms?.items?.sort(sortUserFormsByDateAscending);
+            const listOfUpdatedAt: Date[] = Array<Date>();
+            let nextToken: string | null = null;
 
-            sorted ? resolve(sorted[sorted.length - 1]?.updatedAt) : resolve(null);
+            do {
+                let res: UserFormList | undefined = (
+                    await callGraphQL<UserFormList>(customQueries.listUserFormsUpdatedAt, {
+                        nextToken: nextToken,
+                        filter: {
+                            formDefinitionID: {
+                                eq: formDefId
+                            },
+                            owner: {
+                                eq: userId
+                            }
+                        }
+                    })
+                ).data;
+
+                if (res) {
+                    listOfUpdatedAt.push(
+                        ...res.listUserForms?.items.map((item: any) => {
+                            return new Date(item.updatedAt);
+                        })
+                    );
+                    nextToken = res.listUserForms?.nextToken;
+                } else {
+                    nextToken = null;
+                }
+            } while (nextToken)
+
+            const sorted = listOfUpdatedAt.length > 0
+                ? listOfUpdatedAt.sort((a, b) => b.getTime() - a.getTime())
+                : null;
+            sorted ? resolve(sorted[0]) : resolve(null);
         } catch (e) {
             console.log(e);
-            reject("error fetching updatedAt from latest UserForm");
+            reject("error while fetching updatedAt from latest UserForm");
         }
     });
-
-const sortUserFormsByDateAscending = (a: Maybe<UserForm>, b: Maybe<UserForm>) => {
-    const dateA = new Date(a?.updatedAt);
-    const dateB = new Date(b?.updatedAt);
-    return dateA.getTime() - dateB.getTime()
-};
