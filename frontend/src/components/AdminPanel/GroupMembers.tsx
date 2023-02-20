@@ -13,11 +13,14 @@ import Button from "../mui/Button";
 import Table from "../mui/Table";
 import TableRow from "../mui/TableRow";
 
-const User = ({ user, deleteMember, viewMember }: any) => {
+const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
     const name = getAttribute(user, "name");
     const email = getAttribute(user, "email");
-    //const formLastAnsweredAt = user.lastAnsweredAt == null ? "Ikke besvart" : new Date(user.lastAnsweredAt).toLocaleDateString("nb-NO");
     const picture = getAttribute(user, "picture");
+    const formLastAnsweredAt = user.lastAnsweredAt == null
+        ? "Ikke besvart"
+        : user.lastAnsweredAt.toLocaleDateString("nb-NO");
+
     const onClick = () => {
         if (viewMember) viewMember(user.Username);
     };
@@ -28,7 +31,7 @@ const User = ({ user, deleteMember, viewMember }: any) => {
                 <PictureAndNameCell name={name} picture={picture} />
             </TableCell>
             <TableCell onClick={onClick}>{email}</TableCell>
-            {/*<TableCell>{formLastAnsweredAt}</TableCell>*/}
+            {showLastAnsweredAt && <TableCell>{formLastAnsweredAt}</TableCell>}
             <TableCell>
                 <Button
                     onClick={() => deleteMember(user)}
@@ -47,6 +50,7 @@ const GroupMembers = ({
     addMembersToGroup,
     deleteMember,
     viewMember,
+    showLastAnsweredAt
 }: any) => {
     const [open, setOpen] = useState<boolean>(false);
     const onConfirm = (users: any[]) => {
@@ -62,7 +66,7 @@ const GroupMembers = ({
                         <TableRow>
                             <TableCell>Ansatt</TableCell>
                             <TableCell>Email</TableCell>
-                            {/*<TableCell>Sist besvart</TableCell>*/}
+                            {showLastAnsweredAt && <TableCell>Sist besvart</TableCell>}
                             <TableCell />
                         </TableRow>
                     </TableHead>
@@ -73,6 +77,7 @@ const GroupMembers = ({
                                 user={u}
                                 deleteMember={deleteMember}
                                 viewMember={viewMember}
+                                showLastAnsweredAt={showLastAnsweredAt}
                             />
                         ))}
                     </TableBody>

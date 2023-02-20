@@ -49,6 +49,7 @@ const Main = ({
                             deleteMember(user, groupId)
                         }
                         viewMember={viewMember}
+                        showLastAnsweredAt={true}
                     />
                 </>
             )}

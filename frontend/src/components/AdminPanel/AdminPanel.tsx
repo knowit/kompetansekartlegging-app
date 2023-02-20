@@ -49,7 +49,7 @@ const AdminPanel = ({ activeSubmenuItem }: AdminPanelProps) => {
                 <EditGroupLeaders />
             )}
             {category === SubmenuCategory.EDIT_ADMINS && <EditAdmins />}
-            {category === SubmenuCategory.EDIT_GROUPS && <EditGroups />}
+            {category === SubmenuCategory.EDIT_GROUPS && <EditGroups showLastAnsweredAt={false}/>}
             {category === SubmenuCategory.EDIT_CATALOGS && (
                 <EditCatalogsRouter />
             )}
