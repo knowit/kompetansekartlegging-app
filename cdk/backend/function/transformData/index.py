@@ -24,6 +24,7 @@ def handler(event, context):
     transform("Question", removeColumns=[
               "qid", "formDefinitionID", "organizationID"])
     transform("QuestionAnswer", appendEmptyColumnsNames=["textValue"])
+    transform("UserForm")
 
     lambda_client.invoke(FunctionName=triggerFunctionName,
                          InvocationType='Event')
