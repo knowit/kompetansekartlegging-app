@@ -14,16 +14,16 @@ triggerFunctionName = environ.get("TRIGGER_FUNCTION")
 
 
 def handler(event, context):
-    transform("Organization", appendEmptyColumnsNames=["owner"])
+    transform("Organization", removeColumns=["owner"])
     transform("User")
     transform("APIKeyPermission")
-    transform("Category")
+    transform("Category", removeColumns=["organizationID"])
     transform("FormDefinition", removeColumns=["sortKeyConstant"])
     transform("Group")
     # what is qid, is either empty or marked with <empty> on dynamoDB
-    transform("Question", removeColumns=["qid"])
+    transform("Question", removeColumns=[
+              "qid", "formDefinitionID", "organizationID"])
     transform("QuestionAnswer", appendEmptyColumnsNames=["textValue"])
-    transform("UserForm")
 
     lambda_client.invoke(FunctionName=triggerFunctionName,
                          InvocationType='Event')
@@ -58,7 +58,7 @@ def getPandasCSVFile(key):
         return csv_content
     except Exception as e:
         print(e)
-        print("Returning empty list")
+        print("Returning empty list: " + key)
         return []
 
 

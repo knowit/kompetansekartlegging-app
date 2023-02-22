@@ -49,7 +49,8 @@ CREATE TABLE IF NOT EXISTS question_answer(
     knowledge REAL,
     motivation REAL,
     custom_scale_value REAL,
-    text_value TEXT question_id UUID NOT NULL references question(id),
+    text_value TEXT,
+    question_id UUID NOT NULL references question(id),
     user_id UUID NOT NULL references "user"(id)
 );
 CREATE TABLE IF NOT EXISTS "group"(
@@ -63,7 +64,3 @@ CREATE TABLE IF NOT EXISTS "user"(
     group_id UUID references "group"(id),
     organization_id VARCHAR(255) NOT NULL references organization(id)
 );
--- TODO: Oppdatere alle steder i repoet der SQL-endringene spiller en rolle
--- Lambdaffunksjonen
--- API-spørringer
--- Sjekk diff i pr, gjør fullsøk i repo med gamle verdier på navn for å finne alle forekomster
