@@ -64,3 +64,5 @@ CREATE TABLE IF NOT EXISTS "user"(
     group_id UUID references "group"(id),
     organization_id VARCHAR(255) NOT NULL references organization(id)
 );
+
+-- Hei christobal
