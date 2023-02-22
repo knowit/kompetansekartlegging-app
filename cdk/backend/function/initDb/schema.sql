@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS question_answer(
 );
 CREATE TABLE IF NOT EXISTS "group"(
     id UUID PRIMARY KEY NOT NULL,
-    organization_id VARCHAR(255) NOT NULL references organization(id),
+    organization_id VARCHAR(255) NOT NULL references organization(id)
 );
 ALTER TABLE "user" ADD IF NOT EXISTS group_id UUID references "group"(id);
 ALTER TABLE "group" ADD IF NOT EXISTS group_leader_id UUID NOT NULL references "user"(id);
