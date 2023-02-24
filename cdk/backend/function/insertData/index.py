@@ -165,7 +165,7 @@ def questionAnswerSQL(file, start, end):
             f"{getValueOnSqlFormat(row.questionID, isUUID=True)}," \
             f"{getValueOnSqlFormat(row.knowledge, isNumber=True)},{getValueOnSqlFormat(row.motivation, isNumber=True)}," \
             f"{getValueOnSqlFormat(row.customScaleValue, isNumber=True)},{getValueOnSqlFormat(row.textValue)}," \
-            f"(SELECT u.id FROM \"user\" u WHERE u.mail = {getValueOnSqlFormat(get_user_name_from_user_form(row.userFormID, start, end))})),"
+            f"(SELECT u.id FROM \"user\" u WHERE u.mail = {getValueOnSqlFormat(row.owner)})),"
     sqlInsertStatment = sqlInsertStatment.rstrip(sqlInsertStatment[-1])
     sqlInsertStatment += ") as x (id, question_id, knowledge, motivation, custom_scale_value, text_value, user_id) WHERE EXISTS (SELECT 1 FROM question q WHERE q.id = x.question_id) ON CONFLICT DO NOTHING;"
     print(sqlInsertStatment)
@@ -195,19 +195,11 @@ def groupSQL(file, start, end):
 
 
 def add_group_id_to_user(file, start, end):
-    sqlUpdateStatement = "UPDATE \"user\"\n SET "
+    sqlUpdateStatement = ""
     for row in file.loc[start:end].itertuples():
-        sqlUpdateStatement += f"group_id = {getValueOnSqlFormat(row.groupID)}\nWHERE mail = {getValueOnSqlFormat(row.id)}"
+        sqlUpdateStatement += f"UPDATE \"user\"\n SET group_id = {getValueOnSqlFormat(row.groupID)}\nWHERE mail = {getValueOnSqlFormat(row.id)};"
     print(sqlUpdateStatement)
     return sqlUpdateStatement
-
-
-def get_user_name_from_user_form(userFormID, start, end):
-    file = getPandasCSVFile(getFileName("UserForm"))
-    result = next(
-        (row for row in file.loc[start:end].itertuples() if row.id == userFormID), None)
-    print(result)
-    return "tester2@test"
 
 
 def camel_to_snake_case(s):
