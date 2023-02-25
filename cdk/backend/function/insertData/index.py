@@ -199,7 +199,7 @@ def create_dummy_data():
     sqlInsertStatement = f"INSERT INTO organization (id, organization_name, identifier_attribute)\nVALUES " \
         f"({getValueOnSqlFormat(organization_id)}, 'dummy', 'dummy') ON CONFLICT (organization_name) DO NOTHING;\n"
     sqlInsertStatement += "INSERT INTO \"user\" (id, mail, group_id, organization_id)\nVALUES " \
-        f"({getValueOnSqlFormat(str(uuid.uuid4))}, 'dummyUser@dummy', NULL, {getValueOnSqlFormat(organization_id)}) " \
+        f"({getValueOnSqlFormat(str(uuid.uuid4()))}, 'dummyUser@dummy', NULL, {getValueOnSqlFormat(organization_id)}) " \
         "ON CONFLICT (mail) DO NOTHING"
     return sqlInsertStatement
 
