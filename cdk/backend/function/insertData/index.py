@@ -123,7 +123,7 @@ def apiKeyPermissionSQL(file, start, end):
     sqlInsertStatment = "INSERT INTO api_key_permission (id, api_key_hashed, organization_id)\nVALUES"
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += f"\n({getValueOnSqlFormat(row.id)}," \
-            f"{getValueOnSqlFormat(row.APIKeyHashed)},{getValueOnSqlFormat(row.organizationID)}),"
+            f"{getValueOnSqlFormat(row.APIKeyHashed)},(SELECT o.id FROM organization o WHERE o.organization_name = {getValueOnSqlFormat(row.organizationID)})),"
     sqlInsertStatment = sqlInsertStatment.rstrip(
         sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
     print(sqlInsertStatment)
@@ -135,7 +135,7 @@ def formDefinitionSQL(file, start, end):
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += f"\n({getValueOnSqlFormat(row.id, isUUID=True)}," \
             f"{getValueOnSqlFormat(row.label)},{getValueOnSqlFormat(row.createdAt, isUTC=True)}," \
-            f"{getValueOnSqlFormat(row.updatedAt, isUTC=True)},{getValueOnSqlFormat(row.organizationID)}),"
+            f"{getValueOnSqlFormat(row.updatedAt, isUTC=True)},{getValueOnSqlFormat(row.organizationID, isUUID=True)}),"
     sqlInsertStatment = sqlInsertStatment.rstrip(
         sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
     print(sqlInsertStatment)
@@ -188,7 +188,7 @@ def userSQL(file, start, end):
     sqlInsertStatment = "INSERT INTO \"user\" (id, mail, group_id, organization_id)\nVALUES"
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += f"\n({getValueOnSqlFormat(str(uuid.uuid4()), isUUID=True)},{getValueOnSqlFormat(row.id)}," \
-            f"NULL,{getValueOnSqlFormat(row.organizationID)}),"
+            f"NULL,{getValueOnSqlFormat(row.organizationID, isUUID=True)}),"
     sqlInsertStatment = sqlInsertStatment.rstrip(
         sqlInsertStatment[-1]) + " ON CONFLICT (mail) DO NOTHING;"
     print(sqlInsertStatment)
@@ -214,7 +214,7 @@ def groupSQL(file, start, end):
     sqlInsertStatment = "INSERT INTO \"group\" (id, organization_id, group_leader_id)\nVALUES"
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += f"\n({getValueOnSqlFormat(row.id, isUUID=True)}," \
-            f"{getValueOnSqlFormat(row.organizationID)}, (SELECT COALESCE((SELECT u.id FROM \"user\" u WHERE u.mail = {getValueOnSqlFormat(row.groupLeaderUsername)}), (SELECT du.id FROM \"user\" du WHERE du.mail = {getValueOnSqlFormat('dummyUser@dummy')})))),"
+            f"{getValueOnSqlFormat(row.organizationID, isUUID=True)}, (SELECT COALESCE((SELECT u.id FROM \"user\" u WHERE u.mail = {getValueOnSqlFormat(row.groupLeaderUsername)}), (SELECT du.id FROM \"user\" du WHERE du.mail = {getValueOnSqlFormat('dummyUser@dummy')})))),"
     sqlInsertStatment = sqlInsertStatment.rstrip(
         sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
     print(sqlInsertStatment)

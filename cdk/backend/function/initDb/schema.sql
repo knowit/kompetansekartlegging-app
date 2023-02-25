@@ -9,14 +9,14 @@ CREATE TABLE IF NOT EXISTS organization(
 CREATE TABLE IF NOT EXISTS api_key_permission(
     id VARCHAR(255) PRIMARY KEY NOT NULL,
     api_key_hashed VARCHAR(255) NOT NULL,
-    organization_id VARCHAR(255) NOT NULL references organization(id)
+    organization_id UUID NOT NULL references organization(id)
 );
 CREATE TABLE IF NOT EXISTS "catalog"(
     id UUID PRIMARY KEY NOT NULL,
     label VARCHAR(255),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ,
-    organization_id VARCHAR(255) NOT NULL references organization(id)
+    organization_id UUID NOT NULL references organization(id)
 );
 CREATE TABLE IF NOT EXISTS category(
     id UUID PRIMARY KEY NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS question(
 CREATE TABLE IF NOT EXISTS "user"(
     id UUID PRIMARY KEY NOT NULL,
     mail VARCHAR(255) NOT NULL UNIQUE,
-    organization_id VARCHAR(255) NOT NULL references organization(id)
+    organization_id UUID NOT NULL references organization(id)
 );
 CREATE TABLE IF NOT EXISTS question_answer(
     id UUID PRIMARY KEY NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS question_answer(
 );
 CREATE TABLE IF NOT EXISTS "group"(
     id UUID PRIMARY KEY NOT NULL,
-    organization_id VARCHAR(255) NOT NULL references organization(id)
+    organization_id UUID NOT NULL references organization(id)
 );
 ALTER TABLE "user"
 ADD IF NOT EXISTS group_id UUID references "group"(id);
