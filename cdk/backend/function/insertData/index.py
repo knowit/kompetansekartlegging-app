@@ -189,7 +189,7 @@ def userSQL(file, start, end):
         sqlInsertStatment += f"\n({getValueOnSqlFormat(str(uuid.uuid4()), isUUID=True)},{getValueOnSqlFormat(row.id)}," \
             f"NULL,{getValueOnSqlFormat(row.organizationID)}),"
     sqlInsertStatment = sqlInsertStatment.rstrip(
-        sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
+        sqlInsertStatment[-1]) + " ON CONFLICT (mail) DO NOTHING;"
     print(sqlInsertStatment)
     return sqlInsertStatment
 
@@ -208,7 +208,7 @@ def groupSQL(file, start, end):
     sqlInsertStatment = "INSERT INTO \"group\" (id, organization_id, group_leader_id)\nVALUES"
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += f"\n({getValueOnSqlFormat(row.id, isUUID=True)}," \
-            f"{getValueOnSqlFormat(row.organizationID)}, (SELECT IFNULL(u.id, SELECT du.id FROM \"user\" du WHERE du.mail = 'dummyUser@dummy') u.id FROM \"user\" u WHERE u.mail = {getValueOnSqlFormat(row.groupLeaderUsername)})),"
+            f"{getValueOnSqlFormat(row.organizationID)}, (SELECT COALESCE(u.id, (SELECT du.id FROM \"user\" du WHERE du.mail = 'dummyUser@dummy')) FROM \"user\" u WHERE u.mail = {getValueOnSqlFormat(row.groupLeaderUsername)})),"
     sqlInsertStatment = sqlInsertStatment.rstrip(
         sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
     print(sqlInsertStatment)
