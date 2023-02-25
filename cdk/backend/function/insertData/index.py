@@ -161,7 +161,7 @@ def questionSQL(file, start, end):
         sqlInsertStatment += f"\n({getValueOnSqlFormat(row.id, isUUID=True)}," \
             f"{getValueOnSqlFormat(row.text)},{getValueOnSqlFormat(row.topic)}," \
             f"{getValueOnSqlFormat(row.index, isNumber=True)}," \
-            f"{getValueOnSqlFormat(row.categoryID, isUUID=True)},{getValueOnSqlFormat(camel_to_snake_case(row.type))}::question_type," \
+            f"{getValueOnSqlFormat(row.categoryID, isUUID=True)}, (CASE WHEN {getValueOnSqlFormat(camel_to_snake_case(row.type))}='NULL' THEN NULL ELSE {getValueOnSqlFormat(camel_to_snake_case(row.type))}::question_type END)," \
             f"{getValueOnSqlFormat(row.scaleStart)},{getValueOnSqlFormat(row.scaleMiddle)}," \
             f"{getValueOnSqlFormat(row.scaleEnd)}),"
     sqlInsertStatment = sqlInsertStatment.rstrip(sqlInsertStatment[-1])
@@ -177,8 +177,8 @@ def questionAnswerSQL(file, start, end):
             f"{getValueOnSqlFormat(row.questionID, isUUID=True)}," \
             f"{getValueOnSqlFormat(row.knowledge, isNumber=True)},{getValueOnSqlFormat(row.motivation, isNumber=True)}," \
             f"{getValueOnSqlFormat(row.customScaleValue, isNumber=True)},{getValueOnSqlFormat(row.textValue)}," \
-            f"(SELECT u.id FROM \"user\" u WHERE u.mail = {getValueOnSqlFormat(row.owner)})),"
-        sqlInsertStatment = sqlInsertStatment.rstrip(sqlInsertStatment[-1])
+            f"(SELECT COALESCE ((SELECT u.id FROM \"user\" u WHERE u.mail = {getValueOnSqlFormat(row.owner)}),(SELECT du.id FROM \"user\" du WHERE du.mail = {getValueOnSqlFormat('dummyUser@dummy')})))),"
+    sqlInsertStatment = sqlInsertStatment.rstrip(sqlInsertStatment[-1])
     sqlInsertStatment += ") as x (id, question_id, knowledge, motivation, custom_scale_value, text_value, user_id) WHERE EXISTS (SELECT 1 FROM question q WHERE q.id = x.question_id) ON CONFLICT DO NOTHING;"
     print(sqlInsertStatment)
     return sqlInsertStatment
@@ -231,7 +231,7 @@ def add_group_id_to_user(file, start, end):
 
 def camel_to_snake_case(s):
     # Split the string into words using a regular expression
-    if s == 'NULL':
+    if type(s) != type(""):
         return 'NULL'
     words = re.findall(r'[A-Za-z][a-z]*', s)
 
