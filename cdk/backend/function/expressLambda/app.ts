@@ -1,5 +1,6 @@
 import {
   ExecuteStatementCommand,
+  Field,
   RDSDataClient,
   RecordsFormatType,
   SqlParameter,
@@ -42,6 +43,15 @@ interface SqlQueryInput {
   parameters?: SqlParameter[]
   message: string
 }
+// Enable CORS for all methods
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  )
+  next()
+})
 
 export const sqlQuery = async ({
   query,
@@ -76,4 +86,46 @@ export const sqlQuery = async ({
   }
 }
 
-export default app
+app.get('/categories', async (req, res) => {
+  try {
+    const sqlString = 'SELECT * FROM category'
+    const cmd = new ExecuteStatementCommand({
+      sql: sqlString,
+      ...cmdConstants,
+    })
+
+    const dbResponse = await rds.send(cmd)
+
+    const response = { data: dbResponse }
+    res.status(200).json(response)
+  } catch (err) {
+    console.error(err)
+  }
+})
+
+app.get('/categories/:id/questions', async (req, res) => {
+  const id = req.params.id
+  try {
+    const sqlString = `SELECT * FROM question WHERE categoryID=?`
+    const cmd = new ExecuteStatementCommand({
+      sql: sqlString,
+      ...cmdConstants,
+    })
+
+    const dbResponse = await rds.send(cmd)
+
+    const response = { data: dbResponse }
+    res.status(200).json(response)
+  } catch (err) {
+    console.error(err)
+  }
+})
+
+app.get<unknown, unknown, unknown, { debugName: string }>(
+  '/debug',
+  (req, res) => {
+    return res.json({ name: req.query.debugName, message: "Buggin'" })
+  }
+)
+
+module.exports = app

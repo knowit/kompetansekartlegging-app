@@ -22,6 +22,7 @@ def getFileName(name):
 
 
 def handler(event, context):
+    executeInsert(create_dummy_data)
     excuteInsert(organizationSQL, getFileName("Organization"))
     excuteInsert(apiKeyPermissionSQL, getFileName("APIKeyPermission"))
     excuteInsert(formDefinitionSQL, getFileName("FormDefinition"))
@@ -65,11 +66,12 @@ def excuteInsert(sqlTextFunction, fileName):
 
 
 def executeInsert(sqlTextFunction):
+    sqlInsertStatement = sqlTextFunction()
     response = dbClient.execute_statement(
         resourceArn=dbARN,
         secretArn=secretARN,
         database=dbName,
-        sql=sqlTextFunction
+        sql=sqlInsertStatement
     )
 
     print(f"----- Inserting manually without a file -----")
@@ -142,9 +144,6 @@ def formDefinitionSQL(file, start, end):
 def categorySQL(file, start, end):
     sqlInsertStatment = "INSERT INTO category (id, text, description, index, catalog_id)\nSELECT * FROM (\nVALUES"
     for row in file.loc[start:end].itertuples():
-        print("----------------------------------Helo")
-        print(row)
-        print("----------------------------------------")
         sqlInsertStatment += f"\n({getValueOnSqlFormat(row.id, isUUID=True)}," \
             f"{getValueOnSqlFormat(row.text)},{getValueOnSqlFormat(row.description)}," \
             f"{getValueOnSqlFormat(row.index, isNumber=True)},{getValueOnSqlFormat(row.formDefinitionID, isUUID=True)}),"
@@ -195,11 +194,21 @@ def userSQL(file, start, end):
     return sqlInsertStatment
 
 
+def create_dummy_data():
+    organization_id = str(uuid.uuid4())
+    sqlInsertStatement = f"INSERT INTO organization (id, organization_name, identifier_attribute)\nVALUES " \
+        f"({getValueOnSqlFormat(organization_id)}, 'dummy', 'dummy') ON CONFLICT (organization_name) DO NOTHING;\n"
+    sqlInsertStatement += "INSERT INTO \"user\" (id, mail, group_id, organization_id)\nVALUES " \
+        f"({getValueOnSqlFormat(str(uuid.uuid4))}, 'dummyUser@dummy', NULL, {getValueOnSqlFormat(organization_id)}) " \
+        "ON CONFLICT (mail) DO NOTHING"
+    return sqlInsertStatement
+
+
 def groupSQL(file, start, end):
     sqlInsertStatment = "INSERT INTO \"group\" (id, organization_id, group_leader_id)\nVALUES"
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += f"\n({getValueOnSqlFormat(row.id, isUUID=True)}," \
-            f"{getValueOnSqlFormat(row.organizationID)}, (SELECT u.id FROM \"user\" u WHERE u.mail = {getValueOnSqlFormat(row.groupLeaderUsername)})),"
+            f"{getValueOnSqlFormat(row.organizationID)}, (SELECT IFNULL(u.id, SELECT du.id FROM \"user\" du WHERE du.mail = 'dummyUser@dummy') u.id FROM \"user\" u WHERE u.mail = {getValueOnSqlFormat(row.groupLeaderUsername)})),"
     sqlInsertStatment = sqlInsertStatment.rstrip(
         sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
     print(sqlInsertStatment)
