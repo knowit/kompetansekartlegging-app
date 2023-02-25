@@ -22,8 +22,8 @@ def getFileName(name):
 
 
 def handler(event, context):
+    executeInsert(create_temp_column)
     executeInsert(create_dummy_data)
-    executeInsert(test)
     excuteInsert(organizationSQL, getFileName("Organization"))
     excuteInsert(apiKeyPermissionSQL, getFileName("APIKeyPermission"))
     excuteInsert(formDefinitionSQL, getFileName("FormDefinition"))
@@ -35,6 +35,8 @@ def handler(event, context):
     excuteInsert(questionAnswerSQL, getFileName("QuestionAnswer"))
 
     excuteInsert(add_group_id_to_user, getFileName("User"))
+
+    executeInsert(remove_temp_column)
 
 
 def excuteInsert(sqlTextFunction, fileName):
@@ -107,12 +109,23 @@ def getValueOnSqlFormat(value, isNumber=False, isUUID=False, isUTC=False):
     return f"'{value}'"
 
 
+def create_dummy_data():
+    organization_id = str(uuid.uuid4())
+    sqlInsertStatement = f"INSERT INTO organization (id, organization_name, identifier_attribute, temp_org_id)\nVALUES " \
+        f"({getValueOnSqlFormat(organization_id)}, 'dummy', 'dummy', 'dummy') ON CONFLICT (organization_name) DO NOTHING;\n"
+    sqlInsertStatement += "INSERT INTO \"user\" (id, mail, group_id, organization_id)\nVALUES " \
+        f"({getValueOnSqlFormat(str(uuid.uuid4()))}, 'dummyUser@dummy', NULL, {getValueOnSqlFormat(organization_id)}) " \
+        "ON CONFLICT (mail) DO NOTHING;"
+    return sqlInsertStatement
+
+
 def organizationSQL(file, start, end):
-    sqlInsertStatment = "INSERT INTO organization (id, created_at, organization_name, identifier_attribute)\nVALUES"
+    sqlInsertStatment = "INSERT INTO organization (id, created_at, organization_name, identifier_attribute, temp_org_id)\nVALUES"
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += f"\n({getValueOnSqlFormat(str(uuid.uuid4()))}," \
             f"{getValueOnSqlFormat(row.createdAt, isUTC=True)}," \
-            f"{getValueOnSqlFormat(row.orgname)},{getValueOnSqlFormat(row.identifierAttribute)}),"
+            f"{getValueOnSqlFormat(row.orgname)},{getValueOnSqlFormat(row.identifierAttribute)}," \
+            f"{getValueOnSqlFormat(row.id)}),"
     sqlInsertStatment = sqlInsertStatment.rstrip(
         sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
     print(sqlInsertStatment)
@@ -123,7 +136,7 @@ def apiKeyPermissionSQL(file, start, end):
     sqlInsertStatment = "INSERT INTO api_key_permission (id, api_key_hashed, organization_id)\nVALUES"
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += f"\n({getValueOnSqlFormat(row.id)}," \
-            f"{getValueOnSqlFormat(row.APIKeyHashed)},(SELECT o.id FROM organization o WHERE o.organization_name = {getValueOnSqlFormat(row.organizationID)})),"
+            f"{getValueOnSqlFormat(row.APIKeyHashed)},(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)})),"
     sqlInsertStatment = sqlInsertStatment.rstrip(
         sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
     print(sqlInsertStatment)
@@ -135,7 +148,7 @@ def formDefinitionSQL(file, start, end):
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += f"\n({getValueOnSqlFormat(row.id, isUUID=True)}," \
             f"{getValueOnSqlFormat(row.label)},{getValueOnSqlFormat(row.createdAt, isUTC=True)}," \
-            f"{getValueOnSqlFormat(row.updatedAt, isUTC=True)},{getValueOnSqlFormat(row.organizationID, isUUID=True)}),"
+            f"{getValueOnSqlFormat(row.updatedAt, isUTC=True)},(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)})),"
     sqlInsertStatment = sqlInsertStatment.rstrip(
         sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
     print(sqlInsertStatment)
@@ -188,33 +201,18 @@ def userSQL(file, start, end):
     sqlInsertStatment = "INSERT INTO \"user\" (id, mail, group_id, organization_id)\nVALUES"
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += f"\n({getValueOnSqlFormat(str(uuid.uuid4()), isUUID=True)},{getValueOnSqlFormat(row.id)}," \
-            f"NULL,{getValueOnSqlFormat(row.organizationID, isUUID=True)}),"
+            f"NULL,(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)})),"
     sqlInsertStatment = sqlInsertStatment.rstrip(
         sqlInsertStatment[-1]) + " ON CONFLICT (mail) DO NOTHING;"
     print(sqlInsertStatment)
     return sqlInsertStatment
 
 
-def create_dummy_data():
-    organization_id = str(uuid.uuid4())
-    sqlInsertStatement = f"INSERT INTO organization (id, organization_name, identifier_attribute)\nVALUES " \
-        f"({getValueOnSqlFormat(organization_id)}, 'dummy', 'dummy') ON CONFLICT (organization_name) DO NOTHING;\n"
-    sqlInsertStatement += "INSERT INTO \"user\" (id, mail, group_id, organization_id)\nVALUES " \
-        f"({getValueOnSqlFormat(str(uuid.uuid4()))}, 'dummyUser@dummy', NULL, {getValueOnSqlFormat(organization_id)}) " \
-        "ON CONFLICT (mail) DO NOTHING;"
-    return sqlInsertStatement
-
-
-def test():
-    print("---------------------------------------------------")
-    return f"SELECT du.id FROM \"user\" du WHERE du.mail = {getValueOnSqlFormat('dummyUser@dummy')};"
-
-
 def groupSQL(file, start, end):
     sqlInsertStatment = "INSERT INTO \"group\" (id, organization_id, group_leader_id)\nVALUES"
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += f"\n({getValueOnSqlFormat(row.id, isUUID=True)}," \
-            f"{getValueOnSqlFormat(row.organizationID, isUUID=True)}, (SELECT COALESCE((SELECT u.id FROM \"user\" u WHERE u.mail = {getValueOnSqlFormat(row.groupLeaderUsername)}), (SELECT du.id FROM \"user\" du WHERE du.mail = {getValueOnSqlFormat('dummyUser@dummy')})))),"
+            f"(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)}), (SELECT COALESCE((SELECT u.id FROM \"user\" u WHERE u.mail = {getValueOnSqlFormat(row.groupLeaderUsername)}), (SELECT du.id FROM \"user\" du WHERE du.mail = {getValueOnSqlFormat('dummyUser@dummy')})))),"
     sqlInsertStatment = sqlInsertStatment.rstrip(
         sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
     print(sqlInsertStatment)
@@ -227,6 +225,14 @@ def add_group_id_to_user(file, start, end):
         sqlUpdateStatement += f"UPDATE \"user\"\n SET group_id = {getValueOnSqlFormat(row.groupID)}\nWHERE mail = {getValueOnSqlFormat(row.id)};"
     print(sqlUpdateStatement)
     return sqlUpdateStatement
+
+
+def create_temp_column():
+    return "ALTER TABLE organization ADD COLUMN IF NOT EXISTS temp_org_id VARCHAR(255) NOT NULL;"
+
+
+def remove_temp_column():
+    return "ALTER TABLE organization DROP COLUMN temp_org_id;"
 
 
 def camel_to_snake_case(s):
