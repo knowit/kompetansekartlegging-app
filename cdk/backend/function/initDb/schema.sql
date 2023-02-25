@@ -2,7 +2,7 @@
 -- Oppretter dersom det ikke eksisterer fra før av
 CREATE TABLE IF NOT EXISTS organization(
     id VARCHAR(255) PRIMARY KEY NOT NULL,
-    created_at TIMESTAMPTZ NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     organization_name VARCHAR(255) NOT NULL,
     identifier_attribute VARCHAR(255) NOT NULL
 );
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS api_key_permission(
 CREATE TABLE IF NOT EXISTS "catalog"(
     id UUID PRIMARY KEY NOT NULL,
     label VARCHAR(255),
-    created_at TIMESTAMPTZ NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ,
     organization_id VARCHAR(255) NOT NULL references organization(id)
 );
