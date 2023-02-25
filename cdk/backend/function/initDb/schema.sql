@@ -1,7 +1,7 @@
 -- Tabeller for Kompetansekartlegging
 -- Oppretter dersom det ikke eksisterer fra før av
 CREATE TABLE IF NOT EXISTS organization(
-    id VARCHAR(255) PRIMARY KEY NOT NULL,
+    id UUID PRIMARY KEY NOT NULL,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     organization_name VARCHAR(255) NOT NULL UNIQUE,
     identifier_attribute VARCHAR(255) NOT NULL
@@ -28,7 +28,9 @@ CREATE TABLE IF NOT EXISTS category(
 DO $$ BEGIN CREATE TYPE question_type AS ENUM (
     'knowledge_motivation',
     'custom_scale_labels',
-    'text'
+    'text',
+    'NULL',
+    ''
 );
 EXCEPTION
 WHEN duplicate_object THEN null;

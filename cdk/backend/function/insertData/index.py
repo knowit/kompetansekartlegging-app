@@ -23,6 +23,7 @@ def getFileName(name):
 
 def handler(event, context):
     executeInsert(create_dummy_data)
+    executeInsert(test)
     excuteInsert(organizationSQL, getFileName("Organization"))
     excuteInsert(apiKeyPermissionSQL, getFileName("APIKeyPermission"))
     excuteInsert(formDefinitionSQL, getFileName("FormDefinition"))
@@ -109,8 +110,8 @@ def getValueOnSqlFormat(value, isNumber=False, isUUID=False, isUTC=False):
 def organizationSQL(file, start, end):
     sqlInsertStatment = "INSERT INTO organization (id, created_at, organization_name, identifier_attribute)\nVALUES"
     for row in file.loc[start:end].itertuples():
-        sqlInsertStatment += f"\n({getValueOnSqlFormat(row.id)}," \
-            f"{getValueOnSqlFormat(row.createdAt, isUTC=True)},"\
+        sqlInsertStatment += f"\n({getValueOnSqlFormat(str(uuid.uuid4()))}," \
+            f"{getValueOnSqlFormat(row.createdAt, isUTC=True)}," \
             f"{getValueOnSqlFormat(row.orgname)},{getValueOnSqlFormat(row.identifierAttribute)}),"
     sqlInsertStatment = sqlInsertStatment.rstrip(
         sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
@@ -177,7 +178,7 @@ def questionAnswerSQL(file, start, end):
             f"{getValueOnSqlFormat(row.knowledge, isNumber=True)},{getValueOnSqlFormat(row.motivation, isNumber=True)}," \
             f"{getValueOnSqlFormat(row.customScaleValue, isNumber=True)},{getValueOnSqlFormat(row.textValue)}," \
             f"(SELECT u.id FROM \"user\" u WHERE u.mail = {getValueOnSqlFormat(row.owner)})),"
-    sqlInsertStatment = sqlInsertStatment.rstrip(sqlInsertStatment[-1])
+        sqlInsertStatment = sqlInsertStatment.rstrip(sqlInsertStatment[-1])
     sqlInsertStatment += ") as x (id, question_id, knowledge, motivation, custom_scale_value, text_value, user_id) WHERE EXISTS (SELECT 1 FROM question q WHERE q.id = x.question_id) ON CONFLICT DO NOTHING;"
     print(sqlInsertStatment)
     return sqlInsertStatment
@@ -200,15 +201,20 @@ def create_dummy_data():
         f"({getValueOnSqlFormat(organization_id)}, 'dummy', 'dummy') ON CONFLICT (organization_name) DO NOTHING;\n"
     sqlInsertStatement += "INSERT INTO \"user\" (id, mail, group_id, organization_id)\nVALUES " \
         f"({getValueOnSqlFormat(str(uuid.uuid4()))}, 'dummyUser@dummy', NULL, {getValueOnSqlFormat(organization_id)}) " \
-        "ON CONFLICT (mail) DO NOTHING"
+        "ON CONFLICT (mail) DO NOTHING;"
     return sqlInsertStatement
+
+
+def test():
+    print("---------------------------------------------------")
+    return f"SELECT du.id FROM \"user\" du WHERE du.mail = {getValueOnSqlFormat('dummyUser@dummy')};"
 
 
 def groupSQL(file, start, end):
     sqlInsertStatment = "INSERT INTO \"group\" (id, organization_id, group_leader_id)\nVALUES"
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += f"\n({getValueOnSqlFormat(row.id, isUUID=True)}," \
-            f"{getValueOnSqlFormat(row.organizationID)}, (SELECT COALESCE(u.id, (SELECT du.id FROM \"user\" du WHERE du.mail = 'dummyUser@dummy')) FROM \"user\" u WHERE u.mail = {getValueOnSqlFormat(row.groupLeaderUsername)})),"
+            f"{getValueOnSqlFormat(row.organizationID)}, (SELECT COALESCE((SELECT u.id FROM \"user\" u WHERE u.mail = {getValueOnSqlFormat(row.groupLeaderUsername)}), (SELECT du.id FROM \"user\" du WHERE du.mail = {getValueOnSqlFormat('dummyUser@dummy')})))),"
     sqlInsertStatment = sqlInsertStatment.rstrip(
         sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
     print(sqlInsertStatment)
@@ -225,6 +231,8 @@ def add_group_id_to_user(file, start, end):
 
 def camel_to_snake_case(s):
     # Split the string into words using a regular expression
+    if s == 'NULL':
+        return 'NULL'
     words = re.findall(r'[A-Za-z][a-z]*', s)
 
     # Join the words with underscores and convert to lowercase
