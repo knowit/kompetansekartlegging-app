@@ -64,6 +64,18 @@ def excuteInsert(sqlTextFunction, fileName):
     print(str(response))
 
 
+def executeInsert(sqlTextFunction):
+    response = dbClient.execute_statement(
+        resourceArn=dbARN,
+        secretArn=secretARN,
+        database=dbName,
+        sql=sqlTextFunction
+    )
+
+    print(f"----- Inserting manually without a file -----")
+    print(str(response))
+
+
 def getPandasCSVFile(key):
     s3Object = s3Resource.Object(s3BucketFrom, key)
     fileContent = s3Object.get()["Body"].read().decode("utf-8")
