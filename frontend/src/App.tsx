@@ -1,17 +1,15 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import "./App.css";
-import { Amplify, API, Auth, Hub, Analytics } from "aws-amplify";
+import { API, Auth, Hub } from "aws-amplify";
 // import awsconfig from "./aws-exports";
 import awsconfig from "./exports";
 import Content from "./components/Content";
 import Login from "./components/Login";
 import { ThemeProvider } from "@material-ui/core/styles";
 import {
-    Box,
     Button,
     debounce,
     makeStyles,
-    Modal,
     Snackbar,
 } from "@material-ui/core";
 import { isMobile } from "react-device-detect";
@@ -25,7 +23,6 @@ import {
     fetchOrganizationNameByID,
 } from "./redux/User";
 import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth";
-import ReactMarkdown from "react-markdown";
 import { useAppSelector, useAppDispatch } from "./redux/hooks";
 
 const userBranch = process ? process.env.REACT_APP_USER_BRANCH : ""; // Process does not exist in Webpack 5?
@@ -146,7 +143,7 @@ const App = () => {
                 console.log("Not signed in");
                 dispatch(setUserInfoLogOut());
             });
-    }, []);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         if (isMobile) {

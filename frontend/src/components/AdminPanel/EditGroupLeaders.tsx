@@ -17,7 +17,6 @@ import Typography from "@material-ui/core/Typography";
 import commonStyles from "./common.module.css";
 import useApiGet from "./useApiGet";
 import {
-    listAllUsers,
     listAllUsersInOrganization,
     listGroupLeadersInOrganization,
     addUserToGroup,

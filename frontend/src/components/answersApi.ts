@@ -7,8 +7,7 @@ import {
     FormDefinitionByCreatedAtPaginated,
     FormDefinitionPaginated,
     UserFormPaginated,
-    UserFormByCreatedAtPaginated,
-    UserState,
+    UserFormByCreatedAtPaginated
 } from "../types";
 import * as helper from "../helperFunctions";
 import * as customQueries from "../graphql/custom-queries";

@@ -23,7 +23,6 @@ import DeleteUserFromGroupDialog from "./DeleteUserFromGroupDialog";
 import DeleteGroupDialog from "./DeleteGroupDialog";
 import useApiGet from "./useApiGet";
 import {
-    listAllUsers as listAllAvailableUsers,
     listAllUsersInOrganization as listAllAvailableUsersInOrganization,
     // listGroupLeaders,
     listGroupLeadersInOrganization,
@@ -45,7 +44,6 @@ import AddUserToGroupDialog from "./AddUserToGroupDialog";
 import Button from "../mui/Button";
 import Table from "../mui/Table";
 import TableRow from "../mui/TableRow";
-import { ORGANIZATION_ID_ATTRIBUTE } from "../../constants";
 import { useAppSelector } from "../../redux/hooks";
 import { selectUserState } from "../../redux/User";
 import { listAllFormDefinitionsForLoggedInUser } from "./catalogApi";

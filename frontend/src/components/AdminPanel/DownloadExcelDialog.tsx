@@ -135,7 +135,7 @@ return (
                         <TableCell>{new Date(formDef.createdAt).toLocaleDateString("nb-NO")}</TableCell>
                         <TableCell align="center">
                             <div style={{height: "5.65rem", display: "flex", alignItems: "center"}}>
-                                {formDef.id == idOfDownloadingForm
+                                {formDef.id === idOfDownloadingForm
                                     ?   <>
                                         {isExcelError
                                             ? <p style={{ whiteSpace: "pre-wrap", margin: "0 auto" }}>{"Nedlasting feilet.\nEr katalogen tom?"}</p>

@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 
 import EditGroupLeaders from "./EditGroupLeaders";
 import EditAdmins from "./EditAdmins";
 import EditGroups from "./EditGroups";
 import EditCatalogsRouter from "./EditCatalogsRouter";
 import style from "./AdminPanel.module.css";
-import { Auth } from "aws-amplify";
 
 type AdminPanelProps = {
     activeSubmenuItem: string;

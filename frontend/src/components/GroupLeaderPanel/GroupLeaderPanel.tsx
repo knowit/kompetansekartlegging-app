@@ -5,7 +5,6 @@ import { Group } from "../../API";
 import useApiGet from "../AdminPanel/useApiGet";
 import {
     listAllUsersInOrganization as listAllAvailableUsersInOrganization,
-    listAllUsers as listAllAvailableUsers,
     listGroupLeadersInOrganization,
 } from "../AdminPanel/adminApi";
 import {
@@ -18,10 +17,8 @@ import {
 
 import Main from "./Main";
 import GroupMember from "./GroupMember";
-import { ORGANIZATION_ID_ATTRIBUTE } from "../../constants";
 import { useAppSelector } from "../../redux/hooks";
 import {
-    selectGroupLeaderCognitoGroupName,
     selectUserState,
 } from "../../redux/User";
 import { listAllFormDefinitionsForLoggedInUser } from "../AdminPanel/catalogApi";

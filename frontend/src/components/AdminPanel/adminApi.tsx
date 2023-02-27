@@ -43,10 +43,12 @@ export const removeUserFromGroup = async (
     }
 };
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const removeGroupLeader = async (user: any, org: any) =>
     await removeUserFromGroup(`${org}0groupLeader`, user.Username);
 const removeAdmin = async (user: any, org: any) =>
     await removeUserFromGroup(`${org}0admin`, user.Username);
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 export const addUserToGroup = async (
     groupname: string,
@@ -103,7 +105,7 @@ const listUsersInGroup = async (
             myInit.queryStringParameters["token"] = nextToken;
             response = await API.get(apiName, path, myInit);
             Users.push(...response.Users);
-            if (response.NextToken && response.NextToken != nextToken) {
+            if (response.NextToken && response.NextToken !== nextToken) {
                 nextToken = response.NextToken;
             } else {
                 nextToken = null;

@@ -6,7 +6,7 @@ import {
     GROUPLEADER_COGNITOGROUP_SUFFIX,
 } from "../constants";
 
-import { UserState, UserRole } from "../types";
+import { UserRole } from "../types";
 
 const initialState = {
     userState: {

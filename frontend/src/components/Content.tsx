@@ -10,7 +10,6 @@ import {
     Alert,
     QuestionAnswer,
     SliderValues,
-    UserRole,
 } from "../types";
 import * as helper from "../helperFunctions";
 import * as customQueries from "../graphql/custom-queries";
