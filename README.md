@@ -49,16 +49,22 @@ To run the project locally:
 
 ## Useful commands
 
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+ * `npm run build`    compile typescript to js
+ * `npm run watch`    watch for changes and compile
+ * `npm run test`     perform the jest unit tests
+ * `npm run lint`     run ESLint and Prettier check
+ * `npm run lint-fix` fix auto-fixable lint and formatting errors
+ * `cdk deploy`       deploy this stack to your default AWS account/region
+ * `cdk diff`         compare deployed stack with current state
+ * `cdk synth`        emits the synthesized CloudFormation template
 
 ## Special packages used:
 * Appsync Transformer for CDK: https://github.com/kcwinner/cdk-appsync-transformer
 * Codegen inspiration: https://github.com/kcwinner/advocacy/tree/master/cdk-amplify-appsync-helpers
+
+## CI/CD
+### Linting & Code formatting
+ESLint and Prettier is configured for the frontend code using recommended rules. GitHub Actions analyzes the code when PRs towards the main branch are opened.
 
 # API docs
 
