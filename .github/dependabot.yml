@@ -26,3 +26,31 @@ updates:
     schedule:
       interval: "weekly"
     versioning-strategy: increase
+
+  # AdminQueries
+  - package-ecosystem: "npm"
+    directory: "/cdk/backend/function/AdminQueries"
+    schedule:
+      interval: "weekly"
+    versioning-strategy: increase
+
+  # createUserformBatch
+  - package-ecosystem: "npm"
+    directory: "/cdk/backend/function/createUserformBatch"
+    schedule:
+      interval: "weekly"
+    versioning-strategy: increase
+
+  # excelGenerator
+  - package-ecosystem: "pip"
+    directory: "/cdk/backend/function/excelGenerator"
+    schedule:
+      interval: "weekly"
+    versioning-strategy: increase
+
+  # externalAPI
+  - package-ecosystem: "npm"
+    directory: "/cdk/backend/function/externalAPI"
+    schedule:
+      interval: "weekly"
+    versioning-strategy: increase
