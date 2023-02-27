@@ -60,6 +60,9 @@ To run the project locally:
 * Appsync Transformer for CDK: https://github.com/kcwinner/cdk-appsync-transformer
 * Codegen inspiration: https://github.com/kcwinner/advocacy/tree/master/cdk-amplify-appsync-helpers
 
+## CI/CD
+GitHub Actions is configured to deploy the app to the AWS dev environment on every PR merge. Additionally, you can trigger deployment through the dispatchable workflow "`Deploy to AWS`", specifying which environment to deploy to, and whether to deploy the entire app or the backend only.
+
 # API docs
 
 Documentation for the external API can be found at this projects Github Pages (`kompetansekartlegging-app/docs`) or at this URL: https://apidocs.kompetanse.knowit.no
