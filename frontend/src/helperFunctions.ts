@@ -15,7 +15,7 @@ import { getOrganization } from "./graphql/queries";
 */
 export const callGraphQL = async <T>(
     query: any,
-    variables?: {} | undefined
+    variables?: {} | undefined // eslint-disable-line @typescript-eslint/ban-types
 ): Promise<GraphQLResult<T>> => {
     return (await API.graphql(
         graphqlOperation(query, variables)

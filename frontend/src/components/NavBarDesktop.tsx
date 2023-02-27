@@ -149,7 +149,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
 
     useEffect(() => {
         if (avatarMenuPrevOpen.current === true && avatarMenuOpen === false) {
-            anchorRef.current!.focus();
+            anchorRef.current?.focus();
         }
 
         avatarMenuPrevOpen.current = avatarMenuOpen;

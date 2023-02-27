@@ -24,13 +24,9 @@ const initialState = {
 export const fetchOrganizationNameByID = createAsyncThunk(
     "user/fetchOrganizationNameByID",
     async (cognitoUser: any, thunkAPI) => {
-        try {
-            const id = cognitoUser.attributes["custom:OrganizationID"];
-            const organizationName = await getOrganizationNameByID(id);
-            return organizationName;
-        } catch (err) {
-            throw err;
-        }
+        const id = cognitoUser.attributes["custom:OrganizationID"];
+        const organizationName = await getOrganizationNameByID(id);
+        return organizationName;
     }
 );
 
@@ -88,7 +84,10 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         setUserInfo: {
-            reducer: (state, action: PayloadAction<Object>) => {
+            reducer: (
+                state,
+                action: PayloadAction<Record<string, unknown>>
+            ) => {
                 state.userState = {
                     ...state.userState,
                     ...action.payload,
