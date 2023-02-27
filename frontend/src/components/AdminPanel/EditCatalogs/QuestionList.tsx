@@ -12,13 +12,13 @@ import QuestionListItem from "./QuestionListItem";
 import DeleteQuestionDialog from "./DeleteQuestionDialog";
 
 type QuestionListProps = {
-    id: string,
-    categories: any[],
-    questions: any[],
-    formDefinitionID: string,
-    formDefinitionLabel: string | null,
-    refreshQuestions: any 
-}
+    id: string;
+    categories: any[];
+    questions: any[];
+    formDefinitionID: string;
+    formDefinitionLabel: string | null;
+    refreshQuestions: any;
+};
 
 const QuestionList = ({
     id,
@@ -47,10 +47,14 @@ const QuestionList = ({
         setEnableUpdates(false);
 
         const me = question;
-        const questionsCopy = [...questions]
-        questionsCopy.sort((qA, qB) => qB.index - qA.index)
+        const questionsCopy = [...questions];
+        questionsCopy.sort((qA, qB) => qB.index - qA.index);
 
-        const swapWith = questionsCopy[questionsCopy.findIndex((q) => q.index === question.index) + direction]
+        const swapWith =
+            questionsCopy[
+                questionsCopy.findIndex((q) => q.index === question.index) +
+                    direction
+            ];
         await updateQuestionIndex(me, swapWith.index);
         await updateQuestionIndex(swapWith, me.index);
 

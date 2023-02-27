@@ -47,7 +47,7 @@ import {
 import { SuperAdminMenu } from "./SuperAdminPanel/SuperAdminMenu";
 import { SuperAdminPanel } from "./SuperAdminPanel/SuperAdminPanel";
 
-const cardCornerRadius: number = 40;
+const cardCornerRadius = 40;
 
 export enum MenuButton {
     Overview,
@@ -143,9 +143,9 @@ const updateCategoryAlerts = (
     questionAnswers: Map<string, QuestionAnswer[]>,
     setAlerts: React.Dispatch<React.SetStateAction<AlertState | undefined>>
 ) => {
-    let msNow = Date.now();
-    let alerts = new Map<string, Alert>();
-    let catAlerts = new Map<string, number>();
+    const msNow = Date.now();
+    const alerts = new Map<string, Alert>();
+    const catAlerts = new Map<string, number>();
     questionAnswers.forEach((quAnsArr) => {
         quAnsArr.forEach((quAns) => {
             if (
@@ -158,7 +158,7 @@ const updateCategoryAlerts = (
                     type: AlertType.Incomplete,
                     message: "Ubesvart!",
                 });
-                let numAlerts = catAlerts.get(quAns.question.category.text);
+                const numAlerts = catAlerts.get(quAns.question.category.text);
                 if (numAlerts)
                     catAlerts.set(quAns.question.category.text, numAlerts + 1);
                 else catAlerts.set(quAns.question.category.text, 1);
@@ -169,7 +169,7 @@ const updateCategoryAlerts = (
                         new Date(quAns.updatedAt) //.toLocaleDateString('no-NO')
                     }`,
                 });
-                let numAlerts = catAlerts.get(quAns.question.category.text);
+                const numAlerts = catAlerts.get(quAns.question.category.text);
                 if (numAlerts)
                     catAlerts.set(quAns.question.category.text, numAlerts + 1);
                 else catAlerts.set(quAns.question.category.text, 1);
@@ -215,9 +215,9 @@ const Content = ({ ...props }: ContentProps) => {
         category: string,
         sliderMap: Map<string, SliderValues>
     ): void => {
-        let newAnswers: QuestionAnswer[] =
+        const newAnswers: QuestionAnswer[] =
             questionAnswers.get(category)?.map((quAns) => {
-                let sliderValues = sliderMap.get(
+                const sliderValues = sliderMap.get(
                     quAns.question.id
                 ) as QuestionAnswer;
                 if (sliderValues.customScaleValue != null) {
@@ -247,7 +247,7 @@ const Content = ({ ...props }: ContentProps) => {
             console.error("Missing formDefinition!");
             return;
         }
-        let quAnsInput: CreateQuestionAnswerInput[] = [];
+        const quAnsInput: CreateQuestionAnswerInput[] = [];
         questionAnswers.get(activeCategory)?.forEach((quAns) => {
             if (
                 quAns.question.type === QuestionType.CustomScaleLabels &&
@@ -282,7 +282,7 @@ const Content = ({ ...props }: ContentProps) => {
             );
             return;
         }
-        let result = (
+        const result = (
             await helper.callBatchGraphQL<CreateQuestionAnswerResult>(
                 customQueries.batchCreateQuestionAnswer2,
                 { input: quAnsInput, organizationID: userState.organizationID },
@@ -307,7 +307,7 @@ const Content = ({ ...props }: ContentProps) => {
 
     const submitAndProceed = () => {
         createUserForm();
-        let currentIndex = categories.findIndex(
+        const currentIndex = categories.findIndex(
             (cat) => cat === activeCategory
         );
         if (categories.length >= currentIndex) {
@@ -365,7 +365,7 @@ const Content = ({ ...props }: ContentProps) => {
     useEffect(() => {
         const fetchUserFormsAndOpenView = async () => {
             // debugger
-            let allUserForms = await helper.listUserForms();
+            const allUserForms = await helper.listUserForms();
             setAnswerLog(allUserForms);
             setAnswerHistoryOpen(true);
         };
@@ -469,7 +469,7 @@ const Content = ({ ...props }: ContentProps) => {
     };
 
     const getMainMenuAlertElement = (): JSX.Element => {
-        let totalAlerts = alerts?.qidMap.size ?? 0;
+        const totalAlerts = alerts?.qidMap.size ?? 0;
         if (totalAlerts > 0)
             return (
                 <AlertNotification
@@ -520,7 +520,7 @@ const Content = ({ ...props }: ContentProps) => {
     ];
 
     const setupDesktopMenu = (): JSX.Element[] => {
-        let buttons: JSX.Element[] = [];
+        const buttons: JSX.Element[] = [];
         buttonSetup
             .filter((b) => b.show)
             .forEach((butt) => {
@@ -596,7 +596,7 @@ const Content = ({ ...props }: ContentProps) => {
     };
 
     const setUpMobileMenu = () => {
-        let listItems: JSX.Element[] = [];
+        const listItems: JSX.Element[] = [];
 
         buttonSetup.forEach((butt) => {
             listItems.push(

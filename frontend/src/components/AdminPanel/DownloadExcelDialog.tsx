@@ -6,7 +6,7 @@ import useApiGet from "./useApiGet";
 import { API, Auth } from "aws-amplify";
 
 import Dialog from "@material-ui/core/Dialog";
-import GetAppIcon from '@material-ui/icons/GetApp';
+import GetAppIcon from "@material-ui/icons/GetApp";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import IconButton from "@material-ui/core/IconButton";
 import TableBody from "@material-ui/core/TableBody";
@@ -21,31 +21,37 @@ import { CloseIcon } from "../DescriptionTable";
 import { dialogStyles } from "../../styles";
 
 type FormDefinition = {
-    id: string
-    label: string
-    createdAt: string
-    updatedAt: string
-}
+    id: string;
+    label: string;
+    createdAt: string;
+    updatedAt: string;
+};
 
 interface FormDefinitions {
-    formDefinitions: FormDefinition[]
+    formDefinitions: FormDefinition[];
 }
 
 const DownloadExcelDialog = ({ open, onClose }: any) => {
     const style = dialogStyles();
-    
+
     const {
         result: formDefinitions,
         error,
         loading,
     } = useApiGet({
-        getFn: listAllFormDefinitionsForLoggedInUser
-    })
+        getFn: listAllFormDefinitionsForLoggedInUser,
+    });
 
     return (
-        <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm" PaperProps={{
-            style: { borderRadius: 30 },
-        }}>
+        <Dialog
+            open={open}
+            onClose={onClose}
+            fullWidth
+            maxWidth="sm"
+            PaperProps={{
+                style: { borderRadius: 30 },
+            }}
+        >
             <DialogTitle>
                 <Box
                     component="div"
@@ -56,10 +62,7 @@ const DownloadExcelDialog = ({ open, onClose }: any) => {
                     <span className={style.dialogTitleText}>
                         Last ned resultater
                     </span>
-                    <IconButton
-                        className={style.closeButton}
-                        onClick={onClose}
-                    >
+                    <IconButton className={style.closeButton} onClick={onClose}>
                         <CloseIcon />
                     </IconButton>
                 </Box>
@@ -68,14 +71,14 @@ const DownloadExcelDialog = ({ open, onClose }: any) => {
                 {error && <p>An error occured: {error}</p>}
                 {loading && <CircularProgress />}
                 {!error && !loading && formDefinitions && (
-                    <DownloadExcelTable formDefinitions={formDefinitions}/>
+                    <DownloadExcelTable formDefinitions={formDefinitions} />
                 )}
             </DialogContent>
         </Dialog>
     );
-}
+};
 
-const DownloadExcelTable = ({formDefinitions} : FormDefinitions) => {
+const DownloadExcelTable = ({ formDefinitions }: FormDefinitions) => {
     const [idOfDownloadingForm, setIdOfDownloadingForm] = useState<string>("");
     const [isExcelError, setIsExcelError] = useState<boolean>(false);
 
@@ -88,12 +91,12 @@ const DownloadExcelTable = ({formDefinitions} : FormDefinitions) => {
                     "Content-Type": "application/json",
                     Authorization: `${(await Auth.currentSession())
                         .getAccessToken()
-                        .getJwtToken()}`
+                        .getJwtToken()}`,
                 },
                 queryStringParameters: {
                     formDefId: `${formDefId}`,
-                    formDefLabel: `${formDefLabel}`
-                }
+                    formDefLabel: `${formDefLabel}`,
+                },
             });
             download(data, "report.xlsx");
             setIdOfDownloadingForm("");
@@ -117,48 +120,77 @@ const DownloadExcelTable = ({formDefinitions} : FormDefinitions) => {
         // Remove element from DOM
         document.body.removeChild(anchor);
     };
-    
-return (
-    <TableContainer>
-        <Table stickyHeader>
-            <TableHead>
-                <TableRow>
-                    <TableCell>Katalog</TableCell>
-                    <TableCell>Opprettet</TableCell>
-                    <TableCell/>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {formDefinitions.map((formDef: FormDefinition) => (
-                    <TableRow key={formDef.id}>
-                        <TableCell>{formDef.label}</TableCell>
-                        <TableCell>{new Date(formDef.createdAt).toLocaleDateString("nb-NO")}</TableCell>
-                        <TableCell align="center">
-                            <div style={{height: "5.65rem", display: "flex", alignItems: "center"}}>
-                                {formDef.id === idOfDownloadingForm
-                                    ?   <>
-                                        {isExcelError
-                                            ? <p style={{ whiteSpace: "pre-wrap", margin: "0 auto" }}>{"Nedlasting feilet.\nEr katalogen tom?"}</p>
-                                            : <CircularProgress style={{margin: "0 auto"}}/>
-                                        }
+
+    return (
+        <TableContainer>
+            <Table stickyHeader>
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Katalog</TableCell>
+                        <TableCell>Opprettet</TableCell>
+                        <TableCell />
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {formDefinitions.map((formDef: FormDefinition) => (
+                        <TableRow key={formDef.id}>
+                            <TableCell>{formDef.label}</TableCell>
+                            <TableCell>
+                                {new Date(formDef.createdAt).toLocaleDateString(
+                                    "nb-NO"
+                                )}
+                            </TableCell>
+                            <TableCell align="center">
+                                <div
+                                    style={{
+                                        height: "5.65rem",
+                                        display: "flex",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    {formDef.id === idOfDownloadingForm ? (
+                                        <>
+                                            {isExcelError ? (
+                                                <p
+                                                    style={{
+                                                        whiteSpace: "pre-wrap",
+                                                        margin: "0 auto",
+                                                    }}
+                                                >
+                                                    {
+                                                        "Nedlasting feilet.\nEr katalogen tom?"
+                                                    }
+                                                </p>
+                                            ) : (
+                                                <CircularProgress
+                                                    style={{ margin: "0 auto" }}
+                                                />
+                                            )}
                                         </>
-                                    :   <Button
-                                            style={{margin: "0 auto"}}
+                                    ) : (
+                                        <Button
+                                            style={{ margin: "0 auto" }}
                                             variant="contained"
                                             color="primary"
-                                            endIcon={<GetAppIcon/>}
-                                            onClick={() => {downloadExcel(formDef.id, formDef.label)}}>
+                                            endIcon={<GetAppIcon />}
+                                            onClick={() => {
+                                                downloadExcel(
+                                                    formDef.id,
+                                                    formDef.label
+                                                );
+                                            }}
+                                        >
                                             Last ned
                                         </Button>
-                                }
-                            </div>
-                        </TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
-    </TableContainer>
+                                    )}
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
     );
-}
+};
 
 export default DownloadExcelDialog;

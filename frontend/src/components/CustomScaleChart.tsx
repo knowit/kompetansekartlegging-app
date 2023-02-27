@@ -9,7 +9,10 @@ import {
     ResponsiveContainer,
     TooltipProps,
 } from "recharts";
-import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
+import {
+    NameType,
+    ValueType,
+} from "recharts/types/component/DefaultTooltipContent";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Slider from "@material-ui/core/Slider";
 
@@ -89,7 +92,7 @@ const PopupSlider = withStyles({
 })(Slider);
 
 export const CustomScaleChart = ({ ...props }: CustomScaleChartProps) => {
-    let classes = useStyles();
+    const classes = useStyles();
 
     if (props.chartData.length === 0) return null;
 

@@ -25,13 +25,17 @@ const CategoryList = ({
     const [showDeleteCategoryDialog, setShowDeleteCategoryDialog] =
         useState<boolean>(false);
     const [categoryToDelete, setCategoryToDelete] = useState<any>();
-    const [categoryToDeleteContainsQuestions, setCategoryToDeleteContainsQuestions] = useState<boolean>();
+    const [
+        categoryToDeleteContainsQuestions,
+        setCategoryToDeleteContainsQuestions,
+    ] = useState<boolean>();
 
     const deleteCategory = async (category: any) => {
-        const categoryContainsQuestions = await listQuestionsByCategoryID(category.id)
-        .then((response: any) => {
-            return response.result.length > 0
-        })
+        const categoryContainsQuestions = await listQuestionsByCategoryID(
+            category.id
+        ).then((response: any) => {
+            return response.result.length > 0;
+        });
         setCategoryToDeleteContainsQuestions(categoryContainsQuestions);
         setShowDeleteCategoryDialog(true);
         setCategoryToDelete(category);
@@ -99,7 +103,9 @@ const CategoryList = ({
                     onExited={() => setCategoryToDelete(null)}
                     onConfirm={deleteCategoryConfirm}
                     category={categoryToDelete}
-                    categoryContainsQuestions={categoryToDeleteContainsQuestions}
+                    categoryContainsQuestions={
+                        categoryToDeleteContainsQuestions
+                    }
                 />
             )}
         </>

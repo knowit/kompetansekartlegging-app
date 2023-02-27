@@ -18,9 +18,9 @@ export const removeUserFromGroup = async (
     groupname: string,
     username: string
 ): Promise<ApiResponse<any>> => {
-    let apiName = "AdminQueries";
-    let path = "/removeUserFromGroup";
-    let myInit = {
+    const apiName = "AdminQueries";
+    const path = "/removeUserFromGroup";
+    const myInit = {
         body: {
             groupname,
             username,
@@ -54,9 +54,9 @@ export const addUserToGroup = async (
     groupname: string,
     username: string
 ): Promise<ApiResponse<any>> => {
-    let apiName = "AdminQueries";
-    let path = "/addUserToGroup";
-    let myInit = {
+    const apiName = "AdminQueries";
+    const path = "/addUserToGroup";
+    const myInit = {
         body: {
             groupname,
             username,
@@ -82,9 +82,9 @@ export const addUserToGroup = async (
 const listUsersInGroup = async (
     groupname: string
 ): Promise<ApiResponse<any[]>> => {
-    let apiName = "AdminQueries";
-    let path = "/listUsersInGroup";
-    let myInit: any = {
+    const apiName = "AdminQueries";
+    const path = "/listUsersInGroup";
+    const myInit: any = {
         queryStringParameters: {
             groupname,
         },
@@ -131,16 +131,14 @@ const listAdminsInOrganization = async (organizationID: string) =>
     await listUsersInGroup(`${organizationID}${ADMIN_COGNITOGROUP_SUFFIX}`);
 const listAdmins = async () => await listUsersInGroup("admin");
 
-const listAllUsers = async (
-    limit: number = 60
-): Promise<ApiResponse<any[]>> => {
-    let nextToken: string = "";
+const listAllUsers = async (limit = 60): Promise<ApiResponse<any[]>> => {
+    let nextToken = "";
     let allUsers: any[] = [];
     try {
         do {
-            let apiName = "AdminQueries";
-            let path = "/listUsers";
-            let variables = {
+            const apiName = "AdminQueries";
+            const path = "/listUsers";
+            const variables = {
                 queryStringParameters: {
                     limit: `${limit}`,
                     token: nextToken,

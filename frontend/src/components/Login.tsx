@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, makeStyles } from "@material-ui/core";
 import { Authenticator } from "@aws-amplify/ui-react";
-import '@aws-amplify/ui-react/styles.css';
+import "@aws-amplify/ui-react/styles.css";
 import { Auth } from "aws-amplify";
 import { KnowitColors } from "../styles";
 import { ReactComponent as KnowitLogo } from "../Logotype-Knowit-Digital-white 1.svg";
@@ -108,8 +108,8 @@ const loginStyle = makeStyles({
     authenticator: {
         height: "100%",
         width: "100%",
-        position: "absolute"
-    }
+        position: "absolute",
+    },
 });
 
 const userBranch = process ? process.env.REACT_APP_USER_BRANCH : "";
@@ -120,20 +120,20 @@ const Login = (props: { isMobile: boolean }) => {
     const [showDevLogin, setShowDevLogin] = useState<boolean>(false);
     const formFields = {
         signUp: {
-                name: {
-                    order: 1
-                },
-                email: {
-                    order: 2
-                },
-                password: {
-                    order: 3
-                },
-                confirm_password: {
-                    order: 4
-                }
-        }
-    }
+            name: {
+                order: 1,
+            },
+            email: {
+                order: 2,
+            },
+            password: {
+                order: 3,
+            },
+            confirm_password: {
+                order: 4,
+            },
+        },
+    };
 
     return showDevLogin ? (
         <Authenticator
@@ -142,7 +142,8 @@ const Login = (props: { isMobile: boolean }) => {
             variation="default"
             loginMechanisms={["email"]}
             className={style.authenticator}
-            /*socialProviders={["amazon"]}*//>
+            /*socialProviders={["amazon"]}*/
+        />
     ) : (
         <div className={style.container}>
             <div className={style.topDiv} />
@@ -165,7 +166,7 @@ const Login = (props: { isMobile: boolean }) => {
                         Kompetansekartlegging
                     </h1>
                 </div>
-                <div className={style.buttonAlign}> 
+                <div className={style.buttonAlign}>
                     <Button
                         className={style.loginButton}
                         onClick={() =>

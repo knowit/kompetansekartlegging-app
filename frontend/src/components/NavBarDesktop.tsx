@@ -179,7 +179,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
             "https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/frontend/markdown/help.md"
         )
             .then(async (response) => {
-                let markdown = await response.text();
+                const markdown = await response.text();
                 setHelpMarkdown(markdown);
             })
             .catch((error) => console.error(error));

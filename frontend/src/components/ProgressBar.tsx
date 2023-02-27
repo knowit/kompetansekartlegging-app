@@ -51,9 +51,9 @@ export default function ProgressBar({ ...props }: ProgressProps) {
 
     useEffect(() => {
         const updateProgress = () => {
-            let unfilledQuestions = props.alerts?.qidMap.size ?? 0;
-            let filledQuestions = props.totalQuestions - unfilledQuestions;
-            let progressPercentage =
+            const unfilledQuestions = props.alerts?.qidMap.size ?? 0;
+            const filledQuestions = props.totalQuestions - unfilledQuestions;
+            const progressPercentage =
                 (filledQuestions / props.totalQuestions) * 100;
             setProgress(progressPercentage);
         };

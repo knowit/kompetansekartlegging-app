@@ -130,7 +130,7 @@ export const Form = ({ ...props }: FormProps) => {
         _items: QuestionType[] | undefined
     ): JSX.Element[] => {
         //console.log("Props to make questions from: ", props.questionAnswers);
-        let questionAnswers =
+        const questionAnswers =
             props.questionAnswers
                 ?.get(props.activeCategory)
                 ?.map((questionAnswer) => {

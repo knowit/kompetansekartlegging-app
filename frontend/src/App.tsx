@@ -6,12 +6,7 @@ import awsconfig from "./exports";
 import Content from "./components/Content";
 import Login from "./components/Login";
 import { ThemeProvider } from "@material-ui/core/styles";
-import {
-    Button,
-    debounce,
-    makeStyles,
-    Snackbar,
-} from "@material-ui/core";
+import { Button, debounce, makeStyles, Snackbar } from "@material-ui/core";
 import { isMobile } from "react-device-detect";
 import FloatingScaleDescButton from "./components/FloatingScaleDescButton";
 import NavBarDesktop from "./components/NavBarDesktop";
@@ -50,7 +45,7 @@ Auth.configure(awsconfig);
 Hub.listen(/.*/, (data) => {
     console.log("Hub listening to all messages: ", data);
     if (data.payload.event === "signIn_failure") {
-        let message = data.payload.data.message;
+        const message = data.payload.data.message;
         if (message.includes("Google") && !message.includes("organization")) {
             Auth.federatedSignIn({
                 customProvider: CognitoHostedUIIdentityProvider.Google,
@@ -88,7 +83,7 @@ const cognitoUserContainsAttributes = (data: any): boolean => {
 
 const App = () => {
     const dispatch = useAppDispatch();
-    const userState = useAppSelector(selectUserState)
+    const userState = useAppSelector(selectUserState);
 
     const style = appStyle();
     const [showFab, setShowFab] = useState<boolean>(true);
@@ -98,7 +93,7 @@ const App = () => {
 
     useEffect(() => {
         const handleResize = debounce(() => {
-            let vh = window.innerHeight * 0.01;
+            const vh = window.innerHeight * 0.01;
             document.documentElement.style.setProperty("--vh", `${vh}px`);
         }, 100);
         handleResize();
@@ -177,7 +172,7 @@ const App = () => {
 
     const handleScroll = () => {
         if (categoryNavRef.current?.clientHeight !== undefined) {
-            let menuHeight = categoryNavRef.current?.clientHeight - 56;
+            const menuHeight = categoryNavRef.current?.clientHeight - 56;
             // Makes sure there is enough content to collapse; stops glitchy drag-scrolling past content
             if (
                 document.body.clientHeight > window.innerHeight + menuHeight &&
