@@ -6,7 +6,7 @@ import EditGroups from "./EditGroups";
 import EditCatalogsRouter from "./EditCatalogsRouter";
 import style from "./AdminPanel.module.css";
 import { Auth } from "aws-amplify";
-import DownloadExcelDialog from "./DownloadExcel";
+import DownloadExcel from "./DownloadExcel";
 
 type AdminPanelProps = {
     activeSubmenuItem: string;
@@ -55,7 +55,7 @@ const AdminPanel = ({ activeSubmenuItem }: AdminPanelProps) => {
             {category === SubmenuCategory.EDIT_ADMINS && <EditAdmins />}
             {category === SubmenuCategory.EDIT_GROUPS && <EditGroups showLastAnsweredAt={false}/>}
             {category === SubmenuCategory.EDIT_CATALOGS && <EditCatalogsRouter />}
-            {category === SubmenuCategory.DOWNLOAD_CATALOGS && <DownloadExcelDialog/>}
+            {category === SubmenuCategory.DOWNLOAD_CATALOGS && <DownloadExcel/>}
         </div>
     );
 };
