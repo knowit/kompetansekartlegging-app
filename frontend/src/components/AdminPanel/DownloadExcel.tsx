@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 
-import { Box, DialogContent, DialogTitle } from "@material-ui/core";
+import { CardContent, Typography } from "@material-ui/core";
 import { listAllFormDefinitionsForLoggedInUser } from "./catalogApi";
 import useApiGet from "./useApiGet";
 import { API, Auth } from "aws-amplify";
 
-import Dialog from "@material-ui/core/Dialog";
+import Container from "@material-ui/core/Container";
+import Card from "@material-ui/core/Card";
 import GetAppIcon from '@material-ui/icons/GetApp';
 import CircularProgress from "@material-ui/core/CircularProgress";
-import IconButton from "@material-ui/core/IconButton";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -16,9 +16,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Button from "../mui/Button";
 import Table from "../mui/Table";
-
-import { CloseIcon } from "../DescriptionTable";
-import { dialogStyles } from "../../styles";
+import commonStyles from "./common.module.css";
 
 type FormDefinition = {
     id: string
@@ -31,9 +29,7 @@ interface FormDefinitions {
     formDefinitions: FormDefinition[]
 }
 
-const DownloadExcelDialog = ({ open, onClose }: any) => {
-    const style = dialogStyles();
-    
+const DownloadExcel = () => {    
     const {
         result: formDefinitions,
         error,
@@ -43,35 +39,21 @@ const DownloadExcelDialog = ({ open, onClose }: any) => {
     })
 
     return (
-        <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm" PaperProps={{
-            style: { borderRadius: 30 },
-        }}>
-            <DialogTitle>
-                <Box
-                    component="div"
-                    mb={1}
-                    display="flex"
-                    justifyContent="space-between"
-                >
-                    <span className={style.dialogTitleText}>
-                        Last ned resultater
-                    </span>
-                    <IconButton
-                        className={style.closeButton}
-                        onClick={onClose}
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                </Box>
-            </DialogTitle>
-            <DialogContent>
-                {error && <p>An error occured: {error}</p>}
-                {loading && <CircularProgress />}
-                {!error && !loading && formDefinitions && (
-                    <DownloadExcelTable formDefinitions={formDefinitions}/>
-                )}
-            </DialogContent>
-        </Dialog>
+        <Container maxWidth="md" className={commonStyles.container}>
+            <Card style={{ marginBottom: "24px"}} variant="outlined">
+                <CardContent>
+                    <Typography color="textSecondary" gutterBottom>
+                        Last ned kataloger
+                    </Typography>
+                    På denne siden kan du laste ned Excel-rapport fra katalogen du ønsker.
+                </CardContent>
+            </Card>
+            {error && <p>An error occured: {error}</p>}
+            {loading && <CircularProgress />}
+            {!error && !loading && formDefinitions && (
+                <DownloadExcelTable formDefinitions={formDefinitions}/>
+            )}
+        </Container>
     );
 }
 
@@ -135,7 +117,7 @@ return (
                         <TableCell>{new Date(formDef.createdAt).toLocaleDateString("nb-NO")}</TableCell>
                         <TableCell align="center">
                             <div style={{height: "5.65rem", display: "flex", alignItems: "center"}}>
-                                {formDef.id == idOfDownloadingForm
+                                {formDef.id === idOfDownloadingForm
                                     ?   <>
                                         {isExcelError
                                             ? <p style={{ whiteSpace: "pre-wrap", margin: "0 auto" }}>{"Nedlasting feilet.\nEr katalogen tom?"}</p>
@@ -161,4 +143,4 @@ return (
     );
 }
 
-export default DownloadExcelDialog;
+export default DownloadExcel;
