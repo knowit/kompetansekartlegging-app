@@ -57,7 +57,8 @@ def get_aws_profile(profile_name):
         session_opts = config.items(f"sso-session {profile_name}")
         profile.update(dict(session_opts))
     except:
-        print("Old version of cli detected")
+        pass # Old versions of AWS CLI did not use sso sessions, while newer do.
+             # If sessions are included, we need to get the token from there
     return profile
 
 def update_aws_credentials(profile_name, profile, credentials):
