@@ -37,6 +37,9 @@ const AdminMenu = ({
             text: "Rediger kataloger",
             hasInternalRouting: true,
         },
+        {
+            text: "Last ned kataloger"
+        },
         // refactor this one out once the whole app uses routing
         {
             text: "hidden",
