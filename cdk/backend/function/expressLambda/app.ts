@@ -6,18 +6,13 @@ import {
 } from '@aws-sdk/client-rds-data'
 import express from 'express'
 import { apiRouter } from './api/router'
-
 const rds = new RDSDataClient({ region: 'eu-central-1' })
-
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 const bodyParser = require('body-parser')
-
 const app = express()
-
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(awsServerlessExpressMiddleware.eventContext())
-
 // Enable CORS for all methods
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
@@ -27,22 +22,18 @@ app.use((req, res, next) => {
   )
   next()
 })
-
 // Add all API routerse
 app.use('/api', apiRouter)
-
 const cmdConstants = {
   resourceArn: process.env.DATABASE_ARN,
   secretArn: process.env.SECRET_ARN,
   database: process.env.DATABASE_NAME,
 }
-
 interface SqlQueryInput {
   query: string
   parameters?: SqlParameter[]
   message: string
 }
-
 export const sqlQuery = async ({
   query,
   parameters,
@@ -54,10 +45,8 @@ export const sqlQuery = async ({
     ...cmdConstants,
     formatRecordsAs: RecordsFormatType.JSON,
   })
-
   const response = await rds.send(cmd)
   console.log('🚀 ~ response', response)
-
   if (response.formattedRecords) {
     const records = JSON.parse(response.formattedRecords)
     if (records.length === 0) {
@@ -66,7 +55,6 @@ export const sqlQuery = async ({
         data: null,
       }
     }
-
     return {
       message,
       data: records.length === 1 ? records[0] : records,
@@ -75,5 +63,4 @@ export const sqlQuery = async ({
     throw new Error(`Something went wrong in sqlQuery(...)`)
   }
 }
-
 export default app
