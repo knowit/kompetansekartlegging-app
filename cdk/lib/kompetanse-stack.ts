@@ -23,16 +23,24 @@ import * as path from 'path'
 import { AppSyncTransformer } from 'cdk-appsync-transformer'
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
+import * as sns from 'aws-cdk-lib/aws-sns'
+
 import { aws_lambda_nodejs as nodejs } from 'aws-cdk-lib'
 import { AuroraStack } from './aurora-stack'
 import { MigrationStack } from './migration-stack'
+import {
+  ComparisonOperator,
+  Statistic,
+  TreatMissingData,
+  Unit,
+} from 'aws-cdk-lib/aws-cloudwatch'
+import { SnsAction } from 'aws-cdk-lib/aws-cloudwatch-actions'
 
 export class KompetanseStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props)
     const AZURE = this.node.tryGetContext('AZURE')
-    const GOOGLE_ID = this.node.tryGetContext('GOOGLE_ID')
-    const GOOGLE_SECRET = this.node.tryGetContext('GOOGLE_SECRET')
+    const EXCEL = this.node.tryGetContext('EXCEL')
     const ENV = this.node.tryGetContext('ENV')
     const isProd = ENV === 'prod'
     const isDev = ENV === 'dev'
@@ -69,24 +77,6 @@ export class KompetanseStack extends Stack {
     const supportedProviders = []
 
     // Federation Providers
-    if (GOOGLE_SECRET && GOOGLE_ID) {
-      const googlePorvider = new cognito.UserPoolIdentityProviderGoogle(
-        this,
-        'Google',
-        {
-          clientId: GOOGLE_ID,
-          clientSecret: GOOGLE_SECRET,
-          userPool: pool,
-          scopes: ['profile', 'email', 'openid'],
-          attributeMapping: {
-            email: cognito.ProviderAttribute.GOOGLE_EMAIL,
-            fullname: cognito.ProviderAttribute.GOOGLE_NAME,
-            profilePicture: cognito.ProviderAttribute.GOOGLE_PICTURE,
-          },
-        }
-      )
-      supportedProviders.push({ name: googlePorvider.providerName })
-    }
 
     if (AZURE) {
       const samlProvider = new cognito.CfnUserPoolIdentityProvider(
@@ -236,7 +226,7 @@ export class KompetanseStack extends Stack {
         code: lambda.Code.fromAsset(
           path.join(__dirname, '/../backend/presignup')
         ),
-        functionName: 'KompetansePreSignupTrigger',
+        functionName: `KompetansePreSignupTrigger-${ENV}`,
         handler: 'index.handler',
         runtime: lambda.Runtime.NODEJS_14_X,
         timeout: Duration.seconds(25),
@@ -355,6 +345,10 @@ export class KompetanseStack extends Stack {
       resources: [
         tableArns['UserFormTable'],
         `${tableArns['UserFormTable']}/index/*`,
+        tableArns['GroupTable'],
+        `${tableArns['GroupTable']}/index/*`,
+        tableArns['UserTable'],
+        `${tableArns['UserTable']}/index/*`,
         tableArns['QuestionTable'],
         `${tableArns['QuestionTable']}/index/*`,
         tableArns['QuestionAnswerTable'],
@@ -675,6 +669,8 @@ export class KompetanseStack extends Stack {
 
     // CreateUserFormBatch Setup
 
+    const batchCreateUserTimeoutSeconds = 25
+
     const batchCreateUser = new lambda.Function(
       this,
       'kompetansebatchuserform',
@@ -684,7 +680,7 @@ export class KompetanseStack extends Stack {
         ),
         handler: 'index.handler',
         runtime: lambda.Runtime.NODEJS_14_X,
-        timeout: Duration.seconds(25),
+        timeout: Duration.seconds(batchCreateUserTimeoutSeconds),
       }
     )
     appSync.addLambdaDataSourceAndResolvers(
@@ -698,7 +694,6 @@ export class KompetanseStack extends Stack {
       period: Duration.minutes(5),
       unit: Unit.SECONDS,
     })
-
     const batchCreateUserAlarm = new aws_cloudwatch.Alarm(
       this,
       `${ENV}-lambda-createUserFormBatch-timeout-alarm`,
@@ -713,7 +708,6 @@ export class KompetanseStack extends Stack {
         alarmDescription: `Alarm when lambda createUserFormBatch times out (${batchCreateUserTimeoutSeconds} ${batchCreateUserMetric.unit!.toLowerCase()})`,
       }
     )
-
     const systemAdminTopic = new sns.Topic(this, `${ENV}-system-admin-topic`, {
       displayName: `Kompetansekartlegging ${ENV} systemadministrator`,
       topicName: `${ENV}-system-admin-topic`,
@@ -912,6 +906,12 @@ export class KompetanseStack extends Stack {
       }
     )
 
+    ApiMap['externalAPI'] = {
+      name: externalApi.restApiName,
+      endpoint: externalApi.url,
+      region: this.region,
+    }
+
     // ExternalAPI Usage plan setup
 
     const extUsagePlan = externalApi.addUsagePlan('externalApiUsagePlan', {
@@ -968,28 +968,7 @@ export class KompetanseStack extends Stack {
     })
 
     const functionMapOutput = new CfnOutput(this, 'functionMap', {
-      value: JSON.stringify({
-        adminQueries: {
-          name: adminQueryApi.restApiName,
-          endpoint: adminQueryApi.url,
-          region: this.region,
-        },
-        externalAPI: {
-          name: externalApi.restApiName,
-          endpoint: externalApi.url,
-          region: this.region,
-        },
-        excelApi: {
-          name: '', //excelApi.restApiName,
-          endpoint: '', // excelApi.url,
-          region: this.region,
-        },
-        expressLambda: {
-          name: expressLambdaApi.restApiName,
-          endpoint: expressLambdaApi.url,
-          region: this.region,
-        },
-      }),
+      value: JSON.stringify(ApiMap),
     })
 
     const userCreateBatchOutput = new CfnOutput(this, 'outputCreateBatch', {

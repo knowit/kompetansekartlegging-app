@@ -21,7 +21,6 @@ interface MigrationStackProps extends StackProps {
 export class MigrationStack extends Stack {
   constructor(scope: Construct, id: string, props: MigrationStackProps) {
     super(scope, id, props)
-    super(scope, id, props)
     const tableArns: any = {}
     const ENV = this.node.tryGetContext('ENV')
     const exportToDataBucket = new s3.Bucket(this, 'exportToDataBucket', {
