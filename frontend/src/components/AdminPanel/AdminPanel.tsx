@@ -4,6 +4,10 @@ import { getAllQuestionAnswers } from '../../api/questionAnswers'
 import style from './AdminPanel.module.css'
 import { Auth } from 'aws-amplify'
 import DownloadExcel from './DownloadExcel'
+import EditGroupLeaders from './EditGroupLeaders'
+import EditAdmins from './EditAdmins'
+import EditCatalogsRouter from './EditCatalogsRouter'
+import EditGroups from './EditGroups'
 
 type AdminPanelProps = {
   activeSubmenuItem: string

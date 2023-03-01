@@ -43,20 +43,18 @@ const Admin = (props: any) => {
   const picture = getAttribute(admin, 'picture')
 
   return (
-    <>
-      <TableRow>
-        <TableCell>
-          <PictureAndNameCell name={name} picture={picture} />
-        </TableCell>
-        <TableCell>{email}</TableCell>
-        <TableCell>{username}</TableCell>
-        <TableCell>
-          <IconButton edge="end" onClick={() => deleteAdmin(admin)}>
-            <DeleteIcon />
-          </IconButton>
-        </TableCell>
-      </TableRow>
-    </>
+    <TableRow>
+      <TableCell>
+        <PictureAndNameCell name={name} picture={picture} />
+      </TableCell>
+      <TableCell>{email}</TableCell>
+      <TableCell>{username}</TableCell>
+      <TableCell>
+        <IconButton edge="end" onClick={() => deleteAdmin(admin)}>
+          <DeleteIcon />
+        </IconButton>
+      </TableCell>
+    </TableRow>
   )
 }
 
@@ -95,68 +93,6 @@ const EditAdmins = () => {
     params: adminCognitoGroupName,
   })
   const [showAddAdmin, setShowAddAdmin] = useState<boolean>(false)
-  const download = (path: string, filename: string) => {
-    // Create a new link
-    const anchor = document.createElement('a')
-    anchor.href = path
-    anchor.download = filename
-
-    // Append to the DOM
-    document.body.appendChild(anchor)
-
-    // Trigger `click` event
-    anchor.click()
-
-    return (
-      <Container maxWidth="md" className={commonStyles.container}>
-        {error && <p>An error occured: {error}</p>}
-        {loading && <CircularProgress />}
-        {!error && !loading && admins && (
-          <>
-            <Card style={{ marginBottom: '24px' }} variant="outlined">
-              <CardContent>
-                <Typography color="textSecondary" gutterBottom>
-                  Rediger administratorer
-                </Typography>
-                Administratorer har tilgang til alles svar. De kan også velge
-                hvem som er gruppeledere og administratorer og kan lage og
-                fjerne grupper. På denne siden kan du legge til og fjerne
-                gruppeledere.
-              </CardContent>
-            </Card>
-            <AdminTable admins={admins} deleteAdmin={deleteAdmin} />
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<PersonAddIcon />}
-              style={{ marginTop: '24px' }}
-              onClick={() => setShowAddAdmin(true)}
-            >
-              Legg til administrator
-            </Button>
-          </>
-        )}
-        <DeleteUserFromGroupDialog
-          open={showDeleteUserFromGroupDialog}
-          onCancel={() => setShowDeleteUserFromGroupDialog(false)}
-          onExited={clearSelectedAdmin}
-          onConfirm={deleteAdminConfirm}
-          user={adminToDelete}
-          roleName="administrator"
-        />
-        {showAddAdmin && (
-          <AddUserToGroupDialog
-            open={showAddAdmin}
-            currentUsersInGroup={admins}
-            userGetFn={listAllUsersInOrganization}
-            onCancel={hideShowAddAdmin}
-            onConfirm={addAdminConfirm}
-            roleName="administrator"
-          />
-        )}
-      </Container>
-    )
-  }
 
   const [showDeleteUserFromGroupDialog, setShowDeleteUserFromGroupDialog] =
     useState<boolean>(false)
@@ -183,14 +119,6 @@ const EditAdmins = () => {
     <Container maxWidth="md" className={commonStyles.container}>
       {error && <p>An error occured: {error}</p>}
       {loading && <CircularProgress />}
-      {isExcelLoading && (
-        <Snackbar
-          open={isExcelLoading}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        >
-          <CircularProgress />
-        </Snackbar>
-      )}
       {!error && !loading && admins && (
         <>
           <Card style={{ marginBottom: '24px' }} variant="outlined">
@@ -212,15 +140,6 @@ const EditAdmins = () => {
             onClick={() => setShowAddAdmin(true)}
           >
             Legg til administrator
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AssesmentIcon />}
-            style={{ marginTop: '24px' }}
-            onClick={() => downloadExcel()}
-          >
-            Last ned resultater (Excel)
           </Button>
         </>
       )}

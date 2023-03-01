@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
@@ -38,7 +38,7 @@ import {
   removeUserFromGroup,
   updateGroupLeader,
 } from './groupsApi'
-import { getAttribute, compareByName } from './helpers'
+import { getAttribute, compareByName, compareByCreatedAt } from './helpers'
 import PictureAndNameEditCell from './PictureAndNameEditCell'
 import GroupMembers from './GroupMembers'
 import AddUserToGroupDialog from './AddUserToGroupDialog'
@@ -46,8 +46,10 @@ import Button from '../mui/Button'
 import Table from '../mui/Table'
 import TableRow from '../mui/TableRow'
 import { ORGANIZATION_ID_ATTRIBUTE } from '../../constants'
-import { useSelector } from 'react-redux'
+import { useAppSelector } from '../../redux/hooks'
 import { selectUserState } from '../../redux/User'
+import { listAllFormDefinitionsForLoggedInUser } from './catalogApi'
+import { getLatestUserFormUpdatedAtForUser } from '../../helperFunctions'
 
 const useRowStyles = makeStyles({
   root: {
@@ -67,6 +69,7 @@ const Group = ({
   users,
   open,
   setOpenId,
+  showLastAnsweredAt,
 }: any) => {
   const hasGroupLeader = !!group.groupLeader
   const name = hasGroupLeader
@@ -113,6 +116,7 @@ const Group = ({
                   addMembersToGroup(users, group.id)
                 }
                 deleteMember={(user: any) => deleteMember(user, group.id)}
+                showLastAnsweredAt={showLastAnsweredAt}
               />
             </Box>
           </Collapse>
@@ -125,12 +129,13 @@ const Group = ({
 const GroupsTable = ({
   groups,
   users,
-  allAvailableUsers,
+  allAvailableUsersAnnotated,
   groupLeaders,
   deleteGroup,
   editGroup,
   addMembersToGroup,
   deleteMember,
+  showLastAnsweredAt,
 }: any) => {
   const [openId, setOpenId] = useState<string>('')
   const setOpenGroup = (groupId: string) => {
@@ -140,21 +145,6 @@ const GroupsTable = ({
       setOpenId(groupId)
     }
   }
-
-  const allAvailableUsersAnnotated = allAvailableUsers.map((u: any) => {
-    const user = users.find((us: any) => us.id === u.Username)
-    if (user) {
-      const groupId = user.groupID
-      const group = groups.find((g: any) => g.id === groupId)
-      const groupLeaderUsername = group?.groupLeaderUsername
-      const groupLeader = groupLeaders?.find(
-        (gl: any) => gl.Username === groupLeaderUsername
-      )
-      return { ...u, groupId, groupLeader }
-    } else {
-      return u
-    }
-  })
 
   const groupsAnnotated = groups
     .map((g: any) => {
@@ -194,6 +184,7 @@ const GroupsTable = ({
               addMembersToGroup={addMembersToGroup}
               deleteMember={deleteMember}
               editGroup={editGroup}
+              showLastAnsweredAt={showLastAnsweredAt}
             />
           ))}
         </TableBody>
@@ -202,8 +193,17 @@ const GroupsTable = ({
   )
 }
 
-const EditGroups = () => {
-  const userState = useSelector(selectUserState)
+const EditGroups = ({ showLastAnsweredAt }: any) => {
+  const userState = useAppSelector(selectUserState)
+
+  const {
+    result: formDefinitions,
+    error: formDefinitionsError,
+    loading: formDefinitionsLoading,
+  } = useApiGet({
+    getFn: listAllFormDefinitionsForLoggedInUser,
+    cmpFn: compareByCreatedAt,
+  })
 
   const {
     result: users,
@@ -297,10 +297,81 @@ const EditGroups = () => {
     refreshAllUsers()
   }
 
+  const [lastAnsweredAtLoading, setLastAnsweredAtLoading] =
+    useState<boolean>(showLastAnsweredAt)
+
   const isLoading =
-    loading || allAvailableUsersLoading || groupLeadersLoading || groupsLoading
+    loading ||
+    allAvailableUsersLoading ||
+    groupLeadersLoading ||
+    groupsLoading ||
+    formDefinitionsLoading ||
+    lastAnsweredAtLoading
   const isError =
-    error || allAvailableUsersError || groupLeadersError || groupsError
+    error ||
+    allAvailableUsersError ||
+    groupLeadersError ||
+    groupsError ||
+    formDefinitionsError
+
+  const [allAvailableUsersAnnotated, setAllAvailableUsersAnnotated] = useState<
+    any[]
+  >([])
+
+  useEffect(() => {
+    const addLastAnsweredAt = async (users: any[]) => {
+      if (users.length > 0 && formDefinitions.length > 0) {
+        const activeFormDefId = formDefinitions[0].id
+
+        const usersAnnotated = await Promise.all(
+          users.map(async (u: any) => {
+            const user = users.find((us: any) => us.Username === u.Username)
+            if (user) {
+              const lastAnsweredAt = await getLatestUserFormUpdatedAtForUser(
+                u.Username,
+                activeFormDefId
+              )
+              return { ...u, lastAnsweredAt: lastAnsweredAt }
+            } else {
+              return u
+            }
+          })
+        )
+        setAllAvailableUsersAnnotated(usersAnnotated)
+        setLastAnsweredAtLoading(false)
+      }
+    }
+
+    if (allAvailableUsers && formDefinitions) {
+      const annotated = allAvailableUsers.map((u: any) => {
+        const user = users.find((us: any) => us.id === u.Username)
+
+        if (user) {
+          const groupId = user.groupID
+          const group = groups.find((g: any) => g.id === groupId)
+          const groupLeaderUsername = group?.groupLeaderUsername
+          const groupLeader = groupLeaders?.find(
+            (gl: any) => gl.Username === groupLeaderUsername
+          )
+          return { ...u, groupId, groupLeader }
+        } else {
+          return u
+        }
+      })
+      if (showLastAnsweredAt && formDefinitions.length > 0) {
+        addLastAnsweredAt(annotated)
+      } else {
+        setAllAvailableUsersAnnotated(annotated)
+      }
+    }
+  }, [
+    allAvailableUsers,
+    formDefinitions,
+    groupLeaders,
+    groups,
+    users,
+    showLastAnsweredAt,
+  ])
 
   return (
     <Container maxWidth="md" className={commonStyles.container}>
@@ -322,11 +393,12 @@ const EditGroups = () => {
             groups={groups}
             deleteGroup={deleteGroup}
             users={users}
-            allAvailableUsers={allAvailableUsers}
+            allAvailableUsersAnnotated={allAvailableUsersAnnotated}
             groupLeaders={groupLeaders}
             addMembersToGroup={addMembersToGroup}
             deleteMember={deleteMember}
             editGroup={editGroup}
+            showLastAnsweredAt={showLastAnsweredAt}
           />
           <Button
             variant="contained"

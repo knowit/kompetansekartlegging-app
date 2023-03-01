@@ -2,7 +2,7 @@ import { API, Auth, graphqlOperation } from 'aws-amplify'
 import { GraphQLResult } from '@aws-amplify/api'
 import { UserFormList, UserFormWithAnswers } from './types'
 import * as customQueries from './graphql/custom-queries'
-import { Query } from './API'
+import { Maybe, Query, UserForm } from './API'
 import { getOrganization } from './graphql/queries'
 
 /*
@@ -162,5 +162,55 @@ export const getOrganizationNameByID = (organizationID: string) =>
       }
     } catch (e) {
       reject('no org found')
+    }
+  })
+
+export const getLatestUserFormUpdatedAtForUser = (
+  userId: string,
+  formDefId: string
+) =>
+  new Promise<Date | null>(async (resolve, reject) => {
+    try {
+      const listOfUpdatedAt: Date[] = Array<Date>()
+      let nextToken: string | null = null
+
+      do {
+        let res: UserFormList | undefined = (
+          await callGraphQL<UserFormList>(
+            customQueries.listUserFormsUpdatedAt,
+            {
+              nextToken: nextToken,
+              filter: {
+                formDefinitionID: {
+                  eq: formDefId,
+                },
+                owner: {
+                  eq: userId,
+                },
+              },
+            }
+          )
+        ).data
+
+        if (res) {
+          listOfUpdatedAt.push(
+            ...res.listUserForms?.items.map((item: any) => {
+              return new Date(item.updatedAt)
+            })
+          )
+          nextToken = res.listUserForms?.nextToken
+        } else {
+          nextToken = null
+        }
+      } while (nextToken)
+
+      const sorted =
+        listOfUpdatedAt.length > 0
+          ? listOfUpdatedAt.sort((a, b) => b.getTime() - a.getTime())
+          : null
+      sorted ? resolve(sorted[0]) : resolve(null)
+    } catch (e) {
+      console.log(e)
+      reject('error while fetching updatedAt from latest UserForm')
     }
   })
