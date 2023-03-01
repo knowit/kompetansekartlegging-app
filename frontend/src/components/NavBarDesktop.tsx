@@ -29,6 +29,7 @@ import { selectUserState } from "../redux/User";
 import ReactMarkdown from "react-markdown";
 import HelpIcon from "@material-ui/icons/Help";
 import { LanguageSelect } from "./LanguageSelect";
+import { useTranslation } from "react-i18next";
 
 const navbarStyles = makeStyles((theme) => ({
     root: {
@@ -175,16 +176,19 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
 
     const [helpMarkdown, setHelpMarkdown] = useState<any>();
 
+    const { i18n } = useTranslation();
+
     useEffect(() => {
+        console.log("FETCHING");
         fetch(
-            "https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/frontend/markdown/help.md"
+            "https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/frontend/" + i18n.language + "/markdown/help.md"
         )
             .then(async (response) => {
                 let markdown = await response.text();
                 setHelpMarkdown(markdown);
             })
             .catch((error) => console.error(error));
-    }, []);
+    }, [i18n.language]);
 
     return (
         <div className={style.root}>

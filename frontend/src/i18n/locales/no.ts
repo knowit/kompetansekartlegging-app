@@ -1,5 +1,7 @@
 export const norwegian = {
     translation: {
-        help: "HJELP"
+        navbar: {
+            help: "HJELP"
+        }
     }
 }
