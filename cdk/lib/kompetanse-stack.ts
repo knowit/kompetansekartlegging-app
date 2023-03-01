@@ -25,6 +25,7 @@ export class KompetanseStack extends Stack {
     const EXCEL = this.node.tryGetContext("EXCEL");
     const ENV = this.node.tryGetContext("ENV");
     const isProd = ENV === "prod";
+    const isDev = ENV === "dev";
 
     // COGNITO SetUp
 
@@ -69,8 +70,8 @@ export class KompetanseStack extends Stack {
       supportedIdentityProviders: supportedProviders,
       oAuth: {
         flows: { authorizationCodeGrant: true },
-        callbackUrls: (isProd) ? ["https://kompetanse.knowit.no/"] : ["http://localhost:3000/"],
-        logoutUrls: (isProd) ? ["https://kompetanse.knowit.no/"] : ["http://localhost:3000/"]
+        callbackUrls: (isProd) ? ["https://kompetanse.knowit.no/"] : (isDev) ? ["https://dev.kompetanse.knowit.no/"] : ["http://localhost:3000/"],
+        logoutUrls: (isProd) ? ["https://kompetanse.knowit.no/"] : (isDev) ? ["https://dev.kompetanse.knowit.no/"] : ["http://localhost:3000/"]
       },
       userPoolClientName: "Kompetansekartlegging App Client",
     });
