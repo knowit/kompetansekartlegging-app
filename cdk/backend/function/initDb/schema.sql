@@ -1,43 +1,36 @@
 -- Tabeller for Kompetansekartlegging
 -- Oppretter dersom det ikke eksisterer fra før av
-CREATE TABLE IF NOT EXISTS apiKeyPermission(
-    id VARCHAR(255) PRIMARY KEY NOT NULL,
-    APIKeyHashed VARCHAR(255) NOT NULL,
-    organizationID VARCHAR(255) NOT NULL
-);
 CREATE TABLE IF NOT EXISTS organization(
-    id VARCHAR(255) PRIMARY KEY NOT NULL,
-    createdAt TIMESTAMPTZ NOT NULL,
-    owner VARCHAR(255),
-    orgname VARCHAR(255) NOT NULL,
-    identifierAttribute VARCHAR(255) NOT NULL
+    id UUID PRIMARY KEY NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    organization_name VARCHAR(255) NOT NULL UNIQUE,
+    identifier_attribute VARCHAR(255) NOT NULL
 );
-CREATE TABLE IF NOT EXISTS formDefinition(
+CREATE TABLE IF NOT EXISTS api_key_permission(
+    id VARCHAR(255) PRIMARY KEY NOT NULL,
+    api_key_hashed VARCHAR(255) NOT NULL,
+    organization_id UUID NOT NULL references organization(id)
+);
+CREATE TABLE IF NOT EXISTS "catalog"(
     id UUID PRIMARY KEY NOT NULL,
     label VARCHAR(255),
-    createdAt TIMESTAMPTZ NOT NULL,
-    updatedAt TIMESTAMPTZ,
-    organizationID VARCHAR(255) NOT NULL references organization(id)
-);
-CREATE TABLE IF NOT EXISTS userForm(
-    id UUID PRIMARY KEY NOT NULL,
-    createdAt TIMESTAMPTZ NOT NULL,
-    updatedAt TIMESTAMPTZ,
-    owner VARCHAR(255),
-    formDefinitionID UUID NOT NULL references formDefinition(id)
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ,
+    organization_id UUID NOT NULL references organization(id)
 );
 CREATE TABLE IF NOT EXISTS category(
     id UUID PRIMARY KEY NOT NULL,
     text VARCHAR(255) NOT NULL,
     description TEXT,
     index INTEGER,
-    formDefinitionID UUID NOT NULL references formDefinition(id),
-    organizationID VARCHAR(255) NOT NULL references organization(id)
+    catalog_id UUID NOT NULL references "catalog"(id)
 );
-DO $$ BEGIN CREATE TYPE questionType AS ENUM (
-    'knowledgeMotivation',
-    'customScaleLabels',
-    'text'
+DO $$ BEGIN CREATE TYPE question_type AS ENUM (
+    'knowledge_motivation',
+    'custom_scale_labels',
+    'text',
+    'NULL',
+    ''
 );
 EXCEPTION
 WHEN duplicate_object THEN null;
@@ -47,32 +40,31 @@ CREATE TABLE IF NOT EXISTS question(
     text TEXT,
     topic VARCHAR(255) NOT NULL,
     index INTEGER,
-    formDefinitionID UUID NOT NULL references formDefinition(id),
-    categoryID UUID NOT NULL references category(id),
-    type questionType,
-    scaleStart VARCHAR(255),
-    scaleMiddle VARCHAR(255),
-    scaleEnd VARCHAR(255),
-    organizationID VARCHAR(255) NOT NULL references organization(id)
+    type question_type,
+    scale_start VARCHAR(255),
+    scale_middle VARCHAR(255),
+    scale_end VARCHAR(255),
+    category_id UUID NOT NULL references category(id)
 );
-CREATE TABLE IF NOT EXISTS questionAnswer(
+CREATE TABLE IF NOT EXISTS "user"(
     id UUID PRIMARY KEY NOT NULL,
-    userFormID UUID NOT NULL references userForm(id),
-    questionID UUID NOT NULL references question(id),
+    mail VARCHAR(255) NOT NULL UNIQUE,
+    organization_id UUID NOT NULL references organization(id)
+);
+CREATE TABLE IF NOT EXISTS question_answer(
+    id UUID PRIMARY KEY NOT NULL,
     knowledge REAL,
     motivation REAL,
-    customScaleValue REAL,
-    textValue TEXT
+    custom_scale_value REAL,
+    text_value TEXT,
+    question_id UUID NOT NULL references question(id),
+    user_id UUID NOT NULL references "user"(id)
 );
 CREATE TABLE IF NOT EXISTS "group"(
     id UUID PRIMARY KEY NOT NULL,
-    organizationID VARCHAR(255) NOT NULL references organization(id),
-    groupLeaderUsername VARCHAR(255) NOT NULL
+    organization_id UUID NOT NULL references organization(id)
 );
-CREATE TABLE IF NOT EXISTS "user"(
-    id VARCHAR(255) PRIMARY KEY NOT NULL,
-    groupID UUID NOT NULL references "group"(id),
-    organizationID VARCHAR(255) NOT NULL references organization(id)
-);
+ALTER TABLE "user"
+ADD IF NOT EXISTS group_id UUID references "group"(id);
 ALTER TABLE "group"
-ADD groupLeaderUsername VARCHAR(255) NOT NULL references "user"(id);
+ADD IF NOT EXISTS group_leader_id UUID NOT NULL references "user"(id);
