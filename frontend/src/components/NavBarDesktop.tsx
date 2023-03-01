@@ -28,6 +28,7 @@ import { useAppSelector } from "../redux/hooks";
 import { selectUserState } from "../redux/User";
 import ReactMarkdown from "react-markdown";
 import HelpIcon from "@material-ui/icons/Help";
+import { LanguageSelect } from "./LanguageSelect";
 
 const navbarStyles = makeStyles((theme) => ({
     root: {
@@ -192,6 +193,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
                     <div className={style.logo}>
                         <KnowitLogo />
                     </div>
+                    <LanguageSelect isMobile={false} />
                     <h1 className={style.title}>
                         Kompetansekartlegging for {userState.organizationName}
                     </h1>

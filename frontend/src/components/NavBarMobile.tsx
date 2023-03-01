@@ -13,6 +13,7 @@ import { NavBarPropsMobile } from "../types";
 import MenuIcon from "@material-ui/icons/Menu";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import { isIOS } from "react-device-detect";
+import { LanguageSelect } from "./LanguageSelect";
 
 const navbarStyles = makeStyles((theme) => ({
     toolbar: theme.mixins.toolbar,
@@ -128,6 +129,7 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
             onClick={toggleDrawer(false)}
             onKeyDown={toggleDrawer(false)}
         >
+            <LanguageSelect isMobile={true} />
             <List className={style.list}>
                 {props.menuButtons}
                 <ListItem className={style.logout} onClick={props.signout}>
