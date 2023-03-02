@@ -10,6 +10,7 @@ import {
 import { AlertDialogProps } from "../types";
 import ErrorIcon from "@material-ui/icons/Error";
 import { dialogStyles } from "../styles";
+import { useTranslation } from "react-i18next";
 
 export const AlertDialog = ({ ...props }: AlertDialogProps) => {
     const style = dialogStyles();
@@ -21,6 +22,8 @@ export const AlertDialog = ({ ...props }: AlertDialogProps) => {
     const handleLeave = () => {
         if (props.leaveFormButtonClicked) props.leaveFormButtonClicked();
     };
+
+    const { t } = useTranslation();
 
     return (
         <Dialog
@@ -38,7 +41,7 @@ export const AlertDialog = ({ ...props }: AlertDialogProps) => {
                     className={style.errorIcon}
                 ></ErrorIcon>
                 <div className={style.dialogTitleText}>
-                    Obs! Svarene dine er ikke lagret.
+                    {t("alertDialog.nbAnswersNotSaved")}
                 </div>
             </DialogTitle>
             <DialogContent>
@@ -46,20 +49,19 @@ export const AlertDialog = ({ ...props }: AlertDialogProps) => {
                     id="alert-dialog-description"
                     className={style.alertText}
                 >
-                    Hvis du forlater skjemaet nå vil ikke endringene du har
-                    gjort bli lagret.
+                    {t("alertDialog.leavingWillDiscardChanges")}
                 </DialogContentText>
             </DialogContent>
             <DialogActions className={style.alertButtons}>
                 <Button onClick={handleLeave} className={style.cancelButton}>
-                    <div className={style.buttonText}>Forlat skjemaet</div>
+                    <div className={style.buttonText}>{t("alertDialog.leaveForm")}</div>
                 </Button>
                 <Button
                     autoFocus
                     onClick={handleStayInForm}
                     className={style.confirmButton}
                 >
-                    <div className={style.buttonText}>Bli på skjemaet</div>
+                    <div className={style.buttonText}>{t("alertDialog.stayOnForm")}</div>
                 </Button>
             </DialogActions>
         </Dialog>

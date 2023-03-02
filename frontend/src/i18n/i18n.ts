@@ -3,7 +3,7 @@ import { initReactI18next } from "react-i18next";
 import { english } from "./locales/en";
 import { norwegian } from "./locales/no";
 import { ReactComponent as NorwegianFlag } from "./flags/Norway.svg";
-import { ReactComponent as UnitedKingdom } from "./flags/UnitedKingdom.svg";
+import { ReactComponent as UnitedKingdomFlag } from "./flags/UnitedKingdom.svg";
 
 type languageType = {
     nativeName: string,
@@ -11,14 +11,14 @@ type languageType = {
 }
 
 export const availableLanguages: Record<string, languageType> = {
-    "en": { "nativeName" : "ENGLISH", "flag": UnitedKingdom },
+    "en": { "nativeName" : "ENGLISH", "flag": UnitedKingdomFlag },
     "no": { "nativeName" : "NORSK", "flag": NorwegianFlag }
 }
 
 i18next
     .use(initReactI18next)
     .init({
-        debug: false,
+        debug: true, // TODO: false
         fallbackLng: "en",
         resources: {
             en: english,

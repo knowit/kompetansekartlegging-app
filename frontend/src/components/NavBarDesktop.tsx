@@ -176,12 +176,11 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
 
     const [helpMarkdown, setHelpMarkdown] = useState<any>();
 
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     useEffect(() => {
-        console.log("FETCHING");
         fetch(
-            "https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/frontend/" + i18n.language + "/markdown/help.md"
+            "https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/frontend/markdown/" + i18n.language + "/help.md"
         )
             .then(async (response) => {
                 let markdown = await response.text();
@@ -199,7 +198,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
                     </div>
                     <LanguageSelect isMobile={false} />
                     <h1 className={style.title}>
-                        Kompetansekartlegging for {userState.organizationName}
+                        {t("navbar.competenceMappingFor")} {userState.organizationName}
                     </h1>
 
                     {/* <Button variant="contained" className={classes.logoutButton} onClick={() => Auth.signOut()}>Sign out</Button>  */}
@@ -231,7 +230,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
                                 }
                                 onClick={() => setHelpModalOpen(true)}
                             >
-                                <div className={style.userName}>Hjelp</div>
+                                <div className={style.userName}>{t("navbar.help")}</div>
                             </Button>
                         ) : null}
                         <Button
@@ -287,7 +286,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
                                                 <MenuItem
                                                     onClick={handleCloseSignout}
                                                 >
-                                                    Logg ut
+                                                    {t("navbar.signOut")}
                                                 </MenuItem>
                                             </MenuList>
                                         </ClickAwayListener>
@@ -302,24 +301,23 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
                             aria-describedby="dialogdescription"
                         >
                             <DialogTitle id="dialogtitle">
-                                {"Ønsker du å slette svarene dine?"}
+                                {t("navbar.doYouWantToDeleteYourAnswers")}
                             </DialogTitle>
                             <DialogContent>
                                 <DialogContentText id="dialogdescription">
-                                    OBS: Dette vil slette alle innsendte og
-                                    lagrede svar!
+                                    {t("navbar.thisWillDeleteAllAnswers")}
                                 </DialogContentText>
                             </DialogContent>
                             <DialogActions>
                                 <Button onClick={() => 1} color="primary">
-                                    Bekreft
+                                    {t("confirm")}
                                 </Button>
                                 <Button
                                     onClick={handleCloseAlert}
                                     color="primary"
                                     autoFocus
                                 >
-                                    Avbryt
+                                    {t("abort")}
                                 </Button>
                             </DialogActions>
                         </Dialog>

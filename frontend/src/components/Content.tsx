@@ -47,6 +47,9 @@ import {
 } from "../redux/User";
 import { SuperAdminMenu } from "./SuperAdminPanel/SuperAdminMenu";
 import { SuperAdminPanel } from "./SuperAdminPanel/SuperAdminPanel";
+import i18n from "../i18n/i18n";
+import { useTranslation } from "react-i18next";
+import { TFunction } from "i18next";
 
 const cardCornerRadius: number = 40;
 
@@ -142,11 +145,13 @@ const contentStyle = makeStyles({
 
 const updateCategoryAlerts = (
     questionAnswers: Map<string, QuestionAnswer[]>,
-    setAlerts: React.Dispatch<React.SetStateAction<AlertState | undefined>>
+    setAlerts: React.Dispatch<React.SetStateAction<AlertState | undefined>>,
+    t: TFunction<"translation", undefined, "translation">
 ) => {
     let msNow = Date.now();
     let alerts = new Map<string, Alert>();
     let catAlerts = new Map<string, number>();
+
     questionAnswers.forEach((quAnsArr) => {
         quAnsArr.forEach((quAns) => {
             if (
@@ -157,7 +162,7 @@ const updateCategoryAlerts = (
             ) {
                 alerts.set(quAns.question.id, {
                     type: AlertType.Incomplete,
-                    message: "Ubesvart!",
+                    message: t("content.unAnswared"),
                 });
                 let numAlerts = catAlerts.get(quAns.question.category.text);
                 if (numAlerts)
@@ -166,7 +171,7 @@ const updateCategoryAlerts = (
             } else if (msNow - quAns.updatedAt > staleAnswersLimit) {
                 alerts.set(quAns.question.id, {
                     type: AlertType.Outdated,
-                    message: `Bør oppdateres! Sist besvart: ${
+                    message: t("content.shouldBeUpdatedLastAnswered") + ` ${
                         new Date(quAns.updatedAt) //.toLocaleDateString('no-NO')
                     }`,
                 });
@@ -211,6 +216,8 @@ const Content = ({ ...props }: ContentProps) => {
     const [answerEditMode, setAnswerEditMode] = useState<boolean>(false);
     const [alerts, setAlerts] = useState<AlertState>();
     const [activeSubmenuItem, setActiveSubmenuItem] = useState<string>("");
+
+    const { t } = useTranslation();
 
     const updateAnswer = (
         category: string,
@@ -323,8 +330,8 @@ const Content = ({ ...props }: ContentProps) => {
     }, [categories]);
 
     useEffect(() => {
-        updateCategoryAlerts(questionAnswers, setAlerts);
-    }, [questionAnswers]);
+        updateCategoryAlerts(questionAnswers, setAlerts, t);
+    }, [questionAnswers, t]);
 
     useEffect(() => {
         // console.log('fetchLastFormDefitniio');
@@ -475,7 +482,7 @@ const Content = ({ ...props }: ContentProps) => {
             return (
                 <AlertNotification
                     type={AlertType.Multiple}
-                    message="Besvarelsen er utdatert eller ikke komplett!"
+                    message={t("content.answerOutdatedOrIncomplete")}
                     size={0}
                 />
             );
@@ -484,7 +491,7 @@ const Content = ({ ...props }: ContentProps) => {
 
     <AlertNotification
         type={AlertType.Multiple}
-        message="Besvarelsen er utdatert eller ikke komplett!"
+        message={t("content.answerOutdatedOrIncomplete")}
         size={0}
     />;
 
@@ -505,9 +512,9 @@ const Content = ({ ...props }: ContentProps) => {
     const isGroupLeader = useAppSelector(selectIsGroupLeader);
 
     const buttonSetup = [
-        { text: "OVERSIKT", buttonType: MenuButton.Overview, show: true },
+        { text: t("menu.overview"), buttonType: MenuButton.Overview, show: true },
         {
-            text: "MINE SVAR",
+            text: t("menu.myAnswers"),
             buttonType: MenuButton.MyAnswers,
             subButtons: categories.map((cat) => {
                 return {
@@ -578,7 +585,7 @@ const Content = ({ ...props }: ContentProps) => {
                                     {alerts?.categoryMap.has(butt.text) ? (
                                         <AlertNotification
                                             type={AlertType.Multiple}
-                                            message="Ikke besvart eller utdaterte spørsmål i kategori"
+                                            message={t("content.unansweredOrOutdatedQuestionsInCategory")}
                                             size={alerts.categoryMap.get(
                                                 butt.text
                                             )}

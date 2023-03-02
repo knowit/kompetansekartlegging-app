@@ -14,6 +14,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import { isIOS } from "react-device-detect";
 import { LanguageSelect } from "./LanguageSelect";
+import { useTranslation } from "react-i18next";
 
 const navbarStyles = makeStyles((theme) => ({
     toolbar: theme.mixins.toolbar,
@@ -100,9 +101,9 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
     const navbarHeader = () => {
         switch (props.activePanel) {
             case 0:
-                return "OVERSIKT";
+                return t("menu.overview");
             case 1:
-                return "MINE SVAR";
+                return t("menu.myAnswers");
             default:
                 return "";
         }
@@ -134,11 +135,13 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
                 {props.menuButtons}
                 <ListItem className={style.logout} onClick={props.signout}>
                     {/* <Avatar className={style.userPicture} src={props.userPicture} alt="Profile Picture"/> */}
-                    Logg ut
+                    {t("navbar.signOut")}
                 </ListItem>
             </List>
         </div>
     );
+
+    const { t } = useTranslation();
 
     return (
         <div className={style.root}>
