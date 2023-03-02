@@ -47,7 +47,6 @@ import {
 } from "../redux/User";
 import { SuperAdminMenu } from "./SuperAdminPanel/SuperAdminMenu";
 import { SuperAdminPanel } from "./SuperAdminPanel/SuperAdminPanel";
-import i18n from "../i18n/i18n";
 import { useTranslation } from "react-i18next";
 import { TFunction } from "i18next";
 
@@ -186,6 +185,8 @@ const updateCategoryAlerts = (
 };
 
 const Content = ({ ...props }: ContentProps) => {
+    const { t } = useTranslation();
+
     const userState = useAppSelector(selectUserState);
     const adminCognitoGroupName = useAppSelector(selectAdminCognitoGroupName);
     const groupLeaderCognitoGroupName = useAppSelector(
@@ -216,8 +217,6 @@ const Content = ({ ...props }: ContentProps) => {
     const [answerEditMode, setAnswerEditMode] = useState<boolean>(false);
     const [alerts, setAlerts] = useState<AlertState>();
     const [activeSubmenuItem, setActiveSubmenuItem] = useState<string>("");
-
-    const { t } = useTranslation();
 
     const updateAnswer = (
         category: string,
@@ -512,9 +511,9 @@ const Content = ({ ...props }: ContentProps) => {
     const isGroupLeader = useAppSelector(selectIsGroupLeader);
 
     const buttonSetup = [
-        { text: t("menu.overview"), buttonType: MenuButton.Overview, show: true },
+        { text: t("menu.overview").toUpperCase(), buttonType: MenuButton.Overview, show: true },
         {
-            text: t("menu.myAnswers"),
+            text: t("menu.myAnswers").toUpperCase(),
             buttonType: MenuButton.MyAnswers,
             subButtons: categories.map((cat) => {
                 return {

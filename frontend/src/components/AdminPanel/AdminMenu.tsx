@@ -2,6 +2,7 @@ import React from "react";
 import { Panel } from "../../types";
 import { Button } from "@material-ui/core";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 
 type AdminMenuProps = {
     show: boolean;
@@ -21,6 +22,7 @@ const AdminMenu = ({
     setActiveSubmenuItem,
     setActivePanel,
 }: AdminMenuProps) => {
+    const { t } = useTranslation();
     if (!show) return null;
 
     const items = [
@@ -57,7 +59,7 @@ const AdminMenu = ({
                     setActivePanel(Panel.Admin);
                 }}
             >
-                <div className={clsx(style.menuButtonText)}>ADMIN</div>
+                <div className={clsx(style.menuButtonText)}>{t("menu.admin").toUpperCase()}</div>
             </Button>
 
             {selected &&

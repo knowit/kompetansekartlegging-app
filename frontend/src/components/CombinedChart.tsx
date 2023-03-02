@@ -1,5 +1,6 @@
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
     BarChart,
     Bar,
@@ -95,13 +96,15 @@ const getLabel = (
 };
 
 export const CombinedChart = ({ ...props }: CombinedChartProps) => {
+    const { t } = useTranslation();
+
     let classes = useStyles();
 
     if (props.chartData.length === 0) return null;
 
     const RenderCustomTooltip = (classes: any) => {
         const validate = (msg: string | undefined) => {
-            if (msg === "") return "Ikke besvart";
+            if (msg === "") return t("notAnswered");
             else return msg;
         };
         let isTop = props.type === OverviewType.HIGHEST && props.topSubjects;
@@ -116,12 +119,12 @@ export const CombinedChart = ({ ...props }: CombinedChartProps) => {
                 const knowledgeLabel = getLabel(
                     isTop,
                     () => validate(topSubjects?.get(props.label)?.kTop),
-                    "Kompetanse"
+                    t("knowledge")
                 );
                 const motivationLabel = getLabel(
                     isTop,
                     () => validate(topSubjects?.get(props.label)?.mTop),
-                    "Motivasjon"
+                    t("motivation")
                 );
 
                 return (
@@ -198,7 +201,7 @@ export const CombinedChart = ({ ...props }: CombinedChartProps) => {
                             position="top"
                             offset={50}
                         >
-                            KOMPETANSE
+                            {t("knowledge").toUpperCase()}
                         </Label>
                     </ReferenceLine>
                     <ReferenceLine
@@ -210,7 +213,7 @@ export const CombinedChart = ({ ...props }: CombinedChartProps) => {
                             position="top"
                             offset={50}
                         >
-                            MOTIVASJON
+                            {t("motivation").toUpperCase()}
                         </Label>
                     </ReferenceLine>
                 </BarChart>

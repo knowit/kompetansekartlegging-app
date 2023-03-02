@@ -91,6 +91,7 @@ const navbarStyles = makeStyles((theme) => ({
 }));
 
 const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
+    const { t } = useTranslation();
     const style = navbarStyles();
     // const [mobileOpen, setMobileOpen] = React.useState(false);
     const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -140,8 +141,6 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
             </List>
         </div>
     );
-
-    const { t } = useTranslation();
 
     return (
         <div className={style.root}>

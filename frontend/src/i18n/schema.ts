@@ -2,14 +2,20 @@ export type TranslationKeysSchema = {
     translation: {
         confirm: string,
         abort: string,
+        notAnswered: string,
+        knowledge: string,
+        motivation: string,
+        scaleDescription: string,
         menu: {
             overview: string,
-            myAnswers: string
+            myAnswers: string,
+            myGroup: string,
+            admin: string,
         }
         navbar: {
             help: string,
             signOut: string,
-            competenceMappingFor: string,
+            knowledgeMappingFor: string,
             doYouWantToDeleteYourAnswers: string,
             thisWillDeleteAllAnswers: string
         },
@@ -24,6 +30,43 @@ export type TranslationKeysSchema = {
             leavingWillDiscardChanges: string,
             leaveForm: string,
             stayOnForm: string
+        },
+        overview: {
+            yourTopAmbitionsWillBeDisplayedHere: string,
+            yourTopStrengthsWillBeDisplayedHere: string,
+            focusAreas: string,
+            topStrengths: string,
+            topAmbitions: string,
+            overviewType: {
+                average: string,
+                median: string,
+                highest: string
+            },
+        },
+        knowledgeScale: {
+            knowledgeScale: string,
+            superstar: string,
+            expert: string,
+            professional: string,
+            potentiallyUsable: string,
+            someInsight: string,
+            unfamiliar: string
+            desc: {
+                superstar: string,
+                expert: string,
+                professional: string,
+                potentiallyUsable: string,
+                someInsight: string
+            }
+        },
+        motivationScale: {
+            motivationScale: string,
+            enthusiast: string,
+            good: string,
+            curious: string,
+            ish: string,
+            neutral: string,
+            no: string
         }
     },
 }

@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Fab, Tooltip, Modal, makeStyles } from "@material-ui/core";
 import { KnowitColors } from "../styles";
 import DescriptionTable from "./DescriptionTable";
+import { useTranslation } from "react-i18next";
 
 const floatingScaleDescButtonStyleDesktop = makeStyles({
     fab: {
@@ -136,6 +137,8 @@ const FloatingScaleDescButton = ({
     setScaleDescOpen,
     firstTimeLogin,
 }: FloatingScaleDescButtonProps) => {
+    const { t } = useTranslation();
+
     const style = isMobile
         ? floatingScaleDescButtonStyleMobile()
         : floatingScaleDescButtonStyleDesktop();
@@ -200,7 +203,7 @@ const FloatingScaleDescButton = ({
                         setScaleDescOpen((scaleDescOpen) => !scaleDescOpen)
                     }
                 >
-                    SKALABESKRIVELSE
+                    {t("scaleDescription") as string}
                 </Fab>
             )}
         </>

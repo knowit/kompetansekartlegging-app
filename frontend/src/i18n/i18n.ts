@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
-import { english } from "./locales/en";
-import { norwegian } from "./locales/no";
+import { English } from "./locales/en";
+import { Norwegian } from "./locales/no";
 import { ReactComponent as NorwegianFlag } from "./flags/Norway.svg";
 import { ReactComponent as UnitedKingdomFlag } from "./flags/UnitedKingdom.svg";
 
@@ -21,8 +21,8 @@ i18next
         debug: true, // TODO: false
         fallbackLng: "en",
         resources: {
-            en: english,
-            no: norwegian
+            en: English,
+            no: Norwegian
         }
     });
 

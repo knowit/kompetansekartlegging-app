@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core";
 import { KnowitColors } from "../styles";
 import { wrapString } from "../helperFunctions";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 
 const barIconSize = 24;
 const barIconSizeMobile = 20;
@@ -171,6 +172,7 @@ const highlightsStyle = makeStyles({
 });
 
 export default function Highlights({ ...props }: HighlightsProps) {
+    const { t } = useTranslation();
     const style = highlightsStyle();
 
     const [knowledgeAboveCutoff, setKnowledgeAboveCutoff] = useState<
@@ -247,7 +249,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
                             props.isMobile ? style.barSizeMobile : style.barSize
                         )}
                     >
-                        Her kommer dine topp-ambisjoner
+                        {t("overview.yourTopAmbitionsWillBeDisplayedHere")}
                     </div>
                 </div>
             );
@@ -306,7 +308,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
                             props.isMobile ? style.barSizeMobile : style.barSize
                         )}
                     >
-                        Her kommer dine topp-styrker
+                        {t("overview.yourTopStrengthsWillBeDisplayedHere")}
                     </div>
                 </div>
             );
@@ -360,7 +362,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
         return (
             <div className={props.isMobile ? style.rootMobile : style.root}>
                 <div className={props.isMobile ? style.hidden : style.title}>
-                    FOKUSOMRÅDER
+                    {t("overview.focusAreas")}
                 </div>
                 <div
                     className={
@@ -375,7 +377,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
                                     : style.heading
                             }
                         >
-                            TOPP STYRKER
+                            {t("overview.topStrengths")}
                         </div>
                         {createKnowledgeHighlights()}
                     </div>
@@ -387,7 +389,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
                                     : style.heading
                             }
                         >
-                            TOPP AMBISJONER
+                            {t("overview.topAmbitions")}
                         </div>
                         {createMotivationHighlights()}
                     </div>

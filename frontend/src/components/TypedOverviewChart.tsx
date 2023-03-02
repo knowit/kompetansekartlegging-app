@@ -6,6 +6,7 @@ import { CombinedChart } from "./CombinedChart";
 import { CombinedChartMobile } from "./CombinedChartMobile";
 import Button from "@material-ui/core/Button";
 import { KnowitColors } from "../styles";
+import { useTranslation } from "react-i18next";
 
 const graphStyle = makeStyles({
     resultDiagramContainer: {
@@ -140,6 +141,8 @@ const recalculate = (
 };
 
 export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
+    const { t } = useTranslation();
+
     const style = graphStyle();
 
     const [chartData, setChartData] = useState<ChartData[]>([]);
@@ -343,6 +346,13 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
     };
 
     const getButton = (type: OverviewType): JSX.Element => {
+        const translateType = (type: OverviewType) => {
+            switch (type) {
+                case OverviewType.AVERAGE: return t("overview.overviewType.average");
+                case OverviewType.MEDIAN: return t("overview.overviewType.median");
+                case OverviewType.HIGHEST: return t("overview.overviewType.highest");
+            }
+        }
         return (
             <Button
                 className={
@@ -354,7 +364,7 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
                     selectChartType(type);
                 }}
             >
-                {type}
+                {translateType(type)}
             </Button>
         );
     };
@@ -378,7 +388,7 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
     ) : (
         <div className={style.resultDiagramContainer}>
             <div className={style.header}>
-                OVERSIKT
+                {t("menu.overview").toUpperCase()}
                 <div className={style.buttonGroup}>
                     {getButton(OverviewType.HIGHEST)}
                     {getButton(OverviewType.AVERAGE)}

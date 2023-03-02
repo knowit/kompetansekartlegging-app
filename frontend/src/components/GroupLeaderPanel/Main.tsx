@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import DeleteUserFromGroupDialog from "../AdminPanel/DeleteUserFromGroupDialog";
 import GroupMembers from "../AdminPanel/GroupMembers";
 import commonStyles from "../AdminPanel/common.module.css";
+import { useTranslation } from "react-i18next";
 
 const Main = ({
     allAvailableUsersAnnotated,
@@ -24,6 +25,7 @@ const Main = ({
     deleteMemberConfirm,
     viewMember,
 }: any) => {
+    const { t } = useTranslation();
     return (
         <Container maxWidth="md" className={commonStyles.container}>
             {isError && <p>An error occured: {isError}</p>}
@@ -36,7 +38,7 @@ const Main = ({
                             component="h2"
                             color="textPrimary"
                         >
-                            Min gruppe
+                            {t("menu.myGroup")}
                         </Typography>
                     </Box>
                     <GroupMembers

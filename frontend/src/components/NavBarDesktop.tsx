@@ -179,8 +179,8 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
     const { t, i18n } = useTranslation();
 
     useEffect(() => {
-        fetch(
-            "https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/frontend/markdown/" + i18n.language + "/help.md"
+        fetch( // TODO: fetch from main instead of i18n
+            "https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/i18n/frontend/markdown/" + i18n.language + "/help.md"
         )
             .then(async (response) => {
                 let markdown = await response.text();
@@ -198,7 +198,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
                     </div>
                     <LanguageSelect isMobile={false} />
                     <h1 className={style.title}>
-                        {t("navbar.competenceMappingFor")} {userState.organizationName}
+                        {t("navbar.knowledgeMappingFor")} {userState.organizationName}
                     </h1>
 
                     {/* <Button variant="contained" className={classes.logoutButton} onClick={() => Auth.signOut()}>Sign out</Button>  */}
