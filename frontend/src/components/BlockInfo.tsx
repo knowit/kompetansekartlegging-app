@@ -6,6 +6,7 @@ import CheckCircleOutlineRoundedIcon from "@material-ui/icons/CheckCircleOutline
 import ErrorOutlineRoundedIcon from "@material-ui/icons/ErrorOutlineRounded";
 import UpdateIcon from "@material-ui/icons/Update";
 import { staleAnswersLimit } from "./AlertNotification";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles({
     root: {},
@@ -42,6 +43,7 @@ export enum AlertType {
 export const BlockInfo = (props: {
     questions: QuestionAnswer[] | undefined;
 }) => {
+    const { t } = useTranslation();
     const classes = useStyles();
 
     enum TimeType {
@@ -80,7 +82,7 @@ export const BlockInfo = (props: {
                     <ErrorOutlineRoundedIcon />
                     <div
                         className={classes.warningText}
-                    >{`Blokken er ikke ferdig utfylt!`}</div>
+                    >{t("myAnswers.blockHasNotBeenCompleted")}</div>
                 </div>
             </div>
         );

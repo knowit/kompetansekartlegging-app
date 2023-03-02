@@ -8,6 +8,9 @@ export const English: TranslationKeysSchema = {
         knowledge: "Knowledge",
         motivation: "Motivation",
         scaleDescription: "Scale description",
+        errorOccured: "An error occured: ",
+        thisIsATestEnvironment: "N.B.: This is a test environment!",
+        close: "CLOSE",
         menu: {
             overview: "Overview",
             myAnswers: "My answers",
@@ -17,7 +20,7 @@ export const English: TranslationKeysSchema = {
         navbar: {
             help: "Help",
             signOut: "Sign out",
-            knowledgeMappingFor: "Kompetansekartlegging for",
+            knowledgeMappingFor: "Knowledge mapping for",
             doYouWantToDeleteYourAnswers: "Do you want to delete your answers?",
             thisWillDeleteAllAnswers: "N.B. This will delete all submitted and saved answers!"
         },
@@ -69,6 +72,10 @@ export const English: TranslationKeysSchema = {
             ish: "Well. I can if it's needed.",
             neutral: "Neutral. No opinion.",
             no: "No. I do not want to work on this."
+        },
+        myAnswers: {
+            fillOut: "Fill out",
+            blockHasNotBeenCompleted: "The block has not been completed!"
         }
     },
 }

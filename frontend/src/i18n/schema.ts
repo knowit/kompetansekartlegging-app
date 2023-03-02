@@ -6,6 +6,9 @@ export type TranslationKeysSchema = {
         knowledge: string,
         motivation: string,
         scaleDescription: string,
+        errorOccured: string,
+        thisIsATestEnvironment: string,
+        close: string,
         menu: {
             overview: string,
             myAnswers: string,
@@ -67,6 +70,10 @@ export type TranslationKeysSchema = {
             ish: string,
             neutral: string,
             no: string
+        },
+        myAnswers: {
+            fillOut: string,
+            blockHasNotBeenCompleted: string
         }
     },
 }

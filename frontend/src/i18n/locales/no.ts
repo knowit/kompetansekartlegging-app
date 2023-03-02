@@ -8,6 +8,9 @@ export const Norwegian: TranslationKeysSchema = {
         knowledge: "Kompetanse",
         motivation: "Motivasjon",
         scaleDescription: "Skalabeskrivelse",
+        errorOccured: "Noe gikk galt: ",
+        thisIsATestEnvironment: "NB: Dette er et test-miljø!",
+        close: "LUKK",
         menu: {
             overview: "Oversikt",
             myAnswers: "Mine svar",
@@ -69,6 +72,10 @@ export const Norwegian: TranslationKeysSchema = {
             ish: "Tja. Kan hvis det er behov.",
             neutral: "Nøytral. Ingen formening.",
             no: "Nei. Dette vil jeg ikke jobbe med."
+        },
+        myAnswers: {
+            fillOut: "Fyll ut",
+            blockHasNotBeenCompleted: "Blokken er ikke ferdig utfylt!"
         }
     },
 }
