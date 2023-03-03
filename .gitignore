@@ -68,3 +68,8 @@ __pycache__
 *.xlsx
 
 .idea
+
+# Env
+poetry.lock
+.tool-versions
+pyproject.toml

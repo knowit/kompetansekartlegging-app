@@ -1,11 +1,11 @@
 .tableContainer {
-    max-height: 768px;
+  max-height: 768px;
 }
 
 .usersTableContainer {
-    max-height: 480px;
+  max-height: 480px;
 }
 
 .container {
-    margin-left: 0 !important;
+  margin-left: 0 !important;
 }

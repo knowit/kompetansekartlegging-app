@@ -1,9 +1,9 @@
-import { API, graphqlOperation } from "aws-amplify";
-import { GraphQLResult } from "@aws-amplify/api";
-import { UserFormList, UserFormWithAnswers } from "./types";
-import * as customQueries from "./graphql/custom-queries";
-import { Query } from "./API";
-import { getOrganization } from "./graphql/queries";
+import { API, graphqlOperation } from 'aws-amplify'
+import { GraphQLResult } from '@aws-amplify/api'
+import { UserFormList, UserFormWithAnswers } from './types'
+import * as customQueries from './graphql/custom-queries'
+import { Query } from './API'
+import { getOrganization } from './graphql/queries'
 
 /*
     Used to call graphql queries and mutations.
@@ -14,13 +14,13 @@ import { getOrganization } from "./graphql/queries";
         to extract the data within.
 */
 export const callGraphQL = async <T>(
-    query: any,
-    variables?: {} | undefined // eslint-disable-line @typescript-eslint/ban-types
+  query: any,
+  variables?: {} | undefined // eslint-disable-line @typescript-eslint/ban-types
 ): Promise<GraphQLResult<T>> => {
-    return (await API.graphql(
-        graphqlOperation(query, variables)
-    )) as GraphQLResult<T>;
-};
+  return (await API.graphql(
+    graphqlOperation(query, variables)
+  )) as GraphQLResult<T>
+}
 
 /*
     Gets all userforms in the database. Returned as an array.
@@ -28,73 +28,68 @@ export const callGraphQL = async <T>(
         the "nextToken" is used to redo the query again with a start offset on the index.
 */
 export const listUserForms = async () => {
-    let nextToken: string | null = null;
-    let combinedUserForm: UserFormWithAnswers[] = [];
-    do {
-        const userForms: UserFormList | undefined = (
-            await callGraphQL<UserFormList>(
-                customQueries.listUserFormsWithAnswers,
-                { nextToken: nextToken }
-            )
-        ).data;
-        if (userForms && userForms.listUserForms.items.length > 0) {
-            combinedUserForm = combinedUserForm.concat(
-                userForms.listUserForms.items
-            );
-        }
-        if (userForms) nextToken = userForms.listUserForms.nextToken;
-    } while (nextToken);
+  let nextToken: string | null = null
+  let combinedUserForm: UserFormWithAnswers[] = []
+  do {
+    const userForms: UserFormList | undefined = (
+      await callGraphQL<UserFormList>(customQueries.listUserFormsWithAnswers, {
+        nextToken: nextToken,
+      })
+    ).data
+    if (userForms && userForms.listUserForms.items.length > 0) {
+      combinedUserForm = combinedUserForm.concat(userForms.listUserForms.items)
+    }
+    if (userForms) nextToken = userForms.listUserForms.nextToken
+  } while (nextToken)
 
-    return combinedUserForm;
-};
+  return combinedUserForm
+}
 
 /*
     Splits the incoming array into arrays of length 25.
     Used to prepear arrays for batch querries. A batch querry can do max 25 items at a time.
 */
 const splitArray = <T>(array: T[]): T[][] => {
-    if (array.length < 25) return [array];
+  if (array.length < 25) return [array]
 
-    const splitArray = [];
-    let currentCount = 0;
-    while (currentCount < array.length) {
-        const availableNumber = Math.min(array.length - currentCount, 25);
-        splitArray.push(
-            array.slice(currentCount, currentCount + availableNumber)
-        );
-        currentCount += 25;
-    }
-    return splitArray;
-};
+  const splitArray = []
+  let currentCount = 0
+  while (currentCount < array.length) {
+    const availableNumber = Math.min(array.length - currentCount, 25)
+    splitArray.push(array.slice(currentCount, currentCount + availableNumber))
+    currentCount += 25
+  }
+  return splitArray
+}
 
 /*
     Do a batch call with a querry and input variables.
     Basicly splits the incoming array of inputs, and dose a batch call for every size 25 array
 */
 export const callBatchGraphQL = async <T>(
-    query: any,
-    variables: { input: any[]; organizationID: string },
-    table: string
+  query: any,
+  variables: { input: any[]; organizationID: string },
+  table: string
 ): Promise<GraphQLResult<T>[]> => {
-    if (variables.input.length === 0) {
-        console.error("Array size must be more than 0 in a batch mutation");
-        return [];
-    }
+  if (variables.input.length === 0) {
+    console.error('Array size must be more than 0 in a batch mutation')
+    return []
+  }
 
-    const split = splitArray(variables.input);
-    const returnValue = [];
-    for (const element of split) {
-        returnValue.push(
-            (await API.graphql(
-                graphqlOperation(query, {
-                    input: element,
-                    organizationID: variables.organizationID,
-                })
-            )) as GraphQLResult<T>
-        );
-    }
-    return returnValue;
-};
+  const split = splitArray(variables.input)
+  const returnValue = []
+  for (const element of split) {
+    returnValue.push(
+      (await API.graphql(
+        graphqlOperation(query, {
+          input: element,
+          organizationID: variables.organizationID,
+        })
+      )) as GraphQLResult<T>
+    )
+  }
+  return returnValue
+}
 
 /*
     Rounds a number to a number of decimals.
@@ -102,14 +97,14 @@ export const callBatchGraphQL = async <T>(
     - DecimalCount: The number of decimals u want in the result.
 */
 export const roundDecimals = (
-    valueToRound: number,
-    decimalCount: number
+  valueToRound: number,
+  decimalCount: number
 ): number => {
-    return (
-        Math.round(valueToRound * Math.pow(10, decimalCount)) /
-        Math.pow(10, decimalCount)
-    );
-};
+  return (
+    Math.round(valueToRound * Math.pow(10, decimalCount)) /
+    Math.pow(10, decimalCount)
+  )
+}
 
 /**
  * Splits a long string into an array of shorter strings, with hyphens where "appropriate".
@@ -119,103 +114,103 @@ export const roundDecimals = (
  */
 
 export const wrapString = (str: string, maxLength: number): string[] => {
-    const splitOnSpace = str.split(" ");
-    const resultArray: string[] = [];
-    for (let i = 0; i < splitOnSpace.length; i++) {
-        const s = splitOnSpace[i];
-        if (s.length > maxLength) {
-            const head = s.slice(0, s.length / 2);
-            const tail = s.slice(s.length / 2);
-            resultArray.push(head + "-");
-            resultArray.push(tail);
+  const splitOnSpace = str.split(' ')
+  const resultArray: string[] = []
+  for (let i = 0; i < splitOnSpace.length; i++) {
+    const s = splitOnSpace[i]
+    if (s.length > maxLength) {
+      const head = s.slice(0, s.length / 2)
+      const tail = s.slice(s.length / 2)
+      resultArray.push(head + '-')
+      resultArray.push(tail)
+    } else {
+      if (splitOnSpace.length > i + 1) {
+        if (s.length + splitOnSpace[i + 1].length <= maxLength - 1) {
+          resultArray.push(s + ' ' + splitOnSpace[i + 1])
+          i++
         } else {
-            if (splitOnSpace.length > i + 1) {
-                if (s.length + splitOnSpace[i + 1].length <= maxLength - 1) {
-                    resultArray.push(s + " " + splitOnSpace[i + 1]);
-                    i++;
-                } else {
-                    resultArray.push(s);
-                }
-            } else {
-                resultArray.push(s);
-            }
+          resultArray.push(s)
         }
+      } else {
+        resultArray.push(s)
+      }
     }
-    return resultArray;
-};
+  }
+  return resultArray
+}
 
 export const Millisecs = {
-    FIVEMINUTES: 300000,
-    ONEDAY: 86400000,
-    THREEDAYS: 259200000,
-    THREEMONTHS: 7889400000,
-};
+  FIVEMINUTES: 300000,
+  ONEDAY: 86400000,
+  THREEDAYS: 259200000,
+  THREEMONTHS: 7889400000,
+}
 
 export const getOrganizationNameByID = (organizationID: string) =>
-    new Promise<string>(async (resolve, reject) => {
-        try {
-            const res = await callGraphQL<Query>(getOrganization, {
-                id: organizationID,
-            });
+  new Promise<string>(async (resolve, reject) => {
+    try {
+      const res = await callGraphQL<Query>(getOrganization, {
+        id: organizationID,
+      })
 
-            const organizationName = res.data?.getOrganization?.orgname;
+      const organizationName = res.data?.getOrganization?.orgname
 
-            if (typeof organizationName === "string") {
-                resolve(organizationName);
-            } else {
-                reject("no org found");
-            }
-        } catch (e) {
-            reject("no org found");
-        }
-    });
+      if (typeof organizationName === 'string') {
+        resolve(organizationName)
+      } else {
+        reject('no org found')
+      }
+    } catch (e) {
+      reject('no org found')
+    }
+  })
 
 export const getLatestUserFormUpdatedAtForUser = (
-    userId: string,
-    formDefId: string
+  userId: string,
+  formDefId: string
 ) =>
-    new Promise<Date | null>(async (resolve, reject) => {
-        try {
-            const listOfUpdatedAt: Date[] = Array<Date>();
-            let nextToken: string | null = null;
+  new Promise<Date | null>(async (resolve, reject) => {
+    try {
+      const listOfUpdatedAt: Date[] = Array<Date>()
+      let nextToken: string | null = null
 
-            do {
-                const res: UserFormList | undefined = (
-                    await callGraphQL<UserFormList>(
-                        customQueries.listUserFormsUpdatedAt,
-                        {
-                            nextToken: nextToken,
-                            filter: {
-                                formDefinitionID: {
-                                    eq: formDefId,
-                                },
-                                owner: {
-                                    eq: userId,
-                                },
-                            },
-                        }
-                    )
-                ).data;
+      do {
+        const res: UserFormList | undefined = (
+          await callGraphQL<UserFormList>(
+            customQueries.listUserFormsUpdatedAt,
+            {
+              nextToken: nextToken,
+              filter: {
+                formDefinitionID: {
+                  eq: formDefId,
+                },
+                owner: {
+                  eq: userId,
+                },
+              },
+            }
+          )
+        ).data
 
-                if (res) {
-                    listOfUpdatedAt.push(
-                        ...res.listUserForms?.items.map((item: any) => {
-                            return new Date(item.updatedAt);
-                        })
-                    );
-                    nextToken = res.listUserForms?.nextToken;
-                } else {
-                    nextToken = null;
-                }
-            } while (nextToken);
-
-            const sorted =
-                listOfUpdatedAt.length > 0
-                    ? listOfUpdatedAt.sort((a, b) => b.getTime() - a.getTime())
-                    : null;
-            sorted ? resolve(sorted[0]) : resolve(null);
-        } catch (e) {
-            console.log(e);
-            reject("error while fetching updatedAt from latest UserForm");
+        if (res) {
+          listOfUpdatedAt.push(
+            ...res.listUserForms?.items.map((item: any) => {
+              return new Date(item.updatedAt)
+            })
+          )
+          nextToken = res.listUserForms?.nextToken
+        } else {
+          nextToken = null
         }
-    });
+      } while (nextToken)
+
+      const sorted =
+        listOfUpdatedAt.length > 0
+          ? listOfUpdatedAt.sort((a, b) => b.getTime() - a.getTime())
+          : null
+      sorted ? resolve(sorted[0]) : resolve(null)
+    } catch (e) {
+      console.log(e)
+      reject('error while fetching updatedAt from latest UserForm')
+    }
+  })
