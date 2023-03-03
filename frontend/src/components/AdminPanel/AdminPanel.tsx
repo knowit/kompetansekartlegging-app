@@ -6,6 +6,8 @@ import EditGroups from "./EditGroups";
 import EditCatalogsRouter from "./EditCatalogsRouter";
 import style from "./AdminPanel.module.css";
 import { Auth } from "aws-amplify";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 type AdminPanelProps = {
     activeSubmenuItem: string;
@@ -24,13 +26,13 @@ const activeSubmenuItemToSubmenuCategory = (
     activeCategory: string
 ): SubmenuCategory => {
     switch (activeCategory) {
-        case "Rediger gruppeledere":
+        case i18next.t("menu.submenu.editGroupLeaders"):
             return SubmenuCategory.EDIT_GROUP_LEADERS;
-        case "Rediger grupper":
+        case i18next.t("menu.submenu.editGroups"):
             return SubmenuCategory.EDIT_GROUPS;
-        case "Rediger administratorer":
+        case i18next.t("menu.submenu.editAdministrators"):
             return SubmenuCategory.EDIT_ADMINS;
-        case "Rediger kataloger":
+        case i18next.t("menu.submenu.editCatalogs"):
             return SubmenuCategory.EDIT_CATALOGS;
         case "hidden":
             return SubmenuCategory.HIDDEN;
@@ -40,6 +42,7 @@ const activeSubmenuItemToSubmenuCategory = (
 };
 
 const AdminPanel = ({ activeSubmenuItem }: AdminPanelProps) => {
+    useTranslation();
     const category = activeSubmenuItemToSubmenuCategory(activeSubmenuItem);
 
     return (

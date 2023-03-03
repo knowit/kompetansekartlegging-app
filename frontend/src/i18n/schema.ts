@@ -1,79 +1,119 @@
 export type TranslationKeysSchema = {
     translation: {
-        confirm: string,
-        abort: string,
-        notAnswered: string,
-        knowledge: string,
-        motivation: string,
-        scaleDescription: string,
-        errorOccured: string,
-        thisIsATestEnvironment: string,
-        close: string,
+        confirm: string
+        abort: string
+        remove: string
+        notAnswered: string
+        knowledge: string
+        motivation: string
+        scaleDescription: string
+        errorOccured: string
+        thisIsATestEnvironment: string
+        close: string
+        employee: string
+        email: string
+        add: string
+        groupLeader: string
+        username: string
+        theGroup: string
+        theRole: string
         menu: {
-            overview: string,
-            myAnswers: string,
-            myGroup: string,
-            admin: string,
+            overview: string
+            myAnswers: string
+            myGroup: string
+            admin: string
+            superAdmin: string
+            submenu: {
+                editGroupLeaders: string
+                editGroups: string
+                editAdministrators: string
+                editCatalogs: string
+                editOrganizations: string
+                editSuperAdministrators: string
+                editOrganizationAdministrators: string
+            }
         }
         navbar: {
-            help: string,
-            signOut: string,
-            knowledgeMappingFor: string,
-            doYouWantToDeleteYourAnswers: string,
+            help: string
+            signOut: string
+            knowledgeMappingFor: string
+            doYouWantToDeleteYourAnswers: string
             thisWillDeleteAllAnswers: string
-        },
+        }
         content: {
-            unAnswared: string,
-            shouldBeUpdatedLastAnswered: string,
-            answerOutdatedOrIncomplete: string,
+            unAnswared: string
+            shouldBeUpdatedLastAnswered: string
+            answerOutdatedOrIncomplete: string
             unansweredOrOutdatedQuestionsInCategory: string
-        },
+        }
         alertDialog: {
-            nbAnswersNotSaved: string,
-            leavingWillDiscardChanges: string,
-            leaveForm: string,
+            nbAnswersNotSaved: string
+            leavingWillDiscardChanges: string
+            leaveForm: string
             stayOnForm: string
-        },
+        }
         overview: {
-            yourTopAmbitionsWillBeDisplayedHere: string,
-            yourTopStrengthsWillBeDisplayedHere: string,
-            focusAreas: string,
-            topStrengths: string,
-            topAmbitions: string,
+            yourTopAmbitionsWillBeDisplayedHere: string
+            yourTopStrengthsWillBeDisplayedHere: string
+            focusAreas: string
+            topStrengths: string
+            topAmbitions: string
             overviewType: {
-                average: string,
-                median: string,
+                average: string
+                median: string
                 highest: string
-            },
-        },
+            }
+        }
         knowledgeScale: {
-            knowledgeScale: string,
-            superstar: string,
-            expert: string,
-            professional: string,
-            potentiallyUsable: string,
-            someInsight: string,
+            knowledgeScale: string
+            superstar: string
+            expert: string
+            professional: string
+            potentiallyUsable: string
+            someInsight: string
             unfamiliar: string
             desc: {
-                superstar: string,
-                expert: string,
-                professional: string,
-                potentiallyUsable: string,
+                superstar: string
+                expert: string
+                professional: string
+                potentiallyUsable: string
                 someInsight: string
             }
-        },
+        }
         motivationScale: {
-            motivationScale: string,
-            enthusiast: string,
-            good: string,
-            curious: string,
-            ish: string,
-            neutral: string,
+            motivationScale: string
+            enthusiast: string
+            good: string
+            curious: string
+            ish: string
+            neutral: string
             no: string
-        },
+        }
         myAnswers: {
-            fillOut: string,
+            fillOut: string
             blockHasNotBeenCompleted: string
         }
-    },
+        myGroup: {
+            lastAnswered: string
+            removeFromGroup: string
+            addMembers: string
+            searchForEmployeeIn: string
+            theEmployeeMustHaveSignedInOnce: string
+            showOnlyEmployeesWithoutGroupLeader: string
+            noGroupLeader: string
+        }
+        admin: {
+            editGroupLeadersDesc: string
+            addGroupLeader: string
+            rememberToReplaceGroupLeader: string
+            areYouSureYouWantToDeleteNameFromRole: string
+            removeNameFromRole: string
+            chooseGroupLeaderForTheNewGroup: string
+            chooseNewGroupLeader: string
+            choose: string
+            createGroup: string
+            searchForEmployeeInOrganization: string
+            groupLeaderRemoved: string
+        }
+    }
 }

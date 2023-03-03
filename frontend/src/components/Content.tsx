@@ -49,6 +49,7 @@ import { SuperAdminMenu } from "./SuperAdminPanel/SuperAdminMenu";
 import { SuperAdminPanel } from "./SuperAdminPanel/SuperAdminPanel";
 import { useTranslation } from "react-i18next";
 import { TFunction } from "i18next";
+import { toI18nLocaleDateString } from "../i18n/i18n";
 
 const cardCornerRadius: number = 40;
 
@@ -170,9 +171,7 @@ const updateCategoryAlerts = (
             } else if (msNow - quAns.updatedAt > staleAnswersLimit) {
                 alerts.set(quAns.question.id, {
                     type: AlertType.Outdated,
-                    message: t("content.shouldBeUpdatedLastAnswered") + ` ${
-                        new Date(quAns.updatedAt) //.toLocaleDateString('no-NO')
-                    }`,
+                    message: t("content.shouldBeUpdatedLastAnswered", {date: new Date(quAns.updatedAt)}),
                 });
                 let numAlerts = catAlerts.get(quAns.question.category.text);
                 if (numAlerts)

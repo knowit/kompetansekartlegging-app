@@ -4,6 +4,8 @@ import EditOrganizations from "./EditOrganizations";
 import EditOrganizationAdmins from "./EditOrganizationAdmins";
 import EditSuperAdmins from "./EditSuperAdmins";
 import style from "../AdminPanel/AdminPanel.module.css";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 type SuperAdminPanelProps = {
     activeSubmenuItem: string;
@@ -21,11 +23,11 @@ const activeSubmenuItemToSubmenuCategory = (
     activeCategory: string
 ): SubmenuCategory => {
     switch (activeCategory) {
-        case "Rediger organisasjoner":
+        case i18next.t("menu.submenu.editOrganizations"):
             return SubmenuCategory.EDIT_ORGANIZATIONS;
-        case "Rediger super-administratorer":
+        case i18next.t("menu.submenu.editSuperAdministrators"):
             return SubmenuCategory.EDIT_SUPER_ADMINS;
-        case "Rediger organisasjon-administratorer":
+        case i18next.t("menu.submenu.editOrganizationAdministrators"):
             return SubmenuCategory.EDIT_ORGANIZATION_ADMINS;
         case "hidden":
             return SubmenuCategory.HIDDEN;
@@ -35,6 +37,7 @@ const activeSubmenuItemToSubmenuCategory = (
 };
 
 const SuperAdminPanel = ({ activeSubmenuItem }: SuperAdminPanelProps) => {
+    useTranslation();
     const category = activeSubmenuItemToSubmenuCategory(activeSubmenuItem);
 
     return (

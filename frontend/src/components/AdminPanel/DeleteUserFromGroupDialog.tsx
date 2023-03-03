@@ -10,6 +10,7 @@ import ErrorIcon from "@material-ui/icons/Error";
 
 import { dialogStyles } from "../../styles";
 import { getAttribute } from "./helpers";
+import { useTranslation } from "react-i18next";
 
 const DeleteUserFromGroupDialog = ({
     onCancel,
@@ -21,9 +22,10 @@ const DeleteUserFromGroupDialog = ({
     disableRoleSuffix,
     children,
 }: any) => {
+    const { t } = useTranslation();
     const style = dialogStyles();
     const name = getAttribute(user, "name");
-    const role = disableRoleSuffix ? roleName : `${roleName}rollen`;
+    const role = disableRoleSuffix ? roleName : `${roleName + t("theRole")}`;
 
     return (
         <Dialog
@@ -41,20 +43,22 @@ const DeleteUserFromGroupDialog = ({
                 ></ErrorIcon>
                 <span
                     className={style.dialogTitleText}
-                >{`Fjern ${name} fra ${role}?`}</span>
+                >
+                    {t("admin.removeNameFromRole", {name: name, role: role})}
+                </span>
             </DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Er du sikker på at du har lyst å fjerne {name} fra {role}?{" "}
+                    {t("admin.areYouSureYouWantToDeleteNameFromRole", {name: name, role: role}) + " "}
                     {children}
                 </DialogContentText>
             </DialogContent>
             <DialogActions className={style.alertButtons}>
                 <Button onClick={onConfirm} className={style.cancelButton}>
-                    <span className={style.buttonText}>Fjern</span>
+                    <span className={style.buttonText}>{t("remove")}</span>
                 </Button>
                 <Button onClick={onCancel} className={style.confirmButton}>
-                    <span className={style.buttonText}>Avbryt</span>
+                    <span className={style.buttonText}>{t("abort")}</span>
                 </Button>
             </DialogActions>
         </Dialog>

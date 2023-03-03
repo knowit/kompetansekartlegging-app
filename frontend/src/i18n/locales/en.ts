@@ -2,20 +2,38 @@ import { TranslationKeysSchema } from "../schema";
 
 export const English: TranslationKeysSchema = {
     translation: {
-        confirm: "confirm",
-        abort: "abort",
+        confirm: "Confirm",
+        abort: "Abort",
+        remove: "Remove",
         notAnswered: "Not answered",
         knowledge: "Knowledge",
         motivation: "Motivation",
         scaleDescription: "Scale description",
-        errorOccured: "An error occured: ",
+        errorOccured: "An error occured: {{error}}",
         thisIsATestEnvironment: "N.B.: This is a test environment!",
         close: "CLOSE",
+        employee: "Employee",
+        email: "Email",
+        add: "Add",
+        groupLeader: "Group leader",
+        username: "Username",
+        theGroup: "group",
+        theRole: " role",
         menu: {
             overview: "Overview",
             myAnswers: "My answers",
             myGroup: "My group",
             admin: "Admin",
+            superAdmin: "Super-admin",
+            submenu: {
+                editGroupLeaders: "Edit group leaders",
+                editGroups: "Edit groups",
+                editAdministrators: "Edit administrators",
+                editCatalogs: "Edit catalogs",
+                editOrganizations: "Edit organizations",
+                editSuperAdministrators: "Edit super-administrators",
+                editOrganizationAdministrators: "Edit organization-administrators"
+            }
         },
         navbar: {
             help: "Help",
@@ -26,7 +44,7 @@ export const English: TranslationKeysSchema = {
         },
         content: {
             unAnswared: "Unanswered!",
-            shouldBeUpdatedLastAnswered: "Should be updated! Last answered: ",
+            shouldBeUpdatedLastAnswered: "Should be updated! Last answered: {{date}}",
             answerOutdatedOrIncomplete: "The answer is outdated or incomplete!",
             unansweredOrOutdatedQuestionsInCategory: "Unanswered or outdated questions in category"
         },
@@ -76,6 +94,28 @@ export const English: TranslationKeysSchema = {
         myAnswers: {
             fillOut: "Fill out",
             blockHasNotBeenCompleted: "The block has not been completed!"
+        },
+        myGroup: {
+            lastAnswered: "Last answered",
+            removeFromGroup: "Remove from group",
+            addMembers: "Add members",
+            searchForEmployeeIn: "Search for employee in {{company}}",
+            theEmployeeMustHaveSignedInOnce: "The employee must have signed into the app at least once.",
+            showOnlyEmployeesWithoutGroupLeader: "Show only employees without a group leader",
+            noGroupLeader: "No group leader"
+        },
+        admin: {
+            editGroupLeadersDesc: "Group leaders can access their group members' answers. They can also choose their group members. In this submenu, you can add and remove group leaders.",
+            addGroupLeader: "Add group leader",
+            rememberToReplaceGroupLeader: "Remember to add a new group leader for the groups the user was responsible for.",
+            areYouSureYouWantToDeleteNameFromRole: "Are you sure you want to delete {{name}} from the {{role}}?",
+            removeNameFromRole: "Remove {{name}} from the {{role}}?",
+            chooseGroupLeaderForTheNewGroup: "Choose group leader for the new group",
+            chooseNewGroupLeader: "Choose new group leader",
+            choose: "Choose",
+            createGroup: "Create group",
+            searchForEmployeeInOrganization: "Search for employee in {{organization}}",
+            groupLeaderRemoved: "Group leader removed"
         }
-    },
+    }
 }

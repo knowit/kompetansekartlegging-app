@@ -2,6 +2,7 @@ import React from "react";
 import { Panel } from "../../types";
 import { Button } from "@material-ui/core";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 
 type SuperAdminMenuProps = {
     show: boolean;
@@ -21,17 +22,18 @@ const SuperAdminMenu = ({
     setActiveSubmenuItem,
     setActivePanel,
 }: SuperAdminMenuProps) => {
+    const { t } = useTranslation();
     if (!show) return null;
 
     const items = [
         {
-            text: "Rediger organisasjoner",
+            text: t("menu.submenu.editOrganizations"),
         },
         {
-            text: "Rediger super-administratorer",
+            text: t("menu.submenu.editSuperAdministrators"),
         },
         {
-            text: "Rediger organisasjon-administratorer",
+            text: t("menu.submenu.editOrganizationAdministrators"),
         },
         // refactor this one out once the whole app uses routing
         {
@@ -49,11 +51,11 @@ const SuperAdminMenu = ({
                 onClick={() => {
                     // main pane is same as edit group leader pane atm
                     setShowFab(false);
-                    setActiveSubmenuItem("Rediger organisasjoner");
+                    setActiveSubmenuItem(t("menu.submenu.editOrganizations"));
                     setActivePanel(Panel.SuperAdmin);
                 }}
             >
-                <div className={clsx(style.menuButtonText)}>SUPER-ADMIN</div>
+                <div className={clsx(style.menuButtonText)}>{t("menu.superAdmin").toUpperCase()}</div>
             </Button>
 
             {selected &&

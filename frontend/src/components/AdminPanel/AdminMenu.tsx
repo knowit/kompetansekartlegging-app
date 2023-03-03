@@ -27,16 +27,16 @@ const AdminMenu = ({
 
     const items = [
         {
-            text: "Rediger gruppeledere",
+            text: t("menu.submenu.editGroupLeaders"),
         },
         {
-            text: "Rediger grupper",
+            text: t("menu.submenu.editGroups"),
         },
         {
-            text: "Rediger administratorer",
+            text: t("menu.submenu.editAdministrators"),
         },
         {
-            text: "Rediger kataloger",
+            text: t("menu.submenu.editCatalogs"),
             hasInternalRouting: true,
         },
         // refactor this one out once the whole app uses routing
@@ -55,7 +55,7 @@ const AdminMenu = ({
                 onClick={() => {
                     // main pane is same as edit group leader pane atm
                     setShowFab(false);
-                    setActiveSubmenuItem("Rediger gruppeledere");
+                    setActiveSubmenuItem(t("menu.submenu.editGroupLeaders"));
                     setActivePanel(Panel.Admin);
                 }}
             >

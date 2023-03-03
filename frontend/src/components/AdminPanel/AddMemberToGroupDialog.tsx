@@ -28,6 +28,7 @@ import { CloseIcon } from "../DescriptionTable";
 import { not, getAttribute } from "./helpers";
 import { useAppSelector } from "../../redux/hooks";
 import { selectUserState } from "../../redux/User";
+import { useTranslation } from "react-i18next";
 
 const getNameOrUsername = (user: any) => {
     const name = getAttribute(user, "name");
@@ -41,6 +42,7 @@ const AddMemberToGroupDialog = ({
     allUsers,
     members,
 }: any) => {
+    const { t } = useTranslation();
     const style = dialogStyles();
     const userState = useAppSelector(selectUserState);
 
@@ -95,7 +97,7 @@ const AddMemberToGroupDialog = ({
                     justifyContent="space-between"
                 >
                     <span className={style.dialogTitleText}>
-                        Legg til medlemmer
+                        {t("myGroup.addMembers")}
                     </span>
                     <IconButton
                         className={style.closeButton}
@@ -107,12 +109,12 @@ const AddMemberToGroupDialog = ({
                 <FormGroup row>
                     <TextField
                         fullWidth
-                        placeholder={`Søk etter ansatt i ${userState.organizationName}`}
+                        placeholder={t("myGroup.searchForEmployeeIn", {company: `${userState.organizationName}`})!}
                         variant="outlined"
                         value={nameFilter}
                         className={style.searchField}
                         onChange={(e: any) => setNameFilter(e.target.value)}
-                        helperText="Den ansatte må ha logget seg inn i appen minst en gang."
+                        helperText={t("myGroup.theEmployeeMustHaveSignedInOnce")}
                     />
                     <FormControlLabel
                         control={
@@ -122,7 +124,7 @@ const AddMemberToGroupDialog = ({
                                 color="primary"
                             />
                         }
-                        label="Vis bare ansatte uten gruppeleder"
+                        label={t("myGroup.showOnlyEmployeesWithoutGroupLeader")}
                     />
                 </FormGroup>
                 {selectedUsers.length > 0 && (
@@ -141,7 +143,7 @@ const AddMemberToGroupDialog = ({
             </DialogContent>
             <DialogActions className={style.alertButtons}>
                 <Button onClick={onClose} className={style.cancelButton}>
-                    <span className={style.buttonText}>Avbryt</span>
+                    <span className={style.buttonText}>{t("abort")}</span>
                 </Button>
                 <Button
                     onClick={() => {
@@ -151,7 +153,7 @@ const AddMemberToGroupDialog = ({
                     disabled={selectedUsers.length === 0}
                     className={style.confirmButton}
                 >
-                    <span className={style.buttonText}>Legg til</span>
+                    <span className={style.buttonText}>{t("add")}</span>
                 </Button>
             </DialogActions>
         </Dialog>
@@ -193,6 +195,7 @@ const SelectedUsers = ({ selectedUsers, setSelectedUser }: any) => {
 };
 
 const User = ({ user, selected, setSelectedUser }: any) => {
+    const { t } = useTranslation();
     const name = getAttribute(user, "name");
     const picture = getAttribute(user, "picture");
     const hasGroup = !!user.groupLeader;
@@ -209,7 +212,7 @@ const User = ({ user, selected, setSelectedUser }: any) => {
                     <PictureAndNameCell name={name} picture={picture} />
                 </TableCell>
                 <TableCell>
-                    {groupLeaderName || "Mangler gruppeleder"}
+                    {groupLeaderName || t("myGroup.noGroupLeader")}
                 </TableCell>
             </TableRow>
         </>
@@ -217,6 +220,7 @@ const User = ({ user, selected, setSelectedUser }: any) => {
 };
 
 const UsersTable = ({ users, selectedUsers, setSelectedUser }: any) => {
+    const { t } = useTranslation();
     const isSelected = (user: any) =>
         selectedUsers.some((u: any) => u.Username === user.Username);
 
@@ -225,8 +229,8 @@ const UsersTable = ({ users, selectedUsers, setSelectedUser }: any) => {
             <Table stickyHeader style={{ maxHeight: "100%" }}>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Ansatt</TableCell>
-                        <TableCell>Gruppeleder</TableCell>
+                        <TableCell>{t("employee")}</TableCell>
+                        <TableCell>{t("groupLeader")}</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>

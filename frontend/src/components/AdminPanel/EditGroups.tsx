@@ -50,6 +50,7 @@ import { useAppSelector } from "../../redux/hooks";
 import { selectUserState } from "../../redux/User";
 import { listAllFormDefinitionsForLoggedInUser } from "./catalogApi";
 import { getLatestUserFormUpdatedAtForUser } from "../../helperFunctions";
+import { useTranslation } from "react-i18next";
 
 const useRowStyles = makeStyles({
     root: {
@@ -211,6 +212,7 @@ const GroupsTable = ({
 };
 
 const EditGroups = ({ showLastAnsweredAt }: any) => {
+    const { t } = useTranslation();
     const userState = useAppSelector(selectUserState);
 
     const {
@@ -432,14 +434,14 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
                 onExited={() => setMemberToDelete(null)}
                 onConfirm={deleteMemberConfirm}
                 user={memberToDelete && memberToDelete.user}
-                roleName="gruppen"
+                roleName={t("theGroup")}
                 disableRoleSuffix
             />
             {groupToEdit && (
                 <AddUserToGroupDialog
                     usersConstant={groupLeaders}
-                    title="Velg ny gruppeleder"
-                    confirmButtonText="Velg"
+                    title={t("admin.chooseNewGroupLeader")}
+                    confirmButtonText={t("admin.choose")}
                     open={!!groupToEdit}
                     currentUsersInGroup={
                         groupToEdit.groupLeader ? [groupToEdit.groupLeader] : []
@@ -451,8 +453,8 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
             {showAddGroup && (
                 <AddUserToGroupDialog
                     usersConstant={groupLeaders}
-                    title="Velg gruppeleder til den nye gruppen"
-                    confirmButtonText="Lag gruppe"
+                    title={t("admin.chooseGroupLeaderForTheNewGroup")}
+                    confirmButtonText={t("admin.createGroup")}
                     open={showAddGroup}
                     currentUsersInGroup={[]}
                     onCancel={hideShowAddGroup}

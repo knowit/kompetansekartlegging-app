@@ -28,7 +28,7 @@ const Main = ({
     const { t } = useTranslation();
     return (
         <Container maxWidth="md" className={commonStyles.container}>
-            {isError && <p>An error occured: {isError}</p>}
+            {isError && <p>{t("errorOccured", {error: isError})}</p>}
             {isLoading && <CircularProgress />}
             {!isError && !isLoading && allAvailableUsersAnnotated && (
                 <>
@@ -61,7 +61,7 @@ const Main = ({
                 onExited={() => setMemberToDelete(null)}
                 onConfirm={deleteMemberConfirm}
                 user={memberToDelete && memberToDelete.user}
-                roleName="gruppen"
+                roleName={t("theGroup")}
                 disableRoleSuffix
             />
         </Container>

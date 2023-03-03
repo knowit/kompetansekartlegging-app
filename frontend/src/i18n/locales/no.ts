@@ -4,18 +4,36 @@ export const Norwegian: TranslationKeysSchema = {
     translation: {
         confirm: "Bekreft",
         abort: "Avbryt",
+        remove: "Fjern",
         notAnswered: "Ikke besvart",
         knowledge: "Kompetanse",
         motivation: "Motivasjon",
         scaleDescription: "Skalabeskrivelse",
-        errorOccured: "Noe gikk galt: ",
+        errorOccured: "Noe gikk galt: {{error}}",
         thisIsATestEnvironment: "NB: Dette er et test-miljø!",
         close: "LUKK",
+        employee: "Ansatt",
+        email: "Email",
+        add: "Legg til",
+        groupLeader: "Gruppeleder",
+        username: "Brukernavn",
+        theGroup: "gruppen",
+        theRole: "rollen",
         menu: {
             overview: "Oversikt",
             myAnswers: "Mine svar",
             myGroup: "Min gruppe",
             admin: "Admin",
+            superAdmin: "Super-admin",
+            submenu: {
+                editGroupLeaders: "Rediger gruppeledere",
+                editGroups: "Rediger grupper",
+                editAdministrators: "Rediger administratorer",
+                editCatalogs: "Rediger kataloger",
+                editOrganizations: "Rediger organisasjoner",
+                editSuperAdministrators: "Rediger super-administratorer",
+                editOrganizationAdministrators: "Rediger organisasjon-administratorer"
+            }
         },
         navbar: {
             help: "Hjelp",
@@ -26,7 +44,7 @@ export const Norwegian: TranslationKeysSchema = {
         },
         content: {
             unAnswared: "Ubesvart!",
-            shouldBeUpdatedLastAnswered: "Bør oppdateres! Sist besvart: ",
+            shouldBeUpdatedLastAnswered: "Bør oppdateres! Sist besvart: {{date}}",
             answerOutdatedOrIncomplete: "Besvarelsen er utdatert eller ikke komplett!",
             unansweredOrOutdatedQuestionsInCategory: "Ikke besvart eller utdaterte spørsmål i kategori"
         },
@@ -76,6 +94,27 @@ export const Norwegian: TranslationKeysSchema = {
         myAnswers: {
             fillOut: "Fyll ut",
             blockHasNotBeenCompleted: "Blokken er ikke ferdig utfylt!"
+        },
+        myGroup: {
+            lastAnswered: "Sist besvart",
+            removeFromGroup: "Fjern fra gruppe",
+            addMembers: "Legg til medlemmer",
+            searchForEmployeeIn: "Søk etter ansatt i {{company}}",
+            theEmployeeMustHaveSignedInOnce: "Den ansatte må ha logget seg inn i appen minst en gang.",
+            showOnlyEmployeesWithoutGroupLeader: "Vis bare ansatte uten gruppeleder",
+            noGroupLeader: "Mangler gruppeleder"
+        },
+        admin: {
+            editGroupLeadersDesc: "Gruppeledere har tilgang til sine egne gruppebarns svar. De kan også velge sine gruppebarn. På denne siden kan du legge til og fjerne gruppeledere.",
+            addGroupLeader: "Legg til gruppeleder",
+            rememberToReplaceGroupLeader: "Husk å sette en ny gruppeleder for de gruppene brukeren var ansvarlig for.",
+            areYouSureYouWantToDeleteNameFromRole: "Er du sikker på at du har lyst til å fjerne {{name}} fra {{role}}?",
+            removeNameFromRole: "Fjern {{name}} fra {{role}}?",
+            chooseGroupLeaderForTheNewGroup: "Velg gruppeleder til den nye gruppen",
+            chooseNewGroupLeader: "Velg ny gruppeleder",
+            choose: "Velg",
+            createGroup: "Lag gruppe",
+            searchForEmployeeInOrganization: "Søk etter ansatt i {{organization}}"
         }
-    },
+    }
 }
