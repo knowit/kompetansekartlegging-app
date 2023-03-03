@@ -1,17 +1,16 @@
-import React from 'react'
-
+import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import Button from '@material-ui/core/Button'
 import ErrorIcon from '@material-ui/icons/Error'
 
 import { dialogStyles } from '../../../styles'
 
 const DeleteCategoryDialog = ({
   category,
+  categoryContainsQuestions,
   onCancel,
   onConfirm,
   onExited,
@@ -36,13 +35,17 @@ const DeleteCategoryDialog = ({
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Er du sikker på at du har lyst å fjerne denne kategorien? Dette vil
-          ikke slette spørsmålene i kategorien eller svarene til de ansatte, men
-          gjør det vanskelig å koble svar opp mot kategori.
+          {!categoryContainsQuestions
+            ? 'Er du sikker på at du vil fjerne denne kategorien?'
+            : 'Kan ikke fjerne kategorien fordi den fortsatt inneholder spørsmål.'}
         </DialogContentText>
       </DialogContent>
       <DialogActions className={style.alertButtons}>
-        <Button onClick={onConfirm} className={style.cancelButton}>
+        <Button
+          onClick={onConfirm}
+          className={style.cancelButton}
+          disabled={categoryContainsQuestions}
+        >
           <span className={style.buttonText}>Fjern</span>
         </Button>
         <Button onClick={onCancel} className={style.confirmButton}>

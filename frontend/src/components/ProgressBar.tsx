@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { ProgressProps } from '../types'
 import { createStyles, makeStyles, withStyles } from '@material-ui/core'
-import { KnowitColors } from '../styles'
 import LinearProgress, {
   LinearProgressProps,
 } from '@material-ui/core/LinearProgress'
+import { useEffect, useState } from 'react'
+import { KnowitColors } from '../styles'
+import { ProgressProps } from '../types'
 
 const useStyles = makeStyles({
   root: {
@@ -51,9 +51,9 @@ export default function ProgressBar({ ...props }: ProgressProps) {
 
   useEffect(() => {
     const updateProgress = () => {
-      let unfilledQuestions = props.alerts?.qidMap.size ?? 0
-      let filledQuestions = props.totalQuestions - unfilledQuestions
-      let progressPercentage = (filledQuestions / props.totalQuestions) * 100
+      const unfilledQuestions = props.alerts?.qidMap.size ?? 0
+      const filledQuestions = props.totalQuestions - unfilledQuestions
+      const progressPercentage = (filledQuestions / props.totalQuestions) * 100
       setProgress(progressPercentage)
     }
     updateProgress()

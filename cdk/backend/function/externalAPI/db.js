@@ -23,10 +23,16 @@ const FORM_DEFINITION_TABLE_NAME = TableMap['FormDefinitionTable']
 const USER_POOL_ID = process.env.USERPOOL
 const APIKEYPERMISSION_TABLE_NAME = TableMap['APIKeyPermissionTable']
 // process.env.API_KOMPETANSEKARTLEGGIN_APIKEYPERMISSIONTABLE_NAME;
+const GROUP_TABLE_NAME = TableMap['GroupTable']
+// process.env.API_KOMPETANSEKARTLEGGIN_GROUPTABLE_NAME;
+const USER_TABLE_NAME = TableMap['UserTable']
+// process.env.API_KOMPETANSEKARTLEGGIN_GROUPTABLE_NAME;
 
 const organizationFilterParameter = ':oid'
 const organizationFilterExpression =
   'organizationID = ' + organizationFilterParameter
+const groupFilterParameter = ':gid'
+const groupFilterExpression = 'groupID = ' + groupFilterParameter
 
 const getOrganizationIDFromAPIKeyHashed = async APIKeyHashed => {
   let organizationIDItem = await docClient
@@ -91,9 +97,9 @@ const getAnswersForUser = async (user, formDefinitionID, questionMap) => {
   let lastUserForm = getNewestItem(allUserForms.Items)
 
   const answers = await getAnswersForUserForm(lastUserForm.id)
-  const answersWithQuestions = answers.map(a =>
-    mapQuestionToAnswer(questionMap, a)
-  )
+  const answersWithQuestions = answers
+    .filter(answer => questionMap[answer.questionID])
+    .map(a => mapQuestionToAnswer(questionMap, a))
 
   return {
     username,
@@ -211,7 +217,10 @@ const getAllUsers = async organization_ID => {
       attribute => attribute['Name'] === 'custom:OrganizationID'
     )[0]
 
-    return organizationAttribute['Value'] === organization_ID
+    return (
+      organizationAttribute &&
+      organizationAttribute['Value'] === organization_ID
+    )
   })
 
   filteredUsersWithoutOrganizationID = filteredUsers.map(user => {
@@ -235,6 +244,30 @@ const getAllFormDefs = async organization_ID => {
       ExpressionAttributeValues: {
         [organizationFilterParameter]: organization_ID,
       },
+    })
+    .promise()
+}
+
+// Get all groups
+const getAllGroups = async organization_ID => {
+  return await docClient
+    .scan({
+      TableName: GROUP_TABLE_NAME,
+      FilterExpression: organizationFilterExpression,
+      ExpressionAttributeValues: {
+        [organizationFilterParameter]: organization_ID,
+      },
+    })
+    .promise()
+}
+
+// Get members of group
+const getMembersOfGroup = async group_ID => {
+  return await docClient
+    .scan({
+      TableName: USER_TABLE_NAME,
+      FilterExpression: groupFilterExpression,
+      ExpressionAttributeValues: { [groupFilterParameter]: group_ID },
     })
     .promise()
 }
@@ -269,4 +302,6 @@ module.exports = {
   getAllCategoriesForFormDef,
   getAllQuestionForCategory,
   getOrganizationIDFromAPIKeyHashed,
+  getAllGroups,
+  getMembersOfGroup,
 }

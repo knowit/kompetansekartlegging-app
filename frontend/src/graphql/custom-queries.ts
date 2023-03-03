@@ -145,7 +145,8 @@ export const customUserFormByCreatedAt = /* GraphQL */ `
     $sortDirection: ModelSortDirection
     $filter: ModelUserFormFilterInput
     $limit: Int
-    $nextToken: String
+    $nextUserFormToken: String
+    $nextQAToken: String
   ) {
     userFormByCreatedAt(
       owner: $owner
@@ -153,11 +154,12 @@ export const customUserFormByCreatedAt = /* GraphQL */ `
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
+      nextToken: $nextUserFormToken
     ) {
       items {
         id
         formDefinitionID
-        questionAnswers(nextToken: $nextToken) {
+        questionAnswers(nextToken: $nextQAToken) {
           items {
             id
             knowledge
@@ -180,6 +182,7 @@ export const customUserFormByCreatedAt = /* GraphQL */ `
           nextToken
         }
       }
+      nextToken
     }
   }
 `
@@ -200,6 +203,21 @@ export const batchCreateQuestionAnswer2 = /* GraphQL */ `
         motivation
         formDefinitionID
       }
+    }
+  }
+`
+
+export const listUserFormsUpdatedAt = /* GraphQL */ `
+  query ListUserFormsUpdatedAt(
+    $filter: ModelUserFormFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUserForms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        updatedAt
+      }
+      nextToken
     }
   }
 `

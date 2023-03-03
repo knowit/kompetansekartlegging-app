@@ -18,9 +18,9 @@ export const removeUserFromGroup = async (
   groupname: string,
   username: string
 ): Promise<ApiResponse<any>> => {
-  let apiName = 'AdminQueries'
-  let path = '/removeUserFromGroup'
-  let myInit = {
+  const apiName = 'AdminQueries'
+  const path = '/removeUserFromGroup'
+  const myInit = {
     body: {
       groupname,
       username,
@@ -43,18 +43,20 @@ export const removeUserFromGroup = async (
   }
 }
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const removeGroupLeader = async (user: any, org: any) =>
   await removeUserFromGroup(`${org}0groupLeader`, user.Username)
 const removeAdmin = async (user: any, org: any) =>
   await removeUserFromGroup(`${org}0admin`, user.Username)
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 export const addUserToGroup = async (
   groupname: string,
   username: string
 ): Promise<ApiResponse<any>> => {
-  let apiName = 'AdminQueries'
-  let path = '/addUserToGroup'
-  let myInit = {
+  const apiName = 'AdminQueries'
+  const path = '/addUserToGroup'
+  const myInit = {
     body: {
       groupname,
       username,
@@ -80,9 +82,9 @@ export const addUserToGroup = async (
 const listUsersInGroup = async (
   groupname: string
 ): Promise<ApiResponse<any[]>> => {
-  let apiName = 'AdminQueries'
-  let path = '/listUsersInGroup'
-  let myInit: any = {
+  const apiName = 'AdminQueries'
+  const path = '/listUsersInGroup'
+  const myInit: any = {
     queryStringParameters: {
       groupname,
     },
@@ -103,7 +105,7 @@ const listUsersInGroup = async (
       myInit.queryStringParameters['token'] = nextToken
       response = await API.get(apiName, path, myInit)
       Users.push(...response.Users)
-      if (response.NextToken && response.NextToken != nextToken) {
+      if (response.NextToken && response.NextToken !== nextToken) {
         nextToken = response.NextToken
       } else {
         nextToken = null
@@ -127,16 +129,14 @@ const listAdminsInOrganization = async (organizationID: string) =>
   await listUsersInGroup(`${organizationID}${ADMIN_COGNITOGROUP_SUFFIX}`)
 const listAdmins = async () => await listUsersInGroup('admin')
 
-const listAllUsers = async (
-  limit: number = 60
-): Promise<ApiResponse<any[]>> => {
-  let nextToken: string = ''
+const listAllUsers = async (limit = 60): Promise<ApiResponse<any[]>> => {
+  let nextToken = ''
   let allUsers: any[] = []
   try {
     do {
-      let apiName = 'AdminQueries'
-      let path = '/listUsers'
-      let variables = {
+      const apiName = 'AdminQueries'
+      const path = '/listUsers'
+      const variables = {
         queryStringParameters: {
           limit: `${limit}`,
           token: nextToken,

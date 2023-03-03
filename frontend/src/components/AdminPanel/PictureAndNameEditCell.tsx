@@ -1,10 +1,8 @@
-import React from 'react'
-
 import Avatar from '@material-ui/core/Avatar'
 import Badge from '@material-ui/core/Badge'
-import EditIcon from '@material-ui/icons/Edit'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
+import EditIcon from '@material-ui/icons/Edit'
 
 const useStyles = makeStyles({
   root: {
@@ -30,6 +28,7 @@ const StyledBadge = withStyles((theme) => ({
 
 const GroupAvatar = ({ showBadge, onClick, name, picture }: any) => (
   <StyledBadge
+    overlap="rectangular"
     badgeContent={
       showBadge ? (
         <IconButton size="small" onClick={onClick}>

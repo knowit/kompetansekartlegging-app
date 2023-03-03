@@ -62,9 +62,9 @@ export const BlockInfo = (props: {
     }
   }
 
-  let questions = props.questions ?? []
+  const questions = props.questions ?? []
 
-  let answeredQuestions = questions.filter(
+  const answeredQuestions = questions.filter(
     (question) =>
       (question.motivation !== -1 && question.knowledge !== -1) ||
       (question.customScaleValue != null && question.customScaleValue >= 0)
@@ -82,13 +82,13 @@ export const BlockInfo = (props: {
       </div>
     )
 
-  let now = Date.now()
-  var timeOfOldestQuestion = now
+  const now = Date.now()
+  let timeOfOldestQuestion = now
   answeredQuestions?.forEach((question) => {
     if (question.updatedAt < timeOfOldestQuestion)
       timeOfOldestQuestion = question.updatedAt
   })
-  let timeDiff = now - timeOfOldestQuestion
+  const timeDiff = now - timeOfOldestQuestion
   if (timeDiff > staleAnswersLimit) {
     return (
       <div className={classes.root}>

@@ -1,22 +1,27 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
-import PersonAddIcon from '@material-ui/icons/PersonAdd'
-import TableCell from '@material-ui/core/TableCell'
 import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
+import PersonAddIcon from '@material-ui/icons/PersonAdd'
 
-import { getAttribute } from './helpers'
-import PictureAndNameCell from './PictureAndNameCell'
-import AddMemberToGroupDialog from './AddMemberToGroupDialog'
 import Button from '../mui/Button'
 import Table from '../mui/Table'
 import TableRow from '../mui/TableRow'
+import AddMemberToGroupDialog from './AddMemberToGroupDialog'
+import { getAttribute } from './helpers'
+import PictureAndNameCell from './PictureAndNameCell'
 
-const User = ({ user, deleteMember, viewMember }: any) => {
+const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
   const name = getAttribute(user, 'name')
   const email = getAttribute(user, 'email')
   const picture = getAttribute(user, 'picture')
+  const formLastAnsweredAt =
+    user.lastAnsweredAt == null
+      ? 'Ikke besvart'
+      : user.lastAnsweredAt.toLocaleDateString('nb-NO')
+
   const onClick = () => {
     if (viewMember) viewMember(user.Username)
   }
@@ -27,6 +32,7 @@ const User = ({ user, deleteMember, viewMember }: any) => {
         <PictureAndNameCell name={name} picture={picture} />
       </TableCell>
       <TableCell onClick={onClick}>{email}</TableCell>
+      {showLastAnsweredAt && <TableCell>{formLastAnsweredAt}</TableCell>}
       <TableCell>
         <Button
           onClick={() => deleteMember(user)}
@@ -45,6 +51,7 @@ const GroupMembers = ({
   addMembersToGroup,
   deleteMember,
   viewMember,
+  showLastAnsweredAt,
 }: any) => {
   const [open, setOpen] = useState<boolean>(false)
   const onConfirm = (users: any[]) => {
@@ -60,6 +67,7 @@ const GroupMembers = ({
             <TableRow>
               <TableCell>Ansatt</TableCell>
               <TableCell>Email</TableCell>
+              {showLastAnsweredAt && <TableCell>Sist besvart</TableCell>}
               <TableCell />
             </TableRow>
           </TableHead>
@@ -70,6 +78,7 @@ const GroupMembers = ({
                 user={u}
                 deleteMember={deleteMember}
                 viewMember={viewMember}
+                showLastAnsweredAt={showLastAnsweredAt}
               />
             ))}
           </TableBody>

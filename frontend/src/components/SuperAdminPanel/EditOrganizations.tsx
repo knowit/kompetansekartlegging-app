@@ -1,5 +1,8 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useState } from 'react'
 
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from '@material-ui/core/Container'
 import IconButton from '@material-ui/core/IconButton'
 import TableBody from '@material-ui/core/TableBody'
@@ -7,26 +10,22 @@ import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import DeleteIcon from '@material-ui/icons/Delete'
-import EditIcon from '@material-ui/icons/Edit'
 import Typography from '@material-ui/core/Typography'
+import DeleteIcon from '@material-ui/icons/Delete'
 import commonStyles from '../AdminPanel/common.module.css'
 import Button from '../mui/Button'
 import Table from '../mui/Table'
-import CircularProgress from '@material-ui/core/CircularProgress'
 
-import {
-  getOrganizations,
-  removeOrganization,
-  addOrganization,
-} from './SuperAdminAPI'
-import { OrganizationInfo } from './SuperAdminTypes'
 import AddIcon from '@material-ui/icons/Add'
+import useApiGet from '../AdminPanel/useApiGet'
 import AddOrganizationDialog from './AddOrganizationDialog'
 import DeleteOrganizationDialog from './DeleteOrganizationDialog'
-import useApiGet from '../AdminPanel/useApiGet'
+import {
+  addOrganization,
+  getOrganizations,
+  removeOrganization,
+} from './SuperAdminAPI'
+import { OrganizationInfo } from './SuperAdminTypes'
 
 interface OrganizationProps {
   organization: OrganizationInfo
@@ -93,8 +92,8 @@ const OrganizationTable: React.FC<OrganizationTableProps> = ({
 const EditOrganizations = () => {
   const {
     result: organizations,
-    error: error,
-    loading: loading,
+    error,
+    loading,
     refresh: refreshOrganizations,
   } = useApiGet({
     getFn: getOrganizations,

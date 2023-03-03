@@ -1,20 +1,20 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
-import { makeStyles, createStyles } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import TextField from '@material-ui/core/TextField'
 import FormControl from '@material-ui/core/FormControl'
-import Radio from '@material-ui/core/Radio'
-import RadioGroup from '@material-ui/core/RadioGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import FormLabel from '@material-ui/core/FormLabel'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import Radio from '@material-ui/core/Radio'
+import RadioGroup from '@material-ui/core/RadioGroup'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
+import TextField from '@material-ui/core/TextField'
 
 import { QuestionType } from '../../../API'
 import { KnowitColors } from '../../../styles'
-import EditActionButtons from './EditActionButtons'
 import CategoriesSelect from './CategoriesSelect'
+import EditActionButtons from './EditActionButtons'
 
 const useQuestionListStyles = makeStyles(() =>
   createStyles({
@@ -84,9 +84,9 @@ const QuestionListItemEdit = ({
   categories,
   setEditMode,
 }: any) => {
-  const [topic, setTopic] = useState<String>(q.topic)
-  const [text, setText] = useState<String>(q.text)
-  const [categoryID, setCategoryID] = useState<String>(q.categoryID)
+  const [topic, setTopic] = useState<string>(q.topic)
+  const [text, setText] = useState<string>(q.text)
+  const [categoryID, setCategoryID] = useState<string>(q.categoryID)
   const [questionConfig, setQuestionConfig] = useState<any>(initialConfig(q))
   const classes = useQuestionListStyles()
 
@@ -146,8 +146,8 @@ const QuestionListItemEdit = ({
             <TextField
               fullWidth
               multiline
-              rows={4}
-              rowsMax={6}
+              minRows={4}
+              maxRows={6}
               label="Beskrivelse"
               variant="outlined"
               error={text === ''}

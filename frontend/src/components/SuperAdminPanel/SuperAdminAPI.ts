@@ -1,20 +1,16 @@
-import { callGraphQL } from '../../helperFunctions'
 import {
+  Mutation,
   // ListOrganizationsQuery,
   // CreateOrganizationMutation,
   // UpdateOrganizationMutation,
   // DeleteOrganizationMutation
   Query,
-  Mutation,
 } from '../../API'
+import { createOrganization, deleteOrganization } from '../../graphql/mutations'
 import { listOrganizations } from '../../graphql/queries'
-import {
-  createOrganization,
-  updateOrganization,
-  deleteOrganization,
-} from '../../graphql/mutations'
-import { OrganizationInfo } from './SuperAdminTypes'
+import { callGraphQL } from '../../helperFunctions'
 import { ApiResponse } from '../AdminPanel/adminApi'
+import { OrganizationInfo } from './SuperAdminTypes'
 
 export const getOrganizations = async (): Promise<
   ApiResponse<OrganizationInfo[]>
@@ -44,6 +40,7 @@ export const getOrganizations = async (): Promise<
 export const addOrganization = async (organization: OrganizationInfo) =>
   new Promise(async (resolve, reject) => {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const res = await callGraphQL<Mutation>(createOrganization, {
         input: {
           id: organization.id,

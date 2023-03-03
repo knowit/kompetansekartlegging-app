@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import List from '@material-ui/core/List'
 
+import { Category } from '../../../API'
 import {
+  deleteCategory as deleteCategoryApi,
+  listQuestionsByCategoryID,
   updateCategoryIndex,
   updateCategoryTextAndDescription,
-  deleteCategory as deleteCategoryApi,
 } from '../catalogApi'
-import { Category } from '../../../API'
 import CategoryListItem from './CategoryListItem'
 import DeleteCategoryDialog from './DeleteCategoryDialog'
 
@@ -24,7 +25,18 @@ const CategoryList = ({
   const [showDeleteCategoryDialog, setShowDeleteCategoryDialog] =
     useState<boolean>(false)
   const [categoryToDelete, setCategoryToDelete] = useState<any>()
-  const deleteCategory = (category: any) => {
+  const [
+    categoryToDeleteContainsQuestions,
+    setCategoryToDeleteContainsQuestions,
+  ] = useState<boolean>()
+
+  const deleteCategory = async (category: any) => {
+    const categoryContainsQuestions = await listQuestionsByCategoryID(
+      category.id
+    ).then((response: any) => {
+      return response.result.length > 0
+    })
+    setCategoryToDeleteContainsQuestions(categoryContainsQuestions)
     setShowDeleteCategoryDialog(true)
     setCategoryToDelete(category)
   }
@@ -89,6 +101,7 @@ const CategoryList = ({
           onExited={() => setCategoryToDelete(null)}
           onConfirm={deleteCategoryConfirm}
           category={categoryToDelete}
+          categoryContainsQuestions={categoryToDeleteContainsQuestions}
         />
       )}
     </>
