@@ -48,7 +48,7 @@ app.use((req, res, next) => {
 const allowedGroup = process.env.GROUP
 const allowedListUsersGroup = process.env.GROUP_LIST_USERS
 
-const checkGroup = function (req, res, next) {
+const checkGroup = function(req, res, next) {
   if (req.path == '/signUserOut') {
     return next()
   }
@@ -59,12 +59,11 @@ const checkGroup = function (req, res, next) {
 
   // Fail if group enforcement is being used
   if (req.apiGateway.event.requestContext.authorizer.claims['cognito:groups']) {
-    const groups =
-      req.apiGateway.event.requestContext.authorizer.claims[
-        'cognito:groups'
-      ].split(',')
+    const groups = req.apiGateway.event.requestContext.authorizer.claims[
+      'cognito:groups'
+    ].split(',')
     const newRoles = []
-    groups.forEach((group) => {
+    groups.forEach(group => {
       const splitGroup = group.split('0')
       if (splitGroup.length > 1) {
         newRoles.push(splitGroup[1])
@@ -307,7 +306,10 @@ app.post('/signUserOut', async (req, res, next) => {
 app.use((err, req, res, next) => {
   console.error(err.message)
   if (!err.statusCode) err.statusCode = 500 // If err has no specified error code, set error code to 'Internal Server Error (500)'
-  res.status(err.statusCode).json({ message: err.message }).end()
+  res
+    .status(err.statusCode)
+    .json({ message: err.message })
+    .end()
 })
 
 app.listen(3000, () => {

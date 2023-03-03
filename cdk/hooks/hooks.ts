@@ -1,20 +1,20 @@
-import setAppSyncAuth from "./setAppSyncAuth"
-import initializeDatabase from "./initializeDatabase"
-import * as fs from "fs"
+import setAppSyncAuth from './setAppSyncAuth'
+import initializeDatabase from './initializeDatabase'
+import * as fs from 'fs'
 
-const file = fs.readFileSync("outputs.json", { encoding: "utf-8" })
+const file = fs.readFileSync('outputs.json', { encoding: 'utf-8' })
 
 const json = JSON.parse(file)
-const kompetanseStackKey = Object.keys(json).find((key) =>
-  key.startsWith("KompetanseStack")
+const kompetanseStackKey = Object.keys(json).find(key =>
+  key.startsWith('KompetanseStack')
 )
-const auroraStackKey = Object.keys(json).find((key) =>
-  key.startsWith("AuroraStack")
+const auroraStackKey = Object.keys(json).find(key =>
+  key.startsWith('AuroraStack')
 )
 if (kompetanseStackKey === undefined) {
-  throw new ReferenceError("Kunne ikke finne KompetanseStack i outputs.json")
+  throw new ReferenceError('Kunne ikke finne KompetanseStack i outputs.json')
 } else if (auroraStackKey === undefined) {
-  throw new ReferenceError("Kunne ikke finne AuroraStack i outputs.json")
+  throw new ReferenceError('Kunne ikke finne AuroraStack i outputs.json')
 }
 
 // AuroraStack
@@ -29,7 +29,7 @@ kompetanseStack = json[kompetanseStackKey]
 // console.log(stack);
 kompetanseStack.oauth = JSON.parse(kompetanseStack.oauth)
 kompetanseStack.functionMap = JSON.parse(kompetanseStack.functionMap)
-const functionMap = Object.keys(kompetanseStack.functionMap).map((key) => {
+const functionMap = Object.keys(kompetanseStack.functionMap).map(key => {
   // stack.functionMap[key].endpoint = stack.functionMap[key].endpoint.substring(0, stack.functionMap[key].endpoint.length - 1)
   return {
     ...kompetanseStack.functionMap[key],
@@ -50,7 +50,7 @@ setAppSyncAuth(
 )
 
 fs.writeFileSync(
-  "../frontend/src/exports.js",
+  '../frontend/src/exports.js',
   `
 const exports = {
     aws_project_region: "eu-central-1",
