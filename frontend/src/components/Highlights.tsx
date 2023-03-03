@@ -180,8 +180,8 @@ export default function Highlights({ ...props }: HighlightsProps) {
         TopicScoreWithIcon[]
     >([]);
 
-    const shortlistCutoff: number = 2.0;
-    const maxInList: number = 4;
+    const shortlistCutoff = 2.0;
+    const maxInList = 4;
 
     const maxLengthByWidth = (minNumLetters: number) => {
         const width = Math.max(
@@ -203,8 +203,8 @@ export default function Highlights({ ...props }: HighlightsProps) {
 
     useEffect(() => {
         const generateShortlist = () => {
-            let shortlistMotivation: TopicScoreWithIcon[] = [];
-            let shortlistKnowledge: TopicScoreWithIcon[] = [];
+            const shortlistMotivation: TopicScoreWithIcon[] = [];
+            const shortlistKnowledge: TopicScoreWithIcon[] = [];
             props.questionAnswers.forEach((quAns, _cat) => {
                 quAns.forEach((answer) => {
                     if (answer.knowledge >= shortlistCutoff) {

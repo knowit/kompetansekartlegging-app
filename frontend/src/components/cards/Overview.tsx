@@ -7,7 +7,7 @@ import TypedOverviewChart from "../TypedOverviewChart";
 import Highlights from "../Highlights";
 import { Panel } from "../../types";
 
-const cardCornerRadius: number = 40;
+const cardCornerRadius = 40;
 
 const overviewStyle = makeStyles({
     root: {

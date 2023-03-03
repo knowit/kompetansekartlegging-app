@@ -19,9 +19,7 @@ import AddUserToGroupDialog from "../AdminPanel/AddUserToGroupDialog";
 import DeleteUserFromGroupDialog from "../AdminPanel/DeleteUserFromGroupDialog";
 import useApiGet from "../AdminPanel/useApiGet";
 import {
-    listAllUsers,
     listAllUsersInOrganization,
-    listAdmins,
     removeUserFromGroup,
     addUserToGroup,
 } from "../AdminPanel/adminApi";

@@ -87,8 +87,8 @@ const CategoryListItem = ({
     categories,
 }: any) => {
     const [editMode, setEditMode] = useState<boolean>(false);
-    const [text, setText] = useState<String>(c.text);
-    const [description, setDescription] = useState<String>(c.description || "");
+    const [text, setText] = useState<string>(c.text);
+    const [description, setDescription] = useState<string>(c.description || "");
     const classes = useCategoryListItemStyles();
 
     const onSave = async () => {

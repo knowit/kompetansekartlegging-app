@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState } from "react";
 
 import Container from "@material-ui/core/Container";
 import IconButton from "@material-ui/core/IconButton";
@@ -10,7 +10,6 @@ import TableRow from "@material-ui/core/TableRow";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
 import Typography from "@material-ui/core/Typography";
 import commonStyles from "../AdminPanel/common.module.css";
 import Button from "../mui/Button";
@@ -93,8 +92,8 @@ const OrganizationTable: React.FC<OrganizationTableProps> = ({
 const EditOrganizations = () => {
     const {
         result: organizations,
-        error: error,
-        loading: loading,
+        error,
+        loading,
         refresh: refreshOrganizations,
     } = useApiGet({
         getFn: getOrganizations,

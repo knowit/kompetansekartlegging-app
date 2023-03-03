@@ -74,7 +74,7 @@ const listAllGroups = async (): Promise<ApiResponse<Group[]>> => {
 };
 
 const listAllUsers = async (): Promise<ApiResponse<User[]>> => {
-    let nextToken: string = "";
+    let nextToken = "";
     let allUsers: any[] = [];
     try {
         do {

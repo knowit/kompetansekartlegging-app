@@ -67,7 +67,7 @@ export type QuestionAnswer = {
 };
 
 export type AggregatedAnswer = {
-    category: String;
+    category: string;
     totalAnswerValue: number;
     numberOfAnswerValues: number;
     answerAverage: number;
@@ -117,7 +117,7 @@ export type TopicScoreWithIcon = {
 export type FormDefinitionWithQuestions = {
     data: {
         getFormDefinition: {
-            id: String;
+            id: string;
             questions: {
                 items: [Question];
             };
@@ -152,7 +152,7 @@ export type Category = {
 };
 
 export type FormDefinition = {
-    id: String;
+    id: string;
     createdAt: string;
     questions: {
         items: Question[];
@@ -174,7 +174,7 @@ export type FormDefinitionByCreatedAtPaginated = {
 
 export type FormDefinitionPaginated =
     | {
-          id: String;
+          id: string;
           createdAt: string;
           questions: {
               items: [Question];

@@ -118,7 +118,7 @@ export const GetIcons = (
     knowledge: boolean,
     className?: string
 ): JSX.Element[] => {
-    let els = [
+    const els = [
         CreateHover(knowledge, 0, className, 0),
         CreateHover(knowledge, 1, className, 1),
         CreateHover(knowledge, 2, className, 2),

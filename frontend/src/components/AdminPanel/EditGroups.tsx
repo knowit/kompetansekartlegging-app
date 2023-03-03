@@ -23,7 +23,6 @@ import DeleteUserFromGroupDialog from "./DeleteUserFromGroupDialog";
 import DeleteGroupDialog from "./DeleteGroupDialog";
 import useApiGet from "./useApiGet";
 import {
-    listAllUsers as listAllAvailableUsers,
     listAllUsersInOrganization as listAllAvailableUsersInOrganization,
     // listGroupLeaders,
     listGroupLeadersInOrganization,
@@ -45,7 +44,6 @@ import AddUserToGroupDialog from "./AddUserToGroupDialog";
 import Button from "../mui/Button";
 import Table from "../mui/Table";
 import TableRow from "../mui/TableRow";
-import { ORGANIZATION_ID_ATTRIBUTE } from "../../constants";
 import { useAppSelector } from "../../redux/hooks";
 import { selectUserState } from "../../redux/User";
 import { listAllFormDefinitionsForLoggedInUser } from "./catalogApi";
@@ -69,7 +67,7 @@ const Group = ({
     users,
     open,
     setOpenId,
-    showLastAnsweredAt
+    showLastAnsweredAt,
 }: any) => {
     const hasGroupLeader = !!group.groupLeader;
     const name = hasGroupLeader
@@ -150,7 +148,7 @@ const GroupsTable = ({
     editGroup,
     addMembersToGroup,
     deleteMember,
-    showLastAnsweredAt
+    showLastAnsweredAt,
 }: any) => {
     const [openId, setOpenId] = useState<string>("");
     const setOpenGroup = (groupId: string) => {
@@ -331,25 +329,37 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
         formDefinitionsLoading ||
         lastAnsweredAtLoading;
     const isError =
-        error || allAvailableUsersError || groupLeadersError || groupsError || formDefinitionsError;
+        error ||
+        allAvailableUsersError ||
+        groupLeadersError ||
+        groupsError ||
+        formDefinitionsError;
 
     const [allAvailableUsersAnnotated, setAllAvailableUsersAnnotated] =
-    useState<any[]>([]);
+        useState<any[]>([]);
 
     useEffect(() => {
         const addLastAnsweredAt = async (users: any[]) => {
             if (users.length > 0 && formDefinitions.length > 0) {
                 const activeFormDefId = formDefinitions[0].id;
-    
-                const usersAnnotated = await Promise.all(users.map(async (u: any) => {
-                    const user = users.find((us: any) => us.Username === u.Username);
-                    if (user) {
-                        const lastAnsweredAt = await getLatestUserFormUpdatedAtForUser(u.Username, activeFormDefId);
-                        return { ...u, lastAnsweredAt: lastAnsweredAt };
-                    } else {
-                        return u;
-                    }
-                }));
+
+                const usersAnnotated = await Promise.all(
+                    users.map(async (u: any) => {
+                        const user = users.find(
+                            (us: any) => us.Username === u.Username
+                        );
+                        if (user) {
+                            const lastAnsweredAt =
+                                await getLatestUserFormUpdatedAtForUser(
+                                    u.Username,
+                                    activeFormDefId
+                                );
+                            return { ...u, lastAnsweredAt: lastAnsweredAt };
+                        } else {
+                            return u;
+                        }
+                    })
+                );
                 setAllAvailableUsersAnnotated(usersAnnotated);
                 setLastAnsweredAtLoading(false);
             }
@@ -357,7 +367,6 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
 
         if (allAvailableUsers && formDefinitions) {
             const annotated = allAvailableUsers.map((u: any) => {
-
                 const user = users.find((us: any) => us.id === u.Username);
 
                 if (user) {
@@ -378,7 +387,14 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
                 setAllAvailableUsersAnnotated(annotated);
             }
         }
-    }, [allAvailableUsers, formDefinitions, groupLeaders, groups, users, showLastAnsweredAt]);
+    }, [
+        allAvailableUsers,
+        formDefinitions,
+        groupLeaders,
+        groups,
+        users,
+        showLastAnsweredAt,
+    ]);
 
     return (
         <Container maxWidth="md" className={commonStyles.container}>
