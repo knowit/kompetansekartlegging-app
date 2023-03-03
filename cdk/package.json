@@ -10,7 +10,9 @@
     "test": "jest",
     "cdk": "cdk",
     "deploy": "cdk deploy --outputs-file outputs.json --all && npx ts-node --prefer-ts-exts hooks/hooks.ts",
-    "codegen": "npx amplify-graphql-docs-generator --schema appsync/schema.graphql --output ../frontend/src/graphql --separateFiles true --language typescript && graphql-codegen --config codegen.yml"
+    "codegen": "npx amplify-graphql-docs-generator --schema appsync/schema.graphql --output ../frontend/src/graphql --separateFiles true --language typescript && graphql-codegen --config codegen.yml",
+    "prettier-check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "prettier-fix": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
   },
   "devDependencies": {
     "@graphql-codegen/cli": "2.6.2",
