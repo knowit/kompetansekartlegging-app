@@ -89,7 +89,7 @@ const EditCategory = () => {
         topic: string,
         description: string,
         questionType: QuestionType,
-        questionConfig: object = {}
+        questionConfig: Record<string, unknown> = {}
     ) => {
         // the dialog makes sure questionConfig contains the correct data
         // might be a good idea to double check here

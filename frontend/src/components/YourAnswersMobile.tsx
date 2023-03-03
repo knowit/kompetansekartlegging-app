@@ -160,7 +160,7 @@ export const YourAnswersMobile = ({ ...props }: YourAnswerProps) => {
     const style = yourAnswersStyleMobile();
 
     const getCategoryButtons = () => {
-        let buttons: JSX.Element[] = [];
+        const buttons: JSX.Element[] = [];
 
         const categories = props.categories.map((cat) => {
             return {
@@ -209,7 +209,7 @@ export const YourAnswersMobile = ({ ...props }: YourAnswerProps) => {
     };
 
     const getCategoryButtonsCollapsed = () => {
-        let buttons: JSX.Element[] = [];
+        const buttons: JSX.Element[] = [];
 
         const categories = props.categories.map((cat) => {
             return {
@@ -262,7 +262,7 @@ export const YourAnswersMobile = ({ ...props }: YourAnswerProps) => {
     };
 
     const getCategoryDescription = (): string => {
-        let categoryDesc = props.formDefinition?.questions.items.find(
+        const categoryDesc = props.formDefinition?.questions.items.find(
             (q) => q.category.text === props.activeCategory
         );
         return categoryDesc?.category.description ?? "";

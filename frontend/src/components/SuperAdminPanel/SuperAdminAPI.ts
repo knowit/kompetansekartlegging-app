@@ -10,7 +10,6 @@ import {
 import { listOrganizations } from "../../graphql/queries";
 import {
     createOrganization,
-    updateOrganization,
     deleteOrganization,
 } from "../../graphql/mutations";
 import { OrganizationInfo } from "./SuperAdminTypes";
@@ -44,6 +43,7 @@ export const getOrganizations = async (): Promise<
 export const addOrganization = async (organization: OrganizationInfo) =>
     new Promise(async (resolve, reject) => {
         try {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const res = await callGraphQL<Mutation>(createOrganization, {
                 input: {
                     id: organization.id,

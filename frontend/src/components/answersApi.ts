@@ -8,7 +8,6 @@ import {
     FormDefinitionPaginated,
     UserFormPaginated,
     UserFormByCreatedAtPaginated,
-    UserState,
 } from "../types";
 import * as helper from "../helperFunctions";
 import * as customQueries from "../graphql/custom-queries";
@@ -19,7 +18,7 @@ const createQuestionAnswers = (
 ) => {
     // console.log("Creating questionAnswers with ", formDef);
     if (!formDef) return new Map();
-    let categories = formDef.questions.items
+    const categories = formDef.questions.items
         .map((item) => item.category)
         .filter(
             (category, index, array) =>
@@ -34,9 +33,9 @@ const createQuestionAnswers = (
             return 0;
         });
     setCategories(categories.map((cat) => cat.text));
-    let quAnsMap = new Map<string, QuestionAnswer[]>();
+    const quAnsMap = new Map<string, QuestionAnswer[]>();
     categories.forEach((cat) => {
-        let quAns: QuestionAnswer[] = formDef.questions.items
+        const quAns: QuestionAnswer[] = formDef.questions.items
             .filter((question) => question.category.id === cat.id)
             .sort((a, b) => {
                 if (a.index && b.index == null) return -1;
@@ -76,7 +75,7 @@ const fetchLastFormDefinition = async (
     let formDefPaginated: FormDefinitionPaginated = undefined; // The form definition response has pagination on questions, with nextToken; see types
     try {
         do {
-            let currentForm: any =
+            const currentForm: any =
                 await helper.callGraphQL<FormDefinitionByCreatedAtPaginated>(
                     customQueries.formByCreatedAtPaginated,
                     {
@@ -113,7 +112,7 @@ const fetchLastFormDefinition = async (
         } while (nextToken || (nextFormToken && !foundOrganizationForm));
 
         if (formDefPaginated) {
-            let formDef: FormDefinition = {
+            const formDef: FormDefinition = {
                 id: formDefPaginated.id,
                 createdAt: formDefPaginated.createdAt,
                 questions: {
@@ -122,8 +121,8 @@ const fetchLastFormDefinition = async (
             };
             // console.log("FormDef:", formDef);
             setFormDefinition(formDef);
-            let quAns = createQuestionAnswers(formDef);
-            let userAnswers = await getUserAnswers(formDef);
+            const quAns = createQuestionAnswers(formDef);
+            const userAnswers = await getUserAnswers(formDef);
             setFirstAnswers(quAns, userAnswers);
         } else {
             console.log("Error loading form definition!");
@@ -149,7 +148,7 @@ const getUserAnswers = async (
 ) => {
     let nextToken: string | null = null;
     let nextUserFormToken: string | null = null;
-    let foundLatestUserForm = false
+    let foundLatestUserForm = false;
 
     if (!userName) {
         console.error("User not found when getting useranswers");
@@ -158,24 +157,24 @@ const getUserAnswers = async (
     let questionAnswers: UserAnswer[] = [];
     let paginatedUserform: UserFormPaginated | undefined; // The userform response has pagination on questionAnswers, with nextToken; see types
     do {
-        let query: any = (
+        const query: any = (
             await helper.callGraphQL<UserFormByCreatedAtPaginated>(
                 customQueries.customUserFormByCreatedAt,
                 {
                     ...customQueries.userFormByCreatedAtInputConsts,
                     owner: userName,
-                    filter: {formDefinitionID: {eq: formDef.id}},
+                    filter: { formDefinitionID: { eq: formDef.id } },
                     nextQAToken: nextToken,
-                    nextUserFormToken: nextUserFormToken
+                    nextUserFormToken: nextUserFormToken,
                 }
             )
         ).data?.userFormByCreatedAt;
-        let response: any = query?.items[0];
+        const response: any = query?.items[0];
         if (response) {
-            foundLatestUserForm = true
+            foundLatestUserForm = true;
         }
         if (query && !foundLatestUserForm) {
-            nextUserFormToken = query.nextToken
+            nextUserFormToken = query.nextToken;
         }
         if (response && response.questionAnswers.items) {
             if (typeof paginatedUserform === "undefined") {
@@ -226,13 +225,13 @@ const setFirstAnswers = (
     >
 ) => {
     // console.log(quAns, newUserAnswers);
-    let newMap = new Map<string, QuestionAnswer[]>();
+    const newMap = new Map<string, QuestionAnswer[]>();
     quAns.forEach((quAns, category) => {
         newMap.set(
             category,
             quAns.map((questionAnswer) => {
                 if (newUserAnswers) {
-                    let userAnswer = newUserAnswers.filter(
+                    const userAnswer = newUserAnswers.filter(
                         (userAnswer) =>
                             userAnswer.question.id ===
                             questionAnswer.question.id

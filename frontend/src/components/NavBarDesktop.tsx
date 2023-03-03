@@ -149,7 +149,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
 
     useEffect(() => {
         if (avatarMenuPrevOpen.current === true && avatarMenuOpen === false) {
-            anchorRef.current!.focus();
+            anchorRef.current?.focus();
         }
 
         avatarMenuPrevOpen.current = avatarMenuOpen;
@@ -179,7 +179,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
             "https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/frontend/markdown/help.md"
         )
             .then(async (response) => {
-                let markdown = await response.text();
+                const markdown = await response.text();
                 setHelpMarkdown(markdown);
             })
             .catch((error) => console.error(error));

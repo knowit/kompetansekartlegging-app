@@ -23,7 +23,7 @@ const iconSize = 18;
 
 const getMaxColumnsForWidth = () => {
     const scalingFactor = 50;
-    let width = Math.max(
+    const width = Math.max(
         document.documentElement.clientWidth || 0,
         window.innerWidth || 0
     );
@@ -106,11 +106,11 @@ const createPagedData = (
     chartData: ChartData[],
     maxColumnsPerPage: number
 ): ChartData[][] => {
-    let pagedData: ChartData[][] = [];
+    const pagedData: ChartData[][] = [];
     let items = chartData.length;
     let balancedColumnsPerPage;
     if (items > maxColumnsPerPage) {
-        let numPages = Math.ceil(items / maxColumnsPerPage);
+        const numPages = Math.ceil(items / maxColumnsPerPage);
         balancedColumnsPerPage = Math.ceil(items / numPages);
     } else {
         balancedColumnsPerPage = maxColumnsPerPage;
@@ -131,7 +131,7 @@ export const CombinedChartMobile = ({
     const [currentPage, setCurrentPage] = useState(0);
     const [currentType, setCurrentType] = useState<OverviewType>();
 
-    let classes = useStyles();
+    const classes = useStyles();
 
     const maxColumnsPerPage = getMaxColumnsForWidth();
 
@@ -329,7 +329,7 @@ const renderCustomAxisTicks = () => {
 };
 
 const renderLabelTick = ({ ...props }: TickLabelProps) => {
-    let dy = props.index % 2 ? "-1em" : "-6em";
+    const dy = props.index % 2 ? "-1em" : "-6em";
     return (
         <g transform={`translate(${props.x},${props.y})`}>
             <text

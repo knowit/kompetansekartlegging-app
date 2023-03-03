@@ -10,9 +10,12 @@ import {
     Label,
     ResponsiveContainer,
     ReferenceLine,
-    TooltipProps
+    TooltipProps,
 } from "recharts";
-import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
+import {
+    NameType,
+    ValueType,
+} from "recharts/types/component/DefaultTooltipContent";
 import { GetIcon } from "../icons/iconController";
 import { KnowitColors } from "../styles";
 import { CombinedChartProps } from "../types";
@@ -95,7 +98,7 @@ const getLabel = (
 };
 
 export const CombinedChart = ({ ...props }: CombinedChartProps) => {
-    let classes = useStyles();
+    const classes = useStyles();
 
     if (props.chartData.length === 0) return null;
 
@@ -104,13 +107,13 @@ export const CombinedChart = ({ ...props }: CombinedChartProps) => {
             if (msg === "") return "Ikke besvart";
             else return msg;
         };
-        let isTop = props.type === OverviewType.HIGHEST && props.topSubjects;
-        let topSubjects = props.topSubjects;
+        const isTop = props.type === OverviewType.HIGHEST && props.topSubjects;
+        const topSubjects = props.topSubjects;
         return ({ ...props }: TooltipProps<ValueType, NameType>) => {
             if (props.active && props.payload) {
-                let knowledgeValue =
+                const knowledgeValue =
                     props.payload[0]?.payload.valueKnowledge[1].toFixed(1);
-                let motivationValue = (
+                const motivationValue = (
                     props.payload[1]?.payload.valueMotivation[1] - chartSplitAt
                 ).toFixed(1);
                 const knowledgeLabel = getLabel(

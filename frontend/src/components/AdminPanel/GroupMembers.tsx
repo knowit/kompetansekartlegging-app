@@ -17,9 +17,10 @@ const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
     const name = getAttribute(user, "name");
     const email = getAttribute(user, "email");
     const picture = getAttribute(user, "picture");
-    const formLastAnsweredAt = user.lastAnsweredAt == null
-        ? "Ikke besvart"
-        : user.lastAnsweredAt.toLocaleDateString("nb-NO");
+    const formLastAnsweredAt =
+        user.lastAnsweredAt == null
+            ? "Ikke besvart"
+            : user.lastAnsweredAt.toLocaleDateString("nb-NO");
 
     const onClick = () => {
         if (viewMember) viewMember(user.Username);
@@ -50,7 +51,7 @@ const GroupMembers = ({
     addMembersToGroup,
     deleteMember,
     viewMember,
-    showLastAnsweredAt
+    showLastAnsweredAt,
 }: any) => {
     const [open, setOpen] = useState<boolean>(false);
     const onConfirm = (users: any[]) => {
@@ -66,7 +67,9 @@ const GroupMembers = ({
                         <TableRow>
                             <TableCell>Ansatt</TableCell>
                             <TableCell>Email</TableCell>
-                            {showLastAnsweredAt && <TableCell>Sist besvart</TableCell>}
+                            {showLastAnsweredAt && (
+                                <TableCell>Sist besvart</TableCell>
+                            )}
                             <TableCell />
                         </TableRow>
                     </TableHead>

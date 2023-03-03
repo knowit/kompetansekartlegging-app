@@ -84,9 +84,9 @@ const QuestionListItemEdit = ({
     categories,
     setEditMode,
 }: any) => {
-    const [topic, setTopic] = useState<String>(q.topic);
-    const [text, setText] = useState<String>(q.text);
-    const [categoryID, setCategoryID] = useState<String>(q.categoryID);
+    const [topic, setTopic] = useState<string>(q.topic);
+    const [text, setText] = useState<string>(q.text);
+    const [categoryID, setCategoryID] = useState<string>(q.categoryID);
     const [questionConfig, setQuestionConfig] = useState<any>(initialConfig(q));
     const classes = useQuestionListStyles();
 

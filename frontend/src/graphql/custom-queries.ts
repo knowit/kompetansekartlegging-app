@@ -211,16 +211,16 @@ export const batchCreateQuestionAnswer2 = /* GraphQL */ `
 `;
 
 export const listUserFormsUpdatedAt = /* GraphQL */ `
-  query ListUserFormsUpdatedAt(
-    $filter: ModelUserFormFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listUserForms(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        updatedAt
-      }
-      nextToken
+    query ListUserFormsUpdatedAt(
+        $filter: ModelUserFormFilterInput
+        $limit: Int
+        $nextToken: String
+    ) {
+        listUserForms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+            items {
+                updatedAt
+            }
+            nextToken
+        }
     }
-  }
 `;

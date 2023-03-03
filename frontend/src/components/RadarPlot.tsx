@@ -1,8 +1,9 @@
+/* eslint-disable */
 import React, { useEffect } from "react";
 import { AggregatedAnswer, AnsweredQuestion } from "../types";
 
 export default function RadarPlot(props: { data: AnsweredQuestion[] }) {
-    let categoryAnswers: AggregatedAnswer[] = [];
+    const categoryAnswers: AggregatedAnswer[] = [];
 
     useEffect(() => {
         props.data.map((value) => {

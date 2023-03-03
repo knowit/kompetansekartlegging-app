@@ -174,8 +174,10 @@ const Question = ({ ...props }: QuestionProps) => {
                 <div className={style.topicText}>{questionTopic}</div>
                 {props.alerts?.qidMap.has(questionId) && (
                     <AlertNotification
+                        /* eslint-disable @typescript-eslint/no-non-null-assertion */
                         type={props.alerts?.qidMap.get(questionId)!.type}
                         message={props.alerts?.qidMap.get(questionId)!.message}
+                        /* eslint-enable @typescript-eslint/no-non-null-assertion */
                     />
                 )}
             </div>

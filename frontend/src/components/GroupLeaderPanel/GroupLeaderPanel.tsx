@@ -5,7 +5,6 @@ import { Group } from "../../API";
 import useApiGet from "../AdminPanel/useApiGet";
 import {
     listAllUsersInOrganization as listAllAvailableUsersInOrganization,
-    listAllUsers as listAllAvailableUsers,
     listGroupLeadersInOrganization,
 } from "../AdminPanel/adminApi";
 import {
@@ -18,12 +17,8 @@ import {
 
 import Main from "./Main";
 import GroupMember from "./GroupMember";
-import { ORGANIZATION_ID_ATTRIBUTE } from "../../constants";
 import { useAppSelector } from "../../redux/hooks";
-import {
-    selectGroupLeaderCognitoGroupName,
-    selectUserState,
-} from "../../redux/User";
+import { selectUserState } from "../../redux/User";
 import { listAllFormDefinitionsForLoggedInUser } from "../AdminPanel/catalogApi";
 import { compareByCreatedAt } from "../AdminPanel/helpers";
 import { getLatestUserFormUpdatedAtForUser } from "../../helperFunctions";
@@ -137,21 +132,35 @@ const GroupLeaderPanel = ({
         const addLastAnsweredAt = async (users: any[]) => {
             if (users.length > 0 && formDefinitions.length > 0) {
                 const activeFormDefId = formDefinitions[0].id;
-    
-                const usersAnnotated = await Promise.all(users.map(async (u: any) => {
-                    const user = users.find((us: any) => us.Username === u.Username);
-                    if (user) {
-                        const lastAnsweredAt = await getLatestUserFormUpdatedAtForUser(user.Username, activeFormDefId);
-                        return { ...user, lastAnsweredAt: lastAnsweredAt };
-                    } else {
-                        return u;
-                    }
-                }));
+
+                const usersAnnotated = await Promise.all(
+                    users.map(async (u: any) => {
+                        const user = users.find(
+                            (us: any) => us.Username === u.Username
+                        );
+                        if (user) {
+                            const lastAnsweredAt =
+                                await getLatestUserFormUpdatedAtForUser(
+                                    user.Username,
+                                    activeFormDefId
+                                );
+                            return { ...user, lastAnsweredAt: lastAnsweredAt };
+                        } else {
+                            return u;
+                        }
+                    })
+                );
                 setAllAvailableUsersAnnotated(usersAnnotated);
             }
         };
 
-        if (allAvailableUsers && groupLeaders && groups && users && formDefinitions) {
+        if (
+            allAvailableUsers &&
+            groupLeaders &&
+            groups &&
+            users &&
+            formDefinitions
+        ) {
             const annotated = allAvailableUsers.map((u: any) => {
                 const user = users.find((us: any) => us.id === u.Username);
                 if (user) {

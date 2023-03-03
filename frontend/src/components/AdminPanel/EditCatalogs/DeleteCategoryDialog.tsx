@@ -16,7 +16,7 @@ const DeleteCategoryDialog = ({
     onCancel,
     onConfirm,
     onExited,
-    open
+    open,
 }: any) => {
     const style = dialogStyles();
 
@@ -40,13 +40,17 @@ const DeleteCategoryDialog = ({
             </DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    {!categoryContainsQuestions ?
-                    'Er du sikker på at du vil fjerne denne kategorien?' :
-                    'Kan ikke fjerne kategorien fordi den fortsatt inneholder spørsmål.'}
+                    {!categoryContainsQuestions
+                        ? "Er du sikker på at du vil fjerne denne kategorien?"
+                        : "Kan ikke fjerne kategorien fordi den fortsatt inneholder spørsmål."}
                 </DialogContentText>
             </DialogContent>
             <DialogActions className={style.alertButtons}>
-                <Button onClick={onConfirm} className={style.cancelButton} disabled={categoryContainsQuestions}>
+                <Button
+                    onClick={onConfirm}
+                    className={style.cancelButton}
+                    disabled={categoryContainsQuestions}
+                >
                     <span className={style.buttonText}>Fjern</span>
                 </Button>
                 <Button onClick={onCancel} className={style.confirmButton}>

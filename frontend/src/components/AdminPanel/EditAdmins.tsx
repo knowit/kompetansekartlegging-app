@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import Container from "@material-ui/core/Container";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -12,7 +12,6 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import AssesmentIcon from "@material-ui/icons/BarChart";
 import Typography from "@material-ui/core/Typography";
 
 import commonStyles from "./common.module.css";
@@ -20,9 +19,7 @@ import AddUserToGroupDialog from "./AddUserToGroupDialog";
 import DeleteUserFromGroupDialog from "./DeleteUserFromGroupDialog";
 import useApiGet from "./useApiGet";
 import {
-    listAllUsers,
     listAllUsersInOrganization,
-    listAdmins,
     removeUserFromGroup,
     addUserToGroup,
 } from "./adminApi";
@@ -32,9 +29,6 @@ import Table from "../mui/Table";
 import PictureAndNameCell from "./PictureAndNameCell";
 import { useAppSelector } from "../../redux/hooks";
 import { selectAdminCognitoGroupName } from "../../redux/User";
-import exports from "../../exports";
-import ReactMarkdown from "react-markdown";
-import DownloadExcelDialog from "./DownloadExcelDialog";
 
 const Admin = (props: any) => {
     const { admin, deleteAdmin } = props;
@@ -87,7 +81,6 @@ const AdminTable = ({ admins, deleteAdmin }: any) => {
 
 const EditAdmins = () => {
     const adminCognitoGroupName = useAppSelector(selectAdminCognitoGroupName);
-    const [showDownloadExcel, setShowDownloadExcel] = useState<boolean>(false);
 
     const {
         result: admins,
@@ -130,10 +123,6 @@ const EditAdmins = () => {
             {loading && <CircularProgress />}
             {!error && !loading && admins && (
                 <>
-                    <DownloadExcelDialog
-                        open={showDownloadExcel}
-                        onClose={() => setShowDownloadExcel(false)}
-                    />
                     <Card style={{ marginBottom: "24px" }} variant="outlined">
                         <CardContent>
                             <Typography color="textSecondary" gutterBottom>
@@ -154,15 +143,6 @@ const EditAdmins = () => {
                         onClick={() => setShowAddAdmin(true)}
                     >
                         Legg til administrator
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<AssesmentIcon />}
-                        style={{ marginTop: "24px" }}
-                        onClick={() => setShowDownloadExcel(true)}
-                    >
-                        Last ned resultater (Excel)
                     </Button>
                 </>
             )}
