@@ -63,6 +63,9 @@ To run the project locally:
 * Codegen inspiration: https://github.com/kcwinner/advocacy/tree/master/cdk-amplify-appsync-helpers
 
 ## CI/CD
+### Deployment
+GitHub Actions is configured to deploy the app to the AWS dev environment on every PR merge. Additionally, deployment can be triggered through the dispatchable workflow "`Deploy to AWS`", where you specify which environment to deploy to, and whether to deploy the entire app or the backend only.
+
 ### Linting & Code formatting
 ESLint and Prettier is configured for the frontend code using recommended rules. GitHub Actions analyzes the code when PRs towards the main branch are opened.
 
