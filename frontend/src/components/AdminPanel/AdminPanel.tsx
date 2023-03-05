@@ -1,7 +1,5 @@
-import { useEffect } from 'react'
-import { getAllQuestionAnswers } from '../../api/questionAnswers'
-
 import style from './AdminPanel.module.css'
+import DownloadExcel from './DownloadExcel'
 import EditAdmins from './EditAdmins'
 import EditCatalogsRouter from './EditCatalogsRouter'
 import EditGroupLeaders from './EditGroupLeaders'
@@ -18,6 +16,7 @@ enum SubmenuCategory {
   EDIT_GROUPS,
   EDIT_ADMINS,
   EDIT_CATALOGS,
+  DOWNLOAD_CATALOGS,
 }
 
 const activeSubmenuItemToSubmenuCategory = (
@@ -30,8 +29,10 @@ const activeSubmenuItemToSubmenuCategory = (
       return SubmenuCategory.EDIT_GROUPS
     case 'Rediger administratorer':
       return SubmenuCategory.EDIT_ADMINS
-    case 'Rediger katalog':
+    case 'Rediger kataloger':
       return SubmenuCategory.EDIT_CATALOGS
+    case 'Last ned kataloger':
+      return SubmenuCategory.DOWNLOAD_CATALOGS
     case 'hidden':
       return SubmenuCategory.HIDDEN
     default:
@@ -49,8 +50,11 @@ const AdminPanel = ({ activeSubmenuItem }: AdminPanelProps) => {
         <EditGroupLeaders />
       )}
       {category === SubmenuCategory.EDIT_ADMINS && <EditAdmins />}
-      {category === SubmenuCategory.EDIT_GROUPS && <EditGroups />}
+      {category === SubmenuCategory.EDIT_GROUPS && (
+        <EditGroups showLastAnsweredAt={false} />
+      )}
       {category === SubmenuCategory.EDIT_CATALOGS && <EditCatalogsRouter />}
+      {category === SubmenuCategory.DOWNLOAD_CATALOGS && <DownloadExcel />}
     </div>
   )
 }

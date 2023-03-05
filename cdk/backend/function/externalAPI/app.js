@@ -35,6 +35,8 @@ const {
   getAllCategoriesForFormDef,
   getAllQuestionForCategory,
   getOrganizationIDFromAPIKeyHashed,
+  getAllGroups,
+  getMembersOfGroup,
 } = require('./db')
 
 const getOrganizationID = async () => {
@@ -91,7 +93,7 @@ router.get('/answers', async (req, res) => {
 
   //console.log('allQuestions:', allQuestions);
 
-  const allQuestionsWithCategory = allQuestions.Items.map((q) => ({
+  const allQuestionsWithCategory = allQuestions.Items.map(q => ({
     ...q,
     category: categoryMap[q.categoryID].text,
   }))
@@ -103,13 +105,11 @@ router.get('/answers', async (req, res) => {
 
   // Find answers for the current form definition for each user.
   const userAnswers = await Promise.all(
-    allUsers.map((user) =>
-      getAnswersForUser(user, newestFormDef.id, questionMap)
-    )
+    allUsers.map(user => getAnswersForUser(user, newestFormDef.id, questionMap))
   )
 
   // Filter away users with no answers.
-  const nonEmptyUserAnswers = userAnswers.filter((ua) => ua.answers.length > 0)
+  const nonEmptyUserAnswers = userAnswers.filter(ua => ua.answers.length > 0)
 
   // Create response.
   return res.json(nonEmptyUserAnswers)
@@ -152,7 +152,7 @@ router.get('/answers/:username/newest', async (req, res) => {
   const allCategories = await getAllCategories(organization_ID)
   const categoryMap = mapFromArray(allCategories.Items, 'id')
   const allQuestions = await getAllQuestionForFormDef(newestFormDef.id)
-  const allQuestionsWithCategory = allQuestions.Items.map((q) => ({
+  const allQuestionsWithCategory = allQuestions.Items.map(q => ({
     ...q,
     category: categoryMap[q.categoryID].text,
   }))
@@ -171,8 +171,8 @@ router.get('/users', async (req, res) => {
   const allUsers = await getAllUsers(organization_ID)
   return res.json(
     allUsers
-      .filter((u) => u.Enabled)
-      .map((u) => ({
+      .filter(u => u.Enabled)
+      .map(u => ({
         username: u.Username,
         attributes: u.Attributes,
       }))
@@ -185,7 +185,7 @@ router.get('/catalogs', async (req, res) => {
 
   const allFormDefs = await getAllFormDefs(organization_ID)
   return res.json(
-    allFormDefs.Items.map((fd) => ({
+    allFormDefs.Items.map(fd => ({
       id: fd.id,
       label: fd.label,
     }))
@@ -204,7 +204,7 @@ router.get('/catalogs/:id/questions', async (req, res) => {
   const formDefID = req.params.id
   const allQuestions = await getAllQuestionForFormDef(formDefID)
   return res.json(
-    allQuestions.Items.map((q) =>
+    allQuestions.Items.map(q =>
       q.type ? q : { ...q, type: 'knowledgeMotivation' }
     )
   )
@@ -217,12 +217,36 @@ router.get(
     const catID = req.params.categoryID
     const allQuestions = await getAllQuestionForCategory(catID)
     return res.json(
-      allQuestions.Items.map((q) =>
+      allQuestions.Items.map(q =>
         q.type ? q : { ...q, type: 'knowledgeMotivation' }
       )
     )
   }
 )
+
+// returns: list of all groups
+router.get('/groups', async (req, res) => {
+  const organization_ID = await getOrganizationID()
+
+  const allGroups = await getAllGroups(organization_ID)
+  return res.json(
+    allGroups.Items.flatMap(ag => ({
+      gid: ag.id,
+      groupLeader: ag.groupLeaderUsername,
+    }))
+  )
+})
+
+// returns: members of a group
+router.get('/groups/:id', async (req, res) => {
+  const groupId = req.params.id
+  const allMembers = await getMembersOfGroup(groupId)
+  return res.json(
+    allMembers.Items.flatMap(user => ({
+      userid: user.id,
+    }))
+  )
+})
 
 // The serverless-express library creates a server and listens on a Unix
 // Domain Socket for you, so you can remove the usual call to app.listen.

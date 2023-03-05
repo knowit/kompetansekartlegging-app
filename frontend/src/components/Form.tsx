@@ -1,10 +1,10 @@
 import { Button, makeStyles } from '@material-ui/core'
-import React, { Fragment, useRef } from 'react'
+import ArrowForwardRoundedIcon from '@material-ui/icons/ArrowForwardRounded'
+import { Fragment, useRef } from 'react'
+import { QuestionType as QuestionTypeT } from '../API'
 import { KnowitColors } from '../styles'
 import { FormProps, SliderValues } from '../types'
-import { QuestionType as QuestionTypeT } from '../API'
 import Question from './Question'
-import ArrowForwardRoundedIcon from '@material-ui/icons/ArrowForwardRounded'
 
 const FormStyleDesktop = makeStyles({
   root: {
@@ -130,7 +130,7 @@ export const Form = ({ ...props }: FormProps) => {
     _items: QuestionType[] | undefined
   ): JSX.Element[] => {
     //console.log("Props to make questions from: ", props.questionAnswers);
-    let questionAnswers =
+    const questionAnswers =
       props.questionAnswers
         ?.get(props.activeCategory)
         ?.map((questionAnswer) => {

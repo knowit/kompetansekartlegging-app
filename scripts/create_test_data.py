@@ -1,8 +1,9 @@
+import json
 import profile
 import random
-import boto3
-import json
 import uuid
+
+import boto3
 
 with open('parameters.json') as parameters_file:
     parameters = json.load(parameters_file)

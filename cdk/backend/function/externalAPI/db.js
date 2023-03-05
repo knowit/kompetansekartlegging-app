@@ -23,12 +23,18 @@ const FORM_DEFINITION_TABLE_NAME = TableMap['FormDefinitionTable']
 const USER_POOL_ID = process.env.USERPOOL
 const APIKEYPERMISSION_TABLE_NAME = TableMap['APIKeyPermissionTable']
 // process.env.API_KOMPETANSEKARTLEGGIN_APIKEYPERMISSIONTABLE_NAME;
+const GROUP_TABLE_NAME = TableMap['GroupTable']
+// process.env.API_KOMPETANSEKARTLEGGIN_GROUPTABLE_NAME;
+const USER_TABLE_NAME = TableMap['UserTable']
+// process.env.API_KOMPETANSEKARTLEGGIN_GROUPTABLE_NAME;
 
 const organizationFilterParameter = ':oid'
 const organizationFilterExpression =
   'organizationID = ' + organizationFilterParameter
+const groupFilterParameter = ':gid'
+const groupFilterExpression = 'groupID = ' + groupFilterParameter
 
-const getOrganizationIDFromAPIKeyHashed = async (APIKeyHashed) => {
+const getOrganizationIDFromAPIKeyHashed = async APIKeyHashed => {
   let organizationIDItem = await docClient
     .query({
       TableName: APIKEYPERMISSION_TABLE_NAME,
@@ -41,7 +47,7 @@ const getOrganizationIDFromAPIKeyHashed = async (APIKeyHashed) => {
 }
 
 // Get answers for a user form.
-const getAnswersForUserForm = async (userFormID) => {
+const getAnswersForUserForm = async userFormID => {
   let allAnswers = await docClient
     .query({
       TableName: QUESTION_ANSWER_TABLE_NAME,
@@ -91,9 +97,9 @@ const getAnswersForUser = async (user, formDefinitionID, questionMap) => {
   let lastUserForm = getNewestItem(allUserForms.Items)
 
   const answers = await getAnswersForUserForm(lastUserForm.id)
-  const answersWithQuestions = answers.map((a) =>
-    mapQuestionToAnswer(questionMap, a)
-  )
+  const answersWithQuestions = answers
+    .filter(answer => questionMap[answer.questionID])
+    .map(a => mapQuestionToAnswer(questionMap, a))
 
   return {
     username,
@@ -105,7 +111,7 @@ const getAnswersForUser = async (user, formDefinitionID, questionMap) => {
 }
 
 // Finds all questions for the given form definition.
-const getAllQuestionForFormDef = async (lastFormDefID) => {
+const getAllQuestionForFormDef = async lastFormDefID => {
   return await docClient
     .query({
       TableName: QUESTION_TABLE_NAME,
@@ -127,7 +133,7 @@ const getAllQuestionForFormDef = async (lastFormDefID) => {
 }
 
 // Finds all questions for the given category.
-const getAllQuestionForCategory = async (categoryID) => {
+const getAllQuestionForCategory = async categoryID => {
   return await docClient
     .query({
       TableName: QUESTION_TABLE_NAME,
@@ -149,7 +155,7 @@ const getAllQuestionForCategory = async (categoryID) => {
 }
 
 // Finds all categories.
-const getAllCategories = async (organization_ID) => {
+const getAllCategories = async organization_ID => {
   return await docClient
     .scan({
       TableName: CATEGORY_TABLE_NAME,
@@ -166,7 +172,7 @@ const getAllCategories = async (organization_ID) => {
 }
 
 // Finds all categories for the given form definition.
-const getAllCategoriesForFormDef = async (formDefID) => {
+const getAllCategoriesForFormDef = async formDefID => {
   return await docClient
     .query({
       TableName: CATEGORY_TABLE_NAME,
@@ -187,7 +193,7 @@ const getAllCategoriesForFormDef = async (formDefID) => {
 
 // With the current arcitecture, users have to be filtered after fetching everyone from
 // cognito, because custom-attributes are not searchable
-const getAllUsers = async (organization_ID) => {
+const getAllUsers = async organization_ID => {
   let allUsers = []
   let PaginationToken = null
 
@@ -199,26 +205,29 @@ const getAllUsers = async (organization_ID) => {
         PaginationToken,
       })
       .promise()
-      .catch((err) => {
+      .catch(err => {
         console.log('err:', err)
       })
     allUsers = [...allUsers, ...res.Users]
     PaginationToken = res.PaginationToken
   } while (PaginationToken)
 
-  filteredUsers = allUsers.filter((user) => {
+  filteredUsers = allUsers.filter(user => {
     const organizationAttribute = user['Attributes'].filter(
-      (attribute) => attribute['Name'] === 'custom:OrganizationID'
+      attribute => attribute['Name'] === 'custom:OrganizationID'
     )[0]
 
-    return organizationAttribute['Value'] === organization_ID
+    return (
+      organizationAttribute &&
+      organizationAttribute['Value'] === organization_ID
+    )
   })
 
-  filteredUsersWithoutOrganizationID = filteredUsers.map((user) => {
+  filteredUsersWithoutOrganizationID = filteredUsers.map(user => {
     return {
       ...user,
       Attributes: user['Attributes'].filter(
-        (attribute) => attribute['Name'] === 'email'
+        attribute => attribute['Name'] === 'email'
       ),
     }
   })
@@ -227,7 +236,7 @@ const getAllUsers = async (organization_ID) => {
 }
 
 // Find all form definitions.
-const getAllFormDefs = async (organization_ID) => {
+const getAllFormDefs = async organization_ID => {
   return await docClient
     .scan({
       TableName: FORM_DEFINITION_TABLE_NAME,
@@ -239,8 +248,32 @@ const getAllFormDefs = async (organization_ID) => {
     .promise()
 }
 
+// Get all groups
+const getAllGroups = async organization_ID => {
+  return await docClient
+    .scan({
+      TableName: GROUP_TABLE_NAME,
+      FilterExpression: organizationFilterExpression,
+      ExpressionAttributeValues: {
+        [organizationFilterParameter]: organization_ID,
+      },
+    })
+    .promise()
+}
+
+// Get members of group
+const getMembersOfGroup = async group_ID => {
+  return await docClient
+    .scan({
+      TableName: USER_TABLE_NAME,
+      FilterExpression: groupFilterExpression,
+      ExpressionAttributeValues: { [groupFilterParameter]: group_ID },
+    })
+    .promise()
+}
+
 // Get the newest form definition.
-const getNewestFormDef = async (organization_ID) => {
+const getNewestFormDef = async organization_ID => {
   const form_query = {
     TableName: FORM_DEFINITION_TABLE_NAME,
     IndexName: 'byOrganizationByCreatedAt',
@@ -269,4 +302,6 @@ module.exports = {
   getAllCategoriesForFormDef,
   getAllQuestionForCategory,
   getOrganizationIDFromAPIKeyHashed,
+  getAllGroups,
+  getMembersOfGroup,
 }

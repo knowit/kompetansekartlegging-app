@@ -1,5 +1,5 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { Fab, Tooltip, Modal, makeStyles } from '@material-ui/core'
+import { Fab, makeStyles, Modal, Tooltip } from '@material-ui/core'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { KnowitColors } from '../styles'
 import DescriptionTable from './DescriptionTable'
 
@@ -183,7 +183,7 @@ const FloatingScaleDescButton = ({
         >
           <Fab
             size="medium"
-            variant="round"
+            variant="circular"
             className={style.fab}
             onClick={handleMobileFabClick}
           >

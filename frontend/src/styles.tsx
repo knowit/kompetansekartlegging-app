@@ -1,6 +1,6 @@
 import { makeStyles, Theme } from '@material-ui/core'
 
-export const cardCornerRadius: number = 40
+export const cardCornerRadius = 40
 
 export const KnowitColors = {
   black: '#000000',

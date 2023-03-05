@@ -1,13 +1,11 @@
 import { makeStyles } from '@material-ui/core'
 import clsx from 'clsx'
-import React from 'react'
 import { KnowitColors } from '../../styles'
-import { OverviewProps } from '../../types'
-import TypedOverviewChart from '../TypedOverviewChart'
+import { OverviewProps, Panel } from '../../types'
 import Highlights from '../Highlights'
-import { Panel } from '../../types'
+import TypedOverviewChart from '../TypedOverviewChart'
 
-const cardCornerRadius: number = 40
+const cardCornerRadius = 40
 
 const overviewStyle = makeStyles({
   root: {

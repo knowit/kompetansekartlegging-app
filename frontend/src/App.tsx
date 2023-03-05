@@ -1,26 +1,16 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react'
 import './App.css'
-import { Amplify, API, Auth, Hub, Analytics } from 'aws-amplify'
+import { API, Auth, Hub } from 'aws-amplify'
 // import awsconfig from "./aws-exports";
 import awsconfig from './exports'
 import Content from './components/Content'
 import Login from './components/Login'
 import { ThemeProvider } from '@material-ui/core/styles'
-import {
-  Box,
-  Button,
-  debounce,
-  makeStyles,
-  Modal,
-  Snackbar,
-} from '@material-ui/core'
+import { Button, debounce, makeStyles, Snackbar } from '@material-ui/core'
 import { isMobile } from 'react-device-detect'
 import FloatingScaleDescButton from './components/FloatingScaleDescButton'
 import NavBarDesktop from './components/NavBarDesktop'
 import theme from './theme'
-
-// redux
-import { useSelector, useDispatch } from 'react-redux'
 import {
   setUserInfo,
   setUserInfoLogOut,
@@ -28,7 +18,7 @@ import {
   fetchOrganizationNameByID,
 } from './redux/User'
 import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth'
-import ReactMarkdown from 'react-markdown'
+import { useAppSelector, useAppDispatch } from './redux/hooks'
 
 const userBranch = process ? process.env.REACT_APP_USER_BRANCH : '' // Process does not exist in Webpack 5?
 
@@ -55,7 +45,7 @@ Auth.configure(awsconfig)
 Hub.listen(/.*/, (data) => {
   console.log('Hub listening to all messages: ', data)
   if (data.payload.event === 'signIn_failure') {
-    let message = data.payload.data.message
+    const message = data.payload.data.message
     if (message.includes('Google') && !message.includes('organization')) {
       Auth.federatedSignIn({
         customProvider: CognitoHostedUIIdentityProvider.Google,
@@ -92,8 +82,8 @@ const cognitoUserContainsAttributes = (data: any): boolean => {
 }
 
 const App = () => {
-  const dispatch = useDispatch()
-  const userState = useSelector(selectUserState)
+  const dispatch = useAppDispatch()
+  const userState = useAppSelector(selectUserState)
 
   const style = appStyle()
   const [showFab, setShowFab] = useState<boolean>(true)
@@ -103,7 +93,7 @@ const App = () => {
 
   useEffect(() => {
     const handleResize = debounce(() => {
-      let vh = window.innerHeight * 0.01
+      const vh = window.innerHeight * 0.01
       document.documentElement.style.setProperty('--vh', `${vh}px`)
     }, 100)
     handleResize()
@@ -129,18 +119,26 @@ const App = () => {
           break
       }
     })
+
     Auth.currentAuthenticatedUser()
       .then((res) => {
         if (cognitoUserContainsAttributes(res)) {
-          dispatch(setUserInfo(res))
-          dispatch(fetchOrganizationNameByID(res))
+          Auth.currentSession().then((currentSession) => {
+            res.refreshSession(
+              currentSession.getRefreshToken(),
+              (err: any, session: any) => {
+                dispatch(setUserInfo(res))
+                dispatch(fetchOrganizationNameByID(res))
+              }
+            )
+          })
         }
       })
       .catch(() => {
         console.log('Not signed in')
         dispatch(setUserInfoLogOut())
       })
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (isMobile) {
@@ -174,7 +172,7 @@ const App = () => {
 
   const handleScroll = () => {
     if (categoryNavRef.current?.clientHeight !== undefined) {
-      let menuHeight = categoryNavRef.current?.clientHeight - 56
+      const menuHeight = categoryNavRef.current?.clientHeight - 56
       // Makes sure there is enough content to collapse; stops glitchy drag-scrolling past content
       if (
         document.body.clientHeight > window.innerHeight + menuHeight &&

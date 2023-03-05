@@ -1,4 +1,4 @@
-import { API, Auth, graphqlOperation } from 'aws-amplify'
+import { API, graphqlOperation } from 'aws-amplify'
 import { GraphQLResult } from '@aws-amplify/api'
 import { UserFormList, UserFormWithAnswers } from './types'
 import * as customQueries from './graphql/custom-queries'
@@ -15,7 +15,7 @@ import { getOrganization } from './graphql/queries'
 */
 export const callGraphQL = async <T>(
   query: any,
-  variables?: {} | undefined
+  variables?: {} | undefined // eslint-disable-line @typescript-eslint/ban-types
 ): Promise<GraphQLResult<T>> => {
   return (await API.graphql(
     graphqlOperation(query, variables)
@@ -31,7 +31,7 @@ export const listUserForms = async () => {
   let nextToken: string | null = null
   let combinedUserForm: UserFormWithAnswers[] = []
   do {
-    let userForms: UserFormList | undefined = (
+    const userForms: UserFormList | undefined = (
       await callGraphQL<UserFormList>(customQueries.listUserFormsWithAnswers, {
         nextToken: nextToken,
       })
@@ -52,10 +52,10 @@ export const listUserForms = async () => {
 const splitArray = <T>(array: T[]): T[][] => {
   if (array.length < 25) return [array]
 
-  let splitArray = []
+  const splitArray = []
   let currentCount = 0
   while (currentCount < array.length) {
-    let availableNumber = Math.min(array.length - currentCount, 25)
+    const availableNumber = Math.min(array.length - currentCount, 25)
     splitArray.push(array.slice(currentCount, currentCount + availableNumber))
     currentCount += 25
   }
@@ -68,7 +68,7 @@ const splitArray = <T>(array: T[]): T[][] => {
 */
 export const callBatchGraphQL = async <T>(
   query: any,
-  variables: { input: any[]; organizationID: String },
+  variables: { input: any[]; organizationID: string },
   table: string
 ): Promise<GraphQLResult<T>[]> => {
   if (variables.input.length === 0) {
@@ -76,8 +76,8 @@ export const callBatchGraphQL = async <T>(
     return []
   }
 
-  let split = splitArray(variables.input)
-  let returnValue = []
+  const split = splitArray(variables.input)
+  const returnValue = []
   for (const element of split) {
     returnValue.push(
       (await API.graphql(
@@ -114,13 +114,13 @@ export const roundDecimals = (
  */
 
 export const wrapString = (str: string, maxLength: number): string[] => {
-  let splitOnSpace = str.split(' ')
-  let resultArray: string[] = []
+  const splitOnSpace = str.split(' ')
+  const resultArray: string[] = []
   for (let i = 0; i < splitOnSpace.length; i++) {
-    let s = splitOnSpace[i]
+    const s = splitOnSpace[i]
     if (s.length > maxLength) {
-      let head = s.slice(0, s.length / 2)
-      let tail = s.slice(s.length / 2)
+      const head = s.slice(0, s.length / 2)
+      const tail = s.slice(s.length / 2)
       resultArray.push(head + '-')
       resultArray.push(tail)
     } else {
@@ -162,5 +162,55 @@ export const getOrganizationNameByID = (organizationID: string) =>
       }
     } catch (e) {
       reject('no org found')
+    }
+  })
+
+export const getLatestUserFormUpdatedAtForUser = (
+  userId: string,
+  formDefId: string
+) =>
+  new Promise<Date | null>(async (resolve, reject) => {
+    try {
+      const listOfUpdatedAt: Date[] = Array<Date>()
+      let nextToken: string | null = null
+
+      do {
+        const res: UserFormList | undefined = (
+          await callGraphQL<UserFormList>(
+            customQueries.listUserFormsUpdatedAt,
+            {
+              nextToken: nextToken,
+              filter: {
+                formDefinitionID: {
+                  eq: formDefId,
+                },
+                owner: {
+                  eq: userId,
+                },
+              },
+            }
+          )
+        ).data
+
+        if (res) {
+          listOfUpdatedAt.push(
+            ...res.listUserForms?.items.map((item: any) => {
+              return new Date(item.updatedAt)
+            })
+          )
+          nextToken = res.listUserForms?.nextToken
+        } else {
+          nextToken = null
+        }
+      } while (nextToken)
+
+      const sorted =
+        listOfUpdatedAt.length > 0
+          ? listOfUpdatedAt.sort((a, b) => b.getTime() - a.getTime())
+          : null
+      sorted ? resolve(sorted[0]) : resolve(null)
+    } catch (e) {
+      console.log(e)
+      reject('error while fetching updatedAt from latest UserForm')
     }
   })

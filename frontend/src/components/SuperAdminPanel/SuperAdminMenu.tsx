@@ -1,7 +1,7 @@
-import React from 'react'
-import { Panel } from '../../types'
 import { Button } from '@material-ui/core'
 import clsx from 'clsx'
+import React from 'react'
+import { Panel } from '../../types'
 
 type SuperAdminMenuProps = {
   show: boolean

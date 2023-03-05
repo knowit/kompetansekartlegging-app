@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import Button from '@material-ui/core/Button'
 
-import IconButton from '@material-ui/core/IconButton'
 import Box from '@material-ui/core/Box'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
-import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import IconButton from '@material-ui/core/IconButton'
 import TextField from '@material-ui/core/TextField'
 
 import { dialogStyles } from '../../../styles'
@@ -55,8 +55,8 @@ const AddCategoryDialog = ({ onCancel, onConfirm, open }: any) => {
         <TextField
           fullWidth
           multiline
-          rows={4}
-          rowsMax={6}
+          minRows={4}
+          maxRows={6}
           label="Beskrivelse"
           variant="outlined"
           value={description}

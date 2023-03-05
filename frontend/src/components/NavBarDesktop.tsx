@@ -1,33 +1,31 @@
 import {
   AppBar,
-  Button,
-  Toolbar,
   Avatar,
-  MenuItem,
-  ClickAwayListener,
-  Popper,
-  Grow,
-  Paper,
-  MenuList,
-  Modal,
   Box,
-} from '@material-ui/core'
-import {
+  Button,
+  ClickAwayListener,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Grow,
+  MenuItem,
+  MenuList,
+  Modal,
+  Paper,
+  Popper,
+  Toolbar,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import HelpIcon from '@material-ui/icons/Help'
 import React, { useEffect, useRef, useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import { ReactComponent as KnowitLogo } from '../Logotype-Knowit-Digital-white 1.svg'
+import { useAppSelector } from '../redux/hooks'
+import { selectUserState } from '../redux/User'
 import { KnowitColors } from '../styles'
 import { NavBarPropsDesktop, UserRole } from '../types'
-import { ReactComponent as KnowitLogo } from '../Logotype-Knowit-Digital-white 1.svg'
-import { useSelector } from 'react-redux'
-import { selectUserState } from '../redux/User'
-import ReactMarkdown from 'react-markdown'
-import HelpIcon from '@material-ui/icons/Help'
 
 const navbarStyles = makeStyles((theme) => ({
   root: {
@@ -79,7 +77,7 @@ const navbarStyles = makeStyles((theme) => ({
 }))
 
 const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
-  const userState = useSelector(selectUserState)
+  const userState = useAppSelector(selectUserState)
 
   const [avatarMenuOpen, setAvatarMenuOpen] = useState<boolean>(false)
   // return focus to the button when we transitioned from !avatarMenuOpen -> avatarMenuOpen
@@ -149,7 +147,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
 
   useEffect(() => {
     if (avatarMenuPrevOpen.current === true && avatarMenuOpen === false) {
-      anchorRef.current!.focus()
+      anchorRef.current?.focus()
     }
 
     avatarMenuPrevOpen.current = avatarMenuOpen
@@ -179,7 +177,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
       'https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/frontend/markdown/help.md'
     )
       .then(async (response) => {
-        let markdown = await response.text()
+        const markdown = await response.text()
         setHelpMarkdown(markdown)
       })
       .catch((error) => console.error(error))

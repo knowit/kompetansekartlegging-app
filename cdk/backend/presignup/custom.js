@@ -17,11 +17,11 @@ const OrganizationConstants = {
   IdentifierAttribute: 'identifierAttribute',
 }
 
-const isDeveloperLogin = (event) => {
+const isDeveloperLogin = event => {
   return event['request']['userAttributes']['identities'] === undefined
 }
 
-const getIdentifierValue = (event) => {
+const getIdentifierValue = event => {
   const identities = JSON.parse(
     event['request']['userAttributes']['identities']
   )
@@ -29,7 +29,7 @@ const getIdentifierValue = (event) => {
   return providerName
 }
 
-const getOrganizationID = (identifierAttributeValue) =>
+const getOrganizationID = identifierAttributeValue =>
   new Promise(async (resolve, reject) => {
     const params = {
       TableName: tableMap[`${OrganizationConstants['TableName']}Table`], //OrganizationConstants["TableName"]+'-'+process.env.API_KOMPETANSEKARTLEGGIN_GRAPHQLAPIIDOUTPUT+"-"+process.env.ENV,
@@ -151,7 +151,7 @@ exports.handler = async (event, context, callback) => {
       )
     } else {
       attributes = []
-      Object.keys(event.request.userAttributes).forEach((key) => {
+      Object.keys(event.request.userAttributes).forEach(key => {
         if (key === 'identities' || key === 'sub' || key.includes('cognito:'))
           return
         attributes.push({ Name: key, Value: event.request.userAttributes[key] })
@@ -216,8 +216,8 @@ exports.handler = async (event, context, callback) => {
           GroupName: organizationID,
         })
 
-        const update_user_attribute_command =
-          new AdminUpdateUserAttributesCommand({
+        const update_user_attribute_command = new AdminUpdateUserAttributesCommand(
+          {
             Username: userEmail,
             UserPoolId: event['userPoolId'],
             UserAttributes: [
@@ -226,14 +226,17 @@ exports.handler = async (event, context, callback) => {
                 Value: organizationID,
               },
             ],
-          })
+          }
+        )
 
         try {
-          const [response_user_group, response_custom_attribute] =
-            await Promise.all([
-              client.send(user_to_group_command),
-              client.send(update_user_attribute_command),
-            ])
+          const [
+            response_user_group,
+            response_custom_attribute,
+          ] = await Promise.all([
+            client.send(user_to_group_command),
+            client.send(update_user_attribute_command),
+          ])
           console.log('response user_to_group', response_user_group)
           console.log('response custom_attribute', response_custom_attribute)
         } catch (err) {

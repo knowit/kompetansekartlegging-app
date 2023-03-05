@@ -1,17 +1,17 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
-import { makeStyles, createStyles } from '@material-ui/core/styles'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import IconButton from '@material-ui/core/IconButton'
-import ButtonGroup from '@material-ui/core/ButtonGroup'
 import Button from '@material-ui/core/Button'
-import EditIcon from '@material-ui/icons/Edit'
+import ButtonGroup from '@material-ui/core/ButtonGroup'
+import IconButton from '@material-ui/core/IconButton'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import ListItemText from '@material-ui/core/ListItemText'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
+import TextField from '@material-ui/core/TextField'
 import DeleteIcon from '@material-ui/icons/Delete'
+import EditIcon from '@material-ui/icons/Edit'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
-import TextField from '@material-ui/core/TextField'
 
 import { KnowitColors } from '../../../styles'
 import EditActionButtons from './EditActionButtons'
@@ -87,8 +87,8 @@ const CategoryListItem = ({
   categories,
 }: any) => {
   const [editMode, setEditMode] = useState<boolean>(false)
-  const [text, setText] = useState<String>(c.text)
-  const [description, setDescription] = useState<String>(c.description || '')
+  const [text, setText] = useState<string>(c.text)
+  const [description, setDescription] = useState<string>(c.description || '')
   const classes = useCategoryListItemStyles()
 
   const onSave = async () => {
@@ -124,8 +124,8 @@ const CategoryListItem = ({
             <TextField
               fullWidth
               multiline
-              rows={4}
-              rowsMax={6}
+              minRows={4}
+              maxRows={6}
               label="Beskrivelse"
               variant="outlined"
               value={description}

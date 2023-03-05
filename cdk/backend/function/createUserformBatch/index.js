@@ -157,7 +157,7 @@ exports.handler = async (event, context) => {
 }
 
 // Sets 'updatedAt' for a userform to current time.
-const updateUserformUpdatedAt = async (userformID) => {
+const updateUserformUpdatedAt = async userformID => {
   await docClient
     .update({
       TableName: USERFORMTABLE_NAME,
@@ -180,7 +180,9 @@ async function getOrCreateUserform(eventInput) {
   }
 
   //Get last userform
-  const lastUserform = await getUserformByOwnerWithLimit()
+  const lastUserform = await getUserformByOwnerWithLimit(
+    eventInput.formDefinitionID
+  )
   if (typeof lastUserform != 'undefined' && lastUserform.length > 0) {
     returnValue.oldUserformId = lastUserform[0].id
     const createdTime = new Date(lastUserform[0].createdAt).getTime()
@@ -211,14 +213,14 @@ async function mapQuestionAnswers(newAnswers, oldAnswers, useNewUserform) {
   console.log('New Answers: ', newAnswers)
   console.log('Old Answers: ', oldAnswers)
 
-  let mappedAnswers = newAnswers.map((newAns) => {
+  let mappedAnswers = newAnswers.map(newAns => {
     if (oldAnswers === null) {
       newAns.action = Action.Create
       return newAns
     }
 
     const old = oldAnswers.find(
-      (oldAns) => oldAns.questionID === newAns.questionID
+      oldAns => oldAns.questionID === newAns.questionID
     )
     // console.log("old question: ", old);
     if (old) {
@@ -241,16 +243,14 @@ async function mapQuestionAnswers(newAnswers, oldAnswers, useNewUserform) {
     return newAns
   })
   let returnMap = {
-    createAnswers: mappedAnswers.filter((ans) => ans.action === Action.Create),
-    updateAnswers: mappedAnswers.filter((ans) => ans.action === Action.Update),
+    createAnswers: mappedAnswers.filter(ans => ans.action === Action.Create),
+    updateAnswers: mappedAnswers.filter(ans => ans.action === Action.Update),
   }
   //If new userform, add all oldAnswers not mapped yet
   if (useNewUserform)
-    oldAnswers.forEach((old) => {
+    oldAnswers.forEach(old => {
       if (
-        !returnMap.createAnswers.some(
-          (ans) => ans.questionID === old.questionID
-        )
+        !returnMap.createAnswers.some(ans => ans.questionID === old.questionID)
       )
         returnMap.createAnswers.push(old)
     })
@@ -263,13 +263,13 @@ async function updateQuestionAnswers(mappedQuestionAnswers) {
   console.log('Updating Answers', mappedQuestionAnswers)
   if (mappedQuestionAnswers.length === 0) return null
   const updateResult = await Promise.all(
-    mappedQuestionAnswers.map((answer) => updateQuestionAnswer(answer))
+    mappedQuestionAnswers.map(answer => updateQuestionAnswer(answer))
   )
   console.log('Update results ', updateResult)
   return updateResult
 }
 
-const updateQuestionAnswer = (quAns) => {
+const updateQuestionAnswer = quAns => {
   if (quAns.customScaleValue != null) {
     return docClient
       .update({
@@ -316,10 +316,10 @@ async function insertQuestionAnswers(answerArray, userformId) {
   if (answerArray.length === 0) return result
   const table = QUESTIONANSWERTABLE_NAME
   const answers = splitArray(answerArray)
-  let prepedAnswers = answers.map((aArray) => {
+  let prepedAnswers = answers.map(aArray => {
     return {
       RequestItems: {
-        [table]: aArray.map((answer) => {
+        [table]: aArray.map(answer => {
           return {
             PutRequest: {
               Item: {
@@ -359,20 +359,6 @@ async function insertQuestionAnswers(answerArray, userformId) {
       })
       .promise()
   })
-  // for (let i = 0; i < prepedAnswers.length; i++) {
-  //     promises.push(docClient
-  //         .batchWrite(prepedAnswers[i], (err, data) => {
-  //             if (err) {
-  //                 console.log(`BatchWrite error ${i}: `, err);
-  //                 result.failedData.push(err);
-  //                 result.errors.push(err);
-  //             } else {
-  //                 console.log(`BatchWrite data ${i}: `, data);
-  //                 result.data.push(data);
-  //             }
-  //         })
-  //         .promise());
-  // }
   await Promise.all(promises) // Allows us to fire off all writes at the same time?
   return result
 }
@@ -413,24 +399,51 @@ async function createUserform(formDefinitionId) {
 }
 
 //Returns the X newest userforms by ownerId
-async function getUserformByOwnerWithLimit(limit = 1) {
+async function getUserformByOwnerWithLimit(formDefID = undefined, limit = 1) {
   try {
     let result = await docClient
       .query({
         TableName: USERFORMTABLE_NAME,
         IndexName: 'byCreatedAt',
         KeyConditionExpression: '#o = :ownerValue',
+        FilterExpression: '#formdefid = :formdefValue',
         ExpressionAttributeNames: {
           '#o': 'owner',
+          '#formdefid': 'formDefinitionID',
         },
         ExpressionAttributeValues: {
           ':ownerValue': ownerId,
+          ':formdefValue': formDefID,
         },
         ScanIndexForward: false, //Sort direction: true (default) = ASC, false = DESC
         ConsistentRead: false,
         Limit: limit,
       })
       .promise()
+    let lastEvaluatedKey = result.LastEvaluatedKey
+    while (lastEvaluatedKey && !(result.Items.length > 0)) {
+      result = await docClient
+        .query({
+          TableName: USERFORMTABLE_NAME,
+          IndexName: 'byCreatedAt',
+          KeyConditionExpression: '#o = :ownerValue',
+          FilterExpression: '#formdefid = :formdefValue', // Make sure we fetch the newest UserForm related to current active form definition
+          ExpressionAttributeNames: {
+            '#o': 'owner',
+            '#formdefid': 'formDefinitionID',
+          },
+          ExpressionAttributeValues: {
+            ':ownerValue': ownerId,
+            ':formdefValue': formDefID,
+          },
+          ExclusiveStartKey: lastEvaluatedKey,
+          ScanIndexForward: false, //Sort direction: true (default) = ASC, false = DESC
+          ConsistentRead: false,
+          Limit: limit,
+        })
+        .promise()
+      lastEvaluatedKey = result.LastEvaluatedKey
+    }
     console.log('Limited userform querry result: ', result)
     return result.Items
   } catch (err) {
@@ -476,7 +489,7 @@ function splitArray(array) {
 //Probably a good idea to change this to a more secure uuid generator (like the on in node)
 //Create a random Id in the uuidv4 format.
 function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     var r = (Math.random() * 16) | 0,
       v = c === 'x' ? r : (r & 0x3) | 0x8
     return v.toString(16)

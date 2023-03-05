@@ -38,7 +38,7 @@ const useApiGet = ({
       }
       f()
     }
-  }, [refreshCounter, getFn, cmpFn, constantResult])
+  }, [refreshCounter, getFn, cmpFn, constantResult]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return { result, error, loading, refresh }
 }

@@ -1,11 +1,11 @@
+import Button from '@material-ui/core/Button'
+import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { roundDecimals } from '../helperFunctions'
+import { KnowitColors } from '../styles'
 import { ChartData, ResultData, ResultDiagramProps } from '../types'
-import { makeStyles } from '@material-ui/core/styles'
 import { CombinedChart } from './CombinedChart'
 import { CombinedChartMobile } from './CombinedChartMobile'
-import Button from '@material-ui/core/Button'
-import { KnowitColors } from '../styles'
 
 const graphStyle = makeStyles({
   resultDiagramContainer: {
@@ -99,9 +99,9 @@ const recalculate = (
     case OverviewType.HIGHEST:
       answerData = createHighestData()
   }
-  let knowledgeStart = isMobile ? 7 : 0
-  let motivationStart = isMobile ? 0 : 7
-  let data: ChartData[] = answerData.map((answer) => {
+  const knowledgeStart = isMobile ? 7 : 0
+  const motivationStart = isMobile ? 0 : 7
+  const data: ChartData[] = answerData.map((answer) => {
     if (answer.aggCustomScale > 0) {
       return {
         name: answer.category,
@@ -160,9 +160,9 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
   useEffect(() => {
     const createAverageData = (): ResultData[] => {
       //data: ResultData[]
-      let ansData: ResultData[] = []
+      const ansData: ResultData[] = []
       props.questionAnswers.forEach((questionAnswers, category) => {
-        let reduced = questionAnswers.reduce<ReduceValue>(
+        const reduced = questionAnswers.reduce<ReduceValue>(
           (acc, cur): ReduceValue => {
             if (cur.customScaleValue && cur.customScaleValue >= 0) {
               acc.customScaleCount = acc.customScaleCount + 1
@@ -206,9 +206,9 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
     }
 
     const createMedianData = (): ResultData[] => {
-      let ansData: ResultData[] = []
-      let getMedian = (numbers: number[]): number => {
-        let mid = Math.floor(numbers.length / 2)
+      const ansData: ResultData[] = []
+      const getMedian = (numbers: number[]): number => {
+        const mid = Math.floor(numbers.length / 2)
         numbers.sort()
         return numbers.length % 2 === 1
           ? numbers[mid]
@@ -216,13 +216,13 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
       }
       props.questionAnswers.forEach((questionAnswers, category) => {
         if (questionAnswers.length > 0) {
-          let medianKnowledge = getMedian(
+          const medianKnowledge = getMedian(
             questionAnswers.map((qa) => qa.knowledge).filter((n) => n >= 0)
           )
-          let medianMotivation = getMedian(
+          const medianMotivation = getMedian(
             questionAnswers.map((qa) => qa.motivation).filter((n) => n >= 0)
           )
-          let medianCustomScale = getMedian(
+          const medianCustomScale = getMedian(
             questionAnswers
               .map((qa) => qa.customScaleValue)
               .filter((n) => n >= 0)
@@ -246,13 +246,13 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
     }
 
     const createHighestData = (): ResultData[] => {
-      let ansData: ResultData[] = []
-      let newTopSubjects: Map<string, { kTop: string; mTop: string }> =
+      const ansData: ResultData[] = []
+      const newTopSubjects: Map<string, { kTop: string; mTop: string }> =
         new Map()
       props.questionAnswers.forEach((questionAnswers, category) => {
-        let kTop: string = ''
-        let mTop: string = ''
-        let reduced = questionAnswers.reduce<{
+        let kTop = ''
+        let mTop = ''
+        const reduced = questionAnswers.reduce<{
           maxKnowledge: number
           maxMotivation: number
           maxCustomScale: number

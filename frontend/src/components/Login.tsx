@@ -1,14 +1,10 @@
-import React, { useState } from 'react'
+import { Authenticator } from '@aws-amplify/ui-react'
+import '@aws-amplify/ui-react/styles.css'
 import { Button, makeStyles } from '@material-ui/core'
-import {
-  AmplifyAuthenticator,
-  AmplifySignIn,
-  AmplifySignUp,
-} from '@aws-amplify/ui-react'
-import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth/lib/types'
 import { Auth } from 'aws-amplify'
-import { KnowitColors } from '../styles'
+import { useState } from 'react'
 import { ReactComponent as KnowitLogo } from '../Logotype-Knowit-Digital-white 1.svg'
+import { KnowitColors } from '../styles'
 
 const loginStyle = makeStyles({
   container: {
@@ -109,6 +105,11 @@ const loginStyle = makeStyles({
   hidden: {
     display: 'none',
   },
+  authenticator: {
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+  },
 })
 
 const userBranch = process ? process.env.REACT_APP_USER_BRANCH : ''
@@ -117,24 +118,32 @@ const Login = (props: { isMobile: boolean }) => {
   // console.log("/tree/", userBranch, isNotProd);
   const style = loginStyle()
   const [showDevLogin, setShowDevLogin] = useState<boolean>(false)
+  const formFields = {
+    signUp: {
+      name: {
+        order: 1,
+      },
+      email: {
+        order: 2,
+      },
+      password: {
+        order: 3,
+      },
+      confirm_password: {
+        order: 4,
+      },
+    },
+  }
 
   return showDevLogin ? (
-    <AmplifyAuthenticator usernameAlias="email">
-      <AmplifySignIn
-        headerText="Username/password login for developers"
-        slot="sign-in"
-        usernameAlias="email"
-      />
-      <AmplifySignUp
-        slot="sign-up"
-        usernameAlias="email"
-        formFields={[
-          { type: 'name', label: 'Name' },
-          { type: 'password' },
-          { type: 'email' },
-        ]}
-      />
-    </AmplifyAuthenticator>
+    <Authenticator
+      formFields={formFields}
+      signUpAttributes={['name']}
+      variation="default"
+      loginMechanisms={['email']}
+      className={style.authenticator}
+      /*socialProviders={["amazon"]}*/
+    />
   ) : (
     <div className={style.container}>
       <div className={style.topDiv} />
@@ -158,21 +167,11 @@ const Login = (props: { isMobile: boolean }) => {
             className={style.loginButton}
             onClick={() =>
               Auth.federatedSignIn({
-                customProvider: CognitoHostedUIIdentityProvider.Google,
-              })
-            }
-          >
-            Logg inn (Knowit Objectnet)
-          </Button>
-          <Button
-            className={style.loginButton}
-            onClick={() =>
-              Auth.federatedSignIn({
                 customProvider: 'AzureAD',
               })
             }
           >
-            Logg inn (Andre Knowit Selskaper)
+            Logg inn
           </Button>
           {isNotProd && (
             <Button

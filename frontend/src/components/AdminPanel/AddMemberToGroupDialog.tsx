@@ -1,33 +1,33 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
+import Box from '@material-ui/core/Box'
+import Button from '@material-ui/core/Button'
+import Chip from '@material-ui/core/Chip'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import FormGroup from '@material-ui/core/FormGroup'
+import IconButton from '@material-ui/core/IconButton'
+import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
+import Switch from '@material-ui/core/Switch'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
-import Paper from '@material-ui/core/Paper'
-import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
-import Switch from '@material-ui/core/Switch'
-import FormGroup from '@material-ui/core/FormGroup'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Chip from '@material-ui/core/Chip'
-import Box from '@material-ui/core/Box'
-import IconButton from '@material-ui/core/IconButton'
 
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
 
-import Table from '../mui/Table'
-import TableRow from '../mui/TableRow'
-import PictureAndNameCell from './PictureAndNameCell'
+import { useAppSelector } from '../../redux/hooks'
+import { selectUserState } from '../../redux/User'
 import { dialogStyles } from '../../styles'
 import { CloseIcon } from '../DescriptionTable'
-import { not, getAttribute } from './helpers'
-import { useSelector, useDispatch } from 'react-redux'
-import { selectUserState } from '../../redux/User'
+import Table from '../mui/Table'
+import TableRow from '../mui/TableRow'
+import { getAttribute, not } from './helpers'
+import PictureAndNameCell from './PictureAndNameCell'
 
 const getNameOrUsername = (user: any) => {
   const name = getAttribute(user, 'name')
@@ -42,7 +42,7 @@ const AddMemberToGroupDialog = ({
   members,
 }: any) => {
   const style = dialogStyles()
-  const userState = useSelector(selectUserState)
+  const userState = useAppSelector(selectUserState)
 
   const [showOnlyUnset, setShowOnlyUnset] = useState<boolean>(true)
   const [nameFilter, setNameFilter] = useState<string>('')

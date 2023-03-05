@@ -1,14 +1,14 @@
 import { Button, makeStyles } from '@material-ui/core'
 import clsx from 'clsx'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { KnowitColors } from '../styles'
-import { YourAnswerProps, Panel } from '../types'
-import AnswerDiagram from './AnswerDiagram'
-import { Form } from './Form'
-import { MenuButton } from './Content'
+import { Panel, YourAnswerProps } from '../types'
 import { AlertNotification, AlertType } from './AlertNotification'
-import ProgressBar from './ProgressBar'
+import AnswerDiagram from './AnswerDiagram'
 import { BlockInfo } from './BlockInfo'
+import { MenuButton } from './Content'
+import { Form } from './Form'
+import ProgressBar from './ProgressBar'
 
 const yourAnswersStyleMobile = makeStyles({
   hidden: {
@@ -160,7 +160,7 @@ export const YourAnswersMobile = ({ ...props }: YourAnswerProps) => {
   const style = yourAnswersStyleMobile()
 
   const getCategoryButtons = () => {
-    let buttons: JSX.Element[] = []
+    const buttons: JSX.Element[] = []
 
     const categories = props.categories.map((cat) => {
       return {
@@ -204,7 +204,7 @@ export const YourAnswersMobile = ({ ...props }: YourAnswerProps) => {
   }
 
   const getCategoryButtonsCollapsed = () => {
-    let buttons: JSX.Element[] = []
+    const buttons: JSX.Element[] = []
 
     const categories = props.categories.map((cat) => {
       return {
@@ -253,7 +253,7 @@ export const YourAnswersMobile = ({ ...props }: YourAnswerProps) => {
   }
 
   const getCategoryDescription = (): string => {
-    let categoryDesc = props.formDefinition?.questions.items.find(
+    const categoryDesc = props.formDefinition?.questions.items.find(
       (q) => q.category.text === props.activeCategory
     )
     return categoryDesc?.category.description ?? ''

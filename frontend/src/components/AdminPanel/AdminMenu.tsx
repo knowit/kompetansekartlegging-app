@@ -1,7 +1,7 @@
-import React from 'react'
-import { Panel } from '../../types'
 import { Button } from '@material-ui/core'
 import clsx from 'clsx'
+import React from 'react'
+import { Panel } from '../../types'
 
 type AdminMenuProps = {
   show: boolean
@@ -34,8 +34,11 @@ const AdminMenu = ({
       text: 'Rediger administratorer',
     },
     {
-      text: 'Rediger katalog',
+      text: 'Rediger kataloger',
       hasInternalRouting: true,
+    },
+    {
+      text: 'Last ned kataloger',
     },
     // refactor this one out once the whole app uses routing
     {

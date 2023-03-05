@@ -34,7 +34,7 @@ function* generator() {
 }
 
 const formatDate = (dateString: string) => {
-  let temp: string[] = dateString.split('T')
+  const temp: string[] = dateString.split('T')
   return temp[0] + '  ' + temp[1].slice(0, 5)
 }
 
@@ -53,7 +53,7 @@ export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
     const g = generator()
 
     const renderEntry = (entry: UserFormWithAnswers) => {
-      let key = String(g.next().value)
+      const key = String(g.next().value)
       return (
         <TreeItem key={key} nodeId={key} label={formatDate(entry.createdAt)}>
           {entry.questionAnswers.items.map((answer) => renderAnswer(answer))}
@@ -62,7 +62,7 @@ export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
     }
 
     const renderAnswer = (answer: UserAnswer) => {
-      let key = String(g.next().value)
+      const key = String(g.next().value)
       return (
         <TreeItem
           key={key}
@@ -81,7 +81,7 @@ export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
       )
     }
 
-    let sortedData = props.data.sort(
+    const sortedData = props.data.sort(
       (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
     )
 
@@ -98,7 +98,7 @@ export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
   }
 
   const findQuestion = (questionId: string): string => {
-    let question = props.formDefinition?.questions.items.find(
+    const question = props.formDefinition?.questions.items.find(
       (q) => q.id === questionId
     )
     return question

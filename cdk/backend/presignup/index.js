@@ -18,7 +18,7 @@ const moduleNames = ['custom'] //process.env.MODULES.split(',');
 /**
  * The array of imported modules.
  */
-const modules = moduleNames.map((name) => require(`./${name}`))
+const modules = moduleNames.map(name => require(`./${name}`))
 
 /**
  * This async handler iterates over the given modules and awaits them.
@@ -42,7 +42,7 @@ exports.handler = async (event, context, callback) => {
    */
   // await Promise.all(modules.map(module => module.handler(event)));  // bad
   await Promise.all(
-    modules.map((module) => module.handler(event, context, callback))
+    modules.map(module => module.handler(event, context, callback))
   )
   return event
 }

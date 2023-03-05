@@ -75,4 +75,7 @@ aws_sso.ps1
 Makefile
 .tool-versions
 poetry.lock
+.idea
+
+# Env
 pyproject.toml

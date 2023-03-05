@@ -1,5 +1,5 @@
 // Get the most recently created item of an array, based on createdAt.
-const getNewestItem = (array) => {
+const getNewestItem = array => {
   let sortedArray = array.sort((a, b) =>
     Date.parse(a.createdAt) > Date.parse(b.createdAt) ? -1 : 1
   )
@@ -47,7 +47,7 @@ const mapQuestionToAnswer = (questionMap, answer) => {
 
 // Get user attribute.
 const getUserAttribute = (user, attribute) => {
-  const attr = user.Attributes.find((attr) => attr.Name === attribute)
+  const attr = user.Attributes.find(attr => attr.Name === attribute)
   return attr ? attr.Value : null
 }
 

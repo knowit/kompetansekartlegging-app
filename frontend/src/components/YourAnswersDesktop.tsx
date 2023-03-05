@@ -2,14 +2,14 @@ import { Button, makeStyles } from '@material-ui/core'
 import clsx from 'clsx'
 import React from 'react'
 import { KnowitColors } from '../styles'
-import { YourAnswerProps, Panel } from '../types'
+import { Panel, YourAnswerProps } from '../types'
 import AnswerDiagram from './AnswerDiagram'
+import { BlockInfo } from './BlockInfo'
 import { Form } from './Form'
 import ProgressBar from './ProgressBar'
-import { BlockInfo } from './BlockInfo'
 
-const cardCornerRadius: number = 40
-const zIndex: number = 20
+const cardCornerRadius = 40
+const zIndex = 20
 
 const yourAnwersStyle = makeStyles({
   hidden: {
@@ -167,7 +167,7 @@ export const YourAnswersDesktop = ({ ...props }: YourAnswerProps) => {
   }
 
   const getCategoryDescription = (): string => {
-    let categoryDesc = props.formDefinition?.questions.items.find(
+    const categoryDesc = props.formDefinition?.questions.items.find(
       (q) => q.category.text === props.activeCategory
     )
     return categoryDesc?.category.description ?? ''
