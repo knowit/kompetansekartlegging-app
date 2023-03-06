@@ -1,6 +1,6 @@
 interface QuestionAnswer {
   id: string
-  userformid: string
+  userid: string
   questionid: string
   knowledge: number | null
   motivation: number | null

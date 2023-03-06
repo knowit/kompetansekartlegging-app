@@ -1,6 +1,6 @@
 import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
-import { sqlQuery } from '../../app'
 import { v4 as uuidv4 } from 'uuid'
+import { sqlQuery } from '../../app'
 import {
   DeleteQuestionAnswerInput,
   GetQuestionAnswerInput,
@@ -8,9 +8,9 @@ import {
 } from './types'
 
 const listQuestionAnswers = async () => {
-  const query = 'SELECT id FROM questionAnswer'
+  const query = 'SELECT id FROM question_answer'
 
-  return await sqlQuery({ message: '🚀 ~ > All questionAnswers', query })
+  return await sqlQuery({ message: '🚀 ~ > All question_answers', query })
 }
 
 const getQuestionAnswer = async ({ id }: GetQuestionAnswerInput) => {
@@ -23,17 +23,17 @@ const getQuestionAnswer = async ({ id }: GetQuestionAnswerInput) => {
       typeHint: TypeHint.UUID,
     },
   ]
-  const query = 'SELECT * FROM questionAnswer WHERE id = :id'
+  const query = 'SELECT * FROM question_answer WHERE id = :id'
 
   return await sqlQuery({
-    message: `🚀 ~ > QuestionAnswer with id: ${id}`,
+    message: `🚀 ~ > Question Answer with id: ${id}`,
     query,
     parameters,
   })
 }
 
 const createQuestionAnswer = async ({
-  userformid,
+  userid,
   questionid,
   knowledge,
   motivation,
@@ -51,9 +51,9 @@ const createQuestionAnswer = async ({
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'userformid',
+      name: 'userid',
       value: {
-        stringValue: userformid,
+        stringValue: userid,
       },
       typeHint: TypeHint.UUID,
     },
@@ -94,12 +94,12 @@ const createQuestionAnswer = async ({
     },
   ]
 
-  const query = `INSERT INTO questionAnswer (id, userformid, questionid, knowledge, motivation, customscalevalue)
-    VALUES(:id, :userformid, :questionid, :knowledge, :motivation, :customscalevalue)
+  const query = `INSERT INTO question_answer (id, user_id, question_id, knowledge, motivation, custom_scale_value, text_value)
+    VALUES(:id, :userid, :questionid, :knowledge, :motivation, :customscalevalue, :textvalue)
     RETURNING *`
 
   return await sqlQuery({
-    message: `🚀 ~ > QuestionAnswer with id: ${id} was successfully created`,
+    message: `🚀 ~ > Question Answer with id: ${id} was successfully created`,
     query,
     parameters,
   })
@@ -108,7 +108,7 @@ const createQuestionAnswer = async ({
 const updateQuestionAnswer = async (
   { id }: GetQuestionAnswerInput,
   {
-    userformid,
+    userid,
     questionid,
     knowledge,
     motivation,
@@ -125,9 +125,9 @@ const updateQuestionAnswer = async (
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'userformid',
+      name: 'userid',
       value: {
-        stringValue: userformid,
+        stringValue: userid,
       },
       typeHint: TypeHint.UUID,
     },
@@ -169,9 +169,9 @@ const updateQuestionAnswer = async (
   ]
 
   // TODO: Se kommentar fra @Lekesoldat
-  const query = `UPDATE questionAnswer
-        SET userformid=:userformid, questionid=:questionid, knowledge=:knowledge, motivation=:motivation,
-        customscalevalue=:customscalevalue, textvalue=:textvalue
+  const query = `UPDATE question_answer
+        SET user_id=:userid, question_id=:questionid, knowledge=:knowledge, motivation=:motivation,
+        custom_scale_value=:customscalevalue, text_value=:textvalue
         WHERE id=:id
         RETURNING *`
 
@@ -193,7 +193,7 @@ const deleteQuestionAnswer = async ({ id }: DeleteQuestionAnswerInput) => {
     },
   ]
 
-  const query = `DELETE FROM questionAnswer WHERE id=:id RETURNING *`
+  const query = `DELETE FROM question_answer WHERE id=:id RETURNING *`
 
   return await sqlQuery({
     message: `🚀 ~ > QuestionAnswer with id: ${id} was deleted`,
@@ -203,7 +203,7 @@ const deleteQuestionAnswer = async ({ id }: DeleteQuestionAnswerInput) => {
 }
 
 const createQuestionAnswerFromBatch = async ({
-  userformid,
+  userid,
   questionid,
   knowledge,
   motivation,
@@ -221,9 +221,9 @@ const createQuestionAnswerFromBatch = async ({
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'userformid',
+      name: 'userid',
       value: {
-        stringValue: userformid,
+        stringValue: userid,
       },
       typeHint: TypeHint.UUID,
     },
@@ -264,8 +264,8 @@ const createQuestionAnswerFromBatch = async ({
     },
   ]
 
-  const query = `INSERT INTO questionAnswer (id, userformid, userformid, knowledge, motivation, customscalevalue, textvalue)
-  VALUES(:id, :userformid, :questionid, :knowledge, :motivation, :customscalevalue, :textvalue)
+  const query = `INSERT INTO question_answer (id, user_id, question_id knowledge, motivation, custom_scale_value, text_value)
+  VALUES(:id, :userid, :questionid, :knowledge, :motivation, :customscalevalue, :textvalue)
   RETURNING *`
 
   return await sqlQuery({

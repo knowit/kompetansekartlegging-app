@@ -7,7 +7,7 @@ interface Question {
   topic: string
   index: number | null
   categoryid: string
-  type: 'customscalevalue' | 'knowledgemotivation' | 'text' | null
+  type: 'custom_scale_value' | 'knowledge_motivation' | 'text' | null
   scalestart: string | null
   scalemiddle: string | null
   scaleend: string | null

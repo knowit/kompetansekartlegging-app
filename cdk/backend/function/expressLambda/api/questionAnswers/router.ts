@@ -10,6 +10,7 @@ const router = express.Router()
 
 // List all questionAnswers
 router.get('/', async (req, res, next) => {
+  if (req.query.id) next()
   try {
     const listQuestionAnswerResponse = await QuestionAnswer.listQuestionAnswers()
     res.status(200).json(listQuestionAnswerResponse)
@@ -21,7 +22,7 @@ router.get('/', async (req, res, next) => {
 
 // Get questionAnswer from id
 router.get<unknown, unknown, unknown, GetQuestionAnswerInput>(
-  '/:id',
+  '/',
   async (req, res, next) => {
     try {
       const getQuestionAnswerResponse = await QuestionAnswer.getQuestionAnswer(
@@ -54,7 +55,7 @@ router.post<unknown, unknown, QuestionAnswerInput>(
 
 // Update questionAnswer with given id
 router.patch<unknown, unknown, QuestionAnswerInput, GetQuestionAnswerInput>(
-  '/:id',
+  '/',
   async (req, res, next) => {
     try {
       const updateQuestionAnswerResponse = await QuestionAnswer.updateQuestionAnswer(
