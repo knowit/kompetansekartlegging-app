@@ -51,7 +51,7 @@ const getQuestionsInCategory = async ({
     },
   ]
 
-  const query = `SELECT * FROM question WHERE categoryid = :categoryid`
+  const query = `SELECT * FROM question WHERE category_id = :categoryid`
 
   return await sqlQuery({
     message: `🚀 ~ > All questions with categoryid: ${categoryid}`,
@@ -64,13 +64,11 @@ const createQuestion = async ({
   text,
   topic,
   index,
-  formdefinitionid,
   categoryid,
   type,
   scalestart,
   scalemiddle,
   scaleend,
-  organizationid,
 }: QuestionInput) => {
   const id = uuidv4()
 
@@ -89,13 +87,8 @@ const createQuestion = async ({
       },
       typeHint: TypeHint.UUID,
     },
-    {
-      name: 'formdefinitionid',
-      value: { stringValue: formdefinitionid },
-      typeHint: TypeHint.UUID,
-    },
+
     { name: 'index', value: index ? { longValue: index } : { isNull: true } },
-    { name: 'organizationid', value: { stringValue: organizationid } },
     {
       name: 'scalestart',
       value: scalestart ? { stringValue: scalestart } : { isNull: true },
@@ -112,8 +105,8 @@ const createQuestion = async ({
     { name: 'topic', value: { stringValue: topic } },
   ]
 
-  const query = `INSERT INTO "question" (id, categoryid, formdefinitionid, index, organizationid, scalestart, scalemiddle, scaleend, text, topic, type)
-    VALUES(:id, :categoryid, :formdefinitionid, :index, :organizationid, :scalestart, :scalemiddle, :scaleend, :text, :topic, '${type}')
+  const query = `INSERT INTO "question" (id, category_id, index, scale_start, scale_middle, scale_end, text, topic, type)
+    VALUES(:id, :categoryid, :index, :scalestart, :scalemiddle, :scaleend, :text, :topic, '${type}')
     RETURNING *`
 
   return await sqlQuery({
@@ -129,13 +122,11 @@ const updateQuestion = async (
     text,
     topic,
     index,
-    formdefinitionid,
     categoryid,
     type,
     scalestart,
     scalemiddle,
     scaleend,
-    organizationid,
   }: QuestionInput
 ) => {
   const parameters: SqlParameter[] = [
@@ -153,13 +144,7 @@ const updateQuestion = async (
       },
       typeHint: TypeHint.UUID,
     },
-    {
-      name: 'formdefinitionid',
-      value: { stringValue: formdefinitionid },
-      typeHint: TypeHint.UUID,
-    },
     { name: 'index', value: index ? { longValue: index } : { isNull: true } },
-    { name: 'organizationid', value: { stringValue: organizationid } },
     {
       name: 'scalestart',
       value: scalestart ? { stringValue: scalestart } : { isNull: true },
@@ -177,8 +162,8 @@ const updateQuestion = async (
   ]
 
   const query = `UPDATE "question"
-    SET categoryid=:categoryid, formdefinitionid=:formdefinitionid, index=:index,
-    organizationid=:organizationid, scalestart=:scalestart, scalemiddle=:scalemiddle, scaleend=:scaleend,
+    SET category_id=:categoryid, index=:index, scale_start=:scalestart,
+    scale_middle=:scalemiddle, scale_end=:scaleend,
     text=:text, topic=:topic, type='${type}'
     WHERE id=:id
     RETURNING *`

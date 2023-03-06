@@ -6,13 +6,16 @@ interface Question {
   text: string | null
   topic: string
   index: number | null
-  formdefinitionid: string
   categoryid: string
   type: 'customscalevalue' | 'knowledgemotivation' | 'text' | null
   scalestart: string | null
   scalemiddle: string | null
   scaleend: string | null
-  organizationid: string
+}
+
+export interface GetQuestionReqQuery {
+  id: string | undefined
+  categoryid: string | undefined
 }
 
 export type QuestionInput = Omit<Question, 'id'>
