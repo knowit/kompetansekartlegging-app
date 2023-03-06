@@ -147,7 +147,7 @@ const EditGroupLeaders = () => {
                             <Typography color="textSecondary" gutterBottom>
                                 {t("menu.submenu.editGroupLeaders")}
                             </Typography>
-                            {t("admin.editGroupLeadersDesc")}
+                            {t("admin.editGroupLeaders.description")}
                         </CardContent>
                     </Card>
                     <GroupLeaderTable
@@ -160,7 +160,7 @@ const EditGroupLeaders = () => {
                         startIcon={<PersonAddIcon />}
                         onClick={() => setShowAddGroupLeader(true)}
                     >
-                        {t("admin.addGroupLeader")}
+                        {t("admin.editGroupLeaders.addGroupLeader")}
                     </Button>
                 </>
             )}
@@ -172,7 +172,7 @@ const EditGroupLeaders = () => {
                 user={groupLeaderToDelete}
                 roleName={t("groupLeader").toLowerCase()}
             >
-                {t("admin.rememberToReplaceGroupLeader")}
+                {t("admin.editGroupLeaders.rememberToReplaceGroupLeader")}
             </DeleteUserFromGroupDialog>
             {showAddGroupLeader && (
                 <AddUserToGroupDialog

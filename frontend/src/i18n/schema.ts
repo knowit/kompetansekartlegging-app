@@ -103,17 +103,31 @@ export type TranslationKeysSchema = {
             noGroupLeader: string
         }
         admin: {
-            editGroupLeadersDesc: string
-            addGroupLeader: string
-            rememberToReplaceGroupLeader: string
             areYouSureYouWantToDeleteNameFromRole: string
             removeNameFromRole: string
-            chooseGroupLeaderForTheNewGroup: string
-            chooseNewGroupLeader: string
-            choose: string
-            createGroup: string
             searchForEmployeeInOrganization: string
-            groupLeaderRemoved: string
+            editGroupLeaders: {
+                description: string
+                addGroupLeader: string
+                rememberToReplaceGroupLeader: string
+            }
+            editGroups: {
+                description: string
+                chooseGroupLeaderForTheNewGroup: string
+                chooseNewGroupLeader: string
+                choose: string
+                createNewGroup: string
+                groupLeaderRemoved: string
+                removeGroup: string
+                members: string
+                details: string
+                numberOfGroupMembers: string
+            }
+            editAdmins: {
+                editAdministrators: string
+                description: string
+                addAdministrator: string
+            }
         }
     }
 }

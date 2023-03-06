@@ -105,17 +105,31 @@ export const English: TranslationKeysSchema = {
             noGroupLeader: "No group leader"
         },
         admin: {
-            editGroupLeadersDesc: "Group leaders can access their group members' answers. They can also choose their group members. In this submenu, you can add and remove group leaders.",
-            addGroupLeader: "Add group leader",
-            rememberToReplaceGroupLeader: "Remember to add a new group leader for the groups the user was responsible for.",
             areYouSureYouWantToDeleteNameFromRole: "Are you sure you want to delete {{name}} from the {{role}}?",
             removeNameFromRole: "Remove {{name}} from the {{role}}?",
-            chooseGroupLeaderForTheNewGroup: "Choose group leader for the new group",
-            chooseNewGroupLeader: "Choose new group leader",
-            choose: "Choose",
-            createGroup: "Create group",
             searchForEmployeeInOrganization: "Search for employee in {{organization}}",
-            groupLeaderRemoved: "Group leader removed"
+            editGroupLeaders: {
+                description: "Group leaders can access their group members' answers. They can also choose their group members. In this submenu, you can add and remove group leaders.",
+                addGroupLeader: "Add group leader",
+                rememberToReplaceGroupLeader: "Remember to add a new group leader for the groups the user was responsible for.",
+            },
+            editGroups: {
+                description: "A group consists of a group leader and multiple group children. In this submenu, you can add new groups, delete groups, change the leader of a group and add or remove group members.",
+                chooseGroupLeaderForTheNewGroup: "Choose group leader for the new group",
+                chooseNewGroupLeader: "Choose new group leader",
+                choose: "Choose",
+                createNewGroup: "Create new group",
+                groupLeaderRemoved: "Group leader removed",
+                removeGroup: "Remove group",
+                members: "Members",
+                details: "Details",
+                numberOfGroupMembers: "Number of groupmembers",
+            },
+            editAdmins: {
+                editAdministrators: "Edit administrators",
+                description: "Administrators have access to everyone's answers. They can also appoint group leaders and administrators, and can create and remove groups. In this submenu, you can add and remove administrators.",
+                addAdministrator: "Add administrator"
+            }
         }
     }
 }

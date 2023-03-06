@@ -13,7 +13,7 @@ export const Norwegian: TranslationKeysSchema = {
         thisIsATestEnvironment: "NB: Dette er et test-miljø!",
         close: "LUKK",
         employee: "Ansatt",
-        email: "Email",
+        email: "E-post",
         add: "Legg til",
         groupLeader: "Gruppeleder",
         username: "Brukernavn",
@@ -105,16 +105,31 @@ export const Norwegian: TranslationKeysSchema = {
             noGroupLeader: "Mangler gruppeleder"
         },
         admin: {
-            editGroupLeadersDesc: "Gruppeledere har tilgang til sine egne gruppebarns svar. De kan også velge sine gruppebarn. På denne siden kan du legge til og fjerne gruppeledere.",
-            addGroupLeader: "Legg til gruppeleder",
-            rememberToReplaceGroupLeader: "Husk å sette en ny gruppeleder for de gruppene brukeren var ansvarlig for.",
             areYouSureYouWantToDeleteNameFromRole: "Er du sikker på at du har lyst til å fjerne {{name}} fra {{role}}?",
             removeNameFromRole: "Fjern {{name}} fra {{role}}?",
-            chooseGroupLeaderForTheNewGroup: "Velg gruppeleder til den nye gruppen",
-            chooseNewGroupLeader: "Velg ny gruppeleder",
-            choose: "Velg",
-            createGroup: "Lag gruppe",
-            searchForEmployeeInOrganization: "Søk etter ansatt i {{organization}}"
+            searchForEmployeeInOrganization: "Søk etter ansatt i {{organization}}",
+            editGroupLeaders: {
+                description: "Gruppeledere har tilgang til sine egne gruppebarns svar. De kan også velge sine gruppebarn. På denne siden kan du legge til og fjerne gruppeledere.",
+                addGroupLeader: "Legg til gruppeleder",
+                rememberToReplaceGroupLeader: "Husk å sette en ny gruppeleder for de gruppene brukeren var ansvarlig for.",
+            },
+            editGroups: {
+                description: "En gruppe består av en gruppeleder og flere gruppebarn. På denne siden kan du lage nye grupper, slette grupper, endre gruppelederen til en gruppe og legge til og fjerne ansatte til og fra grupper.",
+                chooseGroupLeaderForTheNewGroup: "Velg gruppeleder til den nye gruppen",
+                chooseNewGroupLeader: "Velg ny gruppeleder",
+                choose: "Velg",
+                createNewGroup: "Lag ny gruppe",
+                groupLeaderRemoved: "Gruppeleder fjernet",
+                removeGroup: "Fjern gruppe",
+                members: "Medlemmer",
+                details: "Detaljer",
+                numberOfGroupMembers: "Antall gruppemedlemmer",
+            },
+            editAdmins: {
+                editAdministrators: "Rediger administratorer",
+                description: "Administratorer har tilgang til alles svar. De kan også velge hvem som er gruppeledere og administratorer, og kan lage og fjerne grupper. På denne siden kan du legge til og fjerne administratorer.",
+                addAdministrator: "Legg til administrator"
+            }
         }
     }
 }

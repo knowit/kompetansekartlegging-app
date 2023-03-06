@@ -35,6 +35,7 @@ import { selectAdminCognitoGroupName } from "../../redux/User";
 import exports from "../../exports";
 import ReactMarkdown from "react-markdown";
 import DownloadExcelDialog from "./DownloadExcelDialog";
+import { useTranslation } from "react-i18next";
 
 const Admin = (props: any) => {
     const { admin, deleteAdmin } = props;
@@ -60,14 +61,15 @@ const Admin = (props: any) => {
 };
 
 const AdminTable = ({ admins, deleteAdmin }: any) => {
+    const { t } = useTranslation();
     return (
         <TableContainer className={commonStyles.tableContainer}>
             <Table stickyHeader>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Ansatt</TableCell>
-                        <TableCell>Email</TableCell>
-                        <TableCell>Brukernavn</TableCell>
+                        <TableCell>{t("employee")}</TableCell>
+                        <TableCell>{t("email")}</TableCell>
+                        <TableCell>{t("username")}</TableCell>
                         <TableCell />
                     </TableRow>
                 </TableHead>
@@ -86,6 +88,7 @@ const AdminTable = ({ admins, deleteAdmin }: any) => {
 };
 
 const EditAdmins = () => {
+    const { t } = useTranslation();
     const adminCognitoGroupName = useAppSelector(selectAdminCognitoGroupName);
     const [showDownloadExcel, setShowDownloadExcel] = useState<boolean>(false);
 
@@ -126,7 +129,7 @@ const EditAdmins = () => {
 
     return (
         <Container maxWidth="md" className={commonStyles.container}>
-            {error && <p>An error occured: {error}</p>}
+            {error && <p>{t("errorOccured", {error: error})}</p>}
             {loading && <CircularProgress />}
             {!error && !loading && admins && (
                 <>
@@ -137,12 +140,9 @@ const EditAdmins = () => {
                     <Card style={{ marginBottom: "24px" }} variant="outlined">
                         <CardContent>
                             <Typography color="textSecondary" gutterBottom>
-                                Rediger administratorer
+                                {t("admin.editAdmins.editAdministrators")}
                             </Typography>
-                            Administratorer har tilgang til alles svar. De kan
-                            også velge hvem som er gruppeledere og
-                            administratorer og kan lage og fjerne grupper. På
-                            denne siden kan du legge til og fjerne gruppeledere.
+                            {t("admin.editAdmins.description")}
                         </CardContent>
                     </Card>
                     <AdminTable admins={admins} deleteAdmin={deleteAdmin} />
@@ -153,7 +153,7 @@ const EditAdmins = () => {
                         style={{ marginTop: "24px" }}
                         onClick={() => setShowAddAdmin(true)}
                     >
-                        Legg til administrator
+                        {t("admin.editAdmins.addAdministrator")}
                     </Button>
                     <Button
                         variant="contained"
