@@ -81,6 +81,7 @@ const navbarStyles = makeStyles((theme) => ({
 }))
 
 const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
+  const { t, i18n } = useTranslation()
   const userState = useAppSelector(selectUserState)
 
   const [avatarMenuOpen, setAvatarMenuOpen] = useState<boolean>(false)
@@ -175,8 +176,6 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
   }
 
   const [helpMarkdown, setHelpMarkdown] = useState<any>()
-
-  const { t, i18n } = useTranslation()
 
   useEffect(() => {
     fetch(

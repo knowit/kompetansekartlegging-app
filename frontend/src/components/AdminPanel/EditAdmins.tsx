@@ -12,7 +12,6 @@ import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import DeleteIcon from '@material-ui/icons/Delete'
 import PersonAddIcon from '@material-ui/icons/PersonAdd'
-import AssesmentIcon from '@material-ui/icons/BarChart'
 import Typography from '@material-ui/core/Typography'
 
 import commonStyles from './common.module.css'
@@ -30,7 +29,6 @@ import Table from '../mui/Table'
 import PictureAndNameCell from './PictureAndNameCell'
 import { useAppSelector } from '../../redux/hooks'
 import { selectAdminCognitoGroupName } from '../../redux/User'
-import DownloadExcelDialog from './DownloadExcelDialog'
 import { useTranslation } from 'react-i18next'
 
 const Admin = (props: any) => {
@@ -58,6 +56,7 @@ const Admin = (props: any) => {
 
 const AdminTable = ({ admins, deleteAdmin }: any) => {
   const { t } = useTranslation()
+
   return (
     <TableContainer className={commonStyles.tableContainer}>
       <Table stickyHeader>
@@ -82,7 +81,6 @@ const AdminTable = ({ admins, deleteAdmin }: any) => {
 const EditAdmins = () => {
   const { t } = useTranslation()
   const adminCognitoGroupName = useAppSelector(selectAdminCognitoGroupName)
-  const [showDownloadExcel, setShowDownloadExcel] = useState<boolean>(false)
 
   const {
     result: admins,
@@ -122,10 +120,6 @@ const EditAdmins = () => {
       {loading && <CircularProgress />}
       {!error && !loading && admins && (
         <>
-          <DownloadExcelDialog
-            open={showDownloadExcel}
-            onClose={() => setShowDownloadExcel(false)}
-          />
           <Card style={{ marginBottom: '24px' }} variant="outlined">
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
@@ -143,15 +137,6 @@ const EditAdmins = () => {
             onClick={() => setShowAddAdmin(true)}
           >
             {t('admin.editAdmins.addAdministrator')}
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AssesmentIcon />}
-            style={{ marginTop: '24px' }}
-            onClick={() => setShowDownloadExcel(true)}
-          >
-            Last ned resultater (Excel)
           </Button>
         </>
       )}

@@ -38,6 +38,7 @@ const activeSubmenuItemToSubmenuCategory = (
 
 const SuperAdminPanel = ({ activeSubmenuItem }: SuperAdminPanelProps) => {
   useTranslation()
+
   const category = activeSubmenuItemToSubmenuCategory(activeSubmenuItem)
 
   return (

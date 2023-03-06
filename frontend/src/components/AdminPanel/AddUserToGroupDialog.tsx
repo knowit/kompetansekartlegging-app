@@ -90,7 +90,7 @@ const AddUserToGroupDialog = ({
         <TextField
           fullWidth
           placeholder={
-            t('admin.searchForEmployeeInOrganization', {
+            t('searchForEmployeeInOrganization', {
               organization: userState.organizationName,
             }) as string
           }

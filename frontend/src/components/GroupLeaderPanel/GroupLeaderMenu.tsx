@@ -18,7 +18,6 @@ const GroupLeaderMenu = ({
   style,
 }: any) => {
   const { t } = useTranslation()
-
   if (!show) return null
 
   const items = members.map((m: any) => ({

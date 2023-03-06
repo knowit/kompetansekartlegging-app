@@ -225,7 +225,6 @@ export const DescriptionTable = ({
               </IconButton>
             )}
           </header>
-
           {getCompetence().map((obj, i) => {
             const Icon = obj.icon
             return (

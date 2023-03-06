@@ -13,6 +13,7 @@ import { dialogStyles } from '../styles'
 import { useTranslation } from 'react-i18next'
 
 export const AlertDialog = ({ ...props }: AlertDialogProps) => {
+  const { t } = useTranslation()
   const style = dialogStyles()
 
   const handleStayInForm = () => {
@@ -22,8 +23,6 @@ export const AlertDialog = ({ ...props }: AlertDialogProps) => {
   const handleLeave = () => {
     if (props.leaveFormButtonClicked) props.leaveFormButtonClicked()
   }
-
-  const { t } = useTranslation()
 
   return (
     <Dialog

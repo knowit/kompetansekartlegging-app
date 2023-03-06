@@ -116,6 +116,7 @@ export const BlockInfo = (props: {
           >{`Blokken ble sist oppdatert ${new Date(
             timeOfOldestQuestion
           ).toLocaleDateString('no-NO')}`}</div>
+          {/* TODO: i18n*/}
         </div>
       </div>
     )

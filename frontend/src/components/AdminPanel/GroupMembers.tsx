@@ -17,6 +17,7 @@ import { toI18nLocaleDateString } from '../../i18n/i18n'
 
 const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
   const { t } = useTranslation()
+
   const name = getAttribute(user, 'name')
   const email = getAttribute(user, 'email')
   const picture = getAttribute(user, 'picture')
@@ -57,6 +58,7 @@ const GroupMembers = ({
   showLastAnsweredAt,
 }: any) => {
   const { t } = useTranslation()
+
   const [open, setOpen] = useState<boolean>(false)
   const onConfirm = (users: any[]) => {
     addMembersToGroup(users)

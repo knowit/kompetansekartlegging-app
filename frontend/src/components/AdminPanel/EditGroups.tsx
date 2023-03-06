@@ -71,6 +71,7 @@ const Group = ({
   showLastAnsweredAt,
 }: any) => {
   const { t } = useTranslation()
+
   const hasGroupLeader = !!group.groupLeader
   const name = hasGroupLeader
     ? getAttribute(group.groupLeader, 'name')
@@ -138,6 +139,7 @@ const GroupsTable = ({
   showLastAnsweredAt,
 }: any) => {
   const { t } = useTranslation()
+
   const [openId, setOpenId] = useState<string>('')
   const setOpenGroup = (groupId: string) => {
     if (openId === groupId) {
@@ -196,6 +198,7 @@ const GroupsTable = ({
 
 const EditGroups = ({ showLastAnsweredAt }: any) => {
   const { t } = useTranslation()
+
   const userState = useAppSelector(selectUserState)
 
   const {

@@ -137,7 +137,6 @@ const recalculate = (
 
 export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
   const { t } = useTranslation()
-
   const style = graphStyle()
 
   const [chartData, setChartData] = useState<ChartData[]>([])
@@ -337,6 +336,7 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
           return t('overview.overviewType.highest')
       }
     }
+
     return (
       <Button
         className={

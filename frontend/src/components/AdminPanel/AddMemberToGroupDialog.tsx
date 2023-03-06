@@ -107,11 +107,9 @@ const AddMemberToGroupDialog = ({
           <TextField
             fullWidth
             placeholder={
-              /* eslint-disable @typescript-eslint/no-non-null-assertion */
-              t('myGroup.searchForEmployeeIn', {
-                company: `${userState.organizationName}`,
-              })!
-              /*eslint-enable @typescript-eslint/no-non-null-assertion */
+              t('searchForEmployeeInOrganization', {
+                organization: `${userState.organizationName}`,
+              }) as string
             }
             variant="outlined"
             value={nameFilter}

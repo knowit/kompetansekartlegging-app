@@ -17,6 +17,7 @@ export type TranslationKeysSchema = {
     username: string
     theGroup: string
     theRole: string
+    searchForEmployeeInOrganization: string
     menu: {
       overview: string
       myAnswers: string
@@ -28,6 +29,7 @@ export type TranslationKeysSchema = {
         editGroups: string
         editAdministrators: string
         editCatalogs: string
+        downloadCatalogs: string
         editOrganizations: string
         editSuperAdministrators: string
         editOrganizationAdministrators: string
@@ -97,7 +99,6 @@ export type TranslationKeysSchema = {
       lastAnswered: string
       removeFromGroup: string
       addMembers: string
-      searchForEmployeeIn: string
       theEmployeeMustHaveSignedInOnce: string
       showOnlyEmployeesWithoutGroupLeader: string
       noGroupLeader: string
@@ -105,7 +106,6 @@ export type TranslationKeysSchema = {
     admin: {
       areYouSureYouWantToDeleteNameFromRole: string
       removeNameFromRole: string
-      searchForEmployeeInOrganization: string
       editGroupLeaders: {
         description: string
         addGroupLeader: string
@@ -117,6 +117,7 @@ export type TranslationKeysSchema = {
         chooseNewGroupLeader: string
         choose: string
         createNewGroup: string
+        createGroup: string
         groupLeaderRemoved: string
         removeGroup: string
         members: string

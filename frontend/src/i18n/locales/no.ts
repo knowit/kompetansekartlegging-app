@@ -19,6 +19,7 @@ export const Norwegian: TranslationKeysSchema = {
     username: 'Brukernavn',
     theGroup: 'gruppen',
     theRole: 'rollen',
+    searchForEmployeeInOrganization: 'Søk etter ansatt i {{organization}}',
     menu: {
       overview: 'Oversikt',
       myAnswers: 'Mine svar',
@@ -30,6 +31,7 @@ export const Norwegian: TranslationKeysSchema = {
         editGroups: 'Rediger grupper',
         editAdministrators: 'Rediger administratorer',
         editCatalogs: 'Rediger kataloger',
+        downloadCatalogs: 'Last ned kataloger',
         editOrganizations: 'Rediger organisasjoner',
         editSuperAdministrators: 'Rediger super-administratorer',
         editOrganizationAdministrators: 'Rediger organisasjon-administratorer',
@@ -40,21 +42,17 @@ export const Norwegian: TranslationKeysSchema = {
       signOut: 'Logg ut',
       knowledgeMappingFor: 'Kompetansekartlegging for',
       doYouWantToDeleteYourAnswers: 'Ønsker du å slette svarene dine?',
-      thisWillDeleteAllAnswers:
-        'OBS: Dette vil slette alle innsendte og lagrede svar!',
+      thisWillDeleteAllAnswers: 'OBS: Dette vil slette alle innsendte og lagrede svar!',
     },
     content: {
       unAnswared: 'Ubesvart!',
       shouldBeUpdatedLastAnswered: 'Bør oppdateres! Sist besvart: {{date}}',
-      answerOutdatedOrIncomplete:
-        'Besvarelsen er utdatert eller ikke komplett!',
-      unansweredOrOutdatedQuestionsInCategory:
-        'Ikke besvart eller utdaterte spørsmål i kategori',
+      answerOutdatedOrIncomplete: 'Besvarelsen er utdatert eller ikke komplett!',
+      unansweredOrOutdatedQuestionsInCategory: 'Ikke besvart eller utdaterte spørsmål i kategori',
     },
     alertDialog: {
       nbAnswersNotSaved: 'Obs! Svarene dine er ikke lagret.',
-      leavingWillDiscardChanges:
-        'Hvis du forlater skjemaet nå vil ikke endringene du har gjort bli lagret.',
+      leavingWillDiscardChanges: 'Hvis du forlater skjemaet nå vil ikke endringene du har gjort bli lagret.',
       leaveForm: 'Forlat skjemaet',
       stayOnForm: 'Bli på skjemaet',
     },
@@ -79,15 +77,11 @@ export const Norwegian: TranslationKeysSchema = {
       someInsight: 'Noe innsikt',
       unfamiliar: 'Kjenner ikke til området',
       desc: {
-        superstar:
-          'En etterspurt spesialist, som fungerer som nyskapende eller strategisk kraft på området',
+        superstar: 'En etterspurt spesialist, som fungerer som nyskapende eller strategisk kraft på området',
         expert: 'Har særdeles god kontroll og en etablert posisjon på området',
-        professional:
-          'Har god kontroll og kan jobbe selvstendig med ikke-trivielle problemstillinger innenfor området',
-        potentiallyUsable:
-          'Kompetanse som enten ikke er testet i oppdrag eller der man inntil videre trenger støtte fra andre i teamet',
-        someInsight:
-          'Har noe innsikt i området, samt evne til å resonnere over eller løse oppgaver på et ikke-profesjonelt nivå innenfor området',
+        professional: 'Har god kontroll og kan jobbe selvstendig med ikke-trivielle problemstillinger innenfor området',
+        potentiallyUsable: 'Kompetanse som enten ikke er testet i oppdrag eller der man inntil videre trenger støtte fra andre i teamet',
+        someInsight: 'Har noe innsikt i området, samt evne til å resonnere over eller løse oppgaver på et ikke-profesjonelt nivå innenfor området',
       },
     },
     motivationScale: {
@@ -107,31 +101,25 @@ export const Norwegian: TranslationKeysSchema = {
       lastAnswered: 'Sist besvart',
       removeFromGroup: 'Fjern fra gruppe',
       addMembers: 'Legg til medlemmer',
-      searchForEmployeeIn: 'Søk etter ansatt i {{company}}',
-      theEmployeeMustHaveSignedInOnce:
-        'Den ansatte må ha logget seg inn i appen minst en gang.',
+      theEmployeeMustHaveSignedInOnce: 'Den ansatte må ha logget seg inn i appen minst en gang.',
       showOnlyEmployeesWithoutGroupLeader: 'Vis bare ansatte uten gruppeleder',
       noGroupLeader: 'Mangler gruppeleder',
     },
     admin: {
-      areYouSureYouWantToDeleteNameFromRole:
-        'Er du sikker på at du har lyst til å fjerne {{name}} fra {{role}}?',
+      areYouSureYouWantToDeleteNameFromRole: 'Er du sikker på at du har lyst til å fjerne {{name}} fra {{role}}?',
       removeNameFromRole: 'Fjern {{name}} fra {{role}}?',
-      searchForEmployeeInOrganization: 'Søk etter ansatt i {{organization}}',
       editGroupLeaders: {
-        description:
-          'Gruppeledere har tilgang til sine egne gruppebarns svar. De kan også velge sine gruppebarn. På denne siden kan du legge til og fjerne gruppeledere.',
+        description: 'Gruppeledere har tilgang til sine egne gruppebarns svar. De kan også velge sine gruppebarn. På denne siden kan du legge til og fjerne gruppeledere.',
         addGroupLeader: 'Legg til gruppeleder',
-        rememberToReplaceGroupLeader:
-          'Husk å sette en ny gruppeleder for de gruppene brukeren var ansvarlig for.',
+        rememberToReplaceGroupLeader: 'Husk å sette en ny gruppeleder for de gruppene brukeren var ansvarlig for.',
       },
       editGroups: {
-        description:
-          'En gruppe består av en gruppeleder og flere gruppebarn. På denne siden kan du lage nye grupper, slette grupper, endre gruppelederen til en gruppe og legge til og fjerne ansatte til og fra grupper.',
+        description: 'En gruppe består av en gruppeleder og flere gruppebarn. På denne siden kan du lage nye grupper, slette grupper, endre gruppelederen til en gruppe og legge til og fjerne ansatte til og fra grupper.',
         chooseGroupLeaderForTheNewGroup: 'Velg gruppeleder til den nye gruppen',
         chooseNewGroupLeader: 'Velg ny gruppeleder',
         choose: 'Velg',
         createNewGroup: 'Lag ny gruppe',
+        createGroup: 'Lag gruppe',
         groupLeaderRemoved: 'Gruppeleder fjernet',
         removeGroup: 'Fjern gruppe',
         members: 'Medlemmer',
@@ -140,8 +128,7 @@ export const Norwegian: TranslationKeysSchema = {
       },
       editAdmins: {
         editAdministrators: 'Rediger administratorer',
-        description:
-          'Administratorer har tilgang til alles svar. De kan også velge hvem som er gruppeledere og administratorer, og kan lage og fjerne grupper. På denne siden kan du legge til og fjerne administratorer.',
+        description: 'Administratorer har tilgang til alles svar. De kan også velge hvem som er gruppeledere og administratorer, og kan lage og fjerne grupper. På denne siden kan du legge til og fjerne administratorer.',
         addAdministrator: 'Legg til administrator',
       },
     },

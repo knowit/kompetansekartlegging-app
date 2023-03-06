@@ -100,7 +100,6 @@ const getLabel = (
 
 export const CombinedChart = ({ ...props }: CombinedChartProps) => {
   const { t } = useTranslation()
-
   const classes = useStyles()
 
   if (props.chartData.length === 0) return null

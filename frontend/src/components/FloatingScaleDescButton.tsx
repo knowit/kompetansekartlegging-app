@@ -176,7 +176,7 @@ const FloatingScaleDescButton = ({
           condition={firstTimeLogin}
           wrap={(children) => (
             <Tooltip
-              title="Trykk her for å se hva ikonene betyr!"
+              title="Trykk her for å se hva ikonene betyr!" // TODO: i18n
               open={showTooltip}
               arrow
             >

@@ -170,7 +170,7 @@ const updateCategoryAlerts = (
         alerts.set(quAns.question.id, {
           type: AlertType.Outdated,
           message: t('content.shouldBeUpdatedLastAnswered', {
-            date: new Date(quAns.updatedAt),
+            date: new Date(quAns.updatedAt), // TODO: i18n
           }),
         })
         const numAlerts = catAlerts.get(quAns.question.category.text)

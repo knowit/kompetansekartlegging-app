@@ -128,13 +128,12 @@ const createPagedData = (
 export const CombinedChartMobile = ({
   ...props
 }: CombinedChartProps): JSX.Element => {
+  const { t } = useTranslation()
+  const classes = useStyles()
+
   const [chartPages, setChartPages] = useState<ChartData[][]>([])
   const [currentPage, setCurrentPage] = useState(0)
   const [currentType, setCurrentType] = useState<OverviewType>()
-
-  const { t } = useTranslation()
-
-  const classes = useStyles()
 
   const maxColumnsPerPage = getMaxColumnsForWidth()
 

@@ -39,6 +39,9 @@ const AdminMenu = ({
       text: t('menu.submenu.editCatalogs'),
       hasInternalRouting: true,
     },
+    {
+      text: t('menu.submenu.downloadCatalogs'),
+    },
     // refactor this one out once the whole app uses routing
     {
       text: 'hidden',

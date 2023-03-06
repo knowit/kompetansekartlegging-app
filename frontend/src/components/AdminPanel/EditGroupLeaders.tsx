@@ -62,6 +62,7 @@ const GroupLeader = (props: any) => {
 
 const GroupLeaderTable = ({ groupLeaders, deleteGroupLeader }: any) => {
   const { t } = useTranslation()
+
   return (
     <TableContainer className={commonStyles.tableContainer}>
       <Table stickyHeader>
@@ -89,6 +90,7 @@ const GroupLeaderTable = ({ groupLeaders, deleteGroupLeader }: any) => {
 
 const EditGroupLeaders = () => {
   const { t } = useTranslation()
+
   const groupLeaderCognitoGroupName = useAppSelector(
     selectGroupLeaderCognitoGroupName
   )
