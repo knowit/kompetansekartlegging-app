@@ -1,60 +1,94 @@
 {
-    "name": "kompetansekartlegging-gui",
-    "version": "0.1.0",
-    "private": true,
-    "dependencies": {
-        "@aws-amplify/ui-react": "^4.3.5",
-        "@aws-sdk/client-lambda": "^3.259.0",
-        "@material-ui/core": "^4.12.4",
-        "@material-ui/icons": "^4.11.3",
-        "@material-ui/lab": "^4.0.0-alpha.61",
-        "@reduxjs/toolkit": "^1.9.2",
-        "aws-amplify": "^5.0.11",
-        "clsx": "^1.2.1",
-        "i18next": "^22.4.10",
-        "react": "^16.14.0",
-        "react-device-detect": "^2.2.2",
-        "react-dom": "^16.14.0",
-        "react-i18next": "^12.2.0",
-        "react-markdown": "^8.0.5",
-        "react-redux": "^8.0.5",
-        "react-router": "^5.3.4",
-        "react-router-dom": "^5.3.4",
-        "react-scripts": "^4.0.3",
-        "react-swipeable": "^7.0.0",
-        "recharts": "^2.3.2",
-        "uuid": "^9.0.0"
+  "name": "kompetansekartlegging-gui",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@aws-amplify/ui-react": "^4.3.5",
+    "@aws-sdk/client-lambda": "^3.259.0",
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/icons": "^4.11.3",
+    "@material-ui/lab": "^4.0.0-alpha.61",
+    "@reduxjs/toolkit": "^1.9.2",
+    "aws-amplify": "^5.0.11",
+    "clsx": "^1.2.1",
+    "i18next": "^22.4.10",
+    "react": "^16.14.0",
+    "react-device-detect": "^2.2.2",
+    "react-dom": "^16.14.0",
+    "react-i18next": "^12.2.0",
+    "react-markdown": "^8.0.5",
+    "react-redux": "^8.0.5",
+    "react-router": "^5.3.4",
+    "react-router-dom": "^5.3.4",
+    "react-scripts": "^4.0.3",
+    "react-swipeable": "^7.0.0",
+    "recharts": "^2.3.2",
+    "uuid": "^9.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint": "eslint . --ext ts,tsx --max-warnings 0 --no-fix",
+    "lint-fix": "eslint . --ext ts,tsx --fix",
+    "prettier-check": "prettier --check .",
+    "prettier-fix": "prettier --write ."
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "plugins": [
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": "warn",
+      "no-async-promise-executor": "off",
+      "no-empty": [
+        "error",
+        {
+          "allowEmptyCatch": true
+        }
+      ],
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/explicit-module-boundary-types": "off"
     },
-    "scripts": {
-        "start": "react-scripts start",
-        "build": "react-scripts build",
-        "test": "react-scripts test",
-        "eject": "react-scripts eject"
+    "globals": {
+      "React": "readonly",
+      "JSX": "readonly"
     },
-    "eslintConfig": {
-        "extends": "react-app"
-    },
-    "browserslist": {
-        "production": [
-            ">0.2%",
-            "not dead",
-            "not op_mini all"
-        ],
-        "development": [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version"
-        ]
-    },
-    "devDependencies": {
-        "@types/node": "^18.11.18",
-        "@types/react": "^16.14.35",
-        "@types/react-dom": "^16.9.17",
-        "@types/react-router-dom": "^5.3.3",
-        "@types/recharts": "^1.8.24",
-        "@types/uuid": "^9.0.0",
-        "eslint": "^7.32.0",
-        "prettier": "^2.8.3",
-        "typescript": "^4.9.4"
-    }
+    "ignorePatterns": [
+      "API.ts",
+      "exports.js"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "@types/react": "^16.14.35",
+    "@types/react-dom": "^16.9.17",
+    "@types/react-router-dom": "^5.3.3",
+    "@types/recharts": "^1.8.24",
+    "@types/uuid": "^9.0.0",
+    "eslint": "^7.32.0",
+    "prettier": "^2.8.3",
+    "typescript": "^4.9.4",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1"
+  }
 }

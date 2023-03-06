@@ -1,69 +1,66 @@
-import React from "react";
+import React from 'react'
 import {
-    Dialog,
-    Button,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    DialogContentText,
-} from "@material-ui/core";
-import { AlertDialogProps } from "../types";
-import ErrorIcon from "@material-ui/icons/Error";
-import { dialogStyles } from "../styles";
-import { useTranslation } from "react-i18next";
+  Dialog,
+  Button,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  DialogContentText,
+} from '@material-ui/core'
+import { AlertDialogProps } from '../types'
+import ErrorIcon from '@material-ui/icons/Error'
+import { dialogStyles } from '../styles'
+import { useTranslation } from 'react-i18next'
 
 export const AlertDialog = ({ ...props }: AlertDialogProps) => {
-    const style = dialogStyles();
+  const style = dialogStyles()
 
-    const handleStayInForm = () => {
-        props.setAlertDialogOpen(false);
-    };
+  const handleStayInForm = () => {
+    props.setAlertDialogOpen(false)
+  }
 
-    const handleLeave = () => {
-        if (props.leaveFormButtonClicked) props.leaveFormButtonClicked();
-    };
+  const handleLeave = () => {
+    if (props.leaveFormButtonClicked) props.leaveFormButtonClicked()
+  }
 
-    const { t } = useTranslation();
+  const { t } = useTranslation()
 
-    return (
-        <Dialog
-            open={props.alertDialogOpen}
-            onClose={handleStayInForm}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-            PaperProps={{
-                style: { borderRadius: 30 },
-            }}
+  return (
+    <Dialog
+      open={props.alertDialogOpen}
+      onClose={handleStayInForm}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      PaperProps={{
+        style: { borderRadius: 30 },
+      }}
+    >
+      <DialogTitle id="alert-dialog-title" className={style.dialogTitle}>
+        <ErrorIcon fontSize="large" className={style.errorIcon}></ErrorIcon>
+        <div className={style.dialogTitleText}>
+          {t('alertDialog.nbAnswersNotSaved')}
+        </div>
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText
+          id="alert-dialog-description"
+          className={style.alertText}
         >
-            <DialogTitle id="alert-dialog-title" className={style.dialogTitle}>
-                <ErrorIcon
-                    fontSize="large"
-                    className={style.errorIcon}
-                ></ErrorIcon>
-                <div className={style.dialogTitleText}>
-                    {t("alertDialog.nbAnswersNotSaved")}
-                </div>
-            </DialogTitle>
-            <DialogContent>
-                <DialogContentText
-                    id="alert-dialog-description"
-                    className={style.alertText}
-                >
-                    {t("alertDialog.leavingWillDiscardChanges")}
-                </DialogContentText>
-            </DialogContent>
-            <DialogActions className={style.alertButtons}>
-                <Button onClick={handleLeave} className={style.cancelButton}>
-                    <div className={style.buttonText}>{t("alertDialog.leaveForm")}</div>
-                </Button>
-                <Button
-                    autoFocus
-                    onClick={handleStayInForm}
-                    className={style.confirmButton}
-                >
-                    <div className={style.buttonText}>{t("alertDialog.stayOnForm")}</div>
-                </Button>
-            </DialogActions>
-        </Dialog>
-    );
-};
+          {t('alertDialog.leavingWillDiscardChanges')}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions className={style.alertButtons}>
+        <Button onClick={handleLeave} className={style.cancelButton}>
+          <div className={style.buttonText}>{t('alertDialog.leaveForm')}</div>
+        </Button>
+        <Button
+          autoFocus
+          onClick={handleStayInForm}
+          className={style.confirmButton}
+        >
+          <div className={style.buttonText}>{t('alertDialog.stayOnForm')}</div>
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+}

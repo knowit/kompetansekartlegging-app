@@ -1,44 +1,44 @@
-import i18next from "i18next";
-import { initReactI18next } from "react-i18next";
-import { English } from "./locales/en";
-import { Norwegian } from "./locales/no";
-import { ReactComponent as NorwegianFlag } from "./flags/Norway.svg";
-import { ReactComponent as UnitedKingdomFlag } from "./flags/UnitedKingdom.svg";
+import i18next from 'i18next'
+import { initReactI18next } from 'react-i18next'
+import { English } from './locales/en'
+import { Norwegian } from './locales/no'
+import { ReactComponent as NorwegianFlag } from './flags/Norway.svg'
+import { ReactComponent as UnitedKingdomFlag } from './flags/UnitedKingdom.svg'
 
 type languageType = {
-    nativeName: string,
-    flag: React.FunctionComponent
+  nativeName: string
+  flag: React.FunctionComponent
 }
 
 export const availableLanguages: Record<string, languageType> = {
-    "en": { "nativeName" : "ENGLISH", "flag": UnitedKingdomFlag },
-    "no": { "nativeName" : "NORSK", "flag": NorwegianFlag }
+  en: { nativeName: 'ENGLISH', flag: UnitedKingdomFlag },
+  no: { nativeName: 'NORSK', flag: NorwegianFlag },
 }
 
-i18next
-    .use(initReactI18next)
-    .init({
-        debug: true, // TODO: false
-        fallbackLng: "en",
-        resources: {
-            en: English,
-            no: Norwegian
-        }
-    });
+i18next.use(initReactI18next).init({
+  debug: true, // TODO: false
+  fallbackLng: 'en',
+  resources: {
+    en: English,
+    no: Norwegian,
+  },
+})
 
-const locallyStoredLanguage = localStorage.getItem("language");
+const locallyStoredLanguage = localStorage.getItem('language')
 
 if (locallyStoredLanguage) {
-    i18next.changeLanguage(locallyStoredLanguage);
+  i18next.changeLanguage(locallyStoredLanguage)
 } else {
-    i18next.changeLanguage("no");
+  i18next.changeLanguage('no')
 }
 
 export const toI18nLocaleDateString = (date: Date) => {
-    switch (i18next.language) {
-        case "no": return date.toLocaleDateString("nb-NO");
-        default: return date.toLocaleDateString("en-GB");
-    }
+  switch (i18next.language) {
+    case 'no':
+      return date.toLocaleDateString('nb-NO')
+    default:
+      return date.toLocaleDateString('en-GB')
+  }
 }
 
-export default i18next;
+export default i18next

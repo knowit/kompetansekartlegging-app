@@ -1,68 +1,69 @@
-import React from "react";
-import clsx from "clsx";
+import React from 'react'
+import clsx from 'clsx'
 
-import { Button } from "@material-ui/core";
+import { Button } from '@material-ui/core'
 
-import { getAttribute } from "../AdminPanel/helpers";
-import { Panel } from "../../types";
-import { useTranslation } from "react-i18next";
+import { getAttribute } from '../AdminPanel/helpers'
+import { Panel } from '../../types'
+import { useTranslation } from 'react-i18next'
 
 const GroupLeaderMenu = ({
-    members,
-    show,
-    selected,
-    setActivePanel,
-    activeSubmenuItem,
-    setActiveSubmenuItem,
-    setShowFab,
-    style,
+  members,
+  show,
+  selected,
+  setActivePanel,
+  activeSubmenuItem,
+  setActiveSubmenuItem,
+  setShowFab,
+  style,
 }: any) => {
-    const { t } = useTranslation();
+  const { t } = useTranslation()
 
-    if (!show) return null;
+  if (!show) return null
 
-    const items = members.map((m: any) => ({
-        name: getAttribute(m, "name"),
-        username: m.Username,
-    }));
+  const items = members.map((m: any) => ({
+    name: getAttribute(m, 'name'),
+    username: m.Username,
+  }))
 
-    return (
-        <>
-            <Button
-                className={clsx(style.MenuButton, {
-                    [style.menuButtonActive]: selected,
-                })}
-                onClick={() => {
-                    setShowFab(true);
-                    setActiveSubmenuItem("MAIN");
-                    setActivePanel(Panel.GroupLeader);
-                }}
+  return (
+    <>
+      <Button
+        className={clsx(style.MenuButton, {
+          [style.menuButtonActive]: selected,
+        })}
+        onClick={() => {
+          setShowFab(true)
+          setActiveSubmenuItem('MAIN')
+          setActivePanel(Panel.GroupLeader)
+        }}
+      >
+        <div className={clsx(style.menuButtonText)}>
+          {t('menu.myGroup').toUpperCase()}
+        </div>
+      </Button>
+
+      {selected &&
+        items.map((member: any) => (
+          <Button
+            key={member.name}
+            className={clsx(style.MenuButton, {
+              [style.menuButtonActive]: activeSubmenuItem === member.username,
+            })}
+            onClick={() => setActiveSubmenuItem(member.username)}
+          >
+            <span
+              className={clsx(
+                style.menuButtonText,
+                style.menuButtonCategoryText
+              )}
             >
-                <div className={clsx(style.menuButtonText)}>{t("menu.myGroup").toUpperCase()}</div>
-            </Button>
+              {member.name}
+            </span>
+          </Button>
+        ))}
+    </>
+  )
+}
 
-            {selected &&
-                items.map((member: any) => (
-                    <Button
-                        key={member.name}
-                        className={clsx(style.MenuButton, {
-                            [style.menuButtonActive]:
-                                activeSubmenuItem === member.username,
-                        })}
-                        onClick={() => setActiveSubmenuItem(member.username)}
-                    >
-                        <span
-                            className={clsx(
-                                style.menuButtonText,
-                                style.menuButtonCategoryText
-                            )}
-                        >
-                            {member.name}
-                        </span>
-                    </Button>
-                ))}
-        </>
-    );
-};
-
-export { GroupLeaderMenu };
+export { GroupLeaderMenu }
