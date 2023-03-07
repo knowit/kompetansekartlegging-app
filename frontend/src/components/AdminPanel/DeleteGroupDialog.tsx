@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button'
 import ErrorIcon from '@material-ui/icons/Error'
 
 import { dialogStyles } from '../../styles'
+import { useTranslation } from 'react-i18next'
 
 const DeleteGroupDialog = ({
   onCancel,
@@ -17,6 +18,7 @@ const DeleteGroupDialog = ({
   groupLeaders,
   open,
 }: any) => {
+  const { t } = useTranslation()
   const style = dialogStyles()
 
   return (
@@ -29,19 +31,21 @@ const DeleteGroupDialog = ({
     >
       <DialogTitle className={style.dialogTitle}>
         <ErrorIcon fontSize="large" className={style.errorIcon}></ErrorIcon>
-        <span className={style.dialogTitleText}>{`Fjern gruppe?`}</span>
+        <span className={style.dialogTitleText}>
+          {t('admin.editGroups.removeGroupQuestion')}
+        </span>
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Er du sikker på at du har lyst å fjerne gruppen?
+          {t('admin.editGroups.areYouSureYouWantToRemoveTheGroup')}
         </DialogContentText>
       </DialogContent>
       <DialogActions className={style.alertButtons}>
         <Button onClick={onConfirm} className={style.cancelButton}>
-          Fjern
+          {t('remove').toUpperCase()}
         </Button>
         <Button onClick={onCancel} className={style.confirmButton}>
-          Avbryt
+          {t('abort').toUpperCase()}
         </Button>
       </DialogActions>
     </Dialog>

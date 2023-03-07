@@ -22,6 +22,7 @@ import AddQuestionDialog from './AddQuestionDialog'
 import Button from '../../mui/Button'
 import { ORGANIZATION_ID_ATTRIBUTE } from '../../../constants'
 import { Auth } from 'aws-amplify'
+import { useTranslation } from 'react-i18next'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -47,6 +48,7 @@ const useStyles = makeStyles(() =>
 )
 
 const EditCategory = () => {
+  const { t } = useTranslation()
   const [user, setUser] = useState<any | null>(null)
 
   if (!user) {
@@ -125,7 +127,7 @@ const EditCategory = () => {
   return (
     <>
       <Container maxWidth="lg" className={classes.container}>
-        {error && <p>An error occured: {error}</p>}
+        {error && <p>{t('errorOccured', { error: error })}</p>}
         {loading && <CircularProgress />}
         {!error && !loading && categories && (
           <>
@@ -153,7 +155,7 @@ const EditCategory = () => {
                 className={classes.addQuestionButton}
                 onClick={() => setShowAddQuestionDialog(true)}
               >
-                Legg til nytt spørsmål
+                {t('admin.editCatalogs.addNewQuestion')}
               </Button>
             </div>
             {showAddQuestionDialog && (

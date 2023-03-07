@@ -13,7 +13,7 @@ import Button from '../mui/Button'
 import Table from '../mui/Table'
 import TableRow from '../mui/TableRow'
 import { useTranslation } from 'react-i18next'
-import { toI18nLocaleDateString } from '../../i18n/i18n'
+import { i18nDateToLocaleDateString } from '../../i18n/i18n'
 
 const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
   const { t } = useTranslation()
@@ -24,7 +24,7 @@ const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
   const formLastAnsweredAt =
     user.lastAnsweredAt == null
       ? t('notAnswered')
-      : toI18nLocaleDateString(user.lastAnsweredAt)
+      : i18nDateToLocaleDateString(user.lastAnsweredAt)
 
   const onClick = () => {
     if (viewMember) viewMember(user.Username)

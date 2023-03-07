@@ -30,16 +30,19 @@ import TableRow from '../../mui/TableRow'
 import ActivateCatalogDialog from './ActivateCatalogDialog'
 import DeleteCatalogDialog from './DeleteCatalogDialog'
 import AddCatalogDialog from './AddCatalogDialog'
+import { useTranslation } from 'react-i18next'
+import { I18nDateToLocaleString } from '../../../i18n/i18n'
 
 const Catalog = ({ catalog, deleteCatalog, active, activateCatalog }: any) => {
-  const name = catalog.label || 'Ikke satt'
+  const { t } = useTranslation()
+  const name = catalog.label || t('admin.editCatalogs.notSet')
 
   return (
     <>
       <TableRow selected={active}>
         <TableCell>{name}</TableCell>
         <TableCell>
-          {new Date(catalog.updatedAt).toLocaleString('nb-NO')}
+          {I18nDateToLocaleString(new Date(catalog.updatedAt))}
         </TableCell>
         <TableCell align="right">
           <Button
@@ -47,7 +50,7 @@ const Catalog = ({ catalog, deleteCatalog, active, activateCatalog }: any) => {
             endIcon={<BookmarkIcon />}
             onClick={() => activateCatalog(catalog)}
           >
-            Bruk katalog
+            {t('admin.editCatalogs.activateCatalog')}
           </Button>
         </TableCell>
         <TableCell align="right">
@@ -57,7 +60,9 @@ const Catalog = ({ catalog, deleteCatalog, active, activateCatalog }: any) => {
               search: `?label=${name}`,
             }}
           >
-            <Button endIcon={<EditIcon />}>Endre katalog</Button>
+            <Button endIcon={<EditIcon />}>
+              {t('admin.editCatalogs.modifyCatalog')}
+            </Button>
           </Link>
         </TableCell>
         <TableCell align="right">
@@ -65,7 +70,7 @@ const Catalog = ({ catalog, deleteCatalog, active, activateCatalog }: any) => {
             endIcon={<DeleteIcon />}
             onClick={() => deleteCatalog(catalog)}
           >
-            Fjern katalog
+            {t('admin.editCatalogs.removeCatalog')}
           </Button>
         </TableCell>
       </TableRow>
@@ -74,13 +79,14 @@ const Catalog = ({ catalog, deleteCatalog, active, activateCatalog }: any) => {
 }
 
 const CatalogTable = ({ catalogs, deleteCatalog, activateCatalog }: any) => {
+  const { t } = useTranslation()
   return (
     <TableContainer className={commonStyles.tableContainer}>
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell>Navn</TableCell>
-            <TableCell>Sist oppdatert</TableCell>
+            <TableCell>{t('name')}</TableCell>
+            <TableCell>{t('admin.editCatalogs.lastUpdated')}</TableCell>
             <TableCell />
             <TableCell />
             <TableCell />
@@ -103,6 +109,7 @@ const CatalogTable = ({ catalogs, deleteCatalog, activateCatalog }: any) => {
 }
 
 const Root = () => {
+  const { t } = useTranslation()
   const {
     result: catalogs,
     error,
@@ -152,17 +159,16 @@ const Root = () => {
 
   return (
     <Container maxWidth="md" className={commonStyles.container}>
-      {error && <p>An error occured: {error}</p>}
+      {error && <p>{t('errorOccured', { error: error })}</p>}
       {loading && <CircularProgress />}
       {!error && !loading && catalogs && (
         <>
           <Card style={{ marginBottom: '24px' }} variant="outlined">
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
-                Rediger kataloger
+                {t('menu.submenu.editCatalogs')}
               </Typography>
-              På denne siden kan du lage nye kataloger, endre på eksisterende
-              kataloger, kategorier og spørsmål og fjerne kataloger.
+              {t('admin.editCatalogs.description')}
             </CardContent>
           </Card>
           <CatalogTable
@@ -177,7 +183,7 @@ const Root = () => {
             style={{ marginTop: '24px' }}
             onClick={() => setShowAddCatalogDialog(true)}
           >
-            Lag ny katalog
+            {t('admin.editCatalogs.createNewCatalog')}
           </Button>
         </>
       )}

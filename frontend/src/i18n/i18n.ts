@@ -32,12 +32,23 @@ if (locallyStoredLanguage) {
   i18next.changeLanguage('no')
 }
 
-export const toI18nLocaleDateString = (date: Date) => {
+// Date only
+export const i18nDateToLocaleDateString = (date: Date) => {
   switch (i18next.language) {
     case 'no':
       return date.toLocaleDateString('nb-NO')
     default:
       return date.toLocaleDateString('en-GB')
+  }
+}
+
+// Includes time
+export const I18nDateToLocaleString = (date: Date) => {
+  switch (i18next.language) {
+    case 'no':
+      return date.toLocaleString('nb-NO')
+    default:
+      return date.toLocaleString('en-GB')
   }
 }
 

@@ -17,8 +17,10 @@ import FormLabel from '@material-ui/core/FormLabel'
 import { QuestionType } from '../../../API'
 import { dialogStyles } from '../../../styles'
 import { CloseIcon } from '../../DescriptionTable'
+import { useTranslation } from 'react-i18next'
 
 const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
+  const { t } = useTranslation()
   const style = dialogStyles()
   const [topic, setTopic] = useState('')
   const [description, setDescription] = useState('')
@@ -74,17 +76,21 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
           display="flex"
           justifyContent="space-between"
         >
-          <span className={style.dialogTitleText}>Legg til nytt spørsmål</span>
+          <span className={style.dialogTitleText}>
+            {t('admin.editCatalogs.addNewQuestion')}
+          </span>
           <IconButton className={style.closeButton} onClick={onCancel}>
             <CloseIcon />
           </IconButton>
         </Box>
         <TextField
           fullWidth
-          label="Emnet på det nye spørsmålet"
+          label={t('admin.editCatalogs.subjectOfTheNewQuestion')}
           variant="outlined"
           error={topic === ''}
-          helperText={topic === '' && 'Emnet kan ikke være tomt.'}
+          helperText={
+            topic === '' && t('admin.editCatalogs.subjectCantBeEmpty')
+          }
           value={topic}
           className={style.textField}
           onChange={(e: any) => setTopic(e.target.value)}
@@ -96,26 +102,30 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
           multiline
           minRows={4}
           maxRows={6}
-          label="Beskrivelse"
+          label={t('description')}
           variant="outlined"
           error={description === ''}
-          helperText={description === '' && 'Beskrivelsen kan ikke være tom.'}
+          helperText={
+            description === '' && t('admin.editCatalogs.descriptionCantBeEmpty')
+          }
           value={description}
           className={style.textField}
           onChange={(e: any) => setDescription(e.target.value)}
         />
         <FormControl component="fieldset">
-          <FormLabel component="legend">Spørsmålstype</FormLabel>
+          <FormLabel component="legend">
+            {t('admin.editCatalogs.typeOfQuestion')}
+          </FormLabel>
           <RadioGroup row value={questionType} onChange={onQuestionTypeChange}>
             <FormControlLabel
               value={QuestionType.KnowledgeMotivation}
               control={<Radio />}
-              label="Kunnskap / Motivasjon"
+              label={t('admin.editCatalogs.knowledgeSlashMotivation')}
             />
             <FormControlLabel
               value={QuestionType.CustomScaleLabels}
               control={<Radio />}
-              label="Egendefinerte skala overskrifter"
+              label={t('admin.editCatalogs.customScaleHeadlines')}
             />
           </RadioGroup>
         </FormControl>
@@ -123,21 +133,21 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
           <FormControl fullWidth component="fieldset">
             <Box display="flex" justifyContent="space-between">
               <TextField
-                label="Start"
+                label={t('admin.editCatalogs.start')}
                 variant="outlined"
                 value={questionConfig.scaleStart}
                 className={style.textField}
                 onChange={onQuestionConfigChange('scaleStart')}
               />
               <TextField
-                label="Midt"
+                label={t('admin.editCatalogs.middle')}
                 variant="outlined"
                 value={questionConfig.scaleMiddle}
                 className={style.textField}
                 onChange={onQuestionConfigChange('scaleMiddle')}
               />
               <TextField
-                label="Slutt"
+                label={t('admin.editCatalogs.end')}
                 variant="outlined"
                 value={questionConfig.scaleEnd}
                 className={style.textField}
@@ -149,7 +159,7 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
       </DialogContent>
       <DialogActions className={style.alertButtons}>
         <Button onClick={onCancel} className={style.cancelButton}>
-          <span className={style.buttonText}>Avbryt</span>
+          <span className={style.buttonText}>{t('abort')}</span>
         </Button>
         <Button
           disabled={!isCompleted}
@@ -158,7 +168,7 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
           }
           className={style.confirmButton}
         >
-          <span className={style.buttonText}>Legg til</span>
+          <span className={style.buttonText}>{t('abort')}</span>
         </Button>
       </DialogActions>
     </Dialog>
