@@ -41,12 +41,17 @@ router.get<unknown, unknown, unknown, GetUsersInput>(
 
 // Add user to group (essentialy creates/updates a user with groupid)
 router.post<unknown, unknown, AddUserInput, GetGroupInput>(
-  '/:id/user',
+  '/user',
   async (req, res, next) => {
     try {
-      const { id: groupid } = req.query
-      const { id, organizationid } = req.body
-      const upsertResponse = await Group.upsert({ groupid, id, organizationid })
+      const { id: group_id } = req.query
+      const { id, mail, organization_id } = req.body
+      const upsertResponse = await Group.upsert({
+        group_id,
+        mail,
+        id,
+        organization_id,
+      })
 
       res.status(200).json(upsertResponse)
     } catch (err) {

@@ -17,58 +17,66 @@ const listGroups = async () => {
   return await sqlQuery({ message: '🚀 ~ > All groups.', query })
 }
 
-const listUsersInGroup = async ({ groupid }: GetUsersInput) => {
+const listUsersInGroup = async ({ group_id }: GetUsersInput) => {
   const parameters: SqlParameter[] = [
     {
-      name: 'groupid',
+      name: 'group_id',
       value: {
-        stringValue: groupid,
+        stringValue: group_id,
       },
       typeHint: TypeHint.UUID,
     },
   ]
 
-  const query = 'SELECT id, groupid FROM "user" WHERE groupid = :groupid'
+  const query = 'SELECT * FROM "user" WHERE group_id = :group_id'
 
   return await sqlQuery({
-    message: `🚀 ~ > All users in group with id '${groupid}'.`,
+    message: `🚀 ~ > All users in group with id '${group_id}'.`,
     query,
     parameters,
   })
 }
 
-const upsert = async ({ id, groupid, organizationid }: UserInput) => {
+const upsert = async ({ id, mail, group_id, organization_id }: UserInput) => {
   const parameters: SqlParameter[] = [
     {
       name: 'id',
       value: {
         stringValue: id,
       },
+      typeHint: TypeHint.UUID,
     },
     {
-      name: 'groupid',
+      name: 'mail',
       value: {
-        stringValue: groupid,
+        stringValue: mail,
+      },
+    },
+    {
+      name: 'group_id',
+      value: {
+        stringValue: group_id,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'organizationid',
+      name: 'organization_id',
       value: {
-        stringValue: organizationid,
+        stringValue: organization_id,
       },
+      typeHint: TypeHint.UUID,
     },
   ]
 
-  const query = `INSERT INTO "user" (id, groupid, organizationid) 
-        VALUES (:id, :groupid, :organizationid) 
+  const query = `INSERT INTO "user" (id, mail, group_id, organization_id) 
+        VALUES (:id, :mail, :group_id, :organization_id) 
         ON CONFLICT (id) 
-        DO UPDATE SET groupid = :groupid, organizationid = :organizationid 
+        DO UPDATE SET mail = :mail, group_id = :group_id, organization_id = :organization_id 
         WHERE excluded.id=:id 
         RETURNING *`
 
   return await sqlQuery({
-    message: `🚀 ~ > User with id '${id}' is now in group with id '${groupid}'.`,
+    message: `🚀 ~ > User with id '${id}' is now in group with id '${group_id}'.`,
     query,
     parameters,
   })
@@ -81,6 +89,7 @@ const deleteUser = async ({ id }: DeleteUserInput) => {
       value: {
         stringValue: id,
       },
+      typeHint: TypeHint.UUID,
     },
   ]
   const query = 'DELETE FROM "user" WHERE id = :id RETURNING *'
@@ -93,39 +102,41 @@ const deleteUser = async ({ id }: DeleteUserInput) => {
 }
 
 const createGroup = async ({
-  groupleaderusername,
-  organizationid,
+  group_leader_id,
+  organization_id,
 }: GroupInput) => {
-  const generatedGroupId = uuidv4()
+  const generatedgroup_id = uuidv4()
 
   const parameters: SqlParameter[] = [
     {
       name: 'id',
       value: {
-        stringValue: generatedGroupId,
+        stringValue: generatedgroup_id,
       },
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'organizationid',
+      name: 'organization_id',
       value: {
-        stringValue: organizationid,
+        stringValue: organization_id,
       },
+      typeHint: TypeHint.UUID,
     },
     {
-      name: 'groupleaderusername',
+      name: 'group_leader_id',
       value: {
-        stringValue: groupleaderusername,
+        stringValue: group_leader_id,
       },
+      typeHint: TypeHint.UUID,
     },
   ]
 
-  const query = `INSERT INTO "group" (id, organizationid, groupleaderusername)
-  VALUES (:id, :organizationid, :groupleaderusername)
+  const query = `INSERT INTO "group" (id, organization_id, group_leader_id)
+  VALUES (:id, :organization_id, :group_leader_id)
   RETURNING *`
 
   return await sqlQuery({
-    message: `🚀 ~ > Created group with id '${generatedGroupId}' and group leader '${groupleaderusername}'.`,
+    message: `🚀 ~ > Created group with id '${generatedgroup_id}' and group leader '${group_leader_id}'.`,
     query,
     parameters,
   })
@@ -152,7 +163,7 @@ const deleteGroup = async ({ id }: DeleteGroupInput) => {
 
 const updateGroupLeader = async (
   { id }: GetGroupInput,
-  { groupleaderusername }: UpdateGroupLeaderInput
+  { group_leader_id }: UpdateGroupLeaderInput
 ) => {
   const parameters: SqlParameter[] = [
     {
@@ -163,20 +174,21 @@ const updateGroupLeader = async (
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'groupleaderusername',
+      name: 'group_leader_id',
       value: {
-        stringValue: groupleaderusername,
+        stringValue: group_leader_id,
       },
+      typeHint: TypeHint.UUID,
     },
   ]
 
   const query = `UPDATE "group"
-  SET groupleaderusername = :groupleaderusername
+  SET group_leader_id = :group_leader_id
   WHERE id = :id 
   RETURNING *`
 
   return await sqlQuery({
-    message: `🚀 ~ > '${groupleaderusername}' is now leader for group with id '${id}'.`,
+    message: `🚀 ~ > '${group_leader_id}' is now leader for group with id '${id}'.`,
     query,
     parameters,
   })
