@@ -1,10 +1,11 @@
 import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
+import { v4 as uuidv4 } from 'uuid'
 import { sqlQuery } from '../../app'
 import { createTimestampNow } from '../utils'
-import { OrganizationInput, DeleteOrganizationInput } from './types'
+import { DeleteOrganizationInput, OrganizationInput } from './types'
 
 const listOrganizations = async () => {
-  const query = 'SELECT id, orgname, identifierattribute FROM organization'
+  const query = 'SELECT * FROM organization'
 
   return await sqlQuery({
     message: '🚀 ~ > All organizations.',
@@ -13,16 +14,18 @@ const listOrganizations = async () => {
 }
 
 const createOrganization = async ({
-  id,
   orgname,
   identifierattribute,
 }: OrganizationInput) => {
+  const id = uuidv4()
+
   const parameters: SqlParameter[] = [
     {
       name: 'id',
       value: {
         stringValue: id,
       },
+      typeHint: TypeHint.UUID,
     },
     {
       name: 'createdat',
@@ -45,7 +48,7 @@ const createOrganization = async ({
     },
   ]
 
-  const query = `INSERT INTO organization (id, createdat, orgname, identifierattribute) 
+  const query = `INSERT INTO organization (id, created_at, organization_name, identifier_attribute) 
   VALUES (:id, to_timestamp(:createdat, 'YYYY-MM-DD HH24:MI:SS'), :orgname, :identifierattribute)
   RETURNING *`
 
@@ -63,6 +66,7 @@ const deleteOrganization = async ({ id }: DeleteOrganizationInput) => {
       value: {
         stringValue: id,
       },
+      typeHint: TypeHint.UUID,
     },
   ]
 
