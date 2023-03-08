@@ -21,15 +21,18 @@ import useApiGet from '../AdminPanel/useApiGet'
 import AddOrganizationDialog from './AddOrganizationDialog'
 import DeleteOrganizationDialog from './DeleteOrganizationDialog'
 import {
-  addOrganization,
-  getOrganizations,
-  removeOrganization,
-} from './SuperAdminAPI'
-import { OrganizationInfo } from './SuperAdminTypes'
+  createOrganization,
+  deleteOrganization,
+  getAllOrganizations,
+} from '../../api/organizations'
+import {
+  Organization as Org,
+  OrganizationInput,
+} from '../../api/organizations/types'
 
 interface OrganizationProps {
-  organization: OrganizationInfo
-  deleteOrganization: (id: OrganizationInfo) => void
+  organization: Org
+  deleteOrganization: (id: Org) => void
 }
 
 const Organization: React.FC<OrganizationProps> = ({
@@ -39,9 +42,9 @@ const Organization: React.FC<OrganizationProps> = ({
   return (
     <>
       <TableRow>
-        <TableCell>{organization.name}</TableCell>
+        <TableCell>{organization.orgname}</TableCell>
         <TableCell>{organization.id}</TableCell>
-        <TableCell>{organization.identifierAttribute}</TableCell>
+        <TableCell>{organization.identifier_attribute}</TableCell>
         <TableCell align="center">
           <IconButton
             edge="end"
@@ -56,8 +59,8 @@ const Organization: React.FC<OrganizationProps> = ({
 }
 
 interface OrganizationTableProps {
-  organizations: OrganizationInfo[]
-  deleteOrganization: (id: OrganizationInfo) => void
+  organizations: Org[]
+  deleteOrganization: (id: Org) => void
 }
 
 const OrganizationTable: React.FC<OrganizationTableProps> = ({
@@ -96,19 +99,20 @@ const EditOrganizations = () => {
     loading,
     refresh: refreshOrganizations,
   } = useApiGet({
-    getFn: getOrganizations,
+    getFn: getAllOrganizations,
   })
 
+  // [TODO] Hva skal vi ha i steden for mutationError?
   const [mutationError, setMutationError] = useState<string>('')
 
   const [showAddOrganization, setShowAddOrganization] = useState<boolean>(false)
   const [showDeleteOrganization, setShowDeleteOrganization] =
     useState<boolean>(false)
   const [organizationToBeDeleted, setOrganizationToBeDeleted] =
-    useState<OrganizationInfo | null>(null)
+    useState<Org | null>(null)
 
-  const addOrganizationConfirm = (organization: OrganizationInfo) => {
-    addOrganization(organization)
+  const addOrganizationConfirm = (organization: OrganizationInput) => {
+    createOrganization(organization)
       .then((res) => {
         setMutationError('')
       })
@@ -121,13 +125,13 @@ const EditOrganizations = () => {
       })
   }
 
-  const openDeleteOrganizationDialog = (organization: OrganizationInfo) => {
+  const openDeleteOrganizationDialog = (organization: Org) => {
     setOrganizationToBeDeleted(organization)
     setShowDeleteOrganization(true)
   }
 
-  const deleteOrganizationConfirm = (organization: OrganizationInfo) => {
-    removeOrganization(organization)
+  const deleteOrganizationConfirm = (organization: Org) => {
+    deleteOrganization(organization)
       .then((res) => {
         setMutationError('')
       })

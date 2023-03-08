@@ -9,13 +9,13 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import ErrorIcon from '@material-ui/icons/Error'
 
 import { dialogStyles } from '../../styles'
-import { OrganizationInfo } from './SuperAdminTypes'
+import { Organization } from '../../api/organizations/types'
 
 interface DeleteOrganiationDialogProps {
   open: boolean
-  onConfirm: (arg: OrganizationInfo) => void
+  onConfirm: (arg: Organization) => void
   onCancel: () => void
-  organization: OrganizationInfo
+  organization: Organization
 }
 
 const DeleteOrganizationDialog: React.FC<DeleteOrganiationDialogProps> = ({
@@ -37,12 +37,12 @@ const DeleteOrganizationDialog: React.FC<DeleteOrganiationDialogProps> = ({
         <ErrorIcon fontSize="large" className={style.errorIcon}></ErrorIcon>
         <span
           className={style.dialogTitleText}
-        >{`Fjern organisasjonen ${organization.name}?`}</span>
+        >{`Fjern organisasjonen ${organization.orgname}?`}</span>
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
           Er du sikker på at du har lyst å fjerne organizasjonen{' '}
-          {organization.name}?{' '}
+          {organization.orgname}?{' '}
         </DialogContentText>
       </DialogContent>
       <DialogActions className={style.alertButtons}>
