@@ -1,7 +1,6 @@
 export interface Organization {
   id: string
   created_at: string
-  owner: string | null
   orgname: string
   identifier_attribute: string
 }
