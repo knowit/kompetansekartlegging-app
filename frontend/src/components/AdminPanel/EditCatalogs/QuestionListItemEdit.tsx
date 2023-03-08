@@ -55,11 +55,13 @@ const useQuestionListStyles = makeStyles(() =>
       marginBottom: '8px',
       '& legend': {
         color: KnowitColors.white,
+        opacity: '38%',
         fontSize: '0.75rem',
       },
       '& span': {
         color: `${KnowitColors.white} !important`,
         fontSize: '0.75rem',
+        opacity: '38%',
         fontWeight: 'normal',
       },
     },
