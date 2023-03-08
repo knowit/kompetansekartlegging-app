@@ -15,7 +15,7 @@ const listOrganizations = async () => {
 
 const createOrganization = async ({
   orgname,
-  identifierattribute,
+  identifier_attribute,
 }: OrganizationInput) => {
   const id = uuidv4()
 
@@ -43,7 +43,7 @@ const createOrganization = async ({
     {
       name: 'identifierattribute',
       value: {
-        stringValue: identifierattribute,
+        stringValue: identifier_attribute,
       },
     },
   ]

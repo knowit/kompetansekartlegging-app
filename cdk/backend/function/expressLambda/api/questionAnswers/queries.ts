@@ -33,12 +33,12 @@ const getQuestionAnswer = async ({ id }: GetQuestionAnswerInput) => {
 }
 
 const createQuestionAnswer = async ({
-  userid,
-  questionid,
+  user_id,
+  question_id,
   knowledge,
   motivation,
-  customscalevalue,
-  textvalue,
+  custom_scale_value,
+  text_value,
 }: QuestionAnswerInput) => {
   const id = uuidv4()
 
@@ -53,14 +53,14 @@ const createQuestionAnswer = async ({
     {
       name: 'userid',
       value: {
-        stringValue: userid,
+        stringValue: user_id,
       },
       typeHint: TypeHint.UUID,
     },
     {
       name: 'questionid',
       value: {
-        stringValue: questionid,
+        stringValue: question_id,
       },
       typeHint: TypeHint.UUID,
     },
@@ -82,15 +82,15 @@ const createQuestionAnswer = async ({
     },
     {
       name: 'customscalevalue',
-      value: customscalevalue
+      value: custom_scale_value
         ? {
-            longValue: customscalevalue,
+            longValue: custom_scale_value,
           }
         : { isNull: true },
     },
     {
       name: 'textvalue',
-      value: textvalue ? { stringValue: textvalue } : { isNull: true },
+      value: text_value ? { stringValue: text_value } : { isNull: true },
     },
   ]
 
@@ -108,12 +108,12 @@ const createQuestionAnswer = async ({
 const updateQuestionAnswer = async (
   { id }: GetQuestionAnswerInput,
   {
-    userid,
-    questionid,
+    user_id,
+    question_id,
     knowledge,
     motivation,
-    customscalevalue,
-    textvalue,
+    custom_scale_value,
+    text_value,
   }: QuestionAnswerInput
 ) => {
   const parameters: SqlParameter[] = [
@@ -127,14 +127,14 @@ const updateQuestionAnswer = async (
     {
       name: 'userid',
       value: {
-        stringValue: userid,
+        stringValue: user_id,
       },
       typeHint: TypeHint.UUID,
     },
     {
       name: 'questionid',
       value: {
-        stringValue: questionid,
+        stringValue: question_id,
       },
       typeHint: TypeHint.UUID,
     },
@@ -156,15 +156,15 @@ const updateQuestionAnswer = async (
     },
     {
       name: 'customscalevalue',
-      value: customscalevalue
+      value: custom_scale_value
         ? {
-            longValue: customscalevalue,
+            longValue: custom_scale_value,
           }
         : { isNull: true },
     },
     {
       name: 'textvalue',
-      value: textvalue ? { stringValue: textvalue } : { isNull: true },
+      value: text_value ? { stringValue: text_value } : { isNull: true },
     },
   ]
 
@@ -203,12 +203,12 @@ const deleteQuestionAnswer = async ({ id }: DeleteQuestionAnswerInput) => {
 }
 
 const createQuestionAnswerFromBatch = async ({
-  userid,
-  questionid,
+  user_id,
+  question_id,
   knowledge,
   motivation,
-  customscalevalue,
-  textvalue,
+  custom_scale_value,
+  text_value,
 }: QuestionAnswerInput) => {
   const id = uuidv4()
 
@@ -223,14 +223,14 @@ const createQuestionAnswerFromBatch = async ({
     {
       name: 'userid',
       value: {
-        stringValue: userid,
+        stringValue: user_id,
       },
       typeHint: TypeHint.UUID,
     },
     {
       name: 'questionid',
       value: {
-        stringValue: questionid,
+        stringValue: question_id,
       },
       typeHint: TypeHint.UUID,
     },
@@ -252,15 +252,15 @@ const createQuestionAnswerFromBatch = async ({
     },
     {
       name: 'customscalevalue',
-      value: customscalevalue
+      value: custom_scale_value
         ? {
-            longValue: customscalevalue,
+            longValue: custom_scale_value,
           }
         : { isNull: true },
     },
     {
       name: 'textvalue',
-      value: textvalue ? { stringValue: textvalue } : { isNull: true },
+      value: text_value ? { stringValue: text_value } : { isNull: true },
     },
   ]
 
