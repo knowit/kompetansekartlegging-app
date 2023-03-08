@@ -33,8 +33,7 @@ const createCategory = async ({
   text,
   description,
   index,
-  formdefinitionid,
-  organizationid,
+  catalog_id,
 }: CategoryInput) => {
   const id = uuidv4()
 
@@ -69,22 +68,16 @@ const createCategory = async ({
         : { isNull: true },
     },
     {
-      name: 'formDefinitionId',
+      name: 'catalog_id',
       value: {
-        stringValue: formdefinitionid,
+        stringValue: catalog_id,
       },
       typeHint: TypeHint.UUID,
     },
-    {
-      name: 'organizationId',
-      value: {
-        stringValue: organizationid,
-      },
-    },
   ]
 
-  const query = `INSERT INTO "category" (id, text, description, index, formDefinitionID, organizationID)
-     VALUES(:id, :text, :description, :index, :formDefinitionId, :organizationId)
+  const query = `INSERT INTO "category" (id, text, description, index, catalog_id)
+     VALUES(:id, :text, :description, :index, :catalog_id)
      RETURNING *`
 
   return await sqlQuery({
@@ -96,7 +89,7 @@ const createCategory = async ({
 
 const updateCategory = async (
   id: string,
-  { text, description, index, formdefinitionid, organizationid }: CategoryInput
+  { text, description, index, catalog_id }: CategoryInput
 ) => {
   const parameters: SqlParameter[] = [
     {
@@ -131,20 +124,14 @@ const updateCategory = async (
     {
       name: 'formDefinitionId',
       value: {
-        stringValue: formdefinitionid,
+        stringValue: catalog_id,
       },
       typeHint: TypeHint.UUID,
-    },
-    {
-      name: 'organizationId',
-      value: {
-        stringValue: organizationid,
-      },
     },
   ]
 
   const query = `UPDATE "category"
-    SET text=:text, description=:description, index=:index, formDefinitionID=:formDefinitionId, organizationID=:organizationId
+    SET text=:text, description=:description, index=:index, catalog_id=:catalog_id
     WHERE id=:id
     RETURNING *`
 

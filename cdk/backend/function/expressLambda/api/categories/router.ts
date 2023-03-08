@@ -24,6 +24,7 @@ router.get('/', async (req, res, next) => {
     res.status(200).json(listCategoriesResponse)
   } catch (err) {
     console.error(err)
+    next(err)
   }
 })
 

@@ -3,8 +3,7 @@ export interface Category {
   text: string
   description: string | null
   index: number | null
-  formdefinitionid: string
-  organizationid: string
+  catalog_id: string
 }
 
 export type CategoryInput = Omit<Category, 'id'>
