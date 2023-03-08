@@ -122,7 +122,7 @@ const updateCategory = async (
         : { isNull: true },
     },
     {
-      name: 'formDefinitionId',
+      name: 'catalog_id',
       value: {
         stringValue: catalog_id,
       },
