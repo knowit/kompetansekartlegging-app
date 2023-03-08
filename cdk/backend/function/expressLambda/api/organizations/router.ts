@@ -1,6 +1,10 @@
 import express from 'express'
 import Organization from './queries'
-import { OrganizationInput, DeleteOrganizationInput } from './types'
+import {
+  OrganizationInput,
+  DeleteOrganizationInput,
+  GetOrganizationInput,
+} from './types'
 
 const router = express.Router()
 
@@ -15,6 +19,23 @@ router.get('/', async (_req, res, next) => {
     console.error(err)
   }
 })
+
+// Get single organization from id
+router.get<unknown, unknown, unknown, GetOrganizationInput>(
+  '/:id',
+  async (req, res, next) => {
+    try {
+      const getOrganizationResponse = await Organization.getOrganization(
+        req.query
+      )
+
+      res.status(200).json(getOrganizationResponse)
+    } catch (err) {
+      console.error(err)
+      next(err)
+    }
+  }
+)
 
 // Create a new organization
 router.post<unknown, unknown, OrganizationInput>(
