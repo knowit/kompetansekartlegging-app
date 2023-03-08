@@ -18,14 +18,14 @@ on:
     secrets:
       aws_access_key_id:
         required: true
-      aws_secret_access_key:
+      SECRET_ACCESS_KEY:
         required: true
       azure:
         required: true
 
 jobs:
   deploy:
-    name: Deploy ${{ inputs.aws_environment }}
+    name: Deploy "synnovsh-kk--github-actions-fork"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -34,10 +34,10 @@ jobs:
           node-version: "16"
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.aws_access_key_id }}
-          aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
+          aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
           aws-region: ${{ inputs.aws_region }}
 
       - name: Install packages
@@ -46,16 +46,14 @@ jobs:
       - name: Update CDK Toolkit
         run: cd cdk && npx cdk bootstrap
 
-      - name: Deploy backend to ${{ inputs.aws_environment }}
+      - name: Deploy backend to "synnovsh-kk--github-actions-fork"
         run: |
           cd cdk && npx cdk deploy \
           --require-approval never \
           --outputs-file outputs.json \
-          --context ENV=${{ inputs.aws_environment }} \
-          --context AZURE=${{ secrets.azure }} \
-          --context EXCEL=${{ inputs.excel }}
+          --context ENV="synnovsh-kk--github-actions-fork" \
 
-      - name: Prepare frontend ${{ inputs.aws_environment }} deployment
+      - name: Prepare frontend "synnovsh-kk--github-actions-fork" deployment
         if: inputs.deploy_backend_only == false
         env:
           REACT_APP_USER_BRANCH: ${{ inputs.aws_environment == 'prod' && 'master' || 'dev' }}
@@ -65,6 +63,6 @@ jobs:
           cd ../frontend && echo $REACT_APP_USER_BRANCH >> .env && \
           CI='' npm run build \
 
-      - name: Deploy frontend to ${{ inputs.aws_environment }}
+      - name: Deploy frontend to "synnovsh-kk--github-actions-fork"
         if: inputs.deploy_backend_only == false
         run: cd frontend-cdk && npx cdk deploy --require-approval never
