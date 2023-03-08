@@ -302,11 +302,7 @@ const copyFormDefinition = async (
   name: string
 ): Promise<ApiResponse<null>> => {
   try {
-    const input = {
-      formDefinitionId,
-    }
-
-    const data = await API.get('CreateCopyCatalogAPI', '', {
+    await API.get('CreateCopyCatalogAPI', '', {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `${(await Auth.currentSession())

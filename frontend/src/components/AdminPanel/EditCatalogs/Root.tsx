@@ -31,7 +31,6 @@ import TableRow from '../../mui/TableRow'
 import ActivateCatalogDialog from './ActivateCatalogDialog'
 import DeleteCatalogDialog from './DeleteCatalogDialog'
 import AddCatalogDialog from './AddCatalogDialog'
-import CopyCatalog from './CopyCatalogDialog'
 import CopyCatalogDialog from './CopyCatalogDialog'
 
 const Catalog = ({
