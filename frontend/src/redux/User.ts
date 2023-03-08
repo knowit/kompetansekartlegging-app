@@ -1,10 +1,10 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
-import { RootState } from './store'
-import { getOrganizationNameByID } from '../helperFunctions'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import {
   ADMIN_COGNITOGROUP_SUFFIX,
   GROUPLEADER_COGNITOGROUP_SUFFIX,
 } from '../constants'
+import { getOrganizationNameByID } from '../helperFunctions'
+import { RootState } from './store'
 
 import { UserRole } from '../types'
 
