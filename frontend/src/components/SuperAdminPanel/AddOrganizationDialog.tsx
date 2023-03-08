@@ -11,11 +11,11 @@ import TextField from '@material-ui/core/TextField'
 
 import { dialogStyles } from '../../styles'
 import { CloseIcon } from '../DescriptionTable'
-import { OrganizationInfo } from './SuperAdminTypes'
+import { OrganizationInput } from '../../api/organizations/types'
 
 interface AddOrganizationDialogProps {
   onCancel: () => void
-  onConfirm: (arg: OrganizationInfo) => void
+  onConfirm: (arg: OrganizationInput) => void
   open: boolean
 }
 
@@ -102,8 +102,8 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
           onClick={() =>
             onConfirm({
               id: organizationID,
-              name: organizationName,
-              identifierAttribute: organizationIdentifierAttribute,
+              orgname: organizationName,
+              identifier_attribute: organizationIdentifierAttribute,
             })
           }
           className={style.confirmButton}
