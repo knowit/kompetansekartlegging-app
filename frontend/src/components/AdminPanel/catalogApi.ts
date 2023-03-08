@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { callGraphQL } from '../../helperFunctions'
 import { store } from '../../redux/store'
-import { API, Auth } from "aws-amplify"
+import { API, Auth } from 'aws-amplify'
 
 import {
   // CategoriesByFormDefinitionQuery,
@@ -298,32 +298,32 @@ const deleteQuestion = async (id: string): Promise<ApiResponse<null>> => {
 }
 
 const copyFormDefinition = async (
-    formDefinitionId: string,
-    name: string 
+  formDefinitionId: string,
+  name: string
 ): Promise<ApiResponse<null>> => {
-        try {
-            const input = {
-                formDefinitionId,
-            }
+  try {
+    const input = {
+      formDefinitionId,
+    }
 
-            const data = await API.get("CreateCopyCatalogAPI", "", {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `${(await Auth.currentSession())
-                        .getAccessToken()
-                        .getJwtToken()}`
-                },
-                queryStringParameters: {
-                    formDefId: `${formDefinitionId}`,
-                    formDefLabel: `${name}`
-                }
-            })
-            return { result: null }
-        } catch (e) {
-            return {
-                error: `Could not copy form definition '${formDefinitionId}'.`,
-            }
-        }
+    const data = await API.get('CreateCopyCatalogAPI', '', {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${(await Auth.currentSession())
+          .getAccessToken()
+          .getJwtToken()}`,
+      },
+      queryStringParameters: {
+        formDefId: `${formDefinitionId}`,
+        formDefLabel: `${name}`,
+      },
+    })
+    return { result: null }
+  } catch (e) {
+    return {
+      error: `Could not copy form definition '${formDefinitionId}'.`,
+    }
+  }
 }
 
 const createFormDefinition = async (

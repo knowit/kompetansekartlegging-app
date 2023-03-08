@@ -31,10 +31,16 @@ import TableRow from '../../mui/TableRow'
 import ActivateCatalogDialog from './ActivateCatalogDialog'
 import DeleteCatalogDialog from './DeleteCatalogDialog'
 import AddCatalogDialog from './AddCatalogDialog'
-import CopyCatalog from "./CopyCatalogDialog"
-import CopyCatalogDialog from "./CopyCatalogDialog"
+import CopyCatalog from './CopyCatalogDialog'
+import CopyCatalogDialog from './CopyCatalogDialog'
 
-const Catalog = ({ catalog, deleteCatalog, active, activateCatalog, copyCatalog }: any) => {
+const Catalog = ({
+  catalog,
+  deleteCatalog,
+  active,
+  activateCatalog,
+  copyCatalog,
+}: any) => {
   const name = catalog.label || 'Ikke satt'
 
   return (
@@ -64,12 +70,9 @@ const Catalog = ({ catalog, deleteCatalog, active, activateCatalog, copyCatalog 
           </Link>
         </TableCell>
         <TableCell align="right">
-        <Button
-                endIcon={<AddIcon />}
-                onClick={() => copyCatalog(catalog)}
-            >
-                Kopier katalog
-            </Button>
+          <Button endIcon={<AddIcon />} onClick={() => copyCatalog(catalog)}>
+            Kopier katalog
+          </Button>
         </TableCell>
         <TableCell align="right">
           <Button
@@ -84,7 +87,12 @@ const Catalog = ({ catalog, deleteCatalog, active, activateCatalog, copyCatalog 
   )
 }
 
-const CatalogTable = ({ catalogs, deleteCatalog, activateCatalog, copyCatalog }: any) => {
+const CatalogTable = ({
+  catalogs,
+  deleteCatalog,
+  activateCatalog,
+  copyCatalog,
+}: any) => {
   return (
     <TableContainer className={commonStyles.tableContainer}>
       <Table stickyHeader>
@@ -160,7 +168,7 @@ const Root = () => {
   const copyCatalog = (catalog: any) => {
     setShowCopyCatalogDialog(true)
     setCatalogToCopy(catalog)
-    }
+  }
   const copyCatalogConfirm = async (newCatalogName: string) => {
     await copyFormDefinition(catalogToCopy.id, newCatalogName)
     setShowCopyCatalogDialog(false)
