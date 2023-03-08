@@ -62,8 +62,6 @@ cdk/cdk.out
 # Python cache
 __pycache__
 
-# Visual Code
-.vscode
 
 *.xlsx
 
