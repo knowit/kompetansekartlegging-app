@@ -10,9 +10,9 @@ type Table = Record<string, Field>
 export const catalogColumns: Table = {
   id: { kind: 'uuid' },
   label: { kind: 'string' },
-  createdat: { kind: 'timestamp' },
-  updatedat: { kind: 'timestamp' },
-  organizationid: { kind: 'uuid' },
+  created_at: { kind: 'timestamp' },
+  updated_at: { kind: 'timestamp' },
+  organization_id: { kind: 'uuid' },
 }
 
 export function kindToParam(paramValue: any, kind: Kinds): SqlParameter {
