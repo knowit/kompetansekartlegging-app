@@ -7,12 +7,12 @@ type Field = {
 
 type Table = Record<string, Field>
 
-export const formDefinitionColumns: Table = {
+export const catalogColumns: Table = {
   id: { kind: 'uuid' },
-  createdat: { kind: 'timestamp' },
-  updatedat: { kind: 'timestamp' },
-  organizationid: { kind: 'string' },
   label: { kind: 'string' },
+  created_at: { kind: 'timestamp' },
+  updated_at: { kind: 'timestamp' },
+  organization_id: { kind: 'uuid' },
 }
 
 export function kindToParam(paramValue: any, kind: Kinds): SqlParameter {

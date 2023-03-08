@@ -2,27 +2,24 @@ import { SqlParameter } from '@aws-sdk/client-rds-data'
 import { v4 as uuidv4 } from 'uuid'
 import { sqlQuery } from '../../app'
 import { createTimestampNow } from '../utils'
-import { formDefinitionColumns, kindToParam } from './helpers'
+import { catalogColumns, kindToParam } from './helpers'
 import {
-  DeleteFormDefinitionInput,
-  FormDefinitionInput,
-  GetFormDefinitionInput,
-  UpdateFormDefinitionInput,
+  DeleteCatalogInput,
+  CatalogInput,
+  GetCatalogInput,
+  UpdateCatalogInput,
 } from './types'
 
-const listFormDefinitions = async () => {
-  const query = `SELECT * FROM formDefinition`
+const listCatalogs = async () => {
+  const query = `SELECT * FROM "catalog"`
 
   return await sqlQuery({
-    message: `🚀 ~ > All Form Definitions:`,
+    message: `🚀 ~ > All Catalogs:`,
     query,
   })
 }
 
-const createFormDefinition = async ({
-  label,
-  organizationid,
-}: FormDefinitionInput) => {
+const createCatalog = async ({ label, organization_id }: CatalogInput) => {
   const parameters: SqlParameter[] = [
     {
       name: 'id',
@@ -33,27 +30,27 @@ const createFormDefinition = async ({
       ...kindToParam(label, 'string'),
     },
     {
-      name: 'organizationid',
-      ...kindToParam(organizationid, 'string'),
+      name: 'organization_id',
+      ...kindToParam(organization_id, 'uuid'),
     },
     {
-      name: 'createdat',
+      name: 'created_at',
       ...kindToParam(createTimestampNow(), 'timestamp'),
     },
   ]
 
-  const query = `INSERT INTO formDefinition (id, label, createdat, organizationid) 
-        VALUES (:id, :label, :createdat, :organizationid) 
+  const query = `INSERT INTO "catalog" (id, label, created_at, organization_id) 
+        VALUES (:id, :label, :created_at, :organization_id) 
         RETURNING *`
 
   return await sqlQuery({
-    message: `🚀 ~ > Form Definition '${label}' created.`,
+    message: `🚀 ~ > Catalog '${label}' created.`,
     query,
     parameters,
   })
 }
 
-const deleteFormDefinition = async ({ id }: DeleteFormDefinitionInput) => {
+const deleteCatalog = async ({ id }: DeleteCatalogInput) => {
   const parameters: SqlParameter[] = [
     {
       name: 'id',
@@ -61,20 +58,20 @@ const deleteFormDefinition = async ({ id }: DeleteFormDefinitionInput) => {
     },
   ]
 
-  const query = `DELETE FROM formDefinition WHERE id = :id RETURNING *`
+  const query = `DELETE FROM Catalog WHERE id = :id RETURNING *`
   return await sqlQuery({
-    message: `🚀 ~ > Form Definition with id '${id}' deleted.`,
+    message: `🚀 ~ > Catalog with id '${id}' deleted.`,
     query,
     parameters,
   })
 }
 
-const updateFormDefinition = async (
-  { id }: GetFormDefinitionInput,
-  values: UpdateFormDefinitionInput
+const updateCatalog = async (
+  { id }: GetCatalogInput,
+  values: UpdateCatalogInput
 ) => {
-  if (!values.updatedat) {
-    values.updatedat = createTimestampNow()
+  if (!values.updated_at) {
+    values.updated_at = createTimestampNow()
   }
 
   // Generate the column string based on provided values
@@ -90,7 +87,7 @@ const updateFormDefinition = async (
 
   Object.entries(values).forEach(([field, value], i) => {
     // Check if provided field exists in table definition
-    if (!(field in formDefinitionColumns)) {
+    if (!(field in catalogColumns)) {
       throw new Error(`Invalid field: ${field}. Potential SQL injection?`)
     }
 
@@ -101,24 +98,24 @@ const updateFormDefinition = async (
 
     const param: SqlParameter = {
       name: field,
-      ...kindToParam(value, formDefinitionColumns[field].kind),
+      ...kindToParam(value, catalogColumns[field].kind),
     }
 
     parameters.push(param)
   })
 
-  const query = `UPDATE formDefinition SET ${columnString} WHERE id=:id RETURNING *`
+  const query = `UPDATE "catalog" SET ${columnString} WHERE id=:id RETURNING *`
 
   return await sqlQuery({
-    message: `🚀 ~ > formDefinition with id '${id}' is now updated.`,
+    message: `🚀 ~ > Catalog with id '${id}' is now updated.`,
     query,
     parameters,
   })
 }
 
 export default {
-  createFormDefinition,
-  deleteFormDefinition,
-  listFormDefinitions,
-  updateFormDefinition,
+  createCatalog,
+  deleteCatalog,
+  listCatalogs,
+  updateCatalog,
 }
