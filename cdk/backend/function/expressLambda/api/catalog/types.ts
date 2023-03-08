@@ -1,8 +1,8 @@
 export interface Catalog {
   id: string
-  label: string
+  label: string | null
   created_at: string
-  updated_at: string
+  updated_at: string | null
   organization_id: string
 }
 
