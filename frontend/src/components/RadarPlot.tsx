@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { AggregatedAnswer, AnsweredQuestion } from '../types'
 
 export default function RadarPlot(props: { data: AnsweredQuestion[] }) {
