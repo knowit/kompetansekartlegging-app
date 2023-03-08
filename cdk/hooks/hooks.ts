@@ -1,5 +1,5 @@
-import setAppSyncAuth from './setAppSyncAuth'
 import * as fs from 'fs'
+import setAppSyncAuth from './setAppSyncAuth'
 
 const file = fs.readFileSync('outputs.json', { encoding: 'utf-8' })
 

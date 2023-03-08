@@ -1,35 +1,27 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import { callGraphQL } from '../../helperFunctions'
 import {
-  User,
+  Group,
+  Mutation,
   // UsersByGroupQuery,
   Query,
-  Mutation,
-  Group,
-  // ListGroupsQuery,
-  // CreateGroupMutation,
-  // DeleteGroupMutation,
-  // UpdateGroupMutation,
-  // ListUsersQuery,
-  // CreateUserMutation,
-  // DeleteUserMutation,
-  // UpdateUserMutation,
+  User,
 } from '../../API'
-import { usersByGroup, listGroups, listUsers } from '../../graphql/queries'
-import {
-  createGroup,
-  deleteGroup,
-  updateGroup,
-  createUser,
-  deleteUser,
-  updateUser,
-} from '../../graphql/mutations'
-import { ApiResponse } from './adminApi'
 import {
   ADMIN_COGNITOGROUP_SUFFIX,
   GROUPLEADER_COGNITOGROUP_SUFFIX,
 } from '../../constants'
+import {
+  createGroup,
+  createUser,
+  deleteGroup,
+  deleteUser,
+  updateGroup,
+  updateUser,
+} from '../../graphql/mutations'
+import { listGroups, listUsers, usersByGroup } from '../../graphql/queries'
+import { callGraphQL } from '../../helperFunctions'
+import { ApiResponse } from './adminApi'
 
 const getGroupMembers = async (
   groupID: string

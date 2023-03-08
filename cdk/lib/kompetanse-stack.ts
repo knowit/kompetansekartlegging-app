@@ -1,3 +1,4 @@
+import * as python from '@aws-cdk/aws-lambda-python-alpha'
 import {
   aws_cloudwatch,
   aws_secretsmanager,
@@ -7,15 +8,8 @@ import {
   Stack,
   StackProps,
 } from 'aws-cdk-lib'
-import * as cam from 'aws-cdk-lib/aws-certificatemanager'
-import * as cognito from 'aws-cdk-lib/aws-cognito'
-import * as lambda from 'aws-cdk-lib/aws-lambda'
-import * as python from '@aws-cdk/aws-lambda-python-alpha'
-import * as iam from 'aws-cdk-lib/aws-iam'
 import * as backup from 'aws-cdk-lib/aws-backup'
-import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
-import * as s3 from 'aws-cdk-lib/aws-s3'
-import * as sns from 'aws-cdk-lib/aws-sns'
+import * as cam from 'aws-cdk-lib/aws-certificatemanager'
 import {
   ComparisonOperator,
   Statistic,
@@ -23,12 +17,17 @@ import {
   Unit,
 } from 'aws-cdk-lib/aws-cloudwatch'
 import { SnsAction } from 'aws-cdk-lib/aws-cloudwatch-actions'
+import * as cognito from 'aws-cdk-lib/aws-cognito'
+import * as iam from 'aws-cdk-lib/aws-iam'
+import * as lambda from 'aws-cdk-lib/aws-lambda'
+import * as s3 from 'aws-cdk-lib/aws-s3'
+import * as sns from 'aws-cdk-lib/aws-sns'
 // import * as appsync from 'aws-cdk-lib/aws-appsync';
 import * as gateway from 'aws-cdk-lib/aws-apigateway'
 // import { CfnUserPoolIdentityProvider } from 'aws-cdk-lib/aws-cognito';
+import { AppSyncTransformer } from 'cdk-appsync-transformer'
 import { Construct } from 'constructs'
 import * as path from 'path'
-import { AppSyncTransformer } from 'cdk-appsync-transformer'
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class KompetanseStack extends Stack {

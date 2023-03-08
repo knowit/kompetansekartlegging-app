@@ -1,15 +1,15 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import List from '@material-ui/core/List'
 
+import { Question } from '../../../API'
 import {
+  deleteQuestion as deleteQuestionApi,
   updateQuestionIndex,
   updateQuestionTextTopicAndCategory,
-  deleteQuestion as deleteQuestionApi,
 } from '../catalogApi'
-import { Question } from '../../../API'
-import QuestionListItem from './QuestionListItem'
 import DeleteQuestionDialog from './DeleteQuestionDialog'
+import QuestionListItem from './QuestionListItem'
 
 type QuestionListProps = {
   id: string

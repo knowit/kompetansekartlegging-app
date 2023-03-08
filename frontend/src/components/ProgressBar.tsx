@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { ProgressProps } from '../types'
 import { createStyles, makeStyles, withStyles } from '@material-ui/core'
-import { KnowitColors } from '../styles'
 import LinearProgress, {
   LinearProgressProps,
 } from '@material-ui/core/LinearProgress'
+import { useEffect, useState } from 'react'
+import { KnowitColors } from '../styles'
+import { ProgressProps } from '../types'
 
 const useStyles = makeStyles({
   root: {

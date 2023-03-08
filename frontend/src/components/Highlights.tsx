@@ -1,10 +1,10 @@
-import React, { Fragment, useEffect, useState } from 'react'
-import { HighlightsProps, TopicScoreWithIcon } from '../types'
-import { GetIcon } from '../icons/iconController'
 import { makeStyles } from '@material-ui/core'
-import { KnowitColors } from '../styles'
-import { wrapString } from '../helperFunctions'
 import clsx from 'clsx'
+import { Fragment, useEffect, useState } from 'react'
+import { wrapString } from '../helperFunctions'
+import { GetIcon } from '../icons/iconController'
+import { KnowitColors } from '../styles'
+import { HighlightsProps, TopicScoreWithIcon } from '../types'
 
 const barIconSize = 24
 const barIconSizeMobile = 20

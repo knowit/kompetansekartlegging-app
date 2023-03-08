@@ -1,27 +1,27 @@
-import React, { useState, useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { makeStyles, createStyles } from '@material-ui/core/styles'
+import Box from '@material-ui/core/Box'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from '@material-ui/core/Container'
-import Box from '@material-ui/core/Box'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import AddIcon from '@material-ui/icons/Add'
 
-import {
-  listQuestionsByCategoryID,
-  listCategoriesByFormDefinitionID,
-  createQuestion,
-} from '../catalogApi'
-import { QuestionType } from '../../../API'
-import useApiGet from '../useApiGet'
-import { compareByIndex } from '../helpers'
-import QuestionList from './QuestionList'
-import RouterBreadcrumbs from './Breadcrumbs'
-import useQuery from './useQuery'
-import AddQuestionDialog from './AddQuestionDialog'
-import Button from '../../mui/Button'
-import { ORGANIZATION_ID_ATTRIBUTE } from '../../../constants'
 import { Auth } from 'aws-amplify'
+import { QuestionType } from '../../../API'
+import { ORGANIZATION_ID_ATTRIBUTE } from '../../../constants'
+import Button from '../../mui/Button'
+import {
+  createQuestion,
+  listCategoriesByFormDefinitionID,
+  listQuestionsByCategoryID,
+} from '../catalogApi'
+import { compareByIndex } from '../helpers'
+import useApiGet from '../useApiGet'
+import AddQuestionDialog from './AddQuestionDialog'
+import RouterBreadcrumbs from './Breadcrumbs'
+import QuestionList from './QuestionList'
+import useQuery from './useQuery'
 
 const useStyles = makeStyles(() =>
   createStyles({
