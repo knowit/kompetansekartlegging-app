@@ -26,8 +26,9 @@ jobs:
       aws_environment: dev
       deploy_backend_only: false
     secrets:
-      aws_access_key_id: ${{ secrets.aws_access_key_id }}
-      aws_secret_access_key: ${{ secrets.SECRET_ACCESS_KEY}}
+      aws_access_key_id: ${{ secrets.DEV_AWS_ACCESS_KEY_ID }}
+      aws_secret_access_key: ${{ secrets.DEV_AWS_SECRET_ACCESS_KEY}}
+      azure: ${{ secrets.DEV_AZURE }}
 
   deploy_on_workflow_dispatch:
     if: github.event_name == 'workflow_dispatch'
@@ -37,5 +38,6 @@ jobs:
       aws_environment: ${{ inputs.aws_environment }}
       deploy_backend_only: ${{ inputs.deploy_backend_only }}
     secrets:
-      aws_access_key_id: ${{ inputs.aws_environment == 'prod' && secrets.aws_access_key_id }}
-      aws_secret_access_key: ${{ inputs.aws_environment == 'prod' && secrets.PROD_AWS_SECRET_ACCESS_KEY }}
+      aws_access_key_id: ${{ inputs.aws_environment == 'prod' && secrets.PROD_AWS_ACCESS_KEY_ID || secrets.DEV_AWS_ACCESS_KEY_ID }}
+      aws_secret_access_key: ${{ inputs.aws_environment == 'prod' && secrets.PROD_AWS_SECRET_ACCESS_KEY || secrets.DEV_AWS_SECRET_ACCESS_KEY}}
+      azure: ${{ inputs.aws_environment == 'prod' && secrets.PROD_AZURE || secrets.DEV_AZURE }}
