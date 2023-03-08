@@ -39,13 +39,13 @@ const getQuestion = async ({ id }: GetQuestionInput) => {
 }
 
 const getQuestionsInCategory = async ({
-  categoryid,
+  category_id,
 }: GetQuestionsByCategoryInput) => {
   const parameters: SqlParameter[] = [
     {
       name: 'categoryid',
       value: {
-        stringValue: categoryid,
+        stringValue: category_id,
       },
       typeHint: TypeHint.UUID,
     },
@@ -54,7 +54,7 @@ const getQuestionsInCategory = async ({
   const query = `SELECT * FROM question WHERE category_id = :categoryid`
 
   return await sqlQuery({
-    message: `🚀 ~ > All questions with categoryid: ${categoryid}`,
+    message: `🚀 ~ > All questions with categoryid: ${category_id}`,
     query,
     parameters,
   })
@@ -64,11 +64,11 @@ const createQuestion = async ({
   text,
   topic,
   index,
-  categoryid,
+  category_id: categoryid,
   type,
-  scalestart,
-  scalemiddle,
-  scaleend,
+  scale_start: scalestart,
+  scale_middle: scalemiddle,
+  scale_end: scaleend,
 }: QuestionInput) => {
   const id = uuidv4()
 
@@ -122,11 +122,11 @@ const updateQuestion = async (
     text,
     topic,
     index,
-    categoryid,
+    category_id: categoryid,
     type,
-    scalestart,
-    scalemiddle,
-    scaleend,
+    scale_start: scalestart,
+    scale_middle: scalemiddle,
+    scale_end: scaleend,
   }: QuestionInput
 ) => {
   const parameters: SqlParameter[] = [

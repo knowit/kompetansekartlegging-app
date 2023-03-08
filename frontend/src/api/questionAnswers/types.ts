@@ -1,11 +1,11 @@
 export interface QuestionAnswer {
   id: string
-  userformid: string
-  questionid: string
+  user_id: string
+  question_id: string
   knowledge: number | null
   motivation: number | null
-  customscalevalue: number | null
-  textvalue: string | null
+  custom_scale_value: number | null
+  text_value: string | null
 }
 
 export type QuestionAnswerInput = Omit<QuestionAnswer, 'id'>

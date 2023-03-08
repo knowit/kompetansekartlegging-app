@@ -7,7 +7,7 @@ import {
 } from './types'
 
 export const getAllQuestionAnswers = async () =>
-  apiGET<Pick<QuestionAnswer, 'id'>[]>('/questionAnswers')
+  apiGET<QuestionAnswer[]>('/questionAnswers')
 
 export const getQuestionAnswerById = async (id: GetQuestionAnswerInput) =>
   apiGET<QuestionAnswer>('/questionAnswers/:id', {

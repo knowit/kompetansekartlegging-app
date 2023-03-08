@@ -6,20 +6,20 @@ interface Question {
   text: string | null
   topic: string
   index: number | null
-  categoryid: string
   type: 'custom_scale_value' | 'knowledge_motivation' | 'text' | null
-  scalestart: string | null
-  scalemiddle: string | null
-  scaleend: string | null
+  scale_start: string | null
+  scale_middle: string | null
+  scale_end: string | null
+  category_id: string
 }
 
 export interface GetQuestionReqQuery {
   id: string | undefined
-  categoryid: string | undefined
+  category_id: string | undefined
 }
 
 export type QuestionInput = Omit<Question, 'id'>
 
 export type GetQuestionInput = Pick<Question, 'id'>
 export type DeleteQuestionInput = Pick<Question, 'id'>
-export type GetQuestionsByCategoryInput = Pick<Question, 'categoryid'>
+export type GetQuestionsByCategoryInput = Pick<Question, 'category_id'>
