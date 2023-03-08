@@ -10,15 +10,6 @@ lambda_client = boto3.client('lambda')
 
 env = environ.get("ENV")
 sourceName = environ.get("SOURCE_NAME")
-triggerFunctionName = environ.get("TRIGGER_FUNCTION")
-
-formDefTable = f"FormDefinition-{sourceName}-{env}"
-categoryTable = f"Category-{sourceName}-{env}"
-questionTable = f"Question-{sourceName}-{env}"
-userFormTable = f"UserForm-{sourceName}-{env}"
-questionAnswerTable = f"QuestionAnswer-{sourceName}-{env}"
-
-tableNames = []    
 
 def handler(event, context):
     tablePostfix = f"{sourceName}-{env}"
