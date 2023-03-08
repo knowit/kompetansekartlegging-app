@@ -3,10 +3,10 @@ import {
   ADMIN_COGNITOGROUP_SUFFIX,
   GROUPLEADER_COGNITOGROUP_SUFFIX,
 } from '../constants'
-import { getOrganizationNameByID } from '../helperFunctions'
 import { RootState } from './store'
 
 import { UserRole } from '../types'
+import { getOrganizationByID } from '../api/organizations'
 
 const initialState = {
   userState: {
@@ -25,8 +25,9 @@ export const fetchOrganizationNameByID = createAsyncThunk(
   'user/fetchOrganizationNameByID',
   async (cognitoUser: any, thunkAPI) => {
     const id = cognitoUser.attributes['custom:OrganizationID']
-    const organizationName = await getOrganizationNameByID(id)
-    return organizationName
+    const organizationName = (await getOrganizationByID(id)).data?.orgname
+    // [TODO] What to do if organization is not found?
+    return organizationName || 'Could not find organization'
   }
 )
 
