@@ -108,7 +108,7 @@ const AddMemberToGroupDialog = ({
             fullWidth
             placeholder={
               t('searchForEmployeeInOrganization', {
-                organization: `${userState.organizationName}`,
+                organization: userState.organizationName,
               }) as string
             }
             variant="outlined"

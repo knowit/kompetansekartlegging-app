@@ -29,6 +29,7 @@ import Table from '../mui/Table'
 import PictureAndNameCell from '../AdminPanel/PictureAndNameCell'
 import { useAppSelector } from '../../redux/hooks'
 import { selectAdminCognitoGroupName } from '../../redux/User'
+import { useTranslation } from 'react-i18next'
 
 const Admin = (props: any) => {
   const { admin, deleteAdmin } = props
@@ -56,15 +57,17 @@ const Admin = (props: any) => {
 }
 
 const AdminTable = ({ admins, deleteAdmin }: any) => {
+  const { t } = useTranslation()
+
   return (
     <TableContainer className={commonStyles.tableContainer}>
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell>Ansatt</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Brukernavn</TableCell>
-            <TableCell />
+            <TableCell>{t('employee')}</TableCell>
+            <TableCell>{t('email')}</TableCell>
+            <TableCell>{t('username')}</TableCell>
+            <TableCell>{t('remove')}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -78,6 +81,7 @@ const AdminTable = ({ admins, deleteAdmin }: any) => {
 }
 
 const EditOrganizationAdmins = () => {
+  const { t } = useTranslation()
   const adminCognitoGroupName = useAppSelector(selectAdminCognitoGroupName)
 
   const {
@@ -113,16 +117,16 @@ const EditOrganizationAdmins = () => {
 
   return (
     <Container maxWidth="md" className={commonStyles.container}>
-      {error && <p>An error occured: {error}</p>}
+      {error && <p>{t('errorOccured') + error}</p>}
       {loading && <CircularProgress />}
       {!error && !loading && admins && (
         <>
           <Card style={{ marginBottom: '24px' }} variant="outlined">
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
-                PLACEHOLDER! HER SKAL REDIGER ORGANISASJONS-ADMINISTRATORER!
+                {t('menu.submenu.editOrganizationAdministrators')}
               </Typography>
-              PLACEHOLDER BESKRIVELSE.
+              {t('superAdmin.editOrganizationAdministrators.description')}
             </CardContent>
           </Card>
           <AdminTable admins={admins} deleteAdmin={deleteAdmin} />
@@ -133,7 +137,7 @@ const EditOrganizationAdmins = () => {
             style={{ marginTop: '24px' }}
             onClick={() => setShowAddAdmin(true)}
           >
-            Legg til administrator
+            {t('addAdministrator')}
           </Button>
         </>
       )}
@@ -143,7 +147,7 @@ const EditOrganizationAdmins = () => {
         onExited={clearSelectedAdmin}
         onConfirm={deleteAdminConfirm}
         user={adminToDelete}
-        roleName="administrator"
+        roleName={t('administrator').toLocaleLowerCase()}
       />
       {showAddAdmin && (
         <AddUserToGroupDialog
@@ -152,7 +156,7 @@ const EditOrganizationAdmins = () => {
           userGetFn={listAllUsersInOrganization}
           onCancel={hideShowAddAdmin}
           onConfirm={addAdminConfirm}
-          roleName="administrator"
+          roleName={t('administrator').toLocaleLowerCase()}
         />
       )}
     </Container>

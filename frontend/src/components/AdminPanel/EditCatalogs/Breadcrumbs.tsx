@@ -8,11 +8,6 @@ import { Link as RouterLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { TFunction } from 'i18next'
 
-/*const breadcrumbNameMap: { [key: string]: string } = {
-  '/add': 'Legg til',
-  '/edit': 'Endre',
-}*/
-
 const getBreadcrumbNameMap = (
   t: TFunction<'translation', undefined, 'translation'>
 ) => {

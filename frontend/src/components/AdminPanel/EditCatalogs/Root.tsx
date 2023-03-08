@@ -159,7 +159,7 @@ const Root = () => {
 
   return (
     <Container maxWidth="md" className={commonStyles.container}>
-      {error && <p>{t('errorOccured', { error: error })}</p>}
+      {error && <p>{t('errorOccured') + error}</p>}
       {loading && <CircularProgress />}
       {!error && !loading && catalogs && (
         <>

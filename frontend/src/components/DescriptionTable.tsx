@@ -105,28 +105,28 @@ const getCompetence = (): ScaleContainerObject[] => [
   {
     icon: Icon.K5,
     heading: i18n.t('knowledgeScale.superstar'),
-    text: i18n.t('knowledgeScale.desc.superstar'),
+    text: i18n.t('knowledgeScale.description.superstar'),
   },
   {
     icon: Icon.K4,
     heading: i18n.t('knowledgeScale.expert'),
-    text: i18n.t('knowledgeScale.desc.expert'),
+    text: i18n.t('knowledgeScale.description.expert'),
   },
   {
     icon: Icon.K3,
     heading: i18n.t('knowledgeScale.professional'),
-    text: i18n.t('knowledgeScale.desc.professional'),
+    text: i18n.t('knowledgeScale.description.professional'),
   },
   {
     icon: Icon.K2,
     heading: i18n.t('knowledgeScale.potentiallyUsable'),
-    text: i18n.t('knowledgeScale.desc.potentiallyUsable'),
+    text: i18n.t('knowledgeScale.description.potentiallyUsable'),
   },
 
   {
     icon: Icon.K1,
     heading: i18n.t('knowledgeScale.someInsight'),
-    text: i18n.t('knowledgeScale.desc.someInsight'),
+    text: i18n.t('knowledgeScale.description.someInsight'),
   },
   {
     icon: Icon.K0,

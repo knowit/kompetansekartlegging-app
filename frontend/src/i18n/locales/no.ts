@@ -11,18 +11,21 @@ export const Norwegian: TranslationKeysSchema = {
     knowledge: 'Kompetanse',
     motivation: 'Motivasjon',
     scaleDescription: 'Skalabeskrivelse',
-    errorOccured: 'Noe gikk galt: {{error}}',
+    errorOccured: 'Noe gikk galt: ',
     thisIsATestEnvironment: 'NB: Dette er et test-miljø!',
     close: 'LUKK',
     employee: 'Ansatt',
     email: 'E-post',
     groupLeader: 'Gruppeleder',
+    administrator: 'Administrator',
     username: 'Brukernavn',
     name: 'Navn',
     description: 'Beskrivelse',
     theGroup: 'gruppen',
     theRole: 'rollen',
     searchForEmployeeInOrganization: 'Søk etter ansatt i {{organization}}',
+    nameCantBeEmpty: 'Navn kan ikke være tom.',
+    addAdministrator: 'Legg til administrator',
     menu: {
       overview: 'Oversikt',
       myAnswers: 'Mine svar',
@@ -79,7 +82,7 @@ export const Norwegian: TranslationKeysSchema = {
       potentiallyUsable: 'Potensielt brukbar kompetanse',
       someInsight: 'Noe innsikt',
       unfamiliar: 'Kjenner ikke til området',
-      desc: {
+      description: {
         superstar: 'En etterspurt spesialist, som fungerer som nyskapende eller strategisk kraft på området',
         expert: 'Har særdeles god kontroll og en etablert posisjon på området',
         professional: 'Har god kontroll og kan jobbe selvstendig med ikke-trivielle problemstillinger innenfor området',
@@ -99,6 +102,10 @@ export const Norwegian: TranslationKeysSchema = {
     myAnswers: {
       fillOut: 'Fyll ut',
       blockHasNotBeenCompleted: 'Blokken er ikke ferdig utfylt!',
+      minutes: 'minutter',
+      days: 'dager',
+      itHasBeenTimeSinceTheBlockWasUpdated: 'Det har gått {{time}} siden blokken ble oppdatert!',
+      theBlockWasLastUpdatedDate: 'Blokken ble sist oppdatert {{date}}'
     },
     myGroup: {
       lastAnswered: 'Sist besvart',
@@ -133,8 +140,7 @@ export const Norwegian: TranslationKeysSchema = {
       },
       editAdmins: {
         description: 'Administratorer har tilgang til alles svar. De kan også velge hvem som er gruppeledere og administratorer, og kan lage og fjerne grupper. På denne siden kan du legge til og fjerne administratorer.',
-        editAdministrators: 'Rediger administratorer',
-        addAdministrator: 'Legg til administrator',
+        editAdministrators: 'Rediger administratorer'
       },
       editCatalogs: {
         description: 'På denne siden kan du lage nye kataloger, fjerne kataloger og endre på eksisterende kataloger, kategorier og spørsmål.',
@@ -149,7 +155,6 @@ export const Norwegian: TranslationKeysSchema = {
         removeCatalogQuestion: 'Fjern katalog?',
         areYouSureYouWantToRemoveThisCatalog: 'Er du sikker på at du har lyst til å fjerne denne katalogen? Dette vil ikke slette svarene til de ansatte, men gjør det vanskelig å koble svar opp mot spørsmålsett.',
         nameOfNewCatalog: 'Navnet på den nye katalogen',
-        nameCantBeEmpty: 'Navnet kan ikke være tomt.',
         areYouSureYouWantToActivateThisCatalog: 'Er du sikker på at du har lyst til å bruke denne katalogen? Dette vil endre spørsmålsettet de ansatte svarer på.',
         catalogs: 'Kataloger',
         modify: 'Endre',
@@ -174,13 +179,62 @@ export const Norwegian: TranslationKeysSchema = {
         areYouSureYouWantToDeleteThisQuestion: 'Er du sikker på at du har lyst til å fjerne dette spørsmålet? Denne handlingen kan ikke angres. Svar på dette spørsmålet kan da ikke kobles opp mot spørsmålet som ble svart på.',
         subjectOfTheNewQuestion: 'Emnet på det nye spørsmålet',
         noQuestionsInThisCategoryYet: 'Ingen spørsmål i denne kategorien ennå.',
+        noCategoriesInThisCatalogYet: 'Ingen kategorier i denne katalogen ennå.',
+      },
+      downloadCatalogs: {
+        description: 'På denne siden kan du laste ned Excel-rapport fra katalogen du ønsker.',
+        catalog: 'Katalog',
+        created: 'Opprettet',
+        downloadFailedIsTheCatalogEmpty: 'Nedlasting feilet.\nEr katalogen tom?',
+        download: 'Last ned'
+      }
     },
-    downloadCatalogs: {
-          description: 'På denne siden kan du laste ned Excel-rapport fra katalogen du ønsker.',
-          catalog: 'Katalog',
-          created: 'Opprettet',
-          downloadFailedIsTheCatalogEmpty: 'Nedlasting feilet.\nEr katalogen tom?',
-          download: 'Last ned'
+    superAdmin: {
+      identifierAttribute: 'Identifier Attribute',
+      editOrganizations: {
+        description: 'På denne siden kan du legge til, fjerne og oppdatere organisasjoner.',
+        id: 'ID',
+        addOrganization: 'Legg til organisasjon',
+        removeOrganization: "Fjern organisasjonen '{{organization}}'?",
+        areYouSureYouWantToRemoveTheOrganization: "Er du sikker på at du har lyst til å fjerne organisasjonen '{{organization}}'?",
+        addNewOrganization: 'Legg til ny organisasjon',
+        idCantBeEmpty: 'ID kan ikke være tom.',
+        identifierAttributeCantBeEmpty: 'Identifier attribute kan ikke være tom.'
+      },
+      editSuperAdministrators: {
+        description: 'På denne siden kan du legge til og fjerne super-administratorer.'
+      },
+      editOrganizationAdministrators: {
+        description: 'På denne siden kan du legge til og fjerne organisasjon-administratorer.'
+      }
+    },
+    adminApi: {
+      result: {
+        removedUserFromGroup: "Fjernet '{{username}}' fra '{{groupname}}'.",
+        addedUserToGroup: "'{{username}}' lagt til i '{{groupname}}'."
+      },
+      error: {
+        couldNotRemoveUserFromGroup: "Kunne ikke fjerne brukeren '{{username}}' fra gruppen '{{groupname}}'.",
+        couldNotAddUserToGroup: "Kunne ikke legge til brukeren '{{username}}' i gruppen '{{groupname}}'.",
+        couldNotGetAListOfUsersInGroup: "Kunne ikke hente liste over medlemmer i gruppen '{{groupname}}'.",
+        couldNotGetAListOfAllUsers: 'Kunne ikke hente liste over alle brukere.'
+      }
+    },
+    catalogApi: {
+      error: {
+        couldNotGetAListOfAllFormDefinitionsForOrganizationID: "Kunne ikke hente liste med alle kataloger for organisasjon med ID '{{organizationID}}'.",
+        listAllFormDefinitionsByOrganizationIDError: "listAllFormDefinitionsByOrganizationID: Kunne ikke hente liste med alle kataloger for organisasjon med ID '{{organizationID}}'.",
+        couldNotGetAListOfCategoriesForFormDefinitionID: "Kunne ikke hente liste med alle kategorier for katalog med ID '{{formDefinitionID}}'.",
+        couldNotGetAListOfQuestionsForCategoryID: "Kunne ikke hente liste med spørsmål for kategori med ID '{{categoryID}}'.",
+        couldNotUpdateCategoryWithID: "Kunne ikke oppdatere kategori med ID '{{categoryID}}'",
+        couldNotUpdateQuestionWithID: "Kunne ikke oppdatere spørsmål med ID '{{questionID}}'",
+        couldNotUpdateFormDefinitionWithID: "Kunne ikke oppdatere katalog med ID '{{formDefinitionID}}'.",
+        couldNotDeleteFormDefinitionWithID: "Kunne ikke slette katalog med ID '{{formDefinitionID}}'.",
+        couldNotDeleteCategoryWithID: "Kunne ikke slette kategori med ID '{{categoryID}}'.",
+        couldNotDeleteQuestionWithID: "Kunne ikke slette spørsmål med ID '{{questionID}}'.",
+        couldNotCreateTheFormDefinition: "Kunne ikke opprette katalogen '{{catalogName}}'.",
+        couldNotCreateTheCategory: "Kunne ikke opprette kategorien '{{categoryName}}'.",
+        couldNotCreateTheQuestion: "Kunne ikke opprette spørsmålet '{{question}}'."
       }
     }
   }

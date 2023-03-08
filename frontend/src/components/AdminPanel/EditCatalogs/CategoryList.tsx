@@ -12,6 +12,7 @@ import {
 import { Category } from '../../../API'
 import CategoryListItem from './CategoryListItem'
 import DeleteCategoryDialog from './DeleteCategoryDialog'
+import { useTranslation } from 'react-i18next'
 
 const CategoryList = ({
   categories,
@@ -19,6 +20,7 @@ const CategoryList = ({
   formDefinitionID,
   formDefinitionLabel,
 }: any) => {
+  const { t } = useTranslation()
   const history = useHistory()
   const [enableUpdates, setEnableUpdates] = useState<boolean>(true)
 
@@ -72,7 +74,7 @@ const CategoryList = ({
   return (
     <>
       {categories.length === 0 && (
-        <p>Ingen kategorier i denne katalogen ennå.</p>
+        <p>{t('admin.editCatalogs.noCategoriesInThisCatalogYet')}</p>
       )}
       <List>
         {categories.map((c: Category, ind: number) => {

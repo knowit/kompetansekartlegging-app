@@ -11,18 +11,21 @@ export const English: TranslationKeysSchema = {
     knowledge: 'Knowledge',
     motivation: 'Motivation',
     scaleDescription: 'Scale description',
-    errorOccured: 'An error occured: {{error}}',
+    errorOccured: 'An error occured: ',
     thisIsATestEnvironment: 'N.B.: This is a test environment!',
     close: 'CLOSE',
     employee: 'Employee',
     email: 'Email',
     groupLeader: 'Group leader',
+    administrator: 'Administrator',
     username: 'Username',
     name: 'Name',
     description: 'Description',
     theGroup: 'group',
     theRole: ' role',
     searchForEmployeeInOrganization: 'Search for employee in {{organization}}',
+    nameCantBeEmpty: "Name can't be empty.",
+    addAdministrator: 'Add administrator',
     menu: {
       overview: 'Overview',
       myAnswers: 'My answers',
@@ -79,7 +82,7 @@ export const English: TranslationKeysSchema = {
       potentiallyUsable: 'Potentially usable knowledge',
       someInsight: 'Some insight',
       unfamiliar: 'Unfamiliar area',
-      desc: {
+      description: {
         superstar: 'A sought-after specialist, who acts as innovative or strategic force in the area',
         expert: 'Has particularly good control and an established potition in the area',
         professional: 'Has good control and can work independently on non-trivial issues within the area',
@@ -99,6 +102,10 @@ export const English: TranslationKeysSchema = {
     myAnswers: {
       fillOut: 'Fill out',
       blockHasNotBeenCompleted: 'The block has not been completed!',
+      minutes: 'minutes',
+      days: 'days',
+      itHasBeenTimeSinceTheBlockWasUpdated: 'It has been {{time}} since the block was updated!',
+      theBlockWasLastUpdatedDate: 'The block was last updated {{date}}'
     },
     myGroup: {
       lastAnswered: 'Last answered',
@@ -133,8 +140,7 @@ export const English: TranslationKeysSchema = {
       },
       editAdmins: {
         description: "Administrators have access to everyone's answers. They can also appoint group leaders and administrators, and can create and remove groups. On this page you can add and remove administrators.",
-        editAdministrators: 'Edit administrators',
-        addAdministrator: 'Add administrator',
+        editAdministrators: 'Edit administrators'
       },
       editCatalogs: {
         description: 'On this page you can create new catalogs, remove catalogs and modify existing catalogs, categories and questions.',
@@ -149,7 +155,6 @@ export const English: TranslationKeysSchema = {
         removeCatalogQuestion: 'Remove catalog?',
         areYouSureYouWantToRemoveThisCatalog: "Are you sure you want to remove this catalog? This will not delete the answers of the employees, but it will make it difficult to connect answers to set of questions.",
         nameOfNewCatalog: 'Name of new catalog',
-        nameCantBeEmpty: "Name can't be empty.",
         areYouSureYouWantToActivateThisCatalog: 'Are you sure you want to activate this catalog? This will change the set of questions the employees answer.',
         catalogs: 'Catalogs',
         modify: 'Modify',
@@ -174,14 +179,63 @@ export const English: TranslationKeysSchema = {
         areYouSureYouWantToDeleteThisQuestion: "Are you sure you want to remove this question? This action is irreversible. Answers to this question will no longer be connected to this question.",
         subjectOfTheNewQuestion: 'Subject of the new question',
         noQuestionsInThisCategoryYet: 'There are no questions in this category yet.',
-    },
-    downloadCatalogs: {
+        noCategoriesInThisCatalogYet: 'There are no catagories in this catalog yet.'
+      },
+      downloadCatalogs: {
         description: 'On this page you can download Excel-reports from the catalog of your choice.',
         catalog: 'Catalog',
         created: 'Created',
         downloadFailedIsTheCatalogEmpty: 'Download failed.\nIs the catalog empty?',
         download: 'Download'
       }
+    },
+    superAdmin: {
+      identifierAttribute: 'Identifier Attribute',
+      editOrganizations: {
+        description: 'On this page you can add, remove and update organizations.',
+        id: 'ID',
+        addOrganization: 'Add organization',
+        removeOrganization: "Remove organization '{{organization}}'?",
+        areYouSureYouWantToRemoveTheOrganization: "Are you sure you want to remove the organization '{{organization}}'?",
+        addNewOrganization: 'Add new organization',
+        idCantBeEmpty: "ID can't be empty.",
+        identifierAttributeCantBeEmpty: "Identifier attribute can't be empty."
+      },
+      editSuperAdministrators: {
+        description: 'On this page you can add and remove super-administrators.'
+      },
+      editOrganizationAdministrators: {
+        description: 'On this page you can add and remove organization-administrators.'
+      }
+    },
+    adminApi: {
+      result: {
+          removedUserFromGroup: "Removed '{{username}}' from '{{groupname}}'.",
+          addedUserToGroup: "Added '{{username}}' to '{{groupname}}'."
+      },
+      error: {
+          couldNotRemoveUserFromGroup: "Could not remove user '{{username}}' from group '{{groupname}}'.",
+          couldNotAddUserToGroup: "Could not add user '{{username}}' to group '{{groupname}}'.",
+          couldNotGetAListOfUsersInGroup: "Could not get a list of users in group '{{groupname}}'.",
+          couldNotGetAListOfAllUsers: 'Could not get a list of all users.'
+      }
+    },
+    catalogApi: {
+        error: {
+            couldNotGetAListOfAllFormDefinitionsForOrganizationID: "Could not get a list of all catalogs for organization with ID '{{organizationID}}'.",
+            listAllFormDefinitionsByOrganizationIDError: "listAllFormDefinitionsByOrganizationID: Could not get a list of all catalogs for organization with ID '{{organizationID}}'.",
+            couldNotGetAListOfCategoriesForFormDefinitionID: "Could not get a list of categories for catalog with ID '{{formDefinitionID}}'.",
+            couldNotGetAListOfQuestionsForCategoryID: "Could not get a list of questions for category with ID '{{categoryID}}'.",
+            couldNotUpdateCategoryWithID: "Could not update category with ID '{{categoryID}}'.",
+            couldNotUpdateQuestionWithID: "Could not update question with ID '{{questionID}}'.",
+            couldNotUpdateFormDefinitionWithID: "Could not update catalog with ID '{{formDefinitionID}}'.",
+            couldNotDeleteFormDefinitionWithID: "Could not delete catalog with ID '{{formDefinitionID}}'.",
+            couldNotDeleteCategoryWithID: "Could not delete category with ID '{{categoryID}}'",
+            couldNotDeleteQuestionWithID: "Could not delete question with ID '{{questionID}}'.",
+            couldNotCreateTheFormDefinition: "Could not create the catalog '{{catalogName}}'.",
+            couldNotCreateTheCategory: "Could not create the category '{{categoryName}}'.",
+            couldNotCreateTheQuestion: "Could not create the question '{{question}}'."
+        }
     }
   }
 }

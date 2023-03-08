@@ -101,7 +101,7 @@ const AddUserToGroupDialog = ({
         />
       </DialogTitle>
       <DialogContent>
-        {error && <p>{t('errorOccured', { error: error })}</p>}
+        {error && <p>{t('errorOccured') + error}</p>}
         {loading && <CircularProgress />}
         {!error && !loading && users && (
           <UsersTable

@@ -48,7 +48,7 @@ const AddCatalogDialog = ({ onCancel, onConfirm, open }: any) => {
           label={t('admin.editCatalogs.nameOfNewCatalog')}
           variant="outlined"
           error={name === ''}
-          helperText={name === '' && t('admin.editCatalogs.nameCantBeEmpty')}
+          helperText={name === '' && t('nameCantBeEmpty')}
           value={name}
           className={style.textField}
           onChange={(e: any) => setName(e.target.value)}

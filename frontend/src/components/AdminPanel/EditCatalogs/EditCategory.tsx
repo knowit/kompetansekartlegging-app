@@ -127,7 +127,7 @@ const EditCategory = () => {
   return (
     <>
       <Container maxWidth="lg" className={classes.container}>
-        {error && <p>{t('errorOccured', { error: error })}</p>}
+        {error && <p>{t('errorOccured') + error}</p>}
         {loading && <CircularProgress />}
         {!error && !loading && categories && (
           <>

@@ -3,6 +3,7 @@ import {
   ADMIN_COGNITOGROUP_SUFFIX,
   GROUPLEADER_COGNITOGROUP_SUFFIX,
 } from '../../constants'
+import i18n from '../../i18n/i18n'
 
 export interface Response<T> {
   result: T
@@ -35,10 +36,18 @@ export const removeUserFromGroup = async (
 
   try {
     await API.post(apiName, path, myInit)
-    return { result: `Removed '${username}' from '${groupname}'.` }
+    return {
+      result: i18n.t('adminApi.result.removedUserFromGroup', {
+        username: username,
+        groupname: groupname,
+      }),
+    }
   } catch (e) {
     return {
-      error: `Could not remove user '${username}' from group '${groupname}'.`,
+      error: i18n.t('adminApi.error.couldNotRemoveUserFromGroup', {
+        username: username,
+        groupname: groupname,
+      }),
     }
   }
 }
@@ -71,10 +80,18 @@ export const addUserToGroup = async (
 
   try {
     await API.post(apiName, path, myInit)
-    return { result: `Added '${username}' to '${groupname}'.` }
+    return {
+      result: i18n.t('adminApi.result.addedUserToGroup', {
+        username: username,
+        groupname: groupname,
+      }),
+    }
   } catch (e) {
     return {
-      error: `Could not add user '${username}' to group '${groupname}'.`,
+      error: i18n.t('adminApi.error.couldNotAddUserToGroup', {
+        username: username,
+        groupname: groupname,
+      }),
     }
   }
 }
@@ -115,7 +132,9 @@ const listUsersInGroup = async (
     return { result: Users }
   } catch (e) {
     return {
-      error: `Could not get a list of users in group '${groupname}'.`,
+      error: i18n.t('adminApi.error.couldNotGetAListOfUsersInGroup', {
+        groupname: groupname,
+      }),
     }
   }
 }
@@ -154,7 +173,7 @@ const listAllUsers = async (limit = 60): Promise<ApiResponse<any[]>> => {
       allUsers = [...allUsers, ...Users]
     } while (nextToken)
   } catch (e) {
-    return { error: 'Could not get a list of all users.' }
+    return { error: i18n.t('adminApi.error.couldNotGetAListOfAllUsers') }
   }
   return { result: allUsers }
 }

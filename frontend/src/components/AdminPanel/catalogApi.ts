@@ -40,6 +40,7 @@ import {
   createQuestion as createQuestionGq,
 } from '../../graphql/mutations'
 import { ApiResponse } from './adminApi'
+import i18n from '../../i18n/i18n'
 
 const listAllFormDefinitionsForLoggedInUser = async (): Promise<
   ApiResponse<FormDefinition[]>
@@ -51,7 +52,10 @@ const listAllFormDefinitionsForLoggedInUser = async (): Promise<
     )
   } catch (e) {
     return {
-      error: `Could not get a list of all form definitions for organization id '${organizationID}'.`,
+      error: i18n.t(
+        'catalogApi.error.couldNotGetAListOfAllFormDefinitionsForOrganizationID',
+        { organizationID: organizationID }
+      ),
     }
   }
 }
@@ -79,7 +83,10 @@ const listAllFormDefinitionsByOrganizationID = async (
   } catch (e) {
     console.log(e)
     return {
-      error: `listAllFormDefinitionsByOrganizationID: Could not get a list of all form definitions for organization id '${organizationID}'.`,
+      error: i18n.t(
+        'catalogApi.error.listAllFormDefinitionsByOrganizationIDError',
+        { organizationID: organizationID }
+      ),
     }
   }
 }
@@ -107,7 +114,10 @@ const listCategoriesByFormDefinitionID = async (
     return { result: els || [] }
   } catch (e) {
     return {
-      error: `Could not get a list of categories for form definition id '${formDefinitionID}'.`,
+      error: i18n.t(
+        'catalogApi.error.couldNotGetAListOfCategoriesForFormDefinitionID',
+        { formDefinitionID: formDefinitionID }
+      ),
     }
   }
 }
@@ -142,7 +152,10 @@ const listQuestionsByCategoryID = async (
     return { result: els || [] }
   } catch (e) {
     return {
-      error: `Could not get a list of questions for category id '${categoryID}'.`,
+      error: i18n.t(
+        'catalogApi.error.couldNotGetAListOfQuestionsForCategoryID',
+        { categoryID: categoryID }
+      ),
     }
   }
 }
@@ -163,7 +176,9 @@ const updateCategory = async (
     return { result: el || null }
   } catch (e) {
     return {
-      error: `Could not update category '${id}'.`,
+      error: i18n.t('catalogApi.error.couldNotUpdateCategoryWithID', {
+        categoryID: id,
+      }),
     }
   }
 }
@@ -196,7 +211,9 @@ const updateQuestion = async (
     return { result: el || null }
   } catch (e) {
     return {
-      error: `Could not update question '${id}'.`,
+      error: i18n.t('catalogApi.error.couldNotUpdateQuestionWithID', {
+        questionID: id,
+      }),
     }
   }
 }
@@ -236,7 +253,9 @@ const updateFormDefinition = async (
     return { result: el || null }
   } catch (e) {
     return {
-      error: `Could not update form definition '${id}'.`,
+      error: i18n.t('catalogApi.error.couldNotUpdateFormDefinitionWithID', {
+        formDefinitionID: id,
+      }),
     }
   }
 }
@@ -259,7 +278,9 @@ const deleteFormDefinition = async (id: string): Promise<ApiResponse<null>> => {
     return { result: null }
   } catch (e) {
     return {
-      error: `Could not delete form definition '${id}'.`,
+      error: i18n.t('catalogApi.error.couldNotDeleteFormDefinitionWithID', {
+        formDefinitionID: id,
+      }),
     }
   }
 }
@@ -275,7 +296,9 @@ const deleteCategory = async (id: string): Promise<ApiResponse<null>> => {
     return { result: null }
   } catch (e) {
     return {
-      error: `Could not delete category '${id}'.`,
+      error: i18n.t('catalogApi.error.couldNotDeleteCategoryWithID', {
+        categoryID: id,
+      }),
     }
   }
 }
@@ -291,7 +314,9 @@ const deleteQuestion = async (id: string): Promise<ApiResponse<null>> => {
     return { result: null }
   } catch (e) {
     return {
-      error: `Could not delete question '${id}'.`,
+      error: i18n.t('catalogApi.error.couldNotDeleteQuestionWithID', {
+        questionID: id,
+      }),
     }
   }
 }
@@ -316,7 +341,9 @@ const createFormDefinition = async (
     return { result: el || null }
   } catch (e) {
     return {
-      error: `Could not create form definition '${name}'.`,
+      error: i18n.t('catalogApi.error.couldNotCreateTheFormDefinition', {
+        catalogName: name,
+      }),
     }
   }
 }
@@ -345,7 +372,9 @@ const createCategory = async (
     return { result: el || null }
   } catch (e) {
     return {
-      error: `Could not create category '${name}'.`,
+      error: i18n.t('catalogApi.error.couldNotCreateTheCategory', {
+        categoryName: name,
+      }),
     }
   }
 }
@@ -380,7 +409,9 @@ const createQuestion = async (
     return { result: el || null }
   } catch (e) {
     return {
-      error: `Could not create question '${topic}'.`,
+      error: i18n.t('catalogApi.error.couldNotCreateTheQuestion', {
+        question: topic,
+      }),
     }
   }
 }

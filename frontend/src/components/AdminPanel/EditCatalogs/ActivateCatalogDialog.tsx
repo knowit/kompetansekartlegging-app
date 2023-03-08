@@ -30,7 +30,7 @@ const ActivateCatalogDialog = ({
       }}
     >
       <DialogTitle className={style.dialogTitle}>
-        <ErrorIcon fontSize="large" className={style.errorIcon}></ErrorIcon>
+        <ErrorIcon fontSize="large" className={style.errorIcon} />
         <span className={style.dialogTitleText}>
           {t('admin.editCatalogs.activateCatalogQuestion')}
         </span>

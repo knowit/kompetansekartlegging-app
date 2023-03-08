@@ -52,7 +52,7 @@ const DownloadExcel = () => {
           {t('admin.downloadCatalogs.description')}
         </CardContent>
       </Card>
-      {error && <p>{t('errorOccured', { error: error })}</p>}
+      {error && <p>{t('errorOccured') + error}</p>}
       {loading && <CircularProgress />}
       {!error && !loading && formDefinitions && (
         <DownloadExcelTable formDefinitions={formDefinitions} />

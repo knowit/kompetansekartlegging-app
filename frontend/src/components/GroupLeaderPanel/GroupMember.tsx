@@ -74,7 +74,7 @@ const GroupMember = ({ members, userId, isMobile = false }: any) => {
 
   return (
     <>
-      {isError && <p>{t('errorOccured', { error: isError })}</p>}
+      {isError && <p>{t('errorOccured') + isError}</p>}
       {isLoading && <CircularProgress />}
       {!isError && !isLoading && questionAnswers && (
         <>

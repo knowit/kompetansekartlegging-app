@@ -116,7 +116,7 @@ const EditAdmins = () => {
 
   return (
     <Container maxWidth="md" className={commonStyles.container}>
-      {error && <p>{t('errorOccured', { error: error })}</p>}
+      {error && <p>{t('errorOccured') + error}</p>}
       {loading && <CircularProgress />}
       {!error && !loading && admins && (
         <>
@@ -136,7 +136,7 @@ const EditAdmins = () => {
             style={{ marginTop: '24px' }}
             onClick={() => setShowAddAdmin(true)}
           >
-            {t('admin.editAdmins.addAdministrator')}
+            {t('addAdministrator')}
           </Button>
         </>
       )}
@@ -146,7 +146,7 @@ const EditAdmins = () => {
         onExited={clearSelectedAdmin}
         onConfirm={deleteAdminConfirm}
         user={adminToDelete}
-        roleName="administrator"
+        roleName={t('administrator').toLocaleLowerCase()}
       />
       {showAddAdmin && (
         <AddUserToGroupDialog
@@ -155,7 +155,7 @@ const EditAdmins = () => {
           userGetFn={listAllUsersInOrganization}
           onCancel={hideShowAddAdmin}
           onConfirm={addAdminConfirm}
-          roleName="administrator"
+          roleName={t('administrator').toLocaleLowerCase()}
         />
       )}
     </Container>

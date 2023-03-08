@@ -15,12 +15,15 @@ export type TranslationKeysSchema = {
     employee: string
     email: string
     groupLeader: string
+    administrator: string
     username: string
     name: string
     description: string
     theGroup: string
     theRole: string
     searchForEmployeeInOrganization: string
+    nameCantBeEmpty: string
+    addAdministrator: string
     menu: {
       overview: string
       myAnswers: string
@@ -77,7 +80,7 @@ export type TranslationKeysSchema = {
       potentiallyUsable: string
       someInsight: string
       unfamiliar: string
-      desc: {
+      description: {
         superstar: string
         expert: string
         professional: string
@@ -97,6 +100,10 @@ export type TranslationKeysSchema = {
     myAnswers: {
       fillOut: string
       blockHasNotBeenCompleted: string
+      minutes: string
+      days: string
+      itHasBeenTimeSinceTheBlockWasUpdated: string
+      theBlockWasLastUpdatedDate: string
     }
     myGroup: {
       lastAnswered: string
@@ -132,7 +139,6 @@ export type TranslationKeysSchema = {
       editAdmins: {
         description: string
         editAdministrators: string
-        addAdministrator: string
       }
       editCatalogs: {
         description: string
@@ -147,7 +153,6 @@ export type TranslationKeysSchema = {
         removeCatalogQuestion: string
         areYouSureYouWantToRemoveThisCatalog: string
         nameOfNewCatalog: string
-        nameCantBeEmpty: string
         areYouSureYouWantToActivateThisCatalog: string
         catalogs: string
         modify: string
@@ -172,6 +177,7 @@ export type TranslationKeysSchema = {
         areYouSureYouWantToDeleteThisQuestion: string
         subjectOfTheNewQuestion: string
         noQuestionsInThisCategoryYet: string
+        noCategoriesInThisCatalogYet: string
       }
       downloadCatalogs: {
         description: string
@@ -179,6 +185,54 @@ export type TranslationKeysSchema = {
         created: string
         downloadFailedIsTheCatalogEmpty: string
         download: string
+      }
+    }
+    superAdmin: {
+      identifierAttribute: string
+      editOrganizations: {
+        description: string
+        id: string
+        addOrganization: string
+        removeOrganization: string
+        areYouSureYouWantToRemoveTheOrganization: string
+        addNewOrganization: string
+        idCantBeEmpty: string
+        identifierAttributeCantBeEmpty: string
+      }
+      editSuperAdministrators: {
+        description: string
+      }
+      editOrganizationAdministrators: {
+        description: string
+      }
+    }
+    adminApi: {
+      result: {
+        removedUserFromGroup: string
+        addedUserToGroup: string
+      }
+      error: {
+        couldNotRemoveUserFromGroup: string
+        couldNotAddUserToGroup: string
+        couldNotGetAListOfUsersInGroup: string
+        couldNotGetAListOfAllUsers: string
+      }
+    }
+    catalogApi: {
+      error: {
+        couldNotGetAListOfAllFormDefinitionsForOrganizationID: string
+        listAllFormDefinitionsByOrganizationIDError: string
+        couldNotGetAListOfCategoriesForFormDefinitionID: string
+        couldNotGetAListOfQuestionsForCategoryID: string
+        couldNotUpdateCategoryWithID: string
+        couldNotUpdateQuestionWithID: string
+        couldNotUpdateFormDefinitionWithID: string
+        couldNotDeleteFormDefinitionWithID: string
+        couldNotDeleteCategoryWithID: string
+        couldNotDeleteQuestionWithID: string
+        couldNotCreateTheFormDefinition: string
+        couldNotCreateTheCategory: string
+        couldNotCreateTheQuestion: string
       }
     }
   }
