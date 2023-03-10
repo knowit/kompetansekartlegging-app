@@ -35,7 +35,7 @@ export const AlertDialog = ({ ...props }: AlertDialogProps) => {
       }}
     >
       <DialogTitle id="alert-dialog-title" className={style.dialogTitle}>
-        <ErrorIcon fontSize="large" className={style.errorIcon}></ErrorIcon>
+        <ErrorIcon fontSize="large" className={style.errorIcon} />
         <div className={style.dialogTitleText}>
           {t('alertDialog.nbAnswersNotSaved')}
         </div>

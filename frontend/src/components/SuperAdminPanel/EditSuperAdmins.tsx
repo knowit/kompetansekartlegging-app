@@ -67,7 +67,7 @@ const AdminTable = ({ admins, deleteAdmin }: any) => {
             <TableCell>{t('employee')}</TableCell>
             <TableCell>{t('email')}</TableCell>
             <TableCell>{t('username')}</TableCell>
-            <TableCell>{t('remove')}</TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -147,7 +147,7 @@ const EditSuperAdmins = () => {
         onExited={clearSelectedAdmin}
         onConfirm={deleteAdminConfirm}
         user={adminToDelete}
-        roleName={t('administrator').toLocaleLowerCase()}
+        roleName={t('administrator').toLowerCase()}
       />
       {showAddAdmin && (
         <AddUserToGroupDialog
@@ -156,7 +156,7 @@ const EditSuperAdmins = () => {
           userGetFn={listAllUsersInOrganization}
           onCancel={hideShowAddAdmin}
           onConfirm={addAdminConfirm}
-          roleName={t('administrator').toLocaleLowerCase()}
+          roleName={t('administrator').toLowerCase()}
         />
       )}
     </Container>

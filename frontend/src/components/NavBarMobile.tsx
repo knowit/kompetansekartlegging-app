@@ -135,7 +135,7 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
       <List className={style.list}>
         {props.menuButtons}
         <ListItem className={style.logout} onClick={props.signout}>
-          {/* <Avatar className={style.userPicture} src={props.userPicture} alt="Profile Picture"/> */}
+          {/* <Avatar className={style.userPicture} src={props.userPicture} alt={t('navbar.profilePicture') as string} /> */}
           {t('navbar.signOut')}
         </ListItem>
       </List>

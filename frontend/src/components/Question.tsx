@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core'
 import { KnowitColors } from '../styles'
 import * as Icon from '../icons/iconController'
 import { AlertNotification } from './AlertNotification'
+import { useTranslation } from 'react-i18next'
 
 const questionStyleDesktop = makeStyles({
   root: {
@@ -207,10 +208,14 @@ const KnowledgeMotivationSliders = ({
   sliderChanged,
   isMobile,
 }: any) => {
+  const { t } = useTranslation()
+
   return (
     <div>
       <div className={style.answerArea}>
-        <div className={clsx(style.largeBold)}>KOMPETANSE</div>
+        <div className={clsx(style.largeBold)}>
+          {t('knowledge').toUpperCase()}
+        </div>
         <div className={style.sliderArea}>
           <div className={style.iconArea}>
             {Icon.GetIcons(true, style.icon)}
@@ -226,7 +231,9 @@ const KnowledgeMotivationSliders = ({
         </div>
       </div>
       <div className={style.answerArea}>
-        <div className={clsx(style.largeBold)}>MOTIVASJON</div>
+        <div className={clsx(style.largeBold)}>
+          {t('motivation').toUpperCase()}
+        </div>
         <div className={style.sliderArea}>
           <div className={style.iconArea}>
             {Icon.GetIcons(false, style.icon)}
@@ -252,11 +259,12 @@ const CustomLabelSlider = ({
   question,
   isMobile,
 }: any) => {
+  const { t } = useTranslation()
   const labels = [question.scaleStart, question.scaleEnd].filter((l) => !!l)
   return (
     <div>
       <div className={style.answerArea}>
-        <div className={clsx(style.largeBold)}>SVAR</div>
+        <div className={clsx(style.largeBold)}>{t('answer').toUpperCase()}</div>
         <div className={style.sliderArea}>
           <div className={style.iconArea}>
             {labels?.map((l: string) => (

@@ -1,12 +1,13 @@
-import { TranslationKeysSchema } from '../schema'
+import { LanguageSchema } from '../schema'
 
-export const Norwegian: TranslationKeysSchema = {
+export const Norwegian: LanguageSchema = {
   translation: {
     confirm: 'Bekreft',
     abort: 'Avbryt',
     add: 'Legg til',
     remove: 'Fjern',
     save: 'Lagre',
+    answer: 'Svar',
     notAnswered: 'Ikke besvart',
     knowledge: 'Kompetanse',
     motivation: 'Motivasjon',
@@ -26,6 +27,47 @@ export const Norwegian: TranslationKeysSchema = {
     searchForEmployeeInOrganization: 'Søk etter ansatt i {{organization}}',
     nameCantBeEmpty: 'Navn kan ikke være tom.',
     addAdministrator: 'Legg til administrator',
+    pressHereToSeeWhatTheIconsMean: 'Trykk her for å se hva ikonene betyr!',
+    noOrganizationNameFound: 'Fant ikke organisasjonsnavn',
+    login: {
+        knowledgeMapping: 'Kompetansekartlegging',
+        signIn: 'Logg inn',
+        devSignIn: 'Dev login',
+        enterYourEmail: 'Skriv din E-post',
+        password: 'Passord',
+        enterYourPassword: 'Skriv ditt Passord',
+        forgotYourPassword: 'Glemt passord?',
+        userDoesNotExist: 'Brukeren eksisterer ikke.'
+    },
+    createAccount: {
+      enterYourName: 'Skriv ditt Navn',
+      confirmPassword: 'Bekreft Passord',
+      pleaseConfirmYourPassword: 'Vennligst bekreft Passordet',
+      createAccount: 'Opprett Konto',
+      passwordCantBeEmpty: 'Passord kan ikke være tom',
+      weEmailedYou: 'Vi sendte deg e-post',
+      yourCodeIsOnTheWay: 'Koden din er på vei. For å logge inn, skriv koden vi sendte til',
+      itMayTakeAMinuteToArrive: 'Det kan ta litt tid før den kommer',
+      confirmationCode: 'Bekreftelseskode',
+      resendCode: 'Send kode på nytt',
+      enterYourCode: 'Skriv inn koden',
+      confirmationCodeCantBeEmpty: 'Bekreftelseskode kan ikke være tom',
+      userAlreadyExists: 'Brukeren finnes allerede',
+      creatingAccount: 'Oppretter konto',
+      confirming: 'Bekrefter'
+    },
+    resetPassword: {
+      resetPassword: 'Tilbakestill Passord',
+      enterYourEmail: 'Skriv din e-post',
+      sendCode: 'Send kode',
+      backToSignIn: 'Tilbake til innlogging',
+      sending: 'Sender',
+      submit: 'Send inn',
+      submitting: 'Sender',
+      code: 'Kode',
+      newPassword: 'Nytt Passord',
+      yourPasswordsMustMatch: 'Passordene må være like'
+    },
     menu: {
       overview: 'Oversikt',
       myAnswers: 'Mine svar',
@@ -49,9 +91,13 @@ export const Norwegian: TranslationKeysSchema = {
       knowledgeMappingFor: 'Kompetansekartlegging for',
       doYouWantToDeleteYourAnswers: 'Ønsker du å slette svarene dine?',
       thisWillDeleteAllAnswers: 'OBS: Dette vil slette alle innsendte og lagrede svar!',
+      profilePicture: 'Profilbilde',
     },
     content: {
-      unAnswared: 'Ubesvart!',
+      unAnswered: 'Ubesvart!',
+      notAnswered: 'Ikke svart',
+      notDefined: 'Ikke definert',
+      answerHistory: 'Svarhistorikk',
       shouldBeUpdatedLastAnswered: 'Bør oppdateres! Sist besvart: {{date}}',
       answerOutdatedOrIncomplete: 'Besvarelsen er utdatert eller ikke komplett!',
       unansweredOrOutdatedQuestionsInCategory: 'Ikke besvart eller utdaterte spørsmål i kategori',
@@ -105,7 +151,9 @@ export const Norwegian: TranslationKeysSchema = {
       minutes: 'minutter',
       days: 'dager',
       itHasBeenTimeSinceTheBlockWasUpdated: 'Det har gått {{time}} siden blokken ble oppdatert!',
-      theBlockWasLastUpdatedDate: 'Blokken ble sist oppdatert {{date}}'
+      theBlockWasLastUpdatedDate: 'Blokken ble sist oppdatert {{date}}',
+      submitAnswersAndQuit: 'Send inn svar og avslutt',
+      saveAndContinue: 'Lagre og gå videre'
     },
     myGroup: {
       lastAnswered: 'Sist besvart',
@@ -221,21 +269,35 @@ export const Norwegian: TranslationKeysSchema = {
       }
     },
     catalogApi: {
-      error: {
-        couldNotGetAListOfAllFormDefinitionsForOrganizationID: "Kunne ikke hente liste med alle kataloger for organisasjon med ID '{{organizationID}}'.",
-        listAllFormDefinitionsByOrganizationIDError: "listAllFormDefinitionsByOrganizationID: Kunne ikke hente liste med alle kataloger for organisasjon med ID '{{organizationID}}'.",
-        couldNotGetAListOfCategoriesForFormDefinitionID: "Kunne ikke hente liste med alle kategorier for katalog med ID '{{formDefinitionID}}'.",
-        couldNotGetAListOfQuestionsForCategoryID: "Kunne ikke hente liste med spørsmål for kategori med ID '{{categoryID}}'.",
-        couldNotUpdateCategoryWithID: "Kunne ikke oppdatere kategori med ID '{{categoryID}}'",
-        couldNotUpdateQuestionWithID: "Kunne ikke oppdatere spørsmål med ID '{{questionID}}'",
-        couldNotUpdateFormDefinitionWithID: "Kunne ikke oppdatere katalog med ID '{{formDefinitionID}}'.",
-        couldNotDeleteFormDefinitionWithID: "Kunne ikke slette katalog med ID '{{formDefinitionID}}'.",
-        couldNotDeleteCategoryWithID: "Kunne ikke slette kategori med ID '{{categoryID}}'.",
-        couldNotDeleteQuestionWithID: "Kunne ikke slette spørsmål med ID '{{questionID}}'.",
-        couldNotCreateTheFormDefinition: "Kunne ikke opprette katalogen '{{catalogName}}'.",
-        couldNotCreateTheCategory: "Kunne ikke opprette kategorien '{{categoryName}}'.",
-        couldNotCreateTheQuestion: "Kunne ikke opprette spørsmålet '{{question}}'."
-      }
+      couldNotGetAListOfAllFormDefinitionsForOrganizationID: "Kunne ikke hente liste med alle kataloger for organisasjon med ID '{{organizationID}}'.",
+      listAllFormDefinitionsByOrganizationIDError: "listAllFormDefinitionsByOrganizationID: Kunne ikke hente liste med alle kataloger for organisasjon med ID '{{organizationID}}'.",
+      couldNotGetAListOfCategoriesForFormDefinitionID: "Kunne ikke hente liste med alle kategorier for katalog med ID '{{formDefinitionID}}'.",
+      couldNotGetAListOfQuestionsForCategoryID: "Kunne ikke hente liste med spørsmål for kategori med ID '{{categoryID}}'.",
+      couldNotUpdateCategoryWithID: "Kunne ikke oppdatere kategori med ID '{{categoryID}}'",
+      couldNotUpdateQuestionWithID: "Kunne ikke oppdatere spørsmål med ID '{{questionID}}'",
+      couldNotUpdateFormDefinitionWithID: "Kunne ikke oppdatere katalog med ID '{{formDefinitionID}}'.",
+      couldNotDeleteFormDefinitionWithID: "Kunne ikke slette katalog med ID '{{formDefinitionID}}'.",
+      couldNotDeleteCategoryWithID: "Kunne ikke slette kategori med ID '{{categoryID}}'.",
+      couldNotDeleteQuestionWithID: "Kunne ikke slette spørsmål med ID '{{questionID}}'.",
+      couldNotCreateTheFormDefinition: "Kunne ikke opprette katalogen '{{catalogName}}'.",
+      couldNotCreateTheCategory: "Kunne ikke opprette kategorien '{{categoryName}}'.",
+      couldNotCreateTheQuestion: "Kunne ikke opprette spørsmålet '{{question}}'."
+    },
+    groupsApi: {
+      couldNotGetMembersOfGroupWithID: "Kunne ikke hente medlemmer av gruppen med ID '{{groupID}}'.",
+      couldNotGetAListOfAllGroups: 'Kunne ikke hente liste med alle grupper.',
+      couldNotGetAListOfAllUsers: 'Kunne ikke hente liste med alle brukere.',
+      couldNotAddUserWithIDToGroupWithID: "Kunne ikke legge legge til brukeren med ID '{{userID}}' i gruppen med ID '{{groupID}}'.",
+      couldNotUpdateUserWithIDToGroupWithID: "Kunne ikke oppdatere brukeren med ID '{{userID}}' til gruppen med ID '{{groupID}}'.",
+      couldNotRemoveUserWithIDFromGroupWithID: "Kunne ikke fjerne brukeren med ID '{{userID}}' fra gruppen med ID '{{groupID}}'.",
+      couldNotAddAGroup: 'Kunne ikke legge til gruppe.',
+      couldNotRemoveGroupWithID: "Kunne ikke fjerne gruppen med ID '{{groupID}}'.",
+      couldNotSetGroupLeaderToUsernameOnGroupWithID: "Kunne ikke sette gruppeleder til '{{username}}' for gruppen med ID '{{groupID}}'."
+    },
+    superAdminApi: {
+        couldNotGetAListOfOrganizations: 'Kunne ikke hente en liste med organisasjoner.',
+        couldNotAddTheOrganization: "Kunne ikke legge til organisasjonen '{{organizationName}}'.",
+        couldNotDeleteTheOrganization: "Kunne ikke slette organisasjonen '{{organizationName}}'."
     }
   }
 }

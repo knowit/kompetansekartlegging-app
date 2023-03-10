@@ -146,7 +146,7 @@ const EditAdmins = () => {
         onExited={clearSelectedAdmin}
         onConfirm={deleteAdminConfirm}
         user={adminToDelete}
-        roleName={t('administrator').toLocaleLowerCase()}
+        roleName={t('administrator').toLowerCase()}
       />
       {showAddAdmin && (
         <AddUserToGroupDialog
@@ -155,7 +155,7 @@ const EditAdmins = () => {
           userGetFn={listAllUsersInOrganization}
           onCancel={hideShowAddAdmin}
           onConfirm={addAdminConfirm}
-          roleName={t('administrator').toLocaleLowerCase()}
+          roleName={t('administrator').toLowerCase()}
         />
       )}
     </Container>

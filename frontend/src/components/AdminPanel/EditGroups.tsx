@@ -75,7 +75,7 @@ const Group = ({
   const hasGroupLeader = !!group.groupLeader
   const name = hasGroupLeader
     ? getAttribute(group.groupLeader, 'name')
-    : 'Gruppeleder fjernet'
+    : t('admin.editGroups.groupLeaderRemoved')
   const picture = hasGroupLeader
     ? getAttribute(group.groupLeader, 'picture')
     : undefined

@@ -179,8 +179,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
 
   useEffect(() => {
     fetch(
-      // TODO: fetch from main instead of i18n
-      'https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/i18n/frontend/markdown/' +
+      'https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/frontend/markdown/' +
         i18n.language +
         '/help.md'
     )
@@ -238,7 +237,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
               <Avatar
                 className={style.userPicture}
                 src={userState.picture}
-                alt="Profile Picture"
+                alt={t('navbar.profilePicture') as string}
               />
             </Button>
 
@@ -266,7 +265,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
                         onKeyDown={handleListKeyDown}
                         className={style.dropdownMenu}
                       >
-                        {/* Removed for user testing
+                        {/* Removed for user testing, i18n if uncommenting
                                         <MenuItem onClick={handleDisplayAnswers}>Vis alle lagrede svar</MenuItem>
                                         <MenuItem onClick={handleDeleteAnswers}>Slett alle svar</MenuItem> */}
                         <MenuItem onClick={handleCloseSignout}>

@@ -1,12 +1,13 @@
-import { TranslationKeysSchema } from '../schema'
+import { LanguageSchema } from '../schema'
 
-export const English: TranslationKeysSchema = {
+export const English: LanguageSchema = {
   translation: {
     confirm: 'Confirm',
     abort: 'Abort',
     add: 'Add',
     remove: 'Remove',
     save: 'Save',
+    answer: 'Answer',
     notAnswered: 'Not answered',
     knowledge: 'Knowledge',
     motivation: 'Motivation',
@@ -26,6 +27,47 @@ export const English: TranslationKeysSchema = {
     searchForEmployeeInOrganization: 'Search for employee in {{organization}}',
     nameCantBeEmpty: "Name can't be empty.",
     addAdministrator: 'Add administrator',
+    pressHereToSeeWhatTheIconsMean: 'Press here to see what the icons mean',
+    noOrganizationNameFound: 'No organization name found',
+    login: {
+      knowledgeMapping: 'Knowledge Mapping',
+      signIn: 'Sign in',
+      devSignIn: 'Dev login',
+      enterYourEmail: 'Enter your Email',
+      password: 'Password',
+      enterYourPassword: 'Enter your Password',
+      forgotYourPassword: 'Forgot your password?',
+      userDoesNotExist: 'User does not exist.'
+    },
+    createAccount: {
+      enterYourName: 'Enter your Name',
+      confirmPassword: 'Confirm Password',
+      pleaseConfirmYourPassword: 'Please confirm your Password',
+      createAccount: 'Create Account',
+      passwordCantBeEmpty: "Password can't be empty",
+      weEmailedYou: 'We Emailed You',
+      yourCodeIsOnTheWay: 'Your code is on the way. To log in, enter the code we emailed to',
+      itMayTakeAMinuteToArrive: 'It may take a minute to arrive',
+      confirmationCode: 'Confirmation Code',
+      resendCode: 'Resend Code',
+      enterYourCode: 'Enter your code',
+      confirmationCodeCantBeEmpty: "Confirmation code can't be empty",
+      userAlreadyExists: 'User already exists',
+      creatingAccount: 'Creating account',
+      confirming: 'Confirming'
+    },
+    resetPassword: {
+      resetPassword: 'Reset Password',
+      enterYourEmail: 'Enter your email',
+      sendCode: 'Send code',
+      backToSignIn: 'Back to Sign In',
+      sending: 'Sending',
+      submit: 'Submit',
+      submitting: 'Submitting',
+      code: 'Code',
+      newPassword: 'New Password',
+      yourPasswordsMustMatch: 'Your passwords must match'
+    },
     menu: {
       overview: 'Overview',
       myAnswers: 'My answers',
@@ -49,9 +91,13 @@ export const English: TranslationKeysSchema = {
       knowledgeMappingFor: 'Knowledge mapping for',
       doYouWantToDeleteYourAnswers: 'Do you want to delete your answers?',
       thisWillDeleteAllAnswers: 'N.B. This will delete all submitted and saved answers!',
+      profilePicture: 'Profile Picture',
     },
     content: {
-      unAnswared: 'Unanswered!',
+      unAnswered: 'Unanswered!',
+      notAnswered: 'Not answered',
+      notDefined: 'Not defined',
+      answerHistory: 'Answer history',
       shouldBeUpdatedLastAnswered: 'Should be updated! Last answered: {{date}}',
       answerOutdatedOrIncomplete: 'The answer is outdated or incomplete!',
       unansweredOrOutdatedQuestionsInCategory: 'Unanswered or outdated questions in category',
@@ -105,7 +151,9 @@ export const English: TranslationKeysSchema = {
       minutes: 'minutes',
       days: 'days',
       itHasBeenTimeSinceTheBlockWasUpdated: 'It has been {{time}} since the block was updated!',
-      theBlockWasLastUpdatedDate: 'The block was last updated {{date}}'
+      theBlockWasLastUpdatedDate: 'The block was last updated {{date}}',
+      submitAnswersAndQuit: 'Submit answers and quit',
+      saveAndContinue: 'Save and continue'
     },
     myGroup: {
       lastAnswered: 'Last answered',
@@ -210,32 +258,46 @@ export const English: TranslationKeysSchema = {
     },
     adminApi: {
       result: {
-          removedUserFromGroup: "Removed '{{username}}' from '{{groupname}}'.",
-          addedUserToGroup: "Added '{{username}}' to '{{groupname}}'."
+        removedUserFromGroup: "Removed '{{username}}' from '{{groupname}}'.",
+        addedUserToGroup: "Added '{{username}}' to '{{groupname}}'."
       },
       error: {
-          couldNotRemoveUserFromGroup: "Could not remove user '{{username}}' from group '{{groupname}}'.",
-          couldNotAddUserToGroup: "Could not add user '{{username}}' to group '{{groupname}}'.",
-          couldNotGetAListOfUsersInGroup: "Could not get a list of users in group '{{groupname}}'.",
-          couldNotGetAListOfAllUsers: 'Could not get a list of all users.'
+        couldNotRemoveUserFromGroup: "Could not remove user '{{username}}' from group '{{groupname}}'.",
+        couldNotAddUserToGroup: "Could not add user '{{username}}' to group '{{groupname}}'.",
+        couldNotGetAListOfUsersInGroup: "Could not get a list of users in group '{{groupname}}'.",
+        couldNotGetAListOfAllUsers: 'Could not get a list of all users.'
       }
     },
     catalogApi: {
-        error: {
-            couldNotGetAListOfAllFormDefinitionsForOrganizationID: "Could not get a list of all catalogs for organization with ID '{{organizationID}}'.",
-            listAllFormDefinitionsByOrganizationIDError: "listAllFormDefinitionsByOrganizationID: Could not get a list of all catalogs for organization with ID '{{organizationID}}'.",
-            couldNotGetAListOfCategoriesForFormDefinitionID: "Could not get a list of categories for catalog with ID '{{formDefinitionID}}'.",
-            couldNotGetAListOfQuestionsForCategoryID: "Could not get a list of questions for category with ID '{{categoryID}}'.",
-            couldNotUpdateCategoryWithID: "Could not update category with ID '{{categoryID}}'.",
-            couldNotUpdateQuestionWithID: "Could not update question with ID '{{questionID}}'.",
-            couldNotUpdateFormDefinitionWithID: "Could not update catalog with ID '{{formDefinitionID}}'.",
-            couldNotDeleteFormDefinitionWithID: "Could not delete catalog with ID '{{formDefinitionID}}'.",
-            couldNotDeleteCategoryWithID: "Could not delete category with ID '{{categoryID}}'",
-            couldNotDeleteQuestionWithID: "Could not delete question with ID '{{questionID}}'.",
-            couldNotCreateTheFormDefinition: "Could not create the catalog '{{catalogName}}'.",
-            couldNotCreateTheCategory: "Could not create the category '{{categoryName}}'.",
-            couldNotCreateTheQuestion: "Could not create the question '{{question}}'."
-        }
+      couldNotGetAListOfAllFormDefinitionsForOrganizationID: "Could not get a list of all catalogs for organization with ID '{{organizationID}}'.",
+      listAllFormDefinitionsByOrganizationIDError: "listAllFormDefinitionsByOrganizationID: Could not get a list of all catalogs for organization with ID '{{organizationID}}'.",
+      couldNotGetAListOfCategoriesForFormDefinitionID: "Could not get a list of categories for catalog with ID '{{formDefinitionID}}'.",
+      couldNotGetAListOfQuestionsForCategoryID: "Could not get a list of questions for category with ID '{{categoryID}}'.",
+      couldNotUpdateCategoryWithID: "Could not update category with ID '{{categoryID}}'.",
+      couldNotUpdateQuestionWithID: "Could not update question with ID '{{questionID}}'.",
+      couldNotUpdateFormDefinitionWithID: "Could not update catalog with ID '{{formDefinitionID}}'.",
+      couldNotDeleteFormDefinitionWithID: "Could not delete catalog with ID '{{formDefinitionID}}'.",
+      couldNotDeleteCategoryWithID: "Could not delete category with ID '{{categoryID}}'",
+      couldNotDeleteQuestionWithID: "Could not delete question with ID '{{questionID}}'.",
+      couldNotCreateTheFormDefinition: "Could not create the catalog '{{catalogName}}'.",
+      couldNotCreateTheCategory: "Could not create the category '{{categoryName}}'.",
+      couldNotCreateTheQuestion: "Could not create the question '{{question}}'."
+    },
+    groupsApi: {
+      couldNotGetMembersOfGroupWithID: "Could not get members of group with ID '{{groupID}}'.",
+      couldNotGetAListOfAllGroups: 'Could not get a list of all groups.',
+      couldNotGetAListOfAllUsers: 'Could not get a list of all users.',
+      couldNotAddUserWithIDToGroupWithID: "Could not add user with ID '{{userID}}' to group with ID '{{groupID}}'.",
+      couldNotUpdateUserWithIDToGroupWithID: "Could not update user with ID '{{userID}}' to group with ID '{{groupID}}'.",
+      couldNotRemoveUserWithIDFromGroupWithID: "Could not remove user with ID '{{userID}}' from group with ID '{{groupID}}'.",
+      couldNotAddAGroup: 'Could not add a group.',
+      couldNotRemoveGroupWithID: "Could not remove group with ID '{{groupID}}'.",
+      couldNotSetGroupLeaderToUsernameOnGroupWithID: "Could not set group leader to '{{username}}' on group with ID '{{groupID}}'."
+    },
+    superAdminApi: {
+        couldNotGetAListOfOrganizations: 'Could not get a list of organizations.',
+        couldNotAddTheOrganization: "Could not add the organization '{{organizationName}}'.",
+        couldNotDeleteTheOrganization: "Could not delete the organization '{{organizationName}}'."
     }
   }
 }

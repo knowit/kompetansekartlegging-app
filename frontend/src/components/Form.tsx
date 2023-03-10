@@ -5,6 +5,7 @@ import { FormProps, SliderValues } from '../types'
 import { QuestionType as QuestionTypeT } from '../API'
 import Question from './Question'
 import ArrowForwardRoundedIcon from '@material-ui/icons/ArrowForwardRounded'
+import { useTranslation } from 'react-i18next'
 
 const FormStyleDesktop = makeStyles({
   root: {
@@ -117,6 +118,7 @@ type QuestionType = {
 }
 
 export const Form = ({ ...props }: FormProps) => {
+  const { t } = useTranslation()
   const sliderValues = useRef<Map<string, SliderValues>>(new Map()) //String is questionid, values are knowledge and motivation
 
   const style = props.isMobile ? FormStyleMobile() : FormStyleDesktop()
@@ -185,7 +187,7 @@ export const Form = ({ ...props }: FormProps) => {
         <div className={style.blockButtons}>
           {props.categories.length > 0 ? (
             <Button onClick={handleClickSubmit} className={style.submitButton}>
-              Send inn svar og avslutt
+              {t('myAnswers.submitAnswersAndQuit')}
             </Button>
           ) : (
             ''
@@ -196,7 +198,7 @@ export const Form = ({ ...props }: FormProps) => {
               onClick={handleClickProceed}
               className={style.submitAndProceedButton}
             >
-              Lagre og gå videre
+              {t('myAnswers.saveAndContinue')}
               <ArrowForwardRoundedIcon className={style.buttonIcon} />
             </Button>
           ) : (

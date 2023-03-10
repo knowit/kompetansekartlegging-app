@@ -59,7 +59,7 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
         <TextField
           autoFocus
           fullWidth
-          label="Navn"
+          label={t('name')}
           variant="outlined"
           error={organizationName === ''}
           helperText={organizationName === '' && t('nameCantBeEmpty')}
@@ -70,7 +70,7 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
         <TextField
           autoFocus
           fullWidth
-          label="ID"
+          label={t('superAdmin.editOrganizations.id')}
           variant="outlined"
           error={organizationID === ''}
           helperText={
@@ -84,7 +84,7 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
         <TextField
           autoFocus
           fullWidth
-          label="Identifier attribute"
+          label={t('superAdmin.identifierAttribute')}
           variant="outlined"
           error={organizationIdentifierAttribute === ''}
           helperText={

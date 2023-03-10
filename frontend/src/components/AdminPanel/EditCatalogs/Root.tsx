@@ -31,7 +31,7 @@ import ActivateCatalogDialog from './ActivateCatalogDialog'
 import DeleteCatalogDialog from './DeleteCatalogDialog'
 import AddCatalogDialog from './AddCatalogDialog'
 import { useTranslation } from 'react-i18next'
-import { I18nDateToLocaleString } from '../../../i18n/i18n'
+import { i18nDateToLocaleString } from '../../../i18n/i18n'
 
 const Catalog = ({ catalog, deleteCatalog, active, activateCatalog }: any) => {
   const { t } = useTranslation()
@@ -42,7 +42,7 @@ const Catalog = ({ catalog, deleteCatalog, active, activateCatalog }: any) => {
       <TableRow selected={active}>
         <TableCell>{name}</TableCell>
         <TableCell>
-          {I18nDateToLocaleString(new Date(catalog.updatedAt))}
+          {i18nDateToLocaleString(new Date(catalog.updatedAt))}
         </TableCell>
         <TableCell align="right">
           <Button

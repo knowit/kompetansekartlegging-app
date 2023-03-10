@@ -160,7 +160,7 @@ const updateCategoryAlerts = (
       ) {
         alerts.set(quAns.question.id, {
           type: AlertType.Incomplete,
-          message: t('content.unAnswared'),
+          message: t('content.unAnswered'),
         })
         const numAlerts = catAlerts.get(quAns.question.category.text)
         if (numAlerts)
@@ -170,7 +170,7 @@ const updateCategoryAlerts = (
         alerts.set(quAns.question.id, {
           type: AlertType.Outdated,
           message: t('content.shouldBeUpdatedLastAnswered', {
-            date: new Date(quAns.updatedAt), // TODO: i18n
+            date: new Date(quAns.updatedAt),
           }),
         })
         const numAlerts = catAlerts.get(quAns.question.category.text)

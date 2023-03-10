@@ -1,10 +1,11 @@
-export type TranslationKeysSchema = {
+export type LanguageSchema = {
   translation: {
     confirm: string
     abort: string
     add: string
     remove: string
     save: string
+    answer: string
     notAnswered: string
     knowledge: string
     motivation: string
@@ -24,6 +25,47 @@ export type TranslationKeysSchema = {
     searchForEmployeeInOrganization: string
     nameCantBeEmpty: string
     addAdministrator: string
+    pressHereToSeeWhatTheIconsMean: string
+    noOrganizationNameFound: string
+    login: {
+      knowledgeMapping: string
+      signIn: string
+      devSignIn: string
+      enterYourEmail: string
+      password: string
+      enterYourPassword: string
+      forgotYourPassword: string
+      userDoesNotExist: string
+    }
+    createAccount: {
+      enterYourName: string
+      confirmPassword: string
+      pleaseConfirmYourPassword: string
+      createAccount: string
+      passwordCantBeEmpty: string
+      weEmailedYou: string
+      yourCodeIsOnTheWay: string
+      itMayTakeAMinuteToArrive: string
+      confirmationCode: string
+      resendCode: string
+      enterYourCode: string
+      confirmationCodeCantBeEmpty: string
+      userAlreadyExists: string
+      creatingAccount: string
+      confirming: string
+    }
+    resetPassword: {
+      resetPassword: string
+      enterYourEmail: string
+      sendCode: string
+      backToSignIn: string
+      sending: string
+      submit: string
+      submitting: string
+      code: string
+      newPassword: string
+      yourPasswordsMustMatch: string
+    }
     menu: {
       overview: string
       myAnswers: string
@@ -47,9 +89,13 @@ export type TranslationKeysSchema = {
       knowledgeMappingFor: string
       doYouWantToDeleteYourAnswers: string
       thisWillDeleteAllAnswers: string
+      profilePicture: string
     }
     content: {
-      unAnswared: string
+      unAnswered: string
+      notAnswered: string
+      notDefined: string
+      answerHistory: string
       shouldBeUpdatedLastAnswered: string
       answerOutdatedOrIncomplete: string
       unansweredOrOutdatedQuestionsInCategory: string
@@ -104,6 +150,8 @@ export type TranslationKeysSchema = {
       days: string
       itHasBeenTimeSinceTheBlockWasUpdated: string
       theBlockWasLastUpdatedDate: string
+      submitAnswersAndQuit: string
+      saveAndContinue: string
     }
     myGroup: {
       lastAnswered: string
@@ -219,21 +267,35 @@ export type TranslationKeysSchema = {
       }
     }
     catalogApi: {
-      error: {
-        couldNotGetAListOfAllFormDefinitionsForOrganizationID: string
-        listAllFormDefinitionsByOrganizationIDError: string
-        couldNotGetAListOfCategoriesForFormDefinitionID: string
-        couldNotGetAListOfQuestionsForCategoryID: string
-        couldNotUpdateCategoryWithID: string
-        couldNotUpdateQuestionWithID: string
-        couldNotUpdateFormDefinitionWithID: string
-        couldNotDeleteFormDefinitionWithID: string
-        couldNotDeleteCategoryWithID: string
-        couldNotDeleteQuestionWithID: string
-        couldNotCreateTheFormDefinition: string
-        couldNotCreateTheCategory: string
-        couldNotCreateTheQuestion: string
-      }
+      couldNotGetAListOfAllFormDefinitionsForOrganizationID: string
+      listAllFormDefinitionsByOrganizationIDError: string
+      couldNotGetAListOfCategoriesForFormDefinitionID: string
+      couldNotGetAListOfQuestionsForCategoryID: string
+      couldNotUpdateCategoryWithID: string
+      couldNotUpdateQuestionWithID: string
+      couldNotUpdateFormDefinitionWithID: string
+      couldNotDeleteFormDefinitionWithID: string
+      couldNotDeleteCategoryWithID: string
+      couldNotDeleteQuestionWithID: string
+      couldNotCreateTheFormDefinition: string
+      couldNotCreateTheCategory: string
+      couldNotCreateTheQuestion: string
+    }
+    groupsApi: {
+      couldNotGetMembersOfGroupWithID: string
+      couldNotGetAListOfAllGroups: string
+      couldNotGetAListOfAllUsers: string
+      couldNotAddUserWithIDToGroupWithID: string
+      couldNotUpdateUserWithIDToGroupWithID: string
+      couldNotRemoveUserWithIDFromGroupWithID: string
+      couldNotAddAGroup: string
+      couldNotRemoveGroupWithID: string
+      couldNotSetGroupLeaderToUsernameOnGroupWithID: string
+    }
+    superAdminApi: {
+      couldNotGetAListOfOrganizations: string
+      couldNotAddTheOrganization: string
+      couldNotDeleteTheOrganization: string
     }
   }
 }

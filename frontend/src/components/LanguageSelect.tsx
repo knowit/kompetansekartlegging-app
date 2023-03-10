@@ -1,8 +1,17 @@
 import { MenuItem, Select, SvgIcon } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { availableLanguages } from '../i18n/i18n'
+import { I18n as amplifyI18n } from 'aws-amplify'
 
 export const LanguageSelect = ({ isMobile }: { isMobile: boolean }) => {
+  const { i18n } = useTranslation()
+
+  const changeLanguage = (language: string) => {
+    i18n.changeLanguage(language)
+    amplifyI18n.setLanguage(language)
+    localStorage.setItem('language', language)
+  }
+
   const getFlagIcon = (
     language: string,
     size: 'small' | 'medium' | 'large' = 'medium'
@@ -14,19 +23,6 @@ export const LanguageSelect = ({ isMobile }: { isMobile: boolean }) => {
       </SvgIcon>
     )
   }
-
-  const changeLanguage = (language: string) => {
-    i18n.changeLanguage(language)
-    localStorage.setItem('language', language)
-  }
-
-  const textStyle = {
-    fontSize: 14,
-    marginLeft: 10,
-    fontWeight: 'bold',
-  }
-
-  const { i18n } = useTranslation()
 
   return (
     <Select
@@ -42,7 +38,7 @@ export const LanguageSelect = ({ isMobile }: { isMobile: boolean }) => {
           <>
             {getFlagIcon(language, isMobile ? 'small' : 'medium')}
             {
-              <div style={textStyle}>
+              <div style={{ fontSize: 14, marginLeft: 10, fontWeight: 'bold' }}>
                 {availableLanguages[language].nativeName}
               </div>
             }

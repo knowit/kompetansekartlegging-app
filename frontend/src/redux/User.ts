@@ -5,8 +5,8 @@ import {
   ADMIN_COGNITOGROUP_SUFFIX,
   GROUPLEADER_COGNITOGROUP_SUFFIX,
 } from '../constants'
-
 import { UserRole } from '../types'
+import i18n from '../i18n/i18n'
 
 const initialState = {
   userState: {
@@ -112,7 +112,7 @@ export const userSlice = createSlice({
       state.userState.organizationName = action.payload
     })
     builder.addCase(fetchOrganizationNameByID.rejected, (state, action) => {
-      state.userState.organizationName = 'no organization name found'
+      state.userState.organizationName = i18n.t('noOrganizationNameFound')
     })
   },
 })

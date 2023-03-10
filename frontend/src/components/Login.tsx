@@ -5,6 +5,8 @@ import '@aws-amplify/ui-react/styles.css'
 import { Auth } from 'aws-amplify'
 import { KnowitColors } from '../styles'
 import { ReactComponent as KnowitLogo } from '../Logotype-Knowit-Digital-white 1.svg'
+import { useTranslation } from 'react-i18next'
+import { LanguageSelect } from './LanguageSelect'
 
 const loginStyle = makeStyles({
   container: {
@@ -54,6 +56,12 @@ const loginStyle = makeStyles({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  languageSelect: {
+    zIndex: 1,
+    position: 'absolute',
+    top: '7px',
+    left: '15px',
   },
   headlineAlign: {
     height: '15%',
@@ -112,38 +120,49 @@ const loginStyle = makeStyles({
   },
 })
 
+const formFields = {
+  signUp: {
+    name: {
+      order: 1,
+      isRequired: true,
+    },
+    email: {
+      order: 2,
+      isRequired: true,
+    },
+    password: {
+      order: 3,
+      isRequired: true,
+    },
+    confirm_password: {
+      order: 4,
+      isRequired: true,
+    },
+  },
+}
+
 const userBranch = process ? process.env.REACT_APP_USER_BRANCH : ''
 const isNotProd = userBranch !== 'master'
 const Login = (props: { isMobile: boolean }) => {
   // console.log("/tree/", userBranch, isNotProd);
+  const { t } = useTranslation()
   const style = loginStyle()
   const [showDevLogin, setShowDevLogin] = useState<boolean>(false)
-  const formFields = {
-    signUp: {
-      name: {
-        order: 1,
-      },
-      email: {
-        order: 2,
-      },
-      password: {
-        order: 3,
-      },
-      confirm_password: {
-        order: 4,
-      },
-    },
-  }
 
   return showDevLogin ? (
-    <Authenticator
-      formFields={formFields}
-      signUpAttributes={['name']}
-      variation="default"
-      loginMechanisms={['email']}
-      className={style.authenticator}
-      /*socialProviders={["amazon"]}*/
-    />
+    <>
+      <div className={style.languageSelect}>
+        <LanguageSelect isMobile={props.isMobile} />
+      </div>
+      <Authenticator
+        formFields={formFields}
+        signUpAttributes={['name']}
+        variation="default"
+        loginMechanisms={['email']}
+        className={style.authenticator}
+        /*socialProviders={["amazon"]}*/
+      />
+    </>
   ) : (
     <div className={style.container}>
       <div className={style.topDiv} />
@@ -154,12 +173,15 @@ const Login = (props: { isMobile: boolean }) => {
         </div>
       </div>
       <div className={style.frontDiv}>
+        <div className={style.languageSelect}>
+          <LanguageSelect isMobile={props.isMobile} />
+        </div>
         <div className={style.headlineAlign}>
           <h1
             className={props.isMobile ? style.headlineMobile : style.headline}
           >
             <div className={style.dot} />
-            Kompetansekartlegging
+            {t('login.knowledgeMapping')}
           </h1>
         </div>
         <div className={style.buttonAlign}>
@@ -171,14 +193,14 @@ const Login = (props: { isMobile: boolean }) => {
               })
             }
           >
-            Logg inn
+            {t('login.signIn')}
           </Button>
           {isNotProd && (
             <Button
               className={style.loginButton}
               onClick={() => setShowDevLogin(true)}
             >
-              Dev login
+              {t('login.devSignIn')}
             </Button>
           )}
         </div>

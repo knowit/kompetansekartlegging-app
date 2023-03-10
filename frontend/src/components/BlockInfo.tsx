@@ -115,9 +115,9 @@ export const BlockInfo = (props: {
           <div className={classes.warningText}>
             {t('myAnswers.theBlockWasLastUpdatedDate', {
               date: i18nDateToLocaleDateString(new Date(timeOfOldestQuestion)),
+              interpolation: { escapeValue: false },
             })}
           </div>
-          {/* TODO: i18n*/}
         </div>
       </div>
     )

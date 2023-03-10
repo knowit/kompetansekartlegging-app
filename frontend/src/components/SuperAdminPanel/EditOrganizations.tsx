@@ -76,7 +76,7 @@ const OrganizationTable: React.FC<OrganizationTableProps> = ({
             <TableCell>{t('name')}</TableCell>
             <TableCell>{t('superAdmin.editOrganizations.id')}</TableCell>
             <TableCell>{t('superAdmin.identifierAttribute')}</TableCell>
-            <TableCell>{t('remove')}</TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>

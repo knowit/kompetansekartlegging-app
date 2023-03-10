@@ -1,2 +1,3 @@
 /src/i18n/locales/*.ts
+/src/i18n/i18n.ts
 /build

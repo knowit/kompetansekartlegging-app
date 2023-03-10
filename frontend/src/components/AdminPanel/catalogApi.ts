@@ -53,7 +53,7 @@ const listAllFormDefinitionsForLoggedInUser = async (): Promise<
   } catch (e) {
     return {
       error: i18n.t(
-        'catalogApi.error.couldNotGetAListOfAllFormDefinitionsForOrganizationID',
+        'catalogApi.couldNotGetAListOfAllFormDefinitionsForOrganizationID',
         { organizationID: organizationID }
       ),
     }
@@ -83,10 +83,9 @@ const listAllFormDefinitionsByOrganizationID = async (
   } catch (e) {
     console.log(e)
     return {
-      error: i18n.t(
-        'catalogApi.error.listAllFormDefinitionsByOrganizationIDError',
-        { organizationID: organizationID }
-      ),
+      error: i18n.t('catalogApi.listAllFormDefinitionsByOrganizationIDError', {
+        organizationID: organizationID,
+      }),
     }
   }
 }
@@ -115,7 +114,7 @@ const listCategoriesByFormDefinitionID = async (
   } catch (e) {
     return {
       error: i18n.t(
-        'catalogApi.error.couldNotGetAListOfCategoriesForFormDefinitionID',
+        'catalogApi.couldNotGetAListOfCategoriesForFormDefinitionID',
         { formDefinitionID: formDefinitionID }
       ),
     }
@@ -152,10 +151,9 @@ const listQuestionsByCategoryID = async (
     return { result: els || [] }
   } catch (e) {
     return {
-      error: i18n.t(
-        'catalogApi.error.couldNotGetAListOfQuestionsForCategoryID',
-        { categoryID: categoryID }
-      ),
+      error: i18n.t('catalogApi.couldNotGetAListOfQuestionsForCategoryID', {
+        categoryID: categoryID,
+      }),
     }
   }
 }
@@ -176,7 +174,7 @@ const updateCategory = async (
     return { result: el || null }
   } catch (e) {
     return {
-      error: i18n.t('catalogApi.error.couldNotUpdateCategoryWithID', {
+      error: i18n.t('catalogApi.couldNotUpdateCategoryWithID', {
         categoryID: id,
       }),
     }
@@ -211,7 +209,7 @@ const updateQuestion = async (
     return { result: el || null }
   } catch (e) {
     return {
-      error: i18n.t('catalogApi.error.couldNotUpdateQuestionWithID', {
+      error: i18n.t('catalogApi.couldNotUpdateQuestionWithID', {
         questionID: id,
       }),
     }
@@ -253,7 +251,7 @@ const updateFormDefinition = async (
     return { result: el || null }
   } catch (e) {
     return {
-      error: i18n.t('catalogApi.error.couldNotUpdateFormDefinitionWithID', {
+      error: i18n.t('catalogApi.couldNotUpdateFormDefinitionWithID', {
         formDefinitionID: id,
       }),
     }
@@ -278,7 +276,7 @@ const deleteFormDefinition = async (id: string): Promise<ApiResponse<null>> => {
     return { result: null }
   } catch (e) {
     return {
-      error: i18n.t('catalogApi.error.couldNotDeleteFormDefinitionWithID', {
+      error: i18n.t('catalogApi.couldNotDeleteFormDefinitionWithID', {
         formDefinitionID: id,
       }),
     }
@@ -296,7 +294,7 @@ const deleteCategory = async (id: string): Promise<ApiResponse<null>> => {
     return { result: null }
   } catch (e) {
     return {
-      error: i18n.t('catalogApi.error.couldNotDeleteCategoryWithID', {
+      error: i18n.t('catalogApi.couldNotDeleteCategoryWithID', {
         categoryID: id,
       }),
     }
@@ -314,7 +312,7 @@ const deleteQuestion = async (id: string): Promise<ApiResponse<null>> => {
     return { result: null }
   } catch (e) {
     return {
-      error: i18n.t('catalogApi.error.couldNotDeleteQuestionWithID', {
+      error: i18n.t('catalogApi.couldNotDeleteQuestionWithID', {
         questionID: id,
       }),
     }
@@ -341,7 +339,7 @@ const createFormDefinition = async (
     return { result: el || null }
   } catch (e) {
     return {
-      error: i18n.t('catalogApi.error.couldNotCreateTheFormDefinition', {
+      error: i18n.t('catalogApi.couldNotCreateTheFormDefinition', {
         catalogName: name,
       }),
     }
@@ -372,7 +370,7 @@ const createCategory = async (
     return { result: el || null }
   } catch (e) {
     return {
-      error: i18n.t('catalogApi.error.couldNotCreateTheCategory', {
+      error: i18n.t('catalogApi.couldNotCreateTheCategory', {
         categoryName: name,
       }),
     }
@@ -409,7 +407,7 @@ const createQuestion = async (
     return { result: el || null }
   } catch (e) {
     return {
-      error: i18n.t('catalogApi.error.couldNotCreateTheQuestion', {
+      error: i18n.t('catalogApi.couldNotCreateTheQuestion', {
         question: topic,
       }),
     }

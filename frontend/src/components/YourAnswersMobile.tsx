@@ -9,6 +9,7 @@ import { MenuButton } from './Content'
 import { AlertNotification, AlertType } from './AlertNotification'
 import ProgressBar from './ProgressBar'
 import { BlockInfo } from './BlockInfo'
+import { useTranslation } from 'react-i18next'
 
 const yourAnswersStyleMobile = makeStyles({
   hidden: {
@@ -157,6 +158,7 @@ const yourAnswersStyleMobile = makeStyles({
 })
 
 export const YourAnswersMobile = ({ ...props }: YourAnswerProps) => {
+  const { t } = useTranslation()
   const style = yourAnswersStyleMobile()
 
   const getCategoryButtons = () => {
@@ -191,7 +193,7 @@ export const YourAnswersMobile = ({ ...props }: YourAnswerProps) => {
           {props.alerts?.categoryMap.has(category.text) ? (
             <AlertNotification
               type={AlertType.Multiple}
-              message="Ikke besvart eller utdaterte spørsmål i kategori"
+              message={t('content.unansweredOrOutdatedQuestionsInCategory')}
               size={props.alerts.categoryMap.get(category.text)}
             />
           ) : (
@@ -239,7 +241,7 @@ export const YourAnswersMobile = ({ ...props }: YourAnswerProps) => {
             {props.alerts?.categoryMap.has(category.text) ? (
               <AlertNotification
                 type={AlertType.Multiple}
-                message="Ikke besvart eller utdaterte spørsmål i kategori"
+                message={t('content.unansweredOrOutdatedQuestionsInCategory')}
                 size={props.alerts.categoryMap.get(category.text)}
               />
             ) : (
