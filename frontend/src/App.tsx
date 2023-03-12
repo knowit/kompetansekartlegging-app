@@ -1,24 +1,25 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react'
-import './App.css'
 import { API, Auth, Hub } from 'aws-amplify'
+import { Fragment, useEffect, useRef, useState } from 'react'
+import './App.css'
 // import awsconfig from "./aws-exports";
-import awsconfig from './exports'
-import Content from './components/Content'
-import Login from './components/Login'
-import { ThemeProvider } from '@material-ui/core/styles'
+import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth'
 import { Button, debounce, makeStyles, Snackbar } from '@material-ui/core'
+import { ThemeProvider } from '@material-ui/core/styles'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { isMobile } from 'react-device-detect'
+import Content from './components/Content'
 import FloatingScaleDescButton from './components/FloatingScaleDescButton'
+import Login from './components/Login'
 import NavBarDesktop from './components/NavBarDesktop'
-import theme from './theme'
+import awsconfig from './exports'
+import { useAppDispatch, useAppSelector } from './redux/hooks'
 import {
+  fetchOrganizationNameByID,
+  selectUserState,
   setUserInfo,
   setUserInfoLogOut,
-  selectUserState,
-  fetchOrganizationNameByID,
 } from './redux/User'
-import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth'
-import { useAppSelector, useAppDispatch } from './redux/hooks'
+import theme from './theme'
 
 const userBranch = process ? process.env.REACT_APP_USER_BRANCH : '' // Process does not exist in Webpack 5?
 
@@ -80,6 +81,8 @@ const appStyle = makeStyles({
 const cognitoUserContainsAttributes = (data: any): boolean => {
   return 'attributes' in data
 }
+
+const queryClient = new QueryClient()
 
 const App = () => {
   const dispatch = useAppDispatch()
@@ -194,63 +197,65 @@ const App = () => {
   const [bannerOpen, setBannerOpen] = useState(true)
 
   return (
-    <ThemeProvider theme={theme}>
-      <div className={style.root}>
-        {userBranch !== 'master' ? (
-          <Snackbar
-            open={bannerOpen}
-            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          >
-            <div
-              style={{
-                background: 'rgba(0,255,0, 255)',
-                borderRadius: 5,
-                padding: 4,
-                textAlign: 'center',
-              }}
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <div className={style.root}>
+          {userBranch !== 'master' ? (
+            <Snackbar
+              open={bannerOpen}
+              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
-              NB: Dette er et test miljø!{' '}
-              <Button onClick={() => setBannerOpen(false)}>Close</Button>
-            </div>
-          </Snackbar>
-        ) : null}
-        {userState.isSignedIn ? (
-          <Fragment>
-            {isMobile ? null : (
-              <NavBarDesktop
-                displayAnswers={displayAnswers}
-                signout={signout}
-              />
-            )}
+              <div
+                style={{
+                  background: 'rgba(0,255,0, 255)',
+                  borderRadius: 5,
+                  padding: 4,
+                  textAlign: 'center',
+                }}
+              >
+                NB: Dette er et test miljø!{' '}
+                <Button onClick={() => setBannerOpen(false)}>Close</Button>
+              </div>
+            </Snackbar>
+          ) : null}
+          {userState.isSignedIn ? (
+            <Fragment>
+              {isMobile ? null : (
+                <NavBarDesktop
+                  displayAnswers={displayAnswers}
+                  signout={signout}
+                />
+              )}
 
-            <Content
-              setAnswerHistoryOpen={setAnswerHistoryOpen}
-              answerHistoryOpen={answerHistoryOpen}
-              isMobile={isMobile}
-              signout={signout}
-              collapseMobileCategories={collapseMobileCategories}
-              categoryNavRef={categoryNavRef}
-              mobileNavRef={mobileNavRef}
-              scrollToTop={scrollToTopMobile}
-              setCollapseMobileCategories={setCollapseMobileCategories}
-              setScaleDescOpen={setScaleDescOpen}
-              setFirstTimeLogin={setFirstTimeLogin}
-              setShowFab={setShowFab}
-            />
-            {showFab && (
-              <FloatingScaleDescButton
-                scaleDescOpen={scaleDescOpen}
-                setScaleDescOpen={setScaleDescOpen}
-                firstTimeLogin={firstTimeLogin}
+              <Content
+                setAnswerHistoryOpen={setAnswerHistoryOpen}
+                answerHistoryOpen={answerHistoryOpen}
                 isMobile={isMobile}
+                signout={signout}
+                collapseMobileCategories={collapseMobileCategories}
+                categoryNavRef={categoryNavRef}
+                mobileNavRef={mobileNavRef}
+                scrollToTop={scrollToTopMobile}
+                setCollapseMobileCategories={setCollapseMobileCategories}
+                setScaleDescOpen={setScaleDescOpen}
+                setFirstTimeLogin={setFirstTimeLogin}
+                setShowFab={setShowFab}
               />
-            )}
-          </Fragment>
-        ) : (
-          <Login isMobile={isMobile} />
-        )}
-      </div>
-    </ThemeProvider>
+              {showFab && (
+                <FloatingScaleDescButton
+                  scaleDescOpen={scaleDescOpen}
+                  setScaleDescOpen={setScaleDescOpen}
+                  firstTimeLogin={firstTimeLogin}
+                  isMobile={isMobile}
+                />
+              )}
+            </Fragment>
+          ) : (
+            <Login isMobile={isMobile} />
+          )}
+        </div>
+      </ThemeProvider>
+    </QueryClientProvider>
   )
 }
 
