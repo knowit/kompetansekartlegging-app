@@ -5,6 +5,7 @@ import { API, Auth } from 'aws-amplify'
 const API_NAME = 'ExpressLambda'
 
 interface ApiResponse<T> {
+  status: 'ok' | 'unknown'
   message: string
   data: T | null
 }
@@ -27,32 +28,34 @@ export const apiGET = async <T>(
   path: string,
   params?: { queryStringParameters?: QSParameters }
 ): Promise<ApiResponse<T>> => {
-  try {
-    const init = await createMyInit()
-    return await API.get(API_NAME, `/api${path}`, {
-      ...init,
-      ...params,
-    })
-  } catch (error) {
-    console.error('error', error)
-    throw error
+  const init = await createMyInit()
+  const res = await API.get(API_NAME, `/api${path}`, {
+    ...init,
+    ...params,
+  })
+
+  if (res.status !== 'ok') {
+    throw new Error(`Error! HTTPS status is ${res.status}!`)
   }
+
+  return res
 }
 
 export const apiPOST = async <T>(
   path: string,
   params: { queryStringParameters?: QSParameters; body: Body }
 ): Promise<ApiResponse<T>> => {
-  try {
-    const init = await createMyInit()
-    return await API.post(API_NAME, `/api${path}`, {
-      ...init,
-      ...params,
-    })
-  } catch (error) {
-    console.error('error', error)
-    throw error
+  const init = await createMyInit()
+  const res = await API.post(API_NAME, `/api${path}`, {
+    ...init,
+    ...params,
+  })
+
+  if (res.status !== 'ok') {
+    throw new Error(`Error! HTTPS status is ${res.status}!`)
   }
+
+  return res
 }
 
 // ? Det irriterer meg at denne må ha body-params for å fungere, men det er nå sånn så lenge API.del ikke aksepterer queryStringParams
@@ -60,31 +63,32 @@ export const apiDELETE = async <T>(
   path: string,
   params: { body: Body }
 ): Promise<ApiResponse<T>> => {
-  try {
-    const init = await createMyInit()
-    const res = await API.del(API_NAME, `/api${path}`, {
-      ...init,
-      ...params,
-    })
-    return res
-  } catch (error) {
-    console.error('error', error)
-    throw error
+  const init = await createMyInit()
+  const res = await API.del(API_NAME, `/api${path}`, {
+    ...init,
+    ...params,
+  })
+
+  if (res.status !== 'ok') {
+    throw new Error(`Error! HTTPS status is ${res.status}!`)
   }
+
+  return res
 }
 
 export const apiPATCH = async <T>(
   path: string,
   params?: { body?: Body; queryStringParameters: QSParameters }
 ): Promise<ApiResponse<T>> => {
-  try {
-    const init = await createMyInit()
-    return await API.patch(API_NAME, `/api${path}`, {
-      ...init,
-      ...params,
-    })
-  } catch (error) {
-    console.error('error', error)
-    throw error
+  const init = await createMyInit()
+  const res = await API.patch(API_NAME, `/api${path}`, {
+    ...init,
+    ...params,
+  })
+
+  if (res.status !== 'ok') {
+    throw new Error(`Error! HTTPS status is ${res.status}!`)
   }
+
+  return res
 }

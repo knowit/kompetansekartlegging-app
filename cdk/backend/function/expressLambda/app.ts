@@ -46,16 +46,26 @@ export const sqlQuery = async ({
     formatRecordsAs: RecordsFormatType.JSON,
   })
   const response = await rds.send(cmd)
+
+  const status =
+    response.$metadata.httpStatusCode &&
+    response.$metadata.httpStatusCode >= 200 &&
+    response.$metadata.httpStatusCode < 300
+      ? 'ok'
+      : 'unknown'
+
   console.log('🚀 ~ response', response)
   if (response.formattedRecords) {
     const records = JSON.parse(response.formattedRecords)
     if (records.length === 0) {
       return {
+        status,
         message: '🧨 ~ No records returned from the query.',
         data: null,
       }
     }
     return {
+      status,
       message,
       data: records.length === 1 ? records[0] : records,
     }
