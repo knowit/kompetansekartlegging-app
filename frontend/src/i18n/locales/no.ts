@@ -228,6 +228,7 @@ export const Norwegian: LanguageSchema = {
         subjectOfTheNewQuestion: 'Emnet på det nye spørsmålet',
         noQuestionsInThisCategoryYet: 'Ingen spørsmål i denne kategorien ennå.',
         noCategoriesInThisCatalogYet: 'Ingen kategorier i denne katalogen ennå.',
+        copyCatalog: 'Kopier katalog',
       },
       downloadCatalogs: {
         description: 'På denne siden kan du laste ned Excel-rapport fra katalogen du ønsker.',

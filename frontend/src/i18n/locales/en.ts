@@ -227,7 +227,8 @@ export const English: LanguageSchema = {
         areYouSureYouWantToDeleteThisQuestion: "Are you sure you want to remove this question? This action is irreversible. Answers to this question will no longer be connected to this question.",
         subjectOfTheNewQuestion: 'Subject of the new question',
         noQuestionsInThisCategoryYet: 'There are no questions in this category yet.',
-        noCategoriesInThisCatalogYet: 'There are no catagories in this catalog yet.'
+        noCategoriesInThisCatalogYet: 'There are no catagories in this catalog yet.',
+        copyCatalog: 'Copy catalog',
       },
       downloadCatalogs: {
         description: 'On this page you can download Excel-reports from the catalog of your choice.',

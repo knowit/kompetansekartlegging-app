@@ -1,24 +1,24 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
-import CircularProgress from '@material-ui/core/CircularProgress'
 import Button from '@material-ui/core/Button'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
-import IconButton from '@material-ui/core/IconButton'
 import Box from '@material-ui/core/Box'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
+import IconButton from '@material-ui/core/IconButton'
 import TextField from '@material-ui/core/TextField'
 
-import { dialogStyles } from '../../styles'
-import { not, getAttribute } from './helpers'
-import useApiGet from './useApiGet'
-import UsersTable from './UsersTable'
-import { CloseIcon } from '../DescriptionTable'
 import { useAppSelector } from '../../redux/hooks'
 import { selectUserState } from '../../redux/User'
 import { useTranslation } from 'react-i18next'
+import { dialogStyles } from '../../styles'
+import { CloseIcon } from '../DescriptionTable'
+import { getAttribute, not } from './helpers'
+import useApiGet from './useApiGet'
+import UsersTable from './UsersTable'
 
 const AddUserToGroupDialog = ({
   onCancel,

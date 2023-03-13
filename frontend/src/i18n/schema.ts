@@ -226,6 +226,7 @@ export type LanguageSchema = {
         subjectOfTheNewQuestion: string
         noQuestionsInThisCategoryYet: string
         noCategoriesInThisCatalogYet: string
+        copyCatalog: string
       }
       downloadCatalogs: {
         description: string

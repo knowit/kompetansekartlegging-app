@@ -1,13 +1,11 @@
-import React from 'react'
-
-import Container from '@material-ui/core/Container'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import Box from '@material-ui/core/Box'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 
+import commonStyles from '../AdminPanel/common.module.css'
 import DeleteUserFromGroupDialog from '../AdminPanel/DeleteUserFromGroupDialog'
 import GroupMembers from '../AdminPanel/GroupMembers'
-import commonStyles from '../AdminPanel/common.module.css'
 import { useTranslation } from 'react-i18next'
 
 const Main = ({

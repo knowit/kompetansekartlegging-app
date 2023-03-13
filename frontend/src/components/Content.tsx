@@ -1,49 +1,49 @@
-import React, { Fragment, useEffect, useState } from 'react'
-import {
-  Panel,
-  ContentProps,
-  FormDefinition,
-  UserAnswer,
-  UserFormWithAnswers,
-  CreateQuestionAnswerResult,
-  AlertState,
-  Alert,
-  QuestionAnswer,
-  SliderValues,
-} from '../types'
-import * as helper from '../helperFunctions'
-import * as customQueries from '../graphql/custom-queries'
-import { Overview } from './cards/Overview'
-import { YourAnswers } from './cards/YourAnswers'
-import { CreateQuestionAnswerInput, QuestionType } from '../API'
 import { Button, ListItem, makeStyles } from '@material-ui/core'
 import clsx from 'clsx'
+import React, { Fragment, useEffect, useState } from 'react'
+import { CreateQuestionAnswerInput, QuestionType } from '../API'
+import * as customQueries from '../graphql/custom-queries'
+import * as helper from '../helperFunctions'
+import { useAppSelector } from '../redux/hooks'
+import {
+  selectAdminCognitoGroupName,
+  selectGroupLeaderCognitoGroupName,
+  selectIsAdmin,
+  selectIsGroupLeader,
+  selectIsSuperAdmin,
+  selectUserState,
+} from '../redux/User'
 import { KnowitColors } from '../styles'
+import {
+  Alert,
+  AlertState,
+  ContentProps,
+  CreateQuestionAnswerResult,
+  FormDefinition,
+  Panel,
+  QuestionAnswer,
+  SliderValues,
+  UserAnswer,
+  UserFormWithAnswers,
+} from '../types'
+import { AdminMenu, AdminPanel } from './AdminPanel/'
 import { AlertDialog } from './AlertDialog'
 import {
   AlertNotification,
   AlertType,
   staleAnswersLimit,
 } from './AlertNotification'
-import NavBarMobile from './NavBarMobile'
 import { AnswerHistory } from './AnswerHistory'
-import { AdminPanel, AdminMenu } from './AdminPanel/'
-import { GroupLeaderMenu, GroupLeaderPanel } from './GroupLeaderPanel/'
 import {
-  getUserAnswers,
-  fetchLastFormDefinition,
   createQuestionAnswers,
+  fetchLastFormDefinition,
+  getUserAnswers,
   setFirstAnswers,
 } from './answersApi'
-import { useAppSelector } from '../redux/hooks'
-import {
-  selectUserState,
-  selectIsSuperAdmin,
-  selectIsAdmin,
-  selectIsGroupLeader,
-  selectAdminCognitoGroupName,
-  selectGroupLeaderCognitoGroupName,
-} from '../redux/User'
+import { Overview } from './cards/Overview'
+import { YourAnswers } from './cards/YourAnswers'
+import { GroupLeaderMenu, GroupLeaderPanel } from './GroupLeaderPanel/'
+import NavBarMobile from './NavBarMobile'
 import { SuperAdminMenu } from './SuperAdminPanel/SuperAdminMenu'
 import { SuperAdminPanel } from './SuperAdminPanel/SuperAdminPanel'
 import { useTranslation } from 'react-i18next'

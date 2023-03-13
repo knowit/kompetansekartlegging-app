@@ -1,15 +1,15 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import List from '@material-ui/core/List'
 
+import { Category } from '../../../API'
 import {
-  updateCategoryIndex,
-  updateCategoryTextAndDescription,
   deleteCategory as deleteCategoryApi,
   listQuestionsByCategoryID,
+  updateCategoryIndex,
+  updateCategoryTextAndDescription,
 } from '../catalogApi'
-import { Category } from '../../../API'
 import CategoryListItem from './CategoryListItem'
 import DeleteCategoryDialog from './DeleteCategoryDialog'
 import { useTranslation } from 'react-i18next'

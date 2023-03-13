@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
-import { Button, makeStyles } from '@material-ui/core'
 import { Authenticator } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css'
+import { Button, makeStyles } from '@material-ui/core'
 import { Auth } from 'aws-amplify'
-import { KnowitColors } from '../styles'
+import { useState } from 'react'
 import { ReactComponent as KnowitLogo } from '../Logotype-Knowit-Digital-white 1.svg'
 import { useTranslation } from 'react-i18next'
 import { LanguageSelect } from './LanguageSelect'
+import { KnowitColors } from '../styles'
 
 const loginStyle = makeStyles({
   container: {

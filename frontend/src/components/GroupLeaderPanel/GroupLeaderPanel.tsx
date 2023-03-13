@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import style from './GroupLeaderPanel.module.css'
 
 import { Group } from '../../API'
-import useApiGet from '../AdminPanel/useApiGet'
 import {
   listAllUsersInOrganization as listAllAvailableUsersInOrganization,
   listGroupLeadersInOrganization,
 } from '../AdminPanel/adminApi'
 import {
+  addUserToGroup,
   listAllGroups,
   listAllUsers,
-  addUserToGroup,
-  updateUserGroup,
   removeUserFromGroup,
+  updateUserGroup,
 } from '../AdminPanel/groupsApi'
+import useApiGet from '../AdminPanel/useApiGet'
 
-import Main from './Main'
-import GroupMember from './GroupMember'
+import { getLatestUserFormUpdatedAtForUser } from '../../helperFunctions'
 import { useAppSelector } from '../../redux/hooks'
 import { selectUserState } from '../../redux/User'
 import { listAllFormDefinitionsForLoggedInUser } from '../AdminPanel/catalogApi'
 import { compareByCreatedAt } from '../AdminPanel/helpers'
-import { getLatestUserFormUpdatedAtForUser } from '../../helperFunctions'
+import GroupMember from './GroupMember'
+import Main from './Main'
 
 const GroupLeaderPanel = ({
   members,

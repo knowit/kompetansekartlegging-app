@@ -1,9 +1,7 @@
-import React from 'react'
-
-import EditOrganizations from './EditOrganizations'
-import EditOrganizationAdmins from './EditOrganizationAdmins'
-import EditSuperAdmins from './EditSuperAdmins'
 import style from '../AdminPanel/AdminPanel.module.css'
+import EditOrganizationAdmins from './EditOrganizationAdmins'
+import EditOrganizations from './EditOrganizations'
+import EditSuperAdmins from './EditSuperAdmins'
 
 type SuperAdminPanelProps = {
   activeSubmenuItem: string

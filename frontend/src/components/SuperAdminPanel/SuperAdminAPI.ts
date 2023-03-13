@@ -1,17 +1,17 @@
-import { callGraphQL } from '../../helperFunctions'
 import {
+  Mutation,
   // ListOrganizationsQuery,
   // CreateOrganizationMutation,
   // UpdateOrganizationMutation,
   // DeleteOrganizationMutation
   Query,
-  Mutation,
 } from '../../API'
-import { listOrganizations } from '../../graphql/queries'
 import { createOrganization, deleteOrganization } from '../../graphql/mutations'
-import { OrganizationInfo } from './SuperAdminTypes'
+import { listOrganizations } from '../../graphql/queries'
+import { callGraphQL } from '../../helperFunctions'
 import { ApiResponse } from '../AdminPanel/adminApi'
 import i18n from '../../i18n/i18n'
+import { OrganizationInfo } from './SuperAdminTypes'
 
 export const getOrganizations = async (): Promise<
   ApiResponse<OrganizationInfo[]>

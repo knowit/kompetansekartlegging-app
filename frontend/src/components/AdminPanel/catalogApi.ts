@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { callGraphQL } from '../../helperFunctions'
 import { store } from '../../redux/store'
+import { API, Auth } from 'aws-amplify'
 
 import {
   // CategoriesByFormDefinitionQuery,
@@ -319,6 +320,31 @@ const deleteQuestion = async (id: string): Promise<ApiResponse<null>> => {
   }
 }
 
+const copyFormDefinition = async (
+  formDefinitionId: string,
+  name: string
+): Promise<ApiResponse<null>> => {
+  try {
+    await API.get('CreateCopyCatalogAPI', '', {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${(await Auth.currentSession())
+          .getAccessToken()
+          .getJwtToken()}`,
+      },
+      queryStringParameters: {
+        formDefId: `${formDefinitionId}`,
+        formDefLabel: `${name}`,
+      },
+    })
+    return { result: null }
+  } catch (e) {
+    return {
+      error: `Could not copy form definition '${formDefinitionId}'.`,
+    }
+  }
+}
+
 const createFormDefinition = async (
   name: string
 ): Promise<ApiResponse<FormDefinition>> => {
@@ -426,6 +452,7 @@ export {
   deleteFormDefinition,
   deleteCategory,
   deleteQuestion,
+  copyFormDefinition,
   createFormDefinition,
   createCategory,
   createQuestion,

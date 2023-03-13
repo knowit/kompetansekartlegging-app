@@ -1,35 +1,33 @@
 import {
   AppBar,
-  Button,
-  Toolbar,
   Avatar,
-  MenuItem,
-  ClickAwayListener,
-  Popper,
-  Grow,
-  Paper,
-  MenuList,
-  Modal,
   Box,
-} from '@material-ui/core'
-import {
+  Button,
+  ClickAwayListener,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Grow,
+  MenuItem,
+  MenuList,
+  Modal,
+  Paper,
+  Popper,
+  Toolbar,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import HelpIcon from '@material-ui/icons/Help'
 import React, { useEffect, useRef, useState } from 'react'
-import { KnowitColors } from '../styles'
-import { NavBarPropsDesktop, UserRole } from '../types'
+import ReactMarkdown from 'react-markdown'
 import { ReactComponent as KnowitLogo } from '../Logotype-Knowit-Digital-white 1.svg'
 import { useAppSelector } from '../redux/hooks'
 import { selectUserState } from '../redux/User'
-import ReactMarkdown from 'react-markdown'
-import HelpIcon from '@material-ui/icons/Help'
 import { LanguageSelect } from './LanguageSelect'
 import { useTranslation } from 'react-i18next'
+import { KnowitColors } from '../styles'
+import { NavBarPropsDesktop, UserRole } from '../types'
 
 const navbarStyles = makeStyles((theme) => ({
   root: {

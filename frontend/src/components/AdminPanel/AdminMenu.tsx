@@ -1,9 +1,9 @@
-import React from 'react'
-import { Panel } from '../../types'
 import { Button } from '@material-ui/core'
 import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
 import { SubmenuCategory } from './AdminPanel'
+import React from 'react'
+import { Panel } from '../../types'
 
 type AdminMenuProps = {
   show: boolean

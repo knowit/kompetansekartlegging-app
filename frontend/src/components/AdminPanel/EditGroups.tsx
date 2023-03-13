@@ -1,54 +1,54 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { makeStyles } from '@material-ui/core/styles'
-import Container from '@material-ui/core/Container'
+import Box from '@material-ui/core/Box'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import Collapse from '@material-ui/core/Collapse'
+import Container from '@material-ui/core/Container'
 import IconButton from '@material-ui/core/IconButton'
+import { makeStyles } from '@material-ui/core/styles'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import DeleteIcon from '@material-ui/icons/Delete'
-import AddIcon from '@material-ui/icons/Add'
 import Typography from '@material-ui/core/Typography'
-import Box from '@material-ui/core/Box'
-import Collapse from '@material-ui/core/Collapse'
+import AddIcon from '@material-ui/icons/Add'
+import DeleteIcon from '@material-ui/icons/Delete'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 
-import commonStyles from './common.module.css'
-import DeleteUserFromGroupDialog from './DeleteUserFromGroupDialog'
-import DeleteGroupDialog from './DeleteGroupDialog'
-import useApiGet from './useApiGet'
+import { getLatestUserFormUpdatedAtForUser } from '../../helperFunctions'
+import { useAppSelector } from '../../redux/hooks'
+import { selectUserState } from '../../redux/User'
+import Button from '../mui/Button'
+import Table from '../mui/Table'
+import TableRow from '../mui/TableRow'
+import AddUserToGroupDialog from './AddUserToGroupDialog'
 import {
   listAllUsersInOrganization as listAllAvailableUsersInOrganization,
   // listGroupLeaders,
   listGroupLeadersInOrganization,
 } from './adminApi'
+import { listAllFormDefinitionsForLoggedInUser } from './catalogApi'
+import commonStyles from './common.module.css'
+import DeleteGroupDialog from './DeleteGroupDialog'
+import DeleteUserFromGroupDialog from './DeleteUserFromGroupDialog'
+import GroupMembers from './GroupMembers'
 import {
-  listAllGroups,
-  removeGroup,
   addGroup,
-  listAllUsers,
   addUserToGroup,
-  updateUserGroup,
+  listAllGroups,
+  listAllUsers,
+  removeGroup,
   removeUserFromGroup,
   updateGroupLeader,
+  updateUserGroup,
 } from './groupsApi'
-import { getAttribute, compareByName, compareByCreatedAt } from './helpers'
+import { compareByCreatedAt, compareByName, getAttribute } from './helpers'
 import PictureAndNameEditCell from './PictureAndNameEditCell'
-import GroupMembers from './GroupMembers'
-import AddUserToGroupDialog from './AddUserToGroupDialog'
-import Button from '../mui/Button'
-import Table from '../mui/Table'
-import TableRow from '../mui/TableRow'
-import { useAppSelector } from '../../redux/hooks'
-import { selectUserState } from '../../redux/User'
-import { listAllFormDefinitionsForLoggedInUser } from './catalogApi'
-import { getLatestUserFormUpdatedAtForUser } from '../../helperFunctions'
 import { useTranslation } from 'react-i18next'
+import useApiGet from './useApiGet'
 
 const useRowStyles = makeStyles({
   root: {

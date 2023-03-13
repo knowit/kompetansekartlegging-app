@@ -1,20 +1,19 @@
-import React from 'react'
+import Slider from '@material-ui/core/Slider'
+import { makeStyles, withStyles } from '@material-ui/core/styles'
 import {
-  BarChart,
   Bar,
+  BarChart,
   CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  TooltipProps,
   XAxis,
   YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  TooltipProps,
 } from 'recharts'
 import {
   NameType,
   ValueType,
 } from 'recharts/types/component/DefaultTooltipContent'
-import { withStyles, makeStyles } from '@material-ui/core/styles'
-import Slider from '@material-ui/core/Slider'
 
 import { KnowitColors } from '../styles'
 import { CustomScaleChartProps } from '../types'

@@ -1,3 +1,4 @@
+import * as python from '@aws-cdk/aws-lambda-python-alpha'
 import {
   aws_cloudwatch,
   aws_secretsmanager,
@@ -7,15 +8,8 @@ import {
   Stack,
   StackProps,
 } from 'aws-cdk-lib'
-import * as cam from 'aws-cdk-lib/aws-certificatemanager'
-import * as cognito from 'aws-cdk-lib/aws-cognito'
-import * as lambda from 'aws-cdk-lib/aws-lambda'
-import * as python from '@aws-cdk/aws-lambda-python-alpha'
-import * as iam from 'aws-cdk-lib/aws-iam'
 import * as backup from 'aws-cdk-lib/aws-backup'
-import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
-import * as s3 from 'aws-cdk-lib/aws-s3'
-import * as sns from 'aws-cdk-lib/aws-sns'
+import * as cam from 'aws-cdk-lib/aws-certificatemanager'
 import {
   ComparisonOperator,
   Statistic,
@@ -23,12 +17,17 @@ import {
   Unit,
 } from 'aws-cdk-lib/aws-cloudwatch'
 import { SnsAction } from 'aws-cdk-lib/aws-cloudwatch-actions'
+import * as cognito from 'aws-cdk-lib/aws-cognito'
+import * as iam from 'aws-cdk-lib/aws-iam'
+import * as lambda from 'aws-cdk-lib/aws-lambda'
+import * as s3 from 'aws-cdk-lib/aws-s3'
+import * as sns from 'aws-cdk-lib/aws-sns'
 // import * as appsync from 'aws-cdk-lib/aws-appsync';
 import * as gateway from 'aws-cdk-lib/aws-apigateway'
 // import { CfnUserPoolIdentityProvider } from 'aws-cdk-lib/aws-cognito';
+import { AppSyncTransformer } from 'cdk-appsync-transformer'
 import { Construct } from 'constructs'
 import * as path from 'path'
-import { AppSyncTransformer } from 'cdk-appsync-transformer'
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class KompetanseStack extends Stack {
@@ -501,6 +500,97 @@ export class KompetanseStack extends Stack {
         endpoint: excelApi.url,
         region: this.region,
       }
+    }
+
+// CopyCatalog Setup
+
+  const copyCatalogStatement = new iam.PolicyStatement({
+    actions: [
+      "dynamodb:Get*",
+      "dynamodb:BatchGetItem",
+      "dynamodb:List*",
+      "dynamodb:Scan",
+      "dynamodb:Query",
+      "dynamodb:PutItem",
+    ],
+    effect: iam.Effect.ALLOW,
+    resources: [
+      tableArns["UserFormTable"],
+      `${tableArns["UserFormTable"]}/index/*`,
+      tableArns["QuestionTable"], 
+      `${tableArns["QuestionTable"]}/index/*`,
+      tableArns["QuestionAnswerTable"],
+      `${tableArns["QuestionAnswerTable"]}/index/*`,
+      tableArns["CategoryTable"],
+      `${tableArns["CategoryTable"]}/index/*`,
+      tableArns["FormDefinitionTable"],
+      `${tableArns["FormDefinitionTable"]}/index/*`
+    ]
+  })
+
+
+  const createCopyCatalogLambda = new python.PythonFunction(this, "kompetanseCopyCatalogLambda", {
+    entry: path.join(__dirname, "/../backend/function/copyCatalog"),
+    runtime: lambda.Runtime.PYTHON_3_9,
+    environment: {
+      SOURCE_NAME: "KompetanseStack",
+      ENV: ENV,
+      USER_POOL_ID: pool.userPoolId,
+    },
+    initialPolicy: [copyCatalogStatement, externalAPICognitoStatement],
+    timeout: Duration.seconds(25),
+    memorySize:2048
+  })
+    // CopyCatalog API Setup
+
+    const copyCatalogApi = new gateway.RestApi(this, "kompetanseRestApi", {
+      restApiName: "CreateCopyCatalogAPI",
+      deployOptions: {
+        stageName: "dev"
+      },
+    })
+
+    const copyCatalogProxy = copyCatalogApi.root.addProxy({
+      anyMethod: false
+    })
+    copyCatalogProxy.addMethod("ANY", new gateway.LambdaIntegration(createCopyCatalogLambda), {
+      authorizer: new gateway.CognitoUserPoolsAuthorizer(this, "CognitoCopyCatalogAPI", {
+        authorizerName: "COGNITO",
+        cognitoUserPools: [pool],
+      }),
+      authorizationScopes: ["aws.cognito.signin.user.admin"],
+    })
+
+    copyCatalogProxy.addMethod("OPTIONS", new gateway.MockIntegration({
+      passthroughBehavior: gateway.PassthroughBehavior.WHEN_NO_MATCH,
+      requestTemplates: {
+        "application/json" : JSON.stringify({statusCode: 200})
+      },
+      integrationResponses: [{
+        statusCode: "200",
+        responseParameters:{
+          "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT'",
+          "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+          "method.response.header.Access-Control-Allow-Origin": "'*'"
+        }
+      }],
+    }), {
+      methodResponses: [{
+        statusCode: "200",
+        responseParameters: {
+          'method.response.header.Content-Type': true,
+          "method.response.header.Access-Control-Allow-Headers": true,
+          'method.response.header.Access-Control-Allow-Origin': true,
+          'method.response.header.Access-Control-Allow-Credentials': true,
+          'method.response.header.Access-Control-Allow-Methods': true
+        },
+        responseModels: {"application/json": gateway.Model.EMPTY_MODEL, "application/vnd.ms-excel": gateway.Model.EMPTY_MODEL}
+      }],
+    })
+    ApiMap["copyCatalogApi"] = {
+      name: copyCatalogApi.restApiName,
+      endpoint: copyCatalogApi.url,
+      region: this.region
     }
 
     // CreateUserformBatch setup

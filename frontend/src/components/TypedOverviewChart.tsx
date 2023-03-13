@@ -1,11 +1,11 @@
+import Button from '@material-ui/core/Button'
+import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { roundDecimals } from '../helperFunctions'
+import { KnowitColors } from '../styles'
 import { ChartData, ResultData, ResultDiagramProps } from '../types'
-import { makeStyles } from '@material-ui/core/styles'
 import { CombinedChart } from './CombinedChart'
 import { CombinedChartMobile } from './CombinedChartMobile'
-import Button from '@material-ui/core/Button'
-import { KnowitColors } from '../styles'
 import { useTranslation } from 'react-i18next'
 
 const graphStyle = makeStyles({

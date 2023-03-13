@@ -1,15 +1,15 @@
 import { Button, makeStyles } from '@material-ui/core'
 import clsx from 'clsx'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { KnowitColors } from '../styles'
-import { YourAnswerProps, Panel } from '../types'
-import AnswerDiagram from './AnswerDiagram'
-import { Form } from './Form'
-import { MenuButton } from './Content'
+import { Panel, YourAnswerProps } from '../types'
 import { AlertNotification, AlertType } from './AlertNotification'
-import ProgressBar from './ProgressBar'
+import AnswerDiagram from './AnswerDiagram'
 import { BlockInfo } from './BlockInfo'
 import { useTranslation } from 'react-i18next'
+import { MenuButton } from './Content'
+import { Form } from './Form'
+import ProgressBar from './ProgressBar'
 
 const yourAnswersStyleMobile = makeStyles({
   hidden: {
