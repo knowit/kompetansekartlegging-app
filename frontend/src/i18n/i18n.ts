@@ -28,7 +28,7 @@ export const availableLanguages: Record<string, languageType> = {
 }
 
 i18next.use(initReactI18next).init({
-  debug: true, // TODO: false
+  debug: false,
   fallbackLng: 'en',
   resources: {
     en: English,
