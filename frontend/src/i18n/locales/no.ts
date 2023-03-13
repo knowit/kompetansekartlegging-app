@@ -153,7 +153,8 @@ export const Norwegian: LanguageSchema = {
       itHasBeenTimeSinceTheBlockWasUpdated: 'Det har gått {{time}} siden blokken ble oppdatert!',
       theBlockWasLastUpdatedDate: 'Blokken ble sist oppdatert {{date}}',
       submitAnswersAndQuit: 'Send inn svar og avslutt',
-      saveAndContinue: 'Lagre og gå videre'
+      saveAndContinue: 'Lagre og gå videre',
+      changeAnswers: 'Endre svar',
     },
     myGroup: {
       lastAnswered: 'Sist besvart',
@@ -229,6 +230,7 @@ export const Norwegian: LanguageSchema = {
         noQuestionsInThisCategoryYet: 'Ingen spørsmål i denne kategorien ennå.',
         noCategoriesInThisCatalogYet: 'Ingen kategorier i denne katalogen ennå.',
         copyCatalog: 'Kopier katalog',
+        copy: 'Kopier'
       },
       downloadCatalogs: {
         description: 'På denne siden kan du laste ned Excel-rapport fra katalogen du ønsker.',

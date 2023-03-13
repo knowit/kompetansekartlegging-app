@@ -153,7 +153,8 @@ export const English: LanguageSchema = {
       itHasBeenTimeSinceTheBlockWasUpdated: 'It has been {{time}} since the block was updated!',
       theBlockWasLastUpdatedDate: 'The block was last updated {{date}}',
       submitAnswersAndQuit: 'Submit answers and quit',
-      saveAndContinue: 'Save and continue'
+      saveAndContinue: 'Save and continue',
+      changeAnswers: 'Change answers',
     },
     myGroup: {
       lastAnswered: 'Last answered',
@@ -229,6 +230,7 @@ export const English: LanguageSchema = {
         noQuestionsInThisCategoryYet: 'There are no questions in this category yet.',
         noCategoriesInThisCatalogYet: 'There are no catagories in this catalog yet.',
         copyCatalog: 'Copy catalog',
+        copy: 'Copy'
       },
       downloadCatalogs: {
         description: 'On this page you can download Excel-reports from the catalog of your choice.',

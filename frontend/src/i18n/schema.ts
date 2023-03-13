@@ -152,6 +152,7 @@ export type LanguageSchema = {
       theBlockWasLastUpdatedDate: string
       submitAnswersAndQuit: string
       saveAndContinue: string
+      changeAnswers: string
     }
     myGroup: {
       lastAnswered: string
@@ -227,6 +228,7 @@ export type LanguageSchema = {
         noQuestionsInThisCategoryYet: string
         noCategoriesInThisCatalogYet: string
         copyCatalog: string
+        copy: string
       }
       downloadCatalogs: {
         description: string

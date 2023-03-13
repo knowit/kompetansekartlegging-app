@@ -340,7 +340,7 @@ export const YourAnswersMobile = ({ ...props }: YourAnswerProps) => {
               className={style.editButton}
               onClick={() => props.enableAnswerEditMode()}
             >
-              Endre svar
+              {t('myAnswers.changeAnswers')}
             </Button>
             {/* <div className={style.catText} >{props.activeCategory}</div> */}
           </div>
