@@ -1,16 +1,16 @@
 import { Duration, Stack, StackProps } from 'aws-cdk-lib'
-import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as iam from 'aws-cdk-lib/aws-iam'
+import * as lambda from 'aws-cdk-lib/aws-lambda'
+import * as rds from 'aws-cdk-lib/aws-rds'
 import * as s3 from 'aws-cdk-lib/aws-s3'
-import { Construct } from 'constructs'
-import * as path from 'path'
 import { BlockPublicAccess } from 'aws-cdk-lib/aws-s3'
 import {
   AwsCustomResource,
   AwsCustomResourcePolicy,
   PhysicalResourceId,
 } from 'aws-cdk-lib/custom-resources'
-import * as rds from 'aws-cdk-lib/aws-rds'
+import { Construct } from 'constructs'
+import * as path from 'path'
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 interface MigrationStackProps extends StackProps {
@@ -60,7 +60,7 @@ export class MigrationStack extends Stack {
         DATABASE_NAME: props.databaseName,
         SOURCE_NAME: 'KompetanseStack',
       },
-      timeout: Duration.seconds(25),
+      timeout: Duration.seconds(900),
       layers: [pandasLayer],
       memorySize: 2048,
     })

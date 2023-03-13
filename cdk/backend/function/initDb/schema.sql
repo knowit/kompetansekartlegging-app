@@ -1,25 +1,25 @@
 -- Tabeller for Kompetansekartlegging
 -- Oppretter dersom det ikke eksisterer fra før av
 CREATE TABLE IF NOT EXISTS organization(
-    id UUID PRIMARY KEY NOT NULL,
+    id UUID PRIMARY KEY,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     organization_name VARCHAR(255) NOT NULL UNIQUE,
     identifier_attribute VARCHAR(255) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS api_key_permission(
-    id VARCHAR(255) PRIMARY KEY NOT NULL,
+    id VARCHAR(255) PRIMARY KEY,
     api_key_hashed VARCHAR(255) NOT NULL,
     organization_id UUID NOT NULL references organization(id)
 );
 CREATE TABLE IF NOT EXISTS "catalog"(
-    id UUID PRIMARY KEY NOT NULL,
+    id UUID PRIMARY KEY,
     label VARCHAR(255),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ,
     organization_id UUID NOT NULL references organization(id)
 );
 CREATE TABLE IF NOT EXISTS category(
-    id UUID PRIMARY KEY NOT NULL,
+    id UUID PRIMARY KEY,
     text VARCHAR(255) NOT NULL,
     description TEXT,
     index INTEGER,
@@ -36,7 +36,7 @@ EXCEPTION
 WHEN duplicate_object THEN null;
 END $$;
 CREATE TABLE IF NOT EXISTS question(
-    id UUID PRIMARY KEY NOT NULL,
+    id UUID PRIMARY KEY,
     text TEXT,
     topic VARCHAR(255) NOT NULL,
     index INTEGER,
@@ -47,12 +47,12 @@ CREATE TABLE IF NOT EXISTS question(
     category_id UUID NOT NULL references category(id)
 );
 CREATE TABLE IF NOT EXISTS "user"(
-    id UUID PRIMARY KEY NOT NULL,
+    id UUID PRIMARY KEY,
     mail VARCHAR(255) NOT NULL UNIQUE,
     organization_id UUID NOT NULL references organization(id)
 );
 CREATE TABLE IF NOT EXISTS question_answer(
-    id UUID PRIMARY KEY NOT NULL,
+    id UUID PRIMARY KEY,
     knowledge REAL,
     motivation REAL,
     custom_scale_value REAL,
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS question_answer(
     user_id UUID NOT NULL references "user"(id)
 );
 CREATE TABLE IF NOT EXISTS "group"(
-    id UUID PRIMARY KEY NOT NULL,
+    id UUID PRIMARY KEY,
     organization_id UUID NOT NULL references organization(id)
 );
 ALTER TABLE "user"

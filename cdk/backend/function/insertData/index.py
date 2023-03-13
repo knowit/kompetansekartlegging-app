@@ -1,10 +1,11 @@
-import boto3
-from os import environ
-import pandas as pd
-from io import StringIO
 import math
-import uuid
 import re
+import uuid
+from io import StringIO
+from os import environ
+
+import boto3
+import pandas as pd
 
 s3Resource = boto3.resource("s3")
 s3BucketFrom = environ.get("TRANSFORMED_DATA_BUCKET")
@@ -30,11 +31,10 @@ def handler(event, context):
     excuteInsert(categorySQL, getFileName("Category"))
     excuteInsert(userSQL, getFileName("User"))
     excuteInsert(groupSQL, getFileName("Group"))
+    excuteInsert(add_group_id_to_user, getFileName("User"))
 
     excuteInsert(questionSQL, getFileName("Question"))
     excuteInsert(questionAnswerSQL, getFileName("QuestionAnswer"))
-
-    excuteInsert(add_group_id_to_user, getFileName("User"))
 
     executeInsert(remove_temp_column)
 
@@ -120,14 +120,13 @@ def create_dummy_data():
 
 
 def organizationSQL(file, start, end):
-    sqlInsertStatment = "INSERT INTO organization (id, created_at, organization_name, identifier_attribute, temp_org_id)\nVALUES"
+    sqlInsertStatment = ""
     for row in file.loc[start:end].itertuples():
+        sqlInsertStatment += "INSERT INTO organization (id, created_at, organization_name, identifier_attribute, temp_org_id)\nVALUES"
         sqlInsertStatment += f"\n({getValueOnSqlFormat(str(uuid.uuid4()))}," \
             f"{getValueOnSqlFormat(row.createdAt, isUTC=True)}," \
             f"{getValueOnSqlFormat(row.orgname)},{getValueOnSqlFormat(row.identifierAttribute)}," \
-            f"{getValueOnSqlFormat(row.id)}),"
-    sqlInsertStatment = sqlInsertStatment.rstrip(
-        sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
+            f"{getValueOnSqlFormat(row.id)}) ON CONFLICT(organization_name) DO UPDATE SET temp_org_id={getValueOnSqlFormat(row.id)};"
     print(sqlInsertStatment)
     return sqlInsertStatment
 
