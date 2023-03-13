@@ -6,12 +6,12 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import PersonAddIcon from '@material-ui/icons/PersonAdd'
 
-import Button from '../mui/Button'
-import Table from '../mui/Table'
-import TableRow from '../mui/TableRow'
-import AddMemberToGroupDialog from './AddMemberToGroupDialog'
-import { getAttribute } from './helpers'
-import PictureAndNameCell from './PictureAndNameCell'
+import Button from '../../mui/Button'
+import Table from '../../mui/Table'
+import TableRow from '../../mui/TableRow'
+import AddMemberToGroupDialog from '../AddMemberToGroupDialog'
+import { getAttribute } from '../helpers'
+import PictureAndNameCell from '../PictureAndNameCell'
 
 const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
   const name = getAttribute(user, 'name')

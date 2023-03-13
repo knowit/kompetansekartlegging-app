@@ -12,7 +12,7 @@ import {
   listAllUsers,
   removeUserFromGroup,
   updateUserGroup,
-} from '../AdminPanel/groupsApi'
+} from '../AdminPanel/Groups/groupsApi'
 import useApiGet from '../AdminPanel/useApiGet'
 
 import { getLatestUserFormUpdatedAtForUser } from '../../helperFunctions'

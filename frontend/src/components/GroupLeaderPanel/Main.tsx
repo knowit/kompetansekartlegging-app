@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography'
 
 import commonStyles from '../AdminPanel/common.module.css'
 import DeleteUserFromGroupDialog from '../AdminPanel/DeleteUserFromGroupDialog'
-import GroupMembers from '../AdminPanel/GroupMembers'
+import GroupMembers from '../AdminPanel/Groups/GroupMembers'
 
 const Main = ({
   allAvailableUsersAnnotated,

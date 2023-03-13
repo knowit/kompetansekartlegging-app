@@ -14,25 +14,25 @@ import Typography from '@material-ui/core/Typography'
 import DeleteIcon from '@material-ui/icons/Delete'
 import PersonAddIcon from '@material-ui/icons/PersonAdd'
 
-import { useAppSelector } from '../../redux/hooks'
+import { useAppSelector } from '../../../redux/hooks'
 import {
   selectGroupLeaderCognitoGroupName,
   selectUserState,
-} from '../../redux/User'
-import Button from '../mui/Button'
-import Table from '../mui/Table'
-import AddUserToGroupDialog from './AddUserToGroupDialog'
+} from '../../../redux/User'
+import Button from '../../mui/Button'
+import Table from '../../mui/Table'
+import AddUserToGroupDialog from '../AddUserToGroupDialog'
 import {
   addUserToGroup,
   listAllUsersInOrganization,
   listGroupLeadersInOrganization,
   removeUserFromGroup,
-} from './adminApi'
-import commonStyles from './common.module.css'
-import DeleteUserFromGroupDialog from './DeleteUserFromGroupDialog'
-import { getAttribute } from './helpers'
-import PictureAndNameCell from './PictureAndNameCell'
-import useApiGet from './useApiGet'
+} from '../adminApi'
+import commonStyles from '../common.module.css'
+import DeleteUserFromGroupDialog from '../DeleteUserFromGroupDialog'
+import { getAttribute } from '../helpers'
+import PictureAndNameCell from '../PictureAndNameCell'
+import useApiGet from '../useApiGet'
 
 const GroupLeader = (props: any) => {
   const { groupLeader, deleteGroupLeader } = props

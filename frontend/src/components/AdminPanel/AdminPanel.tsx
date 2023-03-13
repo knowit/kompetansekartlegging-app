@@ -2,8 +2,8 @@ import style from './AdminPanel.module.css'
 import DownloadExcel from './DownloadExcel'
 import EditAdmins from './EditAdmins'
 import EditCatalogsRouter from './EditCatalogsRouter'
-import EditGroupLeaders from './EditGroupLeaders'
-import EditGroups from './EditGroups'
+import EditGroupLeaders from './Groups/EditGroupLeaders'
+import EditGroups from './Groups/EditGroups'
 
 type AdminPanelProps = {
   activeSubmenuItem: string

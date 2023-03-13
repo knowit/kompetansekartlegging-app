@@ -6,11 +6,11 @@ import {
   // UsersByGroupQuery,
   Query,
   User,
-} from '../../API'
+} from '../../../API'
 import {
   ADMIN_COGNITOGROUP_SUFFIX,
   GROUPLEADER_COGNITOGROUP_SUFFIX,
-} from '../../constants'
+} from '../../../constants'
 import {
   createGroup,
   createUser,
@@ -18,10 +18,10 @@ import {
   deleteUser,
   updateGroup,
   updateUser,
-} from '../../graphql/mutations'
-import { listGroups, listUsers, usersByGroup } from '../../graphql/queries'
-import { callGraphQL } from '../../helperFunctions'
-import { ApiResponse } from './adminApi'
+} from '../../../graphql/mutations'
+import { listGroups, listUsers, usersByGroup } from '../../../graphql/queries'
+import { callGraphQL } from '../../../helperFunctions'
+import { ApiResponse } from '../adminApi'
 
 const getGroupMembers = async (
   groupID: string
