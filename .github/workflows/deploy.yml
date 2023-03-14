@@ -29,6 +29,7 @@ jobs:
       aws_access_key_id: ${{ secrets.DEV_AWS_ACCESS_KEY_ID }}
       aws_secret_access_key: ${{ secrets.DEV_AWS_SECRET_ACCESS_KEY}}
       azure: ${{ secrets.DEV_AZURE }}
+      SLACK_DEPLOY_WEBHOOK_URL: ${{ secrets.SLACK_DEPLOY_WEBHOOK_URL }}
 
   deploy_on_workflow_dispatch:
     if: github.event_name == 'workflow_dispatch'
@@ -41,3 +42,4 @@ jobs:
       aws_access_key_id: ${{ inputs.aws_environment == 'prod' && secrets.PROD_AWS_ACCESS_KEY_ID || secrets.DEV_AWS_ACCESS_KEY_ID }}
       aws_secret_access_key: ${{ inputs.aws_environment == 'prod' && secrets.PROD_AWS_SECRET_ACCESS_KEY || secrets.DEV_AWS_SECRET_ACCESS_KEY}}
       azure: ${{ inputs.aws_environment == 'prod' && secrets.PROD_AZURE || secrets.DEV_AZURE }}
+      SLACK_DEPLOY_WEBHOOK_URL: ${{ secrets.SLACK_DEPLOY_WEBHOOK_URL }}

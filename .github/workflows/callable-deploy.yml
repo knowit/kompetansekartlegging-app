@@ -22,6 +22,8 @@ on:
         required: true
       azure:
         required: true
+      SLACK_DEPLOY_WEBHOOK_URL:
+        required: true
 
 jobs:
   deploy:
@@ -68,3 +70,21 @@ jobs:
       - name: Deploy frontend to ${{ inputs.aws_environment }}
         if: inputs.deploy_backend_only == false
         run: cd frontend-cdk && npx cdk deploy --require-approval never
+
+  slackNotification:
+    if: ${{ always() }}
+    needs: deploy
+    name: Slack Notification
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: kompetansekartlegging-deployments
+          SLACK_COLOR: ${{ needs.deploy.result }}
+          SLACK_USERNAME: Kompetansekartlegging deploy bot
+          SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOY_WEBHOOK_URL }}
+          SLACK_MESSAGE: '[Deploy to ${{inputs.aws_environment}}] - ${{ github.event.head_commit.message }}'
+          MSG_MINIMAL: event,commit
+          SLACK_FOOTER:
