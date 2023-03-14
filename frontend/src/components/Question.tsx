@@ -214,7 +214,7 @@ const KnowledgeMotivationSliders = ({
     <div>
       <div className={style.answerArea}>
         <div className={clsx(style.largeBold)}>
-          {t('knowledge').toUpperCase()}
+          {t('competence').toUpperCase()}
         </div>
         <div className={style.sliderArea}>
           <div className={style.iconArea}>

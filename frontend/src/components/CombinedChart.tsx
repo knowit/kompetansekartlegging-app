@@ -121,7 +121,7 @@ export const CombinedChart = ({ ...props }: CombinedChartProps) => {
         const knowledgeLabel = getLabel(
           isTop,
           () => validate(topSubjects?.get(props.label)?.kTop),
-          t('knowledge')
+          t('competence')
         )
         const motivationLabel = getLabel(
           isTop,
@@ -199,7 +199,7 @@ export const CombinedChart = ({ ...props }: CombinedChartProps) => {
           />
           <ReferenceLine x={0} stroke={KnowitColors.darkGreen}>
             <Label className={classes.label} position="top" offset={50}>
-              {t('knowledge').toUpperCase()}
+              {t('competence').toUpperCase()}
             </Label>
           </ReferenceLine>
           <ReferenceLine x={chartSplitAt} stroke={KnowitColors.darkGreen}>

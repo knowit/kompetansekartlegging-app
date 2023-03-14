@@ -9,7 +9,7 @@ export const Norwegian: LanguageSchema = {
     save: 'Lagre',
     answer: 'Svar',
     notAnswered: 'Ikke besvart',
-    knowledge: 'Kompetanse',
+    competence: 'Kompetanse',
     motivation: 'Motivasjon',
     scaleDescription: 'Skalabeskrivelse',
     errorOccured: 'Noe gikk galt: ',
@@ -32,7 +32,7 @@ export const Norwegian: LanguageSchema = {
     noOrganizationFound: 'Ingen organisasjon funnet',
     errorWhileFetchingUpdatedAtFromLatestUserForm: 'Feil ved henting av updatedAt fra siste UserForm',
     login: {
-        knowledgeMapping: 'Kompetansekartlegging',
+        competenceMapping: 'Kompetansekartlegging',
         signIn: 'Logg inn',
         devSignIn: 'Dev login',
         enterYourEmail: 'Skriv din E-post',
@@ -90,7 +90,7 @@ export const Norwegian: LanguageSchema = {
     navbar: {
       help: 'Hjelp',
       signOut: 'Logg ut',
-      knowledgeMappingFor: 'Kompetansekartlegging for',
+      competenceMappingFor: 'Kompetansekartlegging for',
       doYouWantToDeleteYourAnswers: 'Ønsker du å slette svarene dine?',
       thisWillDeleteAllAnswers: 'OBS: Dette vil slette alle innsendte og lagrede svar!',
       profilePicture: 'Profilbilde',
@@ -122,8 +122,8 @@ export const Norwegian: LanguageSchema = {
         highest: 'TOPP',
       },
     },
-    knowledgeScale: {
-      knowledgeScale: 'Kompetanseskala',
+    competenceScale: {
+      competenceScale: 'Kompetanseskala',
       superstar: 'Superstjerne',
       expert: 'Ekspert',
       professional: 'Profesjonelt nivå',
@@ -220,7 +220,7 @@ export const Norwegian: LanguageSchema = {
         subjectCantBeEmpty: 'Emnet kan ikke være tomt.',
         descriptionCantBeEmpty: 'Beskrivelsen kan ikke være tom.',
         typeOfQuestion: 'Spørsmålstype',
-        knowledgeSlashMotivation: 'Kunnskap / Motivasjon',
+        competenceSlashMotivation: 'Kompetanse / Motivasjon',
         customScaleHeadlines: 'Egendefinerte skala overskrifter',
         start: 'Start',
         middle: 'Midt',

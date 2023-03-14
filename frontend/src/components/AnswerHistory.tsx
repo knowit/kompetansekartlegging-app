@@ -77,7 +77,7 @@ export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
         >
           <TreeItem
             nodeId={String(g.next().value)}
-            label={t('knowledge') + ': ' + parseScore(answer.knowledge, t)}
+            label={t('competence') + ': ' + parseScore(answer.knowledge, t)}
           />
           <TreeItem
             nodeId={String(g.next().value)}

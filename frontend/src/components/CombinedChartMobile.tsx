@@ -283,7 +283,7 @@ export const CombinedChartMobile = ({
               fontWeight="bold"
               fill={KnowitColors.darkBrown}
             >
-              {t('knowledge').toUpperCase()}
+              {t('competence').toUpperCase()}
             </Label>
           </ReferenceLine>
           <ReferenceLine

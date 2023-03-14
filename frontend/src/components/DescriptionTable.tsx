@@ -104,33 +104,33 @@ type ScaleContainerObject = {
 const getCompetence = (): ScaleContainerObject[] => [
   {
     icon: Icon.K5,
-    heading: i18n.t('knowledgeScale.superstar'),
-    text: i18n.t('knowledgeScale.description.superstar'),
+    heading: i18n.t('competenceScale.superstar'),
+    text: i18n.t('competenceScale.description.superstar'),
   },
   {
     icon: Icon.K4,
-    heading: i18n.t('knowledgeScale.expert'),
-    text: i18n.t('knowledgeScale.description.expert'),
+    heading: i18n.t('competenceScale.expert'),
+    text: i18n.t('competenceScale.description.expert'),
   },
   {
     icon: Icon.K3,
-    heading: i18n.t('knowledgeScale.professional'),
-    text: i18n.t('knowledgeScale.description.professional'),
+    heading: i18n.t('competenceScale.professional'),
+    text: i18n.t('competenceScale.description.professional'),
   },
   {
     icon: Icon.K2,
-    heading: i18n.t('knowledgeScale.potentiallyUsable'),
-    text: i18n.t('knowledgeScale.description.potentiallyUsable'),
+    heading: i18n.t('competenceScale.potentiallyUsable'),
+    text: i18n.t('competenceScale.description.potentiallyUsable'),
   },
 
   {
     icon: Icon.K1,
-    heading: i18n.t('knowledgeScale.someInsight'),
-    text: i18n.t('knowledgeScale.description.someInsight'),
+    heading: i18n.t('competenceScale.someInsight'),
+    text: i18n.t('competenceScale.description.someInsight'),
   },
   {
     icon: Icon.K0,
-    heading: i18n.t('knowledgeScale.unfamiliar'),
+    heading: i18n.t('competenceScale.unfamiliar'),
     text: '',
   },
 ]
@@ -213,7 +213,7 @@ export const DescriptionTable = ({
         <div className={style.scaleRow}>
           <header className={style.header}>
             <h2 className={style.scaleTitle}>
-              {t('knowledgeScale.knowledgeScale')}
+              {t('competenceScale.competenceScale')}
             </h2>
             {!isMobile && (
               <IconButton

@@ -197,7 +197,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
           </div>
           <LanguageSelect isMobile={false} iconColor={KnowitColors.creme} />
           <h1 className={style.title}>
-            {t('navbar.knowledgeMappingFor')} {userState.organizationName}
+            {t('navbar.competenceMappingFor')} {userState.organizationName}
           </h1>
 
           {/* <Button variant="contained" className={classes.logoutButton} onClick={() => Auth.signOut()}>Sign out</Button>  */}

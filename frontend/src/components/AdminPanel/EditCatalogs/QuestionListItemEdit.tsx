@@ -175,7 +175,7 @@ const QuestionListItemEdit = ({
                   disabled
                   value={QuestionType.KnowledgeMotivation}
                   control={<Radio />}
-                  label={t('admin.editCatalogs.knowledgeSlashMotivation')}
+                  label={t('admin.editCatalogs.competenceSlashMotivation')}
                 />
                 <FormControlLabel
                   disabled

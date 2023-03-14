@@ -187,7 +187,7 @@ const Login = (props: { isMobile: boolean }) => {
             className={props.isMobile ? style.headlineMobile : style.headline}
           >
             <div className={style.dot} />
-            {t('login.knowledgeMapping')}
+            {t('login.competenceMapping')}
           </h1>
         </div>
         <div className={style.buttonAlign}>

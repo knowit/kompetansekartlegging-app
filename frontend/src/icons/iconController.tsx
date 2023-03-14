@@ -20,17 +20,17 @@ const getIconDescription = (knowledge: boolean, level: number): string => {
   if (knowledge) {
     switch (level) {
       case 0:
-        return i18n.t('knowledgeScale.unfamiliar')
+        return i18n.t('competenceScale.unfamiliar')
       case 1:
-        return i18n.t('knowledgeScale.someInsight')
+        return i18n.t('competenceScale.someInsight')
       case 2:
-        return i18n.t('knowledgeScale.potentiallyUsable')
+        return i18n.t('competenceScale.potentiallyUsable')
       case 3:
-        return i18n.t('knowledgeScale.professional')
+        return i18n.t('competenceScale.professional')
       case 4:
-        return i18n.t('knowledgeScale.expert')
+        return i18n.t('competenceScale.expert')
       case 5:
-        return i18n.t('knowledgeScale.superstar')
+        return i18n.t('competenceScale.superstar')
       default:
         return ''
     }

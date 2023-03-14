@@ -26,6 +26,9 @@ export const LanguageSelect = (props: LanguageSelectProps) => {
       onChange={(event) => changeLanguage(event.target.value as string)}
       renderValue={() => <LanguageIcon style={{ color: props.iconColor }} />}
       style={props.isMobile ? { marginLeft: props.marginLeft } : undefined}
+      aria-label={`select language, ${
+        availableLanguages[i18n.language]
+      } is selected`}
     >
       {Object.keys(availableLanguages).map((language) => (
         <MenuItem key={language} value={language}>

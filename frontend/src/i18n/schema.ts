@@ -7,7 +7,7 @@ export type LanguageSchema = {
     save: string
     answer: string
     notAnswered: string
-    knowledge: string
+    competence: string
     motivation: string
     scaleDescription: string
     errorOccured: string
@@ -30,7 +30,7 @@ export type LanguageSchema = {
     noOrganizationFound: string
     errorWhileFetchingUpdatedAtFromLatestUserForm: string
     login: {
-      knowledgeMapping: string
+      competenceMapping: string
       signIn: string
       devSignIn: string
       enterYourEmail: string
@@ -88,7 +88,7 @@ export type LanguageSchema = {
     navbar: {
       help: string
       signOut: string
-      knowledgeMappingFor: string
+      competenceMappingFor: string
       doYouWantToDeleteYourAnswers: string
       thisWillDeleteAllAnswers: string
       profilePicture: string
@@ -120,8 +120,8 @@ export type LanguageSchema = {
         highest: string
       }
     }
-    knowledgeScale: {
-      knowledgeScale: string
+    competenceScale: {
+      competenceScale: string
       superstar: string
       expert: string
       professional: string
@@ -218,7 +218,7 @@ export type LanguageSchema = {
         subjectCantBeEmpty: string
         descriptionCantBeEmpty: string
         typeOfQuestion: string
-        knowledgeSlashMotivation: string
+        competenceSlashMotivation: string
         customScaleHeadlines: string
         start: string
         middle: string

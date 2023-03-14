@@ -120,7 +120,7 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
             <FormControlLabel
               value={QuestionType.KnowledgeMotivation}
               control={<Radio />}
-              label={t('admin.editCatalogs.knowledgeSlashMotivation')}
+              label={t('admin.editCatalogs.competenceSlashMotivation')}
             />
             <FormControlLabel
               value={QuestionType.CustomScaleLabels}
