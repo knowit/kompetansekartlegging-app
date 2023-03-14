@@ -27,6 +27,8 @@ export type LanguageSchema = {
     addAdministrator: string
     pressHereToSeeWhatTheIconsMean: string
     noOrganizationNameFound: string
+    noOrganizationFound: string
+    errorWhileFetchingUpdatedAtFromLatestUserForm: string
     login: {
       knowledgeMapping: string
       signIn: string

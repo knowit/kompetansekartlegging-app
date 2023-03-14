@@ -29,6 +29,8 @@ export const English: LanguageSchema = {
     addAdministrator: 'Add administrator',
     pressHereToSeeWhatTheIconsMean: 'Press here to see what the icons mean',
     noOrganizationNameFound: 'No organization name found',
+    noOrganizationFound: 'No organization found',
+    errorWhileFetchingUpdatedAtFromLatestUserForm: 'Error while fetching updatedAt from latest UserForm',
     login: {
       knowledgeMapping: 'Knowledge Mapping',
       signIn: 'Sign in',

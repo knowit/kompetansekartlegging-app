@@ -195,7 +195,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
           <div className={style.logo}>
             <KnowitLogo />
           </div>
-          <LanguageSelect isMobile={false} />
+          <LanguageSelect isMobile={false} iconColor={KnowitColors.creme} />
           <h1 className={style.title}>
             {t('navbar.knowledgeMappingFor')} {userState.organizationName}
           </h1>
@@ -216,9 +216,9 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
               <Button
                 ref={anchorRef}
                 aria-controls={avatarMenuOpen ? 'menu-list-grow' : undefined}
-                // onClick={() => {console.log("Hahaha")}}
+                // onClick={() => {}}
                 aria-label="Help button"
-                endIcon={<HelpIcon style={{ color: 'white' }} />}
+                endIcon={<HelpIcon style={{ color: KnowitColors.white }} />}
                 onClick={() => setHelpModalOpen(true)}
               >
                 <div className={style.userName}>{t('navbar.help')}</div>

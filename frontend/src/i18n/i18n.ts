@@ -2,29 +2,21 @@ import i18next from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import { English } from './locales/en'
 import { Norwegian } from './locales/no'
-import { ReactComponent as NorwegianFlag } from './flags/Norway.svg'
-import { ReactComponent as UnitedKingdomFlag } from './flags/UnitedKingdom.svg'
 import { I18n as amplifyI18n } from 'aws-amplify'
 import { AuthErrorStrings } from '@aws-amplify/auth'
 
 /*
 To add a new language, add:
   - A new language file in 'frontend/i18n/locales'
-  - A flag in svg format symbolizing the language in 'frontend/i18n/flags'
   - A new folder & help.md file in 'frontend/markdown'
-  - The language and svg file to the availableLanguages below
+  - The native name of the language to availableLanguages below
   - The language to the init method below
   - A case in the i18nDateToLocaleDateString & i18nDateToLocaleString methods below
 */
 
-type languageType = {
-  nativeName: string
-  flag: React.FunctionComponent
-}
-
-export const availableLanguages: Record<string, languageType> = {
-  en: { nativeName: 'ENGLISH', flag: UnitedKingdomFlag },
-  no: { nativeName: 'NORSK', flag: NorwegianFlag },
+export const availableLanguages: Record<string, string> = {
+  en: 'ENGLISH',
+  no: 'NORSK',
 }
 
 i18next.use(initReactI18next).init({
@@ -36,11 +28,12 @@ i18next.use(initReactI18next).init({
   },
 })
 
+// Get language or default to english
 const locallyStoredLanguage = localStorage.getItem('language')
 if (locallyStoredLanguage) {
   i18next.changeLanguage(locallyStoredLanguage)
 } else {
-  i18next.changeLanguage('no')
+  i18next.changeLanguage('en')
 }
 
 // Date only

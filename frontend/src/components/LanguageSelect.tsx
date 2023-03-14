@@ -1,9 +1,17 @@
-import { MenuItem, Select, SvgIcon } from '@material-ui/core'
+import { MenuItem, Select } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { availableLanguages } from '../i18n/i18n'
 import { I18n as amplifyI18n } from 'aws-amplify'
+import LanguageIcon from '@material-ui/icons/Language'
+import { KnowitColors } from '../styles'
 
-export const LanguageSelect = ({ isMobile }: { isMobile: boolean }) => {
+type LanguageSelectProps = {
+  isMobile: boolean
+  iconColor: string
+  marginLeft?: number
+}
+
+export const LanguageSelect = (props: LanguageSelectProps) => {
   const { i18n } = useTranslation()
 
   const changeLanguage = (language: string) => {
@@ -12,37 +20,24 @@ export const LanguageSelect = ({ isMobile }: { isMobile: boolean }) => {
     localStorage.setItem('language', language)
   }
 
-  const getFlagIcon = (
-    language: string,
-    size: 'small' | 'medium' | 'large' = 'medium'
-  ) => {
-    const Flag = availableLanguages[language].flag
-    return (
-      <SvgIcon fontSize={size}>
-        <Flag />
-      </SvgIcon>
-    )
-  }
-
   return (
     <Select
       value={i18n.language}
       onChange={(event) => changeLanguage(event.target.value as string)}
-      renderValue={(language) =>
-        getFlagIcon(language as string, isMobile ? 'medium' : 'small')
-      }
-      style={isMobile ? { paddingLeft: 9 } : undefined}
+      renderValue={() => <LanguageIcon style={{ color: props.iconColor }} />}
+      style={props.isMobile ? { marginLeft: props.marginLeft } : undefined}
     >
       {Object.keys(availableLanguages).map((language) => (
         <MenuItem key={language} value={language}>
-          <>
-            {getFlagIcon(language, isMobile ? 'small' : 'medium')}
-            {
-              <div style={{ fontSize: 14, marginLeft: 10, fontWeight: 'bold' }}>
-                {availableLanguages[language].nativeName}
-              </div>
-            }
-          </>
+          <div
+            style={{
+              fontSize: 14,
+              fontWeight: 'bold',
+              color: KnowitColors.darkBrown,
+            }}
+          >
+            {availableLanguages[language]}
+          </div>
         </MenuItem>
       ))}
     </Select>

@@ -29,6 +29,8 @@ export const Norwegian: LanguageSchema = {
     addAdministrator: 'Legg til administrator',
     pressHereToSeeWhatTheIconsMean: 'Trykk her for å se hva ikonene betyr!',
     noOrganizationNameFound: 'Fant ikke organisasjonsnavn',
+    noOrganizationFound: 'Ingen organisasjon funnet',
+    errorWhileFetchingUpdatedAtFromLatestUserForm: 'Feil ved henting av updatedAt fra siste UserForm',
     login: {
         knowledgeMapping: 'Kompetansekartlegging',
         signIn: 'Logg inn',

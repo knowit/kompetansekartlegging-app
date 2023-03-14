@@ -76,9 +76,9 @@ const graphStyle = makeStyles({
 })
 
 export enum OverviewType {
-  AVERAGE = 'SNITT',
-  MEDIAN = 'MEDIAN',
-  HIGHEST = 'TOPP',
+  AVERAGE,
+  MEDIAN,
+  HIGHEST,
 }
 
 const recalculate = (
@@ -325,18 +325,18 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
     setOverviewType(type)
   }
 
-  const getButton = (type: OverviewType): JSX.Element => {
-    const translateType = (type: OverviewType) => {
-      switch (type) {
-        case OverviewType.AVERAGE:
-          return t('overview.overviewType.average')
-        case OverviewType.MEDIAN:
-          return t('overview.overviewType.median')
-        case OverviewType.HIGHEST:
-          return t('overview.overviewType.highest')
-      }
+  const translateOverviewType = (type: OverviewType) => {
+    switch (type) {
+      case OverviewType.AVERAGE:
+        return t('overview.overviewType.average')
+      case OverviewType.MEDIAN:
+        return t('overview.overviewType.median')
+      case OverviewType.HIGHEST:
+        return t('overview.overviewType.highest')
     }
+  }
 
+  const getButton = (type: OverviewType): JSX.Element => {
     return (
       <Button
         className={
@@ -346,7 +346,7 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
           selectChartType(type)
         }}
       >
-        {translateType(type)}
+        {translateOverviewType(type)}
       </Button>
     )
   }
@@ -359,7 +359,7 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
           cycleChartType()
         }}
       >
-        {currentType}
+        {translateOverviewType(currentType)}
       </Button>
       <CombinedChartMobile
         chartData={chartData}
