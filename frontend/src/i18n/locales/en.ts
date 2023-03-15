@@ -90,7 +90,7 @@ export const English: LanguageSchema = {
     navbar: {
       help: 'Help',
       signOut: 'Sign out',
-      competenceMappingFor: 'Competence mapping for',
+      competenceMappingFor: 'Competence Mapping for',
       doYouWantToDeleteYourAnswers: 'Do you want to delete your answers?',
       thisWillDeleteAllAnswers: 'N.B. This will delete all submitted and saved answers!',
       profilePicture: 'Profile Picture',
