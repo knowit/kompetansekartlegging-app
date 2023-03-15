@@ -1,11 +1,12 @@
 import express from 'express'
+import { catalogRouter } from './catalog/router'
 import { categoryRouter } from './categories/router'
+import { cognitoRouter } from './cognito/router'
 import { debugRouter } from './debug/debugRouter'
 import { groupRouter } from './groups/router'
 import { organizationRouter } from './organizations/router'
-import { questionsRouter } from './questions/router'
 import { questionAnswersRouter } from './questionAnswers/router'
-import { catalogRouter } from './catalog/router'
+import { questionsRouter } from './questions/router'
 
 const router = express.Router()
 
@@ -16,5 +17,6 @@ router.use('/categories', categoryRouter)
 router.use('/questionAnswers', questionAnswersRouter)
 router.use('/questions', questionsRouter)
 router.use('/catalogs', catalogRouter)
+router.use('/cognito', cognitoRouter)
 
 export { router as apiRouter }
