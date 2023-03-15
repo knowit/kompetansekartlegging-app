@@ -32,6 +32,7 @@ jobs:
           with:
             since_last_remote_commit: true
             files_ignore: |
+              README.md
               */README.md
               *.sh
               scripts/*
