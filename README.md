@@ -64,10 +64,15 @@ To run the project locally:
 
 ## CI/CD
 ### Deployment
-GitHub Actions is configured to deploy the app to the AWS dev environment on every PR merge. Additionally, deployment can be triggered through the dispatchable workflow "`Deploy to AWS`", where you specify which environment to deploy to, and whether to deploy the entire app or the backend only.
+GitHub Actions is configured to deploy the app to the AWS dev environment on every PR merge. This will be skipped if there are only changes to certain files, specified in `.github/workflows/deploy.yml`.
+
+Additionally, deployment can be triggered through the dispatchable workflow "`Deploy to AWS`", where you specify which environment to deploy to, and whether to deploy the entire app or the backend only.
 
 ### Linting & Code formatting
 ESLint and Prettier is configured for the frontend code using recommended rules. GitHub Actions analyzes the code when PRs towards the main branch are opened.
+
+### Slack Notifications
+When deploying to both the dev and production environments, a bot will post to a channel using [Slack Apps](https://api.slack.com/) and the [Slack Notify](https://github.com/rtCamp/action-slack-notify) action.
 
 # API docs
 
