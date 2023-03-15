@@ -17,7 +17,6 @@ import Button from '../mui/Button'
 import Table from '../mui/Table'
 
 import AddIcon from '@material-ui/icons/Add'
-import useApiGet from '../AdminPanel/useApiGet'
 import AddOrganizationDialog from './AddOrganizationDialog'
 import DeleteOrganizationDialog from './DeleteOrganizationDialog'
 import {
@@ -29,6 +28,7 @@ import {
   Organization as Org,
   OrganizationInput,
 } from '../../api/organizations/types'
+import { useQuery } from '@tanstack/react-query'
 
 interface OrganizationProps {
   organization: Org
@@ -94,15 +94,14 @@ const OrganizationTable: React.FC<OrganizationTableProps> = ({
 
 const EditOrganizations = () => {
   const {
-    result: organizations,
+    data: organizations,
     error,
-    loading,
-    refresh: refreshOrganizations,
-  } = useApiGet({
-    getFn: getAllOrganizations,
+    isLoading,
+  } = useQuery({
+    queryKey: ['edit_organizations'],
+    queryFn: getAllOrganizations,
   })
 
-  // [TODO] Hva skal vi ha i steden for mutationError?
   const [mutationError, setMutationError] = useState<string>('')
 
   const [showAddOrganization, setShowAddOrganization] = useState<boolean>(false)
@@ -121,7 +120,6 @@ const EditOrganizations = () => {
       })
       .finally(() => {
         setShowAddOrganization(false)
-        refreshOrganizations()
       })
   }
 
@@ -138,9 +136,6 @@ const EditOrganizations = () => {
       .catch((err) => {
         setMutationError(err)
       })
-      .finally(() => {
-        refreshOrganizations()
-      })
   }
 
   return (
@@ -151,8 +146,8 @@ const EditOrganizations = () => {
           <p>An error occured: {mutationError}</p>
         </>
       )}
-      {loading && <CircularProgress />}
-      {!error && !loading && (
+      {isLoading && <CircularProgress />}
+      {!error && !isLoading && (
         <>
           <Card style={{ marginBottom: '24px' }} variant="outlined">
             <CardContent>
@@ -162,10 +157,12 @@ const EditOrganizations = () => {
               Her man man legge til, fjerne eller oppdatere organizasjoner.
             </CardContent>
           </Card>
-          <OrganizationTable
-            organizations={organizations}
-            deleteOrganization={openDeleteOrganizationDialog}
-          />
+          {organizations?.data && (
+            <OrganizationTable
+              organizations={organizations.data}
+              deleteOrganization={openDeleteOrganizationDialog}
+            />
+          )}
           <Button
             variant="contained"
             color="primary"
