@@ -302,5 +302,11 @@ export type LanguageSchema = {
       couldNotAddTheOrganization: string
       couldNotDeleteTheOrganization: string
     }
+    aria: {
+      selectLanguageLanguageIsSelected: string
+      helpButton: string
+      toggleDropdownMenu: string
+      menu: string
+    }
   }
 }

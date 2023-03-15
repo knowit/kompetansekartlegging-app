@@ -199,7 +199,7 @@ export const DescriptionTable = ({
               {t('scaleDescription')}
             </h2>
             <IconButton
-              aria-label="close"
+              aria-label={t('close') as string}
               className={style.closeButton}
               onClick={onClose}
             >
@@ -217,7 +217,7 @@ export const DescriptionTable = ({
             </h2>
             {!isMobile && (
               <IconButton
-                aria-label="close"
+                aria-label={t('close') as string}
                 className={style.closeButton}
                 onClick={onClose}
               >

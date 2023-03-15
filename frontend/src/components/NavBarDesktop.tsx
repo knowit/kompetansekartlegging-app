@@ -217,7 +217,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
                 ref={anchorRef}
                 aria-controls={avatarMenuOpen ? 'menu-list-grow' : undefined}
                 // onClick={() => {}}
-                aria-label="Help button"
+                aria-label={t('aria.helpButton') as string}
                 endIcon={<HelpIcon style={{ color: KnowitColors.white }} />}
                 onClick={() => setHelpModalOpen(true)}
               >
@@ -229,7 +229,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
               aria-controls={avatarMenuOpen ? 'menu-list-grow' : undefined}
               aria-haspopup="true"
               onClick={handleToggle}
-              aria-label="Toggle dropdownmenu"
+              aria-label={t('aria.toggleDropdownMenu') as string}
             >
               <div className={style.userName}>{userState.name}</div>
               <Avatar

@@ -154,7 +154,7 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
             edge="start"
             className={style.menuButton}
             color="inherit"
-            aria-label="menu"
+            aria-label={t('aria.menu') as string}
             onClick={toggleDrawer(true)}
           >
             <MenuIcon fontSize="large" />

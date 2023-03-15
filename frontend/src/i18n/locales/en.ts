@@ -303,6 +303,12 @@ export const English: LanguageSchema = {
         couldNotGetAListOfOrganizations: 'Could not get a list of organizations.',
         couldNotAddTheOrganization: "Could not add the organization '{{organizationName}}'.",
         couldNotDeleteTheOrganization: "Could not delete the organization '{{organizationName}}'."
+    },
+    aria: {
+      selectLanguageLanguageIsSelected: 'select language, {{language}} is selected',
+      helpButton: 'help button',
+      toggleDropdownMenu: 'toggle dropdownmenu',
+      menu: 'menu'
     }
   }
 }

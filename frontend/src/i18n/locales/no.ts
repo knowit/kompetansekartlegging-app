@@ -303,6 +303,12 @@ export const Norwegian: LanguageSchema = {
         couldNotGetAListOfOrganizations: 'Kunne ikke hente en liste med organisasjoner.',
         couldNotAddTheOrganization: "Kunne ikke legge til organisasjonen '{{organizationName}}'.",
         couldNotDeleteTheOrganization: "Kunne ikke slette organisasjonen '{{organizationName}}'."
+    },
+    aria: {
+      selectLanguageLanguageIsSelected: 'velg språk, {{language}} er valgt',
+      helpButton: 'hjelp-knapp',
+      toggleDropdownMenu: 'Åpne eller lukk nedtrekksmeny',
+      menu: 'meny'
     }
   }
 }
