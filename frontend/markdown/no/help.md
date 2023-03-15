@@ -10,7 +10,7 @@ Administratorrollen har mulighet til å utnevne brukere til nye roller, enten so
 
 ## Gruppeleder
 
-Gruppeledere får en ny fane kalt "Min gruppe". Denne fanen inneholder en liste over gruppemedlemmer, samt en knapp for å legge til nye medlemmer. Gruppeleder kan også trykke på navnene i listen for å se svarene til den ansatte.
+Gruppeledere får en ny fane kalt "Min gruppe". Under denne fanen vil hvert medlem av gruppen være tilgjengelig. Trykker gruppelederen seg inn på et av navnene som står under fanen, vil de kunne se svarene til den ansatte. Trykker gruppelederen istedet på "Min gruppe", vil de se en liste over gruppemedlemmer, samt en knapp for å legge til nye medlemmer. Gruppeleder kan også trykke på ansatte i listen på "Min gruppe"-siden for å se svarene til den ansatte.
 
 ## Sletting av kategorier og spørsmål
 

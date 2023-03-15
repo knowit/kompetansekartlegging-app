@@ -102,9 +102,9 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
   const navbarHeader = () => {
     switch (props.activePanel) {
       case 0:
-        return t('menu.overview')
+        return t('menu.overview').toUpperCase()
       case 1:
-        return t('menu.myAnswers')
+        return t('menu.myAnswers').toUpperCase()
       default:
         return ''
     }
@@ -131,11 +131,7 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
-      <LanguageSelect
-        isMobile={true}
-        iconColor={KnowitColors.beige}
-        marginLeft={15}
-      />
+      <LanguageSelect iconColor={KnowitColors.beige} marginLeft={15} />
       <List className={style.list}>
         {props.menuButtons}
         <ListItem className={style.logout} onClick={props.signout}>

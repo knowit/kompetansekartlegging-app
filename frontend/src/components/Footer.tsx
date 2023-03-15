@@ -5,7 +5,7 @@ export const Footer = () => {
     <div>
       {/* <AppBar position="static">
                 <Toolbar>
-                    Nothing to see here, move along! // i18n
+                    Nothing to see here, move along! // i18n if used
                 </Toolbar>
             </AppBar> */}
     </div>

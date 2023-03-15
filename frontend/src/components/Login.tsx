@@ -61,7 +61,7 @@ const loginStyle = makeStyles({
     zIndex: 1,
     position: 'absolute',
     top: '7px',
-    left: '5px',
+    left: '13px',
   },
   headlineAlign: {
     height: '15%',
@@ -151,11 +151,8 @@ const Login = (props: { isMobile: boolean }) => {
 
   return showDevLogin ? (
     <>
-      <div className={style.languageSelect} style={{ marginLeft: '8px' }}>
-        <LanguageSelect
-          isMobile={props.isMobile}
-          iconColor={KnowitColors.darkBrown}
-        />
+      <div className={style.languageSelect}>
+        <LanguageSelect iconColor={KnowitColors.darkBrown} />
       </div>
       <Authenticator
         formFields={formFields}
@@ -176,11 +173,8 @@ const Login = (props: { isMobile: boolean }) => {
         </div>
       </div>
       <div className={style.frontDiv}>
-        <div className={style.languageSelect} style={{ marginLeft: '8px' }}>
-          <LanguageSelect
-            isMobile={props.isMobile}
-            iconColor={KnowitColors.darkBrown}
-          />
+        <div className={style.languageSelect}>
+          <LanguageSelect iconColor={KnowitColors.darkBrown} />
         </div>
         <div className={style.headlineAlign}>
           <h1

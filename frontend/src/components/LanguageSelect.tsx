@@ -6,7 +6,6 @@ import LanguageIcon from '@material-ui/icons/Language'
 import { KnowitColors } from '../styles'
 
 type LanguageSelectProps = {
-  isMobile: boolean
   iconColor: string
   marginLeft?: number
 }
@@ -25,7 +24,7 @@ export const LanguageSelect = (props: LanguageSelectProps) => {
       value={i18n.language}
       onChange={(event) => changeLanguage(event.target.value as string)}
       renderValue={() => <LanguageIcon style={{ color: props.iconColor }} />}
-      style={props.isMobile ? { marginLeft: props.marginLeft } : undefined}
+      style={{ marginLeft: props.marginLeft }}
       aria-label={
         i18n.t('aria.selectLanguageLanguageIsSelected', {
           language: availableLanguages[i18n.language],

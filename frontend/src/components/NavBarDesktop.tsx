@@ -195,7 +195,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
           <div className={style.logo}>
             <KnowitLogo />
           </div>
-          <LanguageSelect isMobile={false} iconColor={KnowitColors.creme} />
+          <LanguageSelect iconColor={KnowitColors.creme} />
           <h1 className={style.title}>
             {t('navbar.competenceMappingFor')} {userState.organizationName}
           </h1>

@@ -199,7 +199,7 @@ const FloatingScaleDescButton = ({
           className={style.fab}
           onClick={() => setScaleDescOpen((scaleDescOpen) => !scaleDescOpen)}
         >
-          {t('scaleDescription') as string}
+          {t('scaleDescription').toUpperCase()}
         </Fab>
       )}
     </>

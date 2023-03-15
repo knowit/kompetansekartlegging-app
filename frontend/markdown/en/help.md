@@ -1,6 +1,6 @@
 # Registering new users
 
-It is not possible for administrators to register new users on this page. Users need to visit the page and click "Log in (Other Knowit companies)". After doing this, they will become visible in the "Edit administrators" and "Edit groupleaders" submenus in the "ADMIN" menu.
+It is not possible for administrators to register new users on this page. Users need to visit the page and log in. After doing this, they will become visible in the "Edit administrators" and "Edit groupleaders" submenus in the "ADMIN" menu.
 
 # Role descriptions
 

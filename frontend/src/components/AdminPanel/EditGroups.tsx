@@ -427,7 +427,7 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
         onExited={() => setMemberToDelete(null)}
         onConfirm={deleteMemberConfirm}
         user={memberToDelete && memberToDelete.user}
-        roleName={t('theGroup')}
+        roleName={t('groupDefiniteForm')}
         disableRoleSuffix
       />
       {groupToEdit && (

@@ -1,9 +1,9 @@
 import i18next from 'i18next'
 import { initReactI18next } from 'react-i18next'
-import { English } from './locales/en'
-import { Norwegian } from './locales/no'
 import { I18n as amplifyI18n } from 'aws-amplify'
 import { AuthErrorStrings } from '@aws-amplify/auth'
+import { English } from './locales/en'
+import { Norwegian } from './locales/no'
 
 /*
 To add a new language, add:

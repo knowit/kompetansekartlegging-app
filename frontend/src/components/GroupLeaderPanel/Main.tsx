@@ -53,7 +53,7 @@ const Main = ({
         onExited={() => setMemberToDelete(null)}
         onConfirm={deleteMemberConfirm}
         user={memberToDelete && memberToDelete.user}
-        roleName={t('theGroup')}
+        roleName={t('groupDefiniteForm')}
         disableRoleSuffix
       />
     </Container>

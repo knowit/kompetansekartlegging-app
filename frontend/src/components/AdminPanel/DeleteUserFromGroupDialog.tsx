@@ -25,7 +25,9 @@ const DeleteUserFromGroupDialog = ({
   const { t } = useTranslation()
   const style = dialogStyles()
   const name = getAttribute(user, 'name')
-  const role = disableRoleSuffix ? roleName : `${roleName + t('theRole')}`
+  const role = disableRoleSuffix
+    ? roleName
+    : `${roleName + t('roleDefiniteForm')}`
 
   return (
     <Dialog

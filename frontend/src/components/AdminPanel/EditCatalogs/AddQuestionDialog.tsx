@@ -168,7 +168,7 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
           }
           className={style.confirmButton}
         >
-          <span className={style.buttonText}>{t('abort')}</span>
+          <span className={style.buttonText}>{t('add')}</span>
         </Button>
       </DialogActions>
     </Dialog>
