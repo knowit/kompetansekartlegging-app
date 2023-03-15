@@ -9,7 +9,8 @@ import {
 const router = express.Router()
 
 //Get all organizations
-router.get('/', async (_req, res, next) => {
+router.get('/', async (req, res, next) => {
+  if (req.query.id) next()
   try {
     const listOrganizationsResponse = await Organization.listOrganizations()
 
@@ -22,7 +23,7 @@ router.get('/', async (_req, res, next) => {
 
 // Get single organization from id
 router.get<unknown, unknown, unknown, GetOrganizationInput>(
-  '/:id',
+  '/',
   async (req, res, next) => {
     try {
       const getOrganizationResponse = await Organization.getOrganization(
