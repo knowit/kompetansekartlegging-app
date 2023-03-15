@@ -24,7 +24,7 @@ router.get('/', async (req, res, next) => {
 router.get<unknown, unknown, unknown, GetQuestionReqQuery>(
   '/',
   async (req, res, next) => {
-    if (req.query.categoryid) next()
+    if (req.query.category_id) next()
     else {
       try {
         const getQuestionResponse = await Question.getQuestion(

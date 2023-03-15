@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/aws-lambda": "^8.10.110",
+    "aws-sdk": "^2.1335.0",
     "aws-serverless-express": "^3.3.5",
     "express": "^4.18.2",
     "uuid": "^8.3.2"
