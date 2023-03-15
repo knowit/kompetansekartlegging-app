@@ -64,7 +64,7 @@ To run the project locally:
 
 ## CI/CD
 ### Deployment
-GitHub Actions is configured to deploy the app to the AWS dev environment on every PR merge. This will be skipped if there are only changes to certain files, specified in `.github/workflows/deploy.yml`.
+GitHub Actions is configured to deploy the app to the AWS dev environment on every PR merge. This will be skipped if there are only changes to certain files like readmes, and are specified in `.github/workflows/deploy.yml`.
 
 Additionally, deployment can be triggered through the dispatchable workflow "`Deploy to AWS`", where you specify which environment to deploy to, and whether to deploy the entire app or the backend only.
 
