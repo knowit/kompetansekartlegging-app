@@ -13,8 +13,8 @@ export const English: LanguageSchema = {
     motivation: 'Motivation',
     scaleDescription: 'Scale description',
     errorOccured: 'An error occured: ',
-    thisIsATestEnvironment: 'N.B.: This is a test environment!',
-    close: 'CLOSE',
+    thisIsATestEnvironment: 'This is a test environment!',
+    close: 'Close',
     employee: 'Employee',
     email: 'Email',
     groupLeader: 'Group leader',
@@ -113,13 +113,13 @@ export const English: LanguageSchema = {
     overview: {
       yourTopAmbitionsWillBeDisplayedHere: 'Your top ambitions will be displayed here',
       yourTopStrengthsWillBeDisplayedHere: 'Your top strengths will be displayed here',
-      focusAreas: 'FOCUS AREAS',
-      topStrengths: 'TOP STRENGTHS',
-      topAmbitions: 'TOP AMBITIONS',
+      focusAreas: 'Focus areas',
+      topStrengths: 'Top strengths',
+      topAmbitions: 'Top ambitions',
       overviewType: {
-        average: 'AVG',
-        median: 'MEDIAN',
-        highest: 'TOP',
+        average: 'Avg',
+        median: 'Median',
+        highest: 'Top',
       },
     },
     competenceScale: {
@@ -131,7 +131,7 @@ export const English: LanguageSchema = {
       someInsight: 'Some insight',
       unfamiliar: 'Unfamiliar area',
       description: {
-        superstar: 'A sought-after specialist, who acts as innovative or strategic force in the area',
+        superstar: 'A sought-after specialist, who acts as an innovative or strategic force in the area',
         expert: 'Has particularly good control and an established potition in the area',
         professional: 'Has good control and can work independently on non-trivial issues within the area',
         potentiallyUsable: 'Competence that has either not been tested in assignments or where support from others in the team is currently needed',
@@ -143,7 +143,7 @@ export const English: LanguageSchema = {
       enthusiast: 'Enthusiast. I am passionate about this.',
       good: 'Good. This is what I want to work on.',
       curious: 'Curious. I want to learn more about this.',
-      ish: "Well. I can if it's needed.",
+      ish: "Hm... I can if it's needed.",
       neutral: 'Neutral. No opinion.',
       no: 'No. I do not want to work on this.',
     },
@@ -172,7 +172,7 @@ export const English: LanguageSchema = {
       editGroupLeaders: {
         description: "Group leaders can access their group members' answers. They can also choose their group members. On this page you can add and remove group leaders.",
         addGroupLeader: 'Add group leader',
-        rememberToReplaceGroupLeader: 'Remember to add a new group leader for the groups the user was responsible for.',
+        rememberToReplaceGroupLeader: 'Remember to add a new group leader to the groups the user was responsible for.',
       },
       editGroups: {
         description: 'A group consists of a group leader and multiple group children. On this page you can add new groups, delete groups, change the leader of a group and add or remove group members.',

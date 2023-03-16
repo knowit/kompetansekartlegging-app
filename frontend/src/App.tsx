@@ -212,7 +212,9 @@ const App = () => {
               }}
             >
               {t('thisIsATestEnvironment') + ' '}
-              <Button onClick={() => setBannerOpen(false)}>{t('close')}</Button>
+              <Button onClick={() => setBannerOpen(false)}>
+                {t('close').toUpperCase()}
+              </Button>
             </div>
           </Snackbar>
         ) : null}

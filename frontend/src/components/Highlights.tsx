@@ -344,7 +344,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
     return (
       <div className={props.isMobile ? style.rootMobile : style.root}>
         <div className={props.isMobile ? style.hidden : style.title}>
-          {t('overview.focusAreas')}
+          {t('overview.focusAreas').toUpperCase()}
         </div>
         <div
           className={props.isMobile ? style.containerMobile : style.container}
@@ -353,7 +353,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
             <div
               className={props.isMobile ? style.headingMobile : style.heading}
             >
-              {t('overview.topStrengths')}
+              {t('overview.topStrengths').toUpperCase()}
             </div>
             {createKnowledgeHighlights()}
           </div>
@@ -361,7 +361,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
             <div
               className={props.isMobile ? style.headingMobile : style.heading}
             >
-              {t('overview.topAmbitions')}
+              {t('overview.topAmbitions').toUpperCase()}
             </div>
             {createMotivationHighlights()}
           </div>
