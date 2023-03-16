@@ -10,6 +10,7 @@ import { createOrganization, deleteOrganization } from '../../graphql/mutations'
 import { listOrganizations } from '../../graphql/queries'
 import { callGraphQL } from '../../helperFunctions'
 import { ApiResponse } from '../AdminPanel/adminApi'
+import i18n from '../../i18n/i18n'
 import { OrganizationInfo } from './SuperAdminTypes'
 
 export const getOrganizations = async (): Promise<
@@ -32,7 +33,7 @@ export const getOrganizations = async (): Promise<
     }
   } catch (e) {
     return {
-      error: 'Could get get a list of organizations.',
+      error: i18n.t('superAdminApi.couldNotGetAListOfOrganizations'),
     }
   }
 }
@@ -50,7 +51,11 @@ export const addOrganization = async (organization: OrganizationInfo) =>
       })
       resolve(null)
     } catch (e) {
-      reject(`Kunne ikke legge til organisasjonen ${organization.name}.`)
+      reject(
+        i18n.t('superAdminApi.couldNotAddTheOrganization', {
+          organizationName: organization.name,
+        })
+      )
     }
   })
 
@@ -64,6 +69,10 @@ export const removeOrganization = (organization: OrganizationInfo) =>
       })
       resolve(null)
     } catch (e) {
-      reject(`Kunne ikke slette organization ${organization.name}.`)
+      reject(
+        i18n.t('superAdminApi.couldNotDeleteTheOrganization', {
+          organizationName: organization.name,
+        })
+      )
     }
   })

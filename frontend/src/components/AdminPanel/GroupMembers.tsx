@@ -9,18 +9,22 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd'
 import Button from '../mui/Button'
 import Table from '../mui/Table'
 import TableRow from '../mui/TableRow'
+import { useTranslation } from 'react-i18next'
+import { i18nDateToLocaleDateString } from '../../i18n/i18n'
 import AddMemberToGroupDialog from './AddMemberToGroupDialog'
 import { getAttribute } from './helpers'
 import PictureAndNameCell from './PictureAndNameCell'
 
 const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
+  const { t } = useTranslation()
+
   const name = getAttribute(user, 'name')
   const email = getAttribute(user, 'email')
   const picture = getAttribute(user, 'picture')
   const formLastAnsweredAt =
     user.lastAnsweredAt == null
-      ? 'Ikke besvart'
-      : user.lastAnsweredAt.toLocaleDateString('nb-NO')
+      ? t('notAnswered')
+      : i18nDateToLocaleDateString(user.lastAnsweredAt)
 
   const onClick = () => {
     if (viewMember) viewMember(user.Username)
@@ -38,7 +42,7 @@ const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
           onClick={() => deleteMember(user)}
           style={{ fontStyle: 'italic' }}
         >
-          Fjern fra gruppe
+          {t('myGroup.removeFromGroup')}
         </Button>
       </TableCell>
     </TableRow>
@@ -53,6 +57,8 @@ const GroupMembers = ({
   viewMember,
   showLastAnsweredAt,
 }: any) => {
+  const { t } = useTranslation()
+
   const [open, setOpen] = useState<boolean>(false)
   const onConfirm = (users: any[]) => {
     addMembersToGroup(users)
@@ -65,9 +71,11 @@ const GroupMembers = ({
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Ansatt</TableCell>
-              <TableCell>Email</TableCell>
-              {showLastAnsweredAt && <TableCell>Sist besvart</TableCell>}
+              <TableCell>{t('employee')}</TableCell>
+              <TableCell>{t('email')}</TableCell>
+              {showLastAnsweredAt && (
+                <TableCell>{t('myGroup.lastAnswered')}</TableCell>
+              )}
               <TableCell />
             </TableRow>
           </TableHead>
@@ -90,7 +98,7 @@ const GroupMembers = ({
         startIcon={<PersonAddIcon />}
         onClick={() => setOpen(true)}
       >
-        Legg til medlemmer
+        {t('myGroup.addMembers')}
       </Button>
       <AddMemberToGroupDialog
         open={open}

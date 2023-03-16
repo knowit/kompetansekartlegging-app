@@ -16,6 +16,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd'
 
 import { useAppSelector } from '../../redux/hooks'
 import { selectAdminCognitoGroupName } from '../../redux/User'
+import { useTranslation } from 'react-i18next'
 import Button from '../mui/Button'
 import Table from '../mui/Table'
 import AddUserToGroupDialog from './AddUserToGroupDialog'
@@ -54,14 +55,16 @@ const Admin = (props: any) => {
 }
 
 const AdminTable = ({ admins, deleteAdmin }: any) => {
+  const { t } = useTranslation()
+
   return (
     <TableContainer className={commonStyles.tableContainer}>
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell>Ansatt</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Brukernavn</TableCell>
+            <TableCell>{t('employee')}</TableCell>
+            <TableCell>{t('email')}</TableCell>
+            <TableCell>{t('username')}</TableCell>
             <TableCell />
           </TableRow>
         </TableHead>
@@ -76,6 +79,7 @@ const AdminTable = ({ admins, deleteAdmin }: any) => {
 }
 
 const EditAdmins = () => {
+  const { t } = useTranslation()
   const adminCognitoGroupName = useAppSelector(selectAdminCognitoGroupName)
 
   const {
@@ -112,18 +116,16 @@ const EditAdmins = () => {
 
   return (
     <Container maxWidth="md" className={commonStyles.container}>
-      {error && <p>An error occured: {error}</p>}
+      {error && <p>{t('errorOccured') + error}</p>}
       {loading && <CircularProgress />}
       {!error && !loading && admins && (
         <>
           <Card style={{ marginBottom: '24px' }} variant="outlined">
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
-                Rediger administratorer
+                {t('admin.editAdmins.editAdministrators')}
               </Typography>
-              Administratorer har tilgang til alles svar. De kan også velge hvem
-              som er gruppeledere og administratorer og kan lage og fjerne
-              grupper. På denne siden kan du legge til og fjerne gruppeledere.
+              {t('admin.editAdmins.description')}
             </CardContent>
           </Card>
           <AdminTable admins={admins} deleteAdmin={deleteAdmin} />
@@ -134,7 +136,7 @@ const EditAdmins = () => {
             style={{ marginTop: '24px' }}
             onClick={() => setShowAddAdmin(true)}
           >
-            Legg til administrator
+            {t('addAdministrator')}
           </Button>
         </>
       )}
@@ -144,7 +146,7 @@ const EditAdmins = () => {
         onExited={clearSelectedAdmin}
         onConfirm={deleteAdminConfirm}
         user={adminToDelete}
-        roleName="administrator"
+        roleName={t('administrator').toLowerCase()}
       />
       {showAddAdmin && (
         <AddUserToGroupDialog
@@ -153,7 +155,7 @@ const EditAdmins = () => {
           userGetFn={listAllUsersInOrganization}
           onCancel={hideShowAddAdmin}
           onConfirm={addAdminConfirm}
-          roleName="administrator"
+          roleName={t('administrator').toLowerCase()}
         />
       )}
     </Container>

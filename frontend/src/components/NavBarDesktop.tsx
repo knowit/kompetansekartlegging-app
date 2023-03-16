@@ -24,6 +24,8 @@ import ReactMarkdown from 'react-markdown'
 import { ReactComponent as KnowitLogo } from '../Logotype-Knowit-Digital-white 1.svg'
 import { useAppSelector } from '../redux/hooks'
 import { selectUserState } from '../redux/User'
+import { LanguageSelect } from './LanguageSelect'
+import { useTranslation } from 'react-i18next'
 import { KnowitColors } from '../styles'
 import { NavBarPropsDesktop, UserRole } from '../types'
 
@@ -77,6 +79,7 @@ const navbarStyles = makeStyles((theme) => ({
 }))
 
 const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
+  const { t, i18n } = useTranslation()
   const userState = useAppSelector(selectUserState)
 
   const [avatarMenuOpen, setAvatarMenuOpen] = useState<boolean>(false)
@@ -174,14 +177,16 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
 
   useEffect(() => {
     fetch(
-      'https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/frontend/markdown/help.md'
+      'https://raw.githubusercontent.com/knowit/kompetansekartlegging-app/main/frontend/markdown/' +
+        i18n.language +
+        '/help.md'
     )
       .then(async (response) => {
         const markdown = await response.text()
         setHelpMarkdown(markdown)
       })
       .catch((error) => console.error(error))
-  }, [])
+  }, [i18n.language])
 
   return (
     <div className={style.root}>
@@ -190,8 +195,9 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
           <div className={style.logo}>
             <KnowitLogo />
           </div>
+          <LanguageSelect iconColor={KnowitColors.creme} />
           <h1 className={style.title}>
-            Kompetansekartlegging for {userState.organizationName}
+            {t('navbar.competenceMappingFor')} {userState.organizationName}
           </h1>
 
           {/* <Button variant="contained" className={classes.logoutButton} onClick={() => Auth.signOut()}>Sign out</Button>  */}
@@ -210,12 +216,12 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
               <Button
                 ref={anchorRef}
                 aria-controls={avatarMenuOpen ? 'menu-list-grow' : undefined}
-                // onClick={() => {console.log("Hahaha")}}
-                aria-label="Help button"
-                endIcon={<HelpIcon style={{ color: 'white' }} />}
+                // onClick={() => {}}
+                aria-label={t('aria.helpButton') as string}
+                endIcon={<HelpIcon style={{ color: KnowitColors.white }} />}
                 onClick={() => setHelpModalOpen(true)}
               >
-                <div className={style.userName}>Hjelp</div>
+                <div className={style.userName}>{t('navbar.help')}</div>
               </Button>
             ) : null}
             <Button
@@ -223,13 +229,13 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
               aria-controls={avatarMenuOpen ? 'menu-list-grow' : undefined}
               aria-haspopup="true"
               onClick={handleToggle}
-              aria-label="Toggle dropdownmenu"
+              aria-label={t('aria.toggleDropdownMenu') as string}
             >
               <div className={style.userName}>{userState.name}</div>
               <Avatar
                 className={style.userPicture}
                 src={userState.picture}
-                alt="Profile Picture"
+                alt={t('navbar.profilePicture') as string}
               />
             </Button>
 
@@ -257,11 +263,11 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
                         onKeyDown={handleListKeyDown}
                         className={style.dropdownMenu}
                       >
-                        {/* Removed for user testing
+                        {/* Removed for user testing, i18n if uncommenting
                                         <MenuItem onClick={handleDisplayAnswers}>Vis alle lagrede svar</MenuItem>
                                         <MenuItem onClick={handleDeleteAnswers}>Slett alle svar</MenuItem> */}
                         <MenuItem onClick={handleCloseSignout}>
-                          Logg ut
+                          {t('navbar.signOut')}
                         </MenuItem>
                       </MenuList>
                     </ClickAwayListener>
@@ -276,19 +282,19 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
               aria-describedby="dialogdescription"
             >
               <DialogTitle id="dialogtitle">
-                {'Ønsker du å slette svarene dine?'}
+                {t('navbar.doYouWantToDeleteYourAnswers')}
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="dialogdescription">
-                  OBS: Dette vil slette alle innsendte og lagrede svar!
+                  {t('navbar.thisWillDeleteAllAnswers')}
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
                 <Button onClick={() => 1} color="primary">
-                  Bekreft
+                  {t('confirm')}
                 </Button>
                 <Button onClick={handleCloseAlert} color="primary" autoFocus>
-                  Avbryt
+                  {t('abort')}
                 </Button>
               </DialogActions>
             </Dialog>

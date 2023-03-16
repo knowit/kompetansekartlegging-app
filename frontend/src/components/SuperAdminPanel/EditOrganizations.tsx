@@ -20,6 +20,8 @@ import AddIcon from '@material-ui/icons/Add'
 import useApiGet from '../AdminPanel/useApiGet'
 import AddOrganizationDialog from './AddOrganizationDialog'
 import DeleteOrganizationDialog from './DeleteOrganizationDialog'
+import { useTranslation } from 'react-i18next'
+import { t } from 'i18next'
 import {
   addOrganization,
   getOrganizations,
@@ -64,15 +66,17 @@ const OrganizationTable: React.FC<OrganizationTableProps> = ({
   organizations,
   deleteOrganization,
 }) => {
+  const { t } = useTranslation()
+
   return (
     <TableContainer className={commonStyles.tableContainer}>
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell>Navn</TableCell>
-            <TableCell>ID</TableCell>
-            <TableCell>Identifier Attribute</TableCell>
-            <TableCell>Slett</TableCell>
+            <TableCell>{t('name')}</TableCell>
+            <TableCell>{t('superAdmin.editOrganizations.id')}</TableCell>
+            <TableCell>{t('superAdmin.identifierAttribute')}</TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -141,10 +145,10 @@ const EditOrganizations = () => {
 
   return (
     <Container maxWidth="md" className={commonStyles.container}>
-      {error && <p>An error occured: {error}</p>}
+      {error && <p>{t('errorOccured') + error}</p>}
       {mutationError && (
         <>
-          <p>An error occured: {mutationError}</p>
+          <p>{t('errorOccured') + mutationError}</p>
         </>
       )}
       {loading && <CircularProgress />}
@@ -153,9 +157,9 @@ const EditOrganizations = () => {
           <Card style={{ marginBottom: '24px' }} variant="outlined">
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
-                Rediger organisasjoner.
+                {t('menu.submenu.editOrganizations')}
               </Typography>
-              Her man man legge til, fjerne eller oppdatere organizasjoner.
+              {t('superAdmin.editOrganizations.description')}
             </CardContent>
           </Card>
           <OrganizationTable
@@ -169,7 +173,7 @@ const EditOrganizations = () => {
             style={{ marginTop: '24px' }}
             onClick={() => setShowAddOrganization(true)}
           >
-            Legg til organisasjon
+            {t('superAdmin.editOrganizations.addOrganization')}
           </Button>
         </>
       )}

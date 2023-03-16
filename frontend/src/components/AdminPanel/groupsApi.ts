@@ -11,6 +11,7 @@ import {
   ADMIN_COGNITOGROUP_SUFFIX,
   GROUPLEADER_COGNITOGROUP_SUFFIX,
 } from '../../constants'
+import i18n from '../../i18n/i18n'
 import {
   createGroup,
   createUser,
@@ -43,7 +44,9 @@ const getGroupMembers = async (
     return { result: users || [] }
   } catch (e) {
     return {
-      error: `Could not get members of group with ID '${groupID}'.`,
+      error: i18n.t('groupsApi.couldNotGetMembersOfGroupWithID', {
+        groupID: groupID,
+      }),
     }
   }
 }
@@ -61,7 +64,7 @@ const listAllGroups = async (): Promise<ApiResponse<Group[]>> => {
 
     return { result: groups || [] }
   } catch (e) {
-    return { error: `Could not get a list of all groups.` }
+    return { error: i18n.t('groupsApi.couldNotGetAListOfAllGroups') }
   }
 }
 
@@ -85,7 +88,7 @@ const listAllUsers = async (): Promise<ApiResponse<User[]>> => {
     } while (nextToken)
   } catch (e) {
     console.error(e)
-    return { error: `Could not get a list of all users.` }
+    return { error: i18n.t('groupsApi.couldNotGetAListOfAllUsers') }
   }
   return { result: allUsers }
 }
@@ -108,7 +111,12 @@ const addUserToGroup = async (
     const user = userGQ?.data?.createUser as User
     return { result: user || null }
   } catch (e) {
-    return { error: `Could not add user '${id}' to group '${groupID}'.` }
+    return {
+      error: i18n.t('groupsApi.couldNotAddUserWithIDToGroupWithID', {
+        userID: id,
+        groupID: groupID,
+      }),
+    }
   }
 }
 
@@ -127,7 +135,10 @@ const updateUserGroup = async (
     return { result: user || null }
   } catch (e) {
     return {
-      error: `Could not update user '${id}' to group '${groupID}'.`,
+      error: i18n.t('groupsApi.couldNotUpdateUserWithIDToGroupWithID', {
+        userID: id,
+        groupID: groupID,
+      }),
     }
   }
 }
@@ -145,7 +156,10 @@ const removeUserFromGroup = async (
     return { result: null }
   } catch (e) {
     return {
-      error: `Could not remove user '${id}' from group '${groupID}'.`,
+      error: i18n.t('groupsApi.couldNotRemoveUserWithIDFromGroupWithID', {
+        userID: id,
+        groupID: groupID,
+      }),
     }
   }
 }
@@ -164,7 +178,7 @@ const addGroup = async (user: any, orgID: any): Promise<ApiResponse<Group>> => {
     const group = groupsGQ?.data?.createGroup as Group
     return { result: group || null }
   } catch (e) {
-    return { error: `Could not add a group.` }
+    return { error: i18n.t('groupsApi.couldNotAddAGroup') }
   }
 }
 
@@ -177,7 +191,11 @@ const removeGroup = async (group: any): Promise<ApiResponse<null>> => {
     })
     return { result: null }
   } catch (e) {
-    return { error: `Could not remove group with ID '${group.id}'.` }
+    return {
+      error: i18n.t('groupsApi.couldNotRemoveGroupWithID', {
+        groupID: group.id,
+      }),
+    }
   }
 }
 
@@ -199,7 +217,10 @@ const updateGroupLeader = async (
     return { result: group || null }
   } catch (e) {
     return {
-      error: `Could not set group leader to '${newGroupLeader.Username}' on group '${groupToEdit.id}'.`,
+      error: i18n.t('groupsApi.couldNotSetGroupLeaderToUsernameOnGroupWithID', {
+        username: newGroupLeader.Username,
+        groupID: groupToEdit.id,
+      }),
     }
   }
 }

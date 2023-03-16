@@ -16,6 +16,7 @@ import { ChartData, CombinedChartProps } from '../types'
 import { wrapString } from '../helperFunctions'
 import { useSwipeable } from 'react-swipeable'
 import { OverviewType } from './TypedOverviewChart'
+import { useTranslation } from 'react-i18next'
 
 const numTicks = 5
 const chartSplitAt = numTicks + 2
@@ -127,11 +128,12 @@ const createPagedData = (
 export const CombinedChartMobile = ({
   ...props
 }: CombinedChartProps): JSX.Element => {
+  const { t } = useTranslation()
+  const classes = useStyles()
+
   const [chartPages, setChartPages] = useState<ChartData[][]>([])
   const [currentPage, setCurrentPage] = useState(0)
   const [currentType, setCurrentType] = useState<OverviewType>()
-
-  const classes = useStyles()
 
   const maxColumnsPerPage = getMaxColumnsForWidth()
 
@@ -261,7 +263,7 @@ export const CombinedChartMobile = ({
               fontWeight="bold"
               fill={KnowitColors.darkBrown}
             >
-              MOTIVASJON
+              {t('motivation').toUpperCase()}
             </Label>
           </ReferenceLine>
           <ReferenceLine
@@ -281,7 +283,7 @@ export const CombinedChartMobile = ({
               fontWeight="bold"
               fill={KnowitColors.darkBrown}
             >
-              KOMPETANSE
+              {t('competence').toUpperCase()}
             </Label>
           </ReferenceLine>
           <ReferenceLine

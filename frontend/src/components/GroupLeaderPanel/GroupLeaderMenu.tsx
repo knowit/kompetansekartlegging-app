@@ -5,6 +5,7 @@ import { Button } from '@material-ui/core'
 
 import { getAttribute } from '../AdminPanel/helpers'
 import { Panel } from '../../types'
+import { useTranslation } from 'react-i18next'
 
 const GroupLeaderMenu = ({
   members,
@@ -16,6 +17,7 @@ const GroupLeaderMenu = ({
   setShowFab,
   style,
 }: any) => {
+  const { t } = useTranslation()
   if (!show) return null
 
   const items = members.map((m: any) => ({
@@ -35,7 +37,9 @@ const GroupLeaderMenu = ({
           setActivePanel(Panel.GroupLeader)
         }}
       >
-        <div className={clsx(style.menuButtonText)}>MIN GRUPPE</div>
+        <div className={clsx(style.menuButtonText)}>
+          {t('menu.myGroup').toUpperCase()}
+        </div>
       </Button>
 
       {selected &&

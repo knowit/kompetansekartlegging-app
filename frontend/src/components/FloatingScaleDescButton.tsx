@@ -2,6 +2,7 @@ import { Fab, makeStyles, Modal, Tooltip } from '@material-ui/core'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { KnowitColors } from '../styles'
 import DescriptionTable from './DescriptionTable'
+import { useTranslation } from 'react-i18next'
 
 const floatingScaleDescButtonStyleDesktop = makeStyles({
   fab: {
@@ -136,6 +137,8 @@ const FloatingScaleDescButton = ({
   setScaleDescOpen,
   firstTimeLogin,
 }: FloatingScaleDescButtonProps) => {
+  const { t } = useTranslation()
+
   const style = isMobile
     ? floatingScaleDescButtonStyleMobile()
     : floatingScaleDescButtonStyleDesktop()
@@ -173,7 +176,7 @@ const FloatingScaleDescButton = ({
           condition={firstTimeLogin}
           wrap={(children) => (
             <Tooltip
-              title="Trykk her for å se hva ikonene betyr!"
+              title={t('pressHereToSeeWhatTheIconsMean') as string}
               open={showTooltip}
               arrow
             >
@@ -196,7 +199,7 @@ const FloatingScaleDescButton = ({
           className={style.fab}
           onClick={() => setScaleDescOpen((scaleDescOpen) => !scaleDescOpen)}
         >
-          SKALABESKRIVELSE
+          {t('scaleDescription').toUpperCase()}
         </Fab>
       )}
     </>

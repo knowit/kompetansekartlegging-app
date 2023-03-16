@@ -18,6 +18,7 @@ import {
   selectGroupLeaderCognitoGroupName,
   selectUserState,
 } from '../../redux/User'
+import { useTranslation } from 'react-i18next'
 import Button from '../mui/Button'
 import Table from '../mui/Table'
 import AddUserToGroupDialog from './AddUserToGroupDialog'
@@ -59,14 +60,16 @@ const GroupLeader = (props: any) => {
 }
 
 const GroupLeaderTable = ({ groupLeaders, deleteGroupLeader }: any) => {
+  const { t } = useTranslation()
+
   return (
     <TableContainer className={commonStyles.tableContainer}>
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell>Ansatt</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Brukernavn</TableCell>
+            <TableCell>{t('employee')}</TableCell>
+            <TableCell>{t('email')}</TableCell>
+            <TableCell>{t('username')}</TableCell>
             <TableCell />
           </TableRow>
         </TableHead>
@@ -85,6 +88,8 @@ const GroupLeaderTable = ({ groupLeaders, deleteGroupLeader }: any) => {
 }
 
 const EditGroupLeaders = () => {
+  const { t } = useTranslation()
+
   const groupLeaderCognitoGroupName = useAppSelector(
     selectGroupLeaderCognitoGroupName
   )
@@ -129,18 +134,16 @@ const EditGroupLeaders = () => {
 
   return (
     <Container maxWidth="md" className={commonStyles.container}>
-      {error && <p>An error occured: {error}</p>}
+      {error && <p>{t('errorOccured') + error}</p>}
       {loading && <CircularProgress />}
       {!error && !loading && groupLeaders && (
         <>
           <Card style={{ marginBottom: '24px' }} variant="outlined">
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
-                Rediger gruppeledere
+                {t('menu.submenu.editGroupLeaders')}
               </Typography>
-              Gruppeledere har tilgang til sine egne gruppebarns svar. De kan
-              også velge sine gruppebarn. På denne siden kan du legge til og
-              fjerne gruppeledere.
+              {t('admin.editGroupLeaders.description')}
             </CardContent>
           </Card>
           <GroupLeaderTable
@@ -153,7 +156,7 @@ const EditGroupLeaders = () => {
             startIcon={<PersonAddIcon />}
             onClick={() => setShowAddGroupLeader(true)}
           >
-            Legg til gruppeleder
+            {t('admin.editGroupLeaders.addGroupLeader')}
           </Button>
         </>
       )}
@@ -163,15 +166,14 @@ const EditGroupLeaders = () => {
         onExited={clearSelectedGroupLeader}
         onConfirm={deleteGroupLeaderConfirm}
         user={groupLeaderToDelete}
-        roleName="gruppeleder"
+        roleName={t('groupLeader').toLowerCase()}
       >
-        Husk å sette en ny gruppeleder for de gruppene brukeren var ansvarlig
-        for.
+        {t('admin.editGroupLeaders.rememberToReplaceGroupLeader')}
       </DeleteUserFromGroupDialog>
       {showAddGroupLeader && (
         <AddUserToGroupDialog
           userGetFn={listAllUsersInOrganization}
-          roleName="gruppeleder"
+          roleName={t('groupLeader').toLowerCase()}
           open={showAddGroupLeader}
           currentUsersInGroup={groupLeaders}
           onCancel={hideShowAddGroupLeader}

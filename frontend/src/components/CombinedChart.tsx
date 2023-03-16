@@ -1,5 +1,6 @@
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   BarChart,
   Bar,
@@ -98,13 +99,14 @@ const getLabel = (
 }
 
 export const CombinedChart = ({ ...props }: CombinedChartProps) => {
+  const { t } = useTranslation()
   const classes = useStyles()
 
   if (props.chartData.length === 0) return null
 
   const RenderCustomTooltip = (classes: any) => {
     const validate = (msg: string | undefined) => {
-      if (msg === '') return 'Ikke besvart'
+      if (msg === '') return t('notAnswered')
       else return msg
     }
     const isTop = props.type === OverviewType.HIGHEST && props.topSubjects
@@ -119,12 +121,12 @@ export const CombinedChart = ({ ...props }: CombinedChartProps) => {
         const knowledgeLabel = getLabel(
           isTop,
           () => validate(topSubjects?.get(props.label)?.kTop),
-          'Kompetanse'
+          t('competence')
         )
         const motivationLabel = getLabel(
           isTop,
           () => validate(topSubjects?.get(props.label)?.mTop),
-          'Motivasjon'
+          t('motivation')
         )
 
         return (
@@ -197,12 +199,12 @@ export const CombinedChart = ({ ...props }: CombinedChartProps) => {
           />
           <ReferenceLine x={0} stroke={KnowitColors.darkGreen}>
             <Label className={classes.label} position="top" offset={50}>
-              KOMPETANSE
+              {t('competence').toUpperCase()}
             </Label>
           </ReferenceLine>
           <ReferenceLine x={chartSplitAt} stroke={KnowitColors.darkGreen}>
             <Label className={classes.label} position="top" offset={50}>
-              MOTIVASJON
+              {t('motivation').toUpperCase()}
             </Label>
           </ReferenceLine>
         </BarChart>

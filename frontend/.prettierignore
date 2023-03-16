@@ -1,0 +1,8 @@
+/build
+/src/API.ts
+/src/exports.js
+/src/graphql/mutations.ts
+/src/graphql/queries.ts
+/src/graphql/subscriptions.ts
+/src/i18n/locales/*.ts
+/src/i18n/i18n.ts

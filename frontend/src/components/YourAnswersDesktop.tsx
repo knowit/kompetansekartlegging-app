@@ -7,6 +7,7 @@ import AnswerDiagram from './AnswerDiagram'
 import { BlockInfo } from './BlockInfo'
 import { Form } from './Form'
 import ProgressBar from './ProgressBar'
+import { useTranslation } from 'react-i18next'
 
 const cardCornerRadius = 40
 const zIndex = 20
@@ -158,6 +159,7 @@ const yourAnwersStyle = makeStyles({
 })
 
 export const YourAnswersDesktop = ({ ...props }: YourAnswerProps) => {
+  const { t } = useTranslation()
   const style = yourAnwersStyle()
 
   const scrollRef = React.useRef<HTMLDivElement>(null)
@@ -202,7 +204,7 @@ export const YourAnswersDesktop = ({ ...props }: YourAnswerProps) => {
                 className={style.editButton}
                 onClick={() => props.enableAnswerEditMode()}
               >
-                Fyll ut
+                {t('myAnswers.fillOut')}
               </Button>
             </div>
           </div>

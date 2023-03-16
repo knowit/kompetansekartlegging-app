@@ -47,6 +47,7 @@ import {
 } from './groupsApi'
 import { compareByCreatedAt, compareByName, getAttribute } from './helpers'
 import PictureAndNameEditCell from './PictureAndNameEditCell'
+import { useTranslation } from 'react-i18next'
 import useApiGet from './useApiGet'
 
 const useRowStyles = makeStyles({
@@ -69,10 +70,12 @@ const Group = ({
   setOpenId,
   showLastAnsweredAt,
 }: any) => {
+  const { t } = useTranslation()
+
   const hasGroupLeader = !!group.groupLeader
   const name = hasGroupLeader
     ? getAttribute(group.groupLeader, 'name')
-    : 'Gruppeleder fjernet'
+    : t('admin.editGroups.groupLeaderRemoved')
   const picture = hasGroupLeader
     ? getAttribute(group.groupLeader, 'picture')
     : undefined
@@ -96,7 +99,7 @@ const Group = ({
         <TableCell>{group.members.length}</TableCell>
         <TableCell align="right">
           <Button endIcon={<DeleteIcon />} onClick={() => deleteGroup(group)}>
-            Fjern gruppe
+            {t('admin.editGroups.removeGroup')}
           </Button>
         </TableCell>
       </TableRow>
@@ -105,7 +108,7 @@ const Group = ({
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
               <Typography variant="h6" gutterBottom>
-                Medlemmer
+                {t('admin.editGroups.members')}
               </Typography>
               <GroupMembers
                 allUsers={users}
@@ -135,6 +138,8 @@ const GroupsTable = ({
   deleteMember,
   showLastAnsweredAt,
 }: any) => {
+  const { t } = useTranslation()
+
   const [openId, setOpenId] = useState<string>('')
   const setOpenGroup = (groupId: string) => {
     if (openId === groupId) {
@@ -164,9 +169,9 @@ const GroupsTable = ({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Detaljer</TableCell>
-            <TableCell>Gruppeleder</TableCell>
-            <TableCell>Antall gruppemedlemmer</TableCell>
+            <TableCell>{t('admin.editGroups.details')}</TableCell>
+            <TableCell>{t('groupLeader')}</TableCell>
+            <TableCell>{t('admin.editGroups.numberOfGroupMembers')}</TableCell>
             <TableCell />
           </TableRow>
         </TableHead>
@@ -192,6 +197,8 @@ const GroupsTable = ({
 }
 
 const EditGroups = ({ showLastAnsweredAt }: any) => {
+  const { t } = useTranslation()
+
   const userState = useAppSelector(selectUserState)
 
   const {
@@ -373,18 +380,16 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
 
   return (
     <Container maxWidth="md" className={commonStyles.container}>
-      {isError && <p>An error occured: {isError}</p>}
+      {isError && <p>{t('errorOccured') + isError}</p>}
       {isLoading && <CircularProgress />}
       {!isError && !isLoading && groups && (
         <>
           <Card style={{ marginBottom: '24px' }} variant="outlined">
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
-                Rediger grupper
+                {t('menu.submenu.editGroups')}
               </Typography>
-              En gruppe består av en gruppeleder og flere gruppebarn. På denne
-              siden kan du lage nye grupper, slette grupper, endre gruppelederen
-              til en gruppe og legge til og fjerne ansatte til og fra grupper.
+              {t('admin.editGroups.description')}
             </CardContent>
           </Card>
           <GroupsTable
@@ -405,7 +410,7 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
             style={{ marginTop: '48px' }}
             onClick={() => setShowAddGroup(true)}
           >
-            Lag ny gruppe
+            {t('admin.editGroups.createNewGroup')}
           </Button>
         </>
       )}
@@ -422,14 +427,14 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
         onExited={() => setMemberToDelete(null)}
         onConfirm={deleteMemberConfirm}
         user={memberToDelete && memberToDelete.user}
-        roleName="gruppen"
+        roleName={t('groupDefiniteForm')}
         disableRoleSuffix
       />
       {groupToEdit && (
         <AddUserToGroupDialog
           usersConstant={groupLeaders}
-          title="Velg ny gruppeleder"
-          confirmButtonText="Velg"
+          title={t('admin.editGroups.chooseNewGroupLeader')}
+          confirmButtonText={t('admin.editGroups.choose')}
           open={!!groupToEdit}
           currentUsersInGroup={
             groupToEdit.groupLeader ? [groupToEdit.groupLeader] : []
@@ -441,8 +446,8 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
       {showAddGroup && (
         <AddUserToGroupDialog
           usersConstant={groupLeaders}
-          title="Velg gruppeleder til den nye gruppen"
-          confirmButtonText="Lag gruppe"
+          title={t('admin.editGroups.chooseGroupLeaderForTheNewGroup')}
+          confirmButtonText={t('admin.editGroups.createGroup')}
           open={showAddGroup}
           currentUsersInGroup={[]}
           onCancel={hideShowAddGroup}

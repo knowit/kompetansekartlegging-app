@@ -6,6 +6,7 @@ import { KnowitColors } from '../styles'
 import { ChartData, ResultData, ResultDiagramProps } from '../types'
 import { CombinedChart } from './CombinedChart'
 import { CombinedChartMobile } from './CombinedChartMobile'
+import { useTranslation } from 'react-i18next'
 
 const graphStyle = makeStyles({
   resultDiagramContainer: {
@@ -75,9 +76,9 @@ const graphStyle = makeStyles({
 })
 
 export enum OverviewType {
-  AVERAGE = 'SNITT',
-  MEDIAN = 'MEDIAN',
-  HIGHEST = 'TOPP',
+  AVERAGE,
+  MEDIAN,
+  HIGHEST,
 }
 
 const recalculate = (
@@ -135,6 +136,7 @@ const recalculate = (
 }
 
 export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
+  const { t } = useTranslation()
   const style = graphStyle()
 
   const [chartData, setChartData] = useState<ChartData[]>([])
@@ -323,6 +325,17 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
     setOverviewType(type)
   }
 
+  const translateOverviewType = (type: OverviewType) => {
+    switch (type) {
+      case OverviewType.AVERAGE:
+        return t('overview.overviewType.average').toUpperCase()
+      case OverviewType.MEDIAN:
+        return t('overview.overviewType.median').toUpperCase()
+      case OverviewType.HIGHEST:
+        return t('overview.overviewType.highest').toUpperCase()
+    }
+  }
+
   const getButton = (type: OverviewType): JSX.Element => {
     return (
       <Button
@@ -333,7 +346,7 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
           selectChartType(type)
         }}
       >
-        {type}
+        {translateOverviewType(type)}
       </Button>
     )
   }
@@ -346,7 +359,7 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
           cycleChartType()
         }}
       >
-        {currentType}
+        {translateOverviewType(currentType)}
       </Button>
       <CombinedChartMobile
         chartData={chartData}
@@ -357,7 +370,7 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
   ) : (
     <div className={style.resultDiagramContainer}>
       <div className={style.header}>
-        OVERSIKT
+        {t('menu.overview').toUpperCase()}
         <div className={style.buttonGroup}>
           {getButton(OverviewType.HIGHEST)}
           {getButton(OverviewType.AVERAGE)}

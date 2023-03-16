@@ -17,6 +17,8 @@ import TableRow from '@material-ui/core/TableRow'
 import Button from '../mui/Button'
 import Table from '../mui/Table'
 import commonStyles from './common.module.css'
+import { useTranslation } from 'react-i18next'
+import { i18nDateToLocaleDateString } from '../../i18n/i18n'
 
 type FormDefinition = {
   id: string
@@ -30,6 +32,8 @@ interface FormDefinitions {
 }
 
 const DownloadExcel = () => {
+  const { t } = useTranslation()
+
   const {
     result: formDefinitions,
     error,
@@ -43,12 +47,12 @@ const DownloadExcel = () => {
       <Card style={{ marginBottom: '24px' }} variant="outlined">
         <CardContent>
           <Typography color="textSecondary" gutterBottom>
-            Last ned kataloger
+            {t('menu.submenu.downloadCatalogs')}
           </Typography>
-          På denne siden kan du laste ned Excel-rapport fra katalogen du ønsker.
+          {t('admin.downloadCatalogs.description')}
         </CardContent>
       </Card>
-      {error && <p>An error occured: {error}</p>}
+      {error && <p>{t('errorOccured') + error}</p>}
       {loading && <CircularProgress />}
       {!error && !loading && formDefinitions && (
         <DownloadExcelTable formDefinitions={formDefinitions} />
@@ -58,6 +62,7 @@ const DownloadExcel = () => {
 }
 
 const DownloadExcelTable = ({ formDefinitions }: FormDefinitions) => {
+  const { t } = useTranslation()
   const [idOfDownloadingForm, setIdOfDownloadingForm] = useState<string>('')
   const [isExcelError, setIsExcelError] = useState<boolean>(false)
 
@@ -105,8 +110,8 @@ const DownloadExcelTable = ({ formDefinitions }: FormDefinitions) => {
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell>Katalog</TableCell>
-            <TableCell>Opprettet</TableCell>
+            <TableCell>{t('admin.downloadCatalogs.catalog')}</TableCell>
+            <TableCell>{t('admin.downloadCatalogs.created')}</TableCell>
             <TableCell />
           </TableRow>
         </TableHead>
@@ -115,7 +120,7 @@ const DownloadExcelTable = ({ formDefinitions }: FormDefinitions) => {
             <TableRow key={formDef.id}>
               <TableCell>{formDef.label}</TableCell>
               <TableCell>
-                {new Date(formDef.createdAt).toLocaleDateString('nb-NO')}
+                {i18nDateToLocaleDateString(new Date(formDef.createdAt))}
               </TableCell>
               <TableCell align="center">
                 <div
@@ -134,7 +139,9 @@ const DownloadExcelTable = ({ formDefinitions }: FormDefinitions) => {
                             margin: '0 auto',
                           }}
                         >
-                          {'Nedlasting feilet.\nEr katalogen tom?'}
+                          {t(
+                            'admin.downloadCatalogs.downloadFailedIsTheCatalogEmpty'
+                          )}
                         </p>
                       ) : (
                         <CircularProgress style={{ margin: '0 auto' }} />
@@ -150,7 +157,7 @@ const DownloadExcelTable = ({ formDefinitions }: FormDefinitions) => {
                         downloadExcel(formDef.id, formDef.label)
                       }}
                     >
-                      Last ned
+                      {t('admin.downloadCatalogs.download')}
                     </Button>
                   )}
                 </div>
