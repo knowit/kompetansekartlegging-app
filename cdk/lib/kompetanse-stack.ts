@@ -688,7 +688,7 @@ export class KompetanseStack extends Stack {
     const slackAlarmForwarderPermissions = new iam.PolicyStatement({
       actions: ['secretsmanager:GetSecretValue'],
       resources: [
-        'arn:aws:secretsmanager:eu-central-1:*:secret:slack_webhook_url-*',
+        'arn:aws:secretsmanager:eu-central-1:*:secret:slack_webhook_url2-*',
       ],
     })
 
@@ -703,8 +703,8 @@ export class KompetanseStack extends Stack {
       }
     )
 
-    new aws_secretsmanager.Secret(this, 'slack_webhook_url', {
-      secretName: 'slack_webhook_url',
+    new aws_secretsmanager.Secret(this, 'slack_webhook_url2', {
+      secretName: 'slack_webhook_url2',
       generateSecretString: {
         secretStringTemplate:
           '{"url": "value must be set using AWS Console or CLI"}',
@@ -878,6 +878,113 @@ export class KompetanseStack extends Stack {
       endpoint: externalApi.url,
       region: this.region,
     }
+
+    // configureNewOrganization setup
+    const configureNewOrganizationStatement = new iam.PolicyStatement({
+      actions: [
+        //'cognito-idp:Describe*',
+        //'cognito-idp:List*',
+        'cognito-idp:CreateGroup',
+        'cognito-idp:AdminCreateUser',
+        'cognito-idp:AdminSetUserPassword',
+        'cognito-idp:AdminAddUserToGroup',
+        'cognito-idp:AdminGetUser'
+        /*'cognito-identity:Describe*',
+        'cognito-identity:Get*',
+        'cognito-identity:List*',
+        'cognito-idp:Describe*',
+        'cognito-idp:AdminGetDevice',
+        'cognito-idp:AdminList*',
+        'cognito-idp:List*',
+        'cognito-sync:Describe*',
+        'cognito-sync:Get*',
+        'cognito-sync:List*',
+        'iam:ListOpenIdConnectProviders',
+        'iam:ListRoles',
+        'sns:ListPlatformApplications',*/
+      ],
+      effect: iam.Effect.ALLOW,
+      resources: [pool.userPoolArn],
+    })
+
+    const configureNewOrganizationLambda = new python.PythonFunction(
+      this,
+      'configureNewOrganizationLambda',
+      {
+        entry: path.join(__dirname, '/../backend/function/configureNewOrganization'),
+        runtime: lambda.Runtime.PYTHON_3_9,
+        environment: {
+          //ENV: ENV,
+          USER_POOL_ID: pool.userPoolId,
+        },
+        initialPolicy: [configureNewOrganizationStatement],
+        timeout: Duration.seconds(25),
+        memorySize: 2048,
+      }
+    )
+
+    // configureNewOrganization API Setup
+
+    const configureNewOrganizationApi = new gateway.RestApi(this, "kompetanseConfigureNewOrganizationRestApi", {
+      restApiName: "configureNewOrganizationAPI",
+      deployOptions: {
+        stageName: "dev"
+      },
+    })
+
+    const configureNewOrganizationProxy = configureNewOrganizationApi.root.addProxy({
+      anyMethod: false,
+    })
+    configureNewOrganizationProxy.addMethod(
+      'ANY',
+      new gateway.LambdaIntegration(configureNewOrganizationLambda),
+      {
+        authorizer: new gateway.CognitoUserPoolsAuthorizer(
+          this,
+          'configureNewOrganizationAPI',
+          {
+            authorizerName: 'COGNITO',
+            cognitoUserPools: [pool],
+          }
+        ),
+        authorizationScopes: ['aws.cognito.signin.user.admin'],
+      }
+    )
+
+    configureNewOrganizationProxy.addMethod("OPTIONS", new gateway.MockIntegration({
+      passthroughBehavior: gateway.PassthroughBehavior.WHEN_NO_MATCH,
+      requestTemplates: {
+        "application/json" : JSON.stringify({statusCode: 200})
+      },
+      integrationResponses: [{
+        statusCode: "200",
+        responseParameters:{
+          "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT'",
+          "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+          "method.response.header.Access-Control-Allow-Origin": "'*'"
+        }
+      }],
+    }), {
+      methodResponses: [{
+        statusCode: "200",
+        responseParameters: {
+          'method.response.header.Content-Type': true,
+          "method.response.header.Access-Control-Allow-Headers": true,
+          'method.response.header.Access-Control-Allow-Origin': true,
+          'method.response.header.Access-Control-Allow-Credentials': true,
+          'method.response.header.Access-Control-Allow-Methods': true
+        },
+        responseModels: {"application/json": gateway.Model.EMPTY_MODEL, "application/vnd.ms-excel": gateway.Model.EMPTY_MODEL}
+      }],
+    })
+    ApiMap["configureNewOrganizationApi"] = {
+      name: configureNewOrganizationApi.restApiName,
+      endpoint: configureNewOrganizationApi.url,
+      region: this.region
+    }
+
+
+
 
     // ExternalAPI Usage plan setup
 

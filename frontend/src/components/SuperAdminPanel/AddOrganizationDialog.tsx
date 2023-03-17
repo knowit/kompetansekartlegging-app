@@ -12,6 +12,7 @@ import TextField from '@material-ui/core/TextField'
 import { dialogStyles } from '../../styles'
 import { CloseIcon } from '../DescriptionTable'
 import { OrganizationInfo } from './SuperAdminTypes'
+import { API, Auth } from 'aws-amplify'
 
 interface AddOrganizationDialogProps {
   onCancel: () => void
@@ -29,6 +30,28 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
   const [organizationID, setOrganizationID] = useState('')
   const [organizationIdentifierAttribute, setOrganizationIdentifierAttribute] =
     useState('')
+
+  const organizationId = 'rairai'
+  const adminEmail = 'admin@admin'
+  const test = async () => {
+    try {
+      const data = await API.get('configureNewOrganizationAPI', '', {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${(await Auth.currentSession())
+            .getAccessToken()
+            .getJwtToken()}`,
+        },
+        queryStringParameters: {
+          organization_id: `${organizationId}`,
+          admin_email: `${adminEmail}`,
+        },
+      })
+      console.log(JSON.stringify(data))
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   return (
     <Dialog
@@ -99,12 +122,12 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
         </Button>
         <Button
           disabled={organizationName === ''}
-          onClick={() =>
-            onConfirm({
+          onClick={() => test()
+            /*onConfirm({
               id: organizationID,
               name: organizationName,
               identifierAttribute: organizationIdentifierAttribute,
-            })
+            })*/
           }
           className={style.confirmButton}
         >
