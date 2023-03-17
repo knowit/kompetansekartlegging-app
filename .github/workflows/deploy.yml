@@ -19,6 +19,7 @@ on:
 
 jobs: 
   check_files:
+    if: github.event_name == 'push'
     name: Check if needs deployment
     runs-on: ubuntu-latest
     steps:
