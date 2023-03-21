@@ -22,6 +22,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 
 import { useAppSelector } from '../../redux/hooks'
 import { selectUserState } from '../../redux/User'
+import { useTranslation } from 'react-i18next'
 import { dialogStyles } from '../../styles'
 import { CloseIcon } from '../DescriptionTable'
 import Table from '../mui/Table'
@@ -41,6 +42,7 @@ const AddMemberToGroupDialog = ({
   allUsers,
   members,
 }: any) => {
+  const { t } = useTranslation()
   const style = dialogStyles()
   const userState = useAppSelector(selectUserState)
 
@@ -94,7 +96,9 @@ const AddMemberToGroupDialog = ({
           display="flex"
           justifyContent="space-between"
         >
-          <span className={style.dialogTitleText}>Legg til medlemmer</span>
+          <span className={style.dialogTitleText}>
+            {t('myGroup.addMembers')}
+          </span>
           <IconButton className={style.closeButton} onClick={onCancel}>
             <CloseIcon />
           </IconButton>
@@ -102,12 +106,16 @@ const AddMemberToGroupDialog = ({
         <FormGroup row>
           <TextField
             fullWidth
-            placeholder={`Søk etter ansatt i ${userState.organizationName}`}
+            placeholder={
+              t('searchForEmployeeInOrganization', {
+                organization: userState.organizationName,
+              }) as string
+            }
             variant="outlined"
             value={nameFilter}
             className={style.searchField}
             onChange={(e: any) => setNameFilter(e.target.value)}
-            helperText="Den ansatte må ha logget seg inn i appen minst en gang."
+            helperText={t('myGroup.theEmployeeMustHaveSignedInOnce')}
           />
           <FormControlLabel
             control={
@@ -117,7 +125,7 @@ const AddMemberToGroupDialog = ({
                 color="primary"
               />
             }
-            label="Vis bare ansatte uten gruppeleder"
+            label={t('myGroup.showOnlyEmployeesWithoutGroupLeader')}
           />
         </FormGroup>
         {selectedUsers.length > 0 && (
@@ -136,7 +144,7 @@ const AddMemberToGroupDialog = ({
       </DialogContent>
       <DialogActions className={style.alertButtons}>
         <Button onClick={onClose} className={style.cancelButton}>
-          <span className={style.buttonText}>Avbryt</span>
+          <span className={style.buttonText}>{t('abort')}</span>
         </Button>
         <Button
           onClick={() => {
@@ -146,7 +154,7 @@ const AddMemberToGroupDialog = ({
           disabled={selectedUsers.length === 0}
           className={style.confirmButton}
         >
-          <span className={style.buttonText}>Legg til</span>
+          <span className={style.buttonText}>{t('add')}</span>
         </Button>
       </DialogActions>
     </Dialog>
@@ -188,6 +196,7 @@ const SelectedUsers = ({ selectedUsers, setSelectedUser }: any) => {
 }
 
 const User = ({ user, selected, setSelectedUser }: any) => {
+  const { t } = useTranslation()
   const name = getAttribute(user, 'name')
   const picture = getAttribute(user, 'picture')
   const hasGroup = !!user.groupLeader
@@ -199,13 +208,14 @@ const User = ({ user, selected, setSelectedUser }: any) => {
         <TableCell>
           <PictureAndNameCell name={name} picture={picture} />
         </TableCell>
-        <TableCell>{groupLeaderName || 'Mangler gruppeleder'}</TableCell>
+        <TableCell>{groupLeaderName || t('myGroup.noGroupLeader')}</TableCell>
       </TableRow>
     </>
   )
 }
 
 const UsersTable = ({ users, selectedUsers, setSelectedUser }: any) => {
+  const { t } = useTranslation()
   const isSelected = (user: any) =>
     selectedUsers.some((u: any) => u.Username === user.Username)
 
@@ -214,8 +224,8 @@ const UsersTable = ({ users, selectedUsers, setSelectedUser }: any) => {
       <Table stickyHeader style={{ maxHeight: '100%' }}>
         <TableHead>
           <TableRow>
-            <TableCell>Ansatt</TableCell>
-            <TableCell>Gruppeleder</TableCell>
+            <TableCell>{t('employee')}</TableCell>
+            <TableCell>{t('groupLeader')}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

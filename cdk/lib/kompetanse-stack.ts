@@ -684,8 +684,8 @@ export class KompetanseStack extends Stack {
     batchCreateUserAlarm.addOkAction(new SnsAction(systemAdminTopic))
 
     // SlackAlarmForwarder setup
-    const slackWebhookSecret = new aws_secretsmanager.Secret(this, 'slack_webhook_url2', { // TODO: remove 2
-      secretName: 'slack_webhook_url2', // TODO: remove 2
+    const slackWebhookSecret = new aws_secretsmanager.Secret(this, 'slack_webhook_url', {
+      secretName: 'slack_webhook_url',
       generateSecretString: {
         secretStringTemplate:
           '{"url": "value must be set using AWS Console or CLI"}',

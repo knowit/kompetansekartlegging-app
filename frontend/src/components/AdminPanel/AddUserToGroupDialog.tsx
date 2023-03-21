@@ -13,6 +13,7 @@ import TextField from '@material-ui/core/TextField'
 
 import { useAppSelector } from '../../redux/hooks'
 import { selectUserState } from '../../redux/User'
+import { useTranslation } from 'react-i18next'
 import { dialogStyles } from '../../styles'
 import { CloseIcon } from '../DescriptionTable'
 import { getAttribute, not } from './helpers'
@@ -30,6 +31,7 @@ const AddUserToGroupDialog = ({
   title,
   confirmButtonText,
 }: any) => {
+  const { t } = useTranslation()
   const style = dialogStyles()
   const userState = useAppSelector(selectUserState)
 
@@ -79,7 +81,7 @@ const AddUserToGroupDialog = ({
           justifyContent="space-between"
         >
           <span className={style.dialogTitleText}>
-            {title || `Legg til ${roleName}`}
+            {title || t('add') + ' ' + roleName}
           </span>
           <IconButton className={style.closeButton} onClick={onCancel}>
             <CloseIcon />
@@ -87,7 +89,11 @@ const AddUserToGroupDialog = ({
         </Box>
         <TextField
           fullWidth
-          placeholder={`Søk etter ansatt i ${userState.organizationName}`}
+          placeholder={
+            t('searchForEmployeeInOrganization', {
+              organization: userState.organizationName,
+            }) as string
+          }
           variant="outlined"
           value={nameFilter}
           className={style.searchField}
@@ -95,7 +101,7 @@ const AddUserToGroupDialog = ({
         />
       </DialogTitle>
       <DialogContent>
-        {error && <p>An error occured: {error}</p>}
+        {error && <p>{t('errorOccured') + error}</p>}
         {loading && <CircularProgress />}
         {!error && !loading && users && (
           <UsersTable
@@ -107,7 +113,7 @@ const AddUserToGroupDialog = ({
       </DialogContent>
       <DialogActions className={style.alertButtons}>
         <Button onClick={onCancel} className={style.cancelButton}>
-          <span className={style.buttonText}>Avbryt</span>
+          <span className={style.buttonText}>{t('abort')}</span>
         </Button>
         <Button
           onClick={() => onConfirm(selectedUser)}
@@ -115,7 +121,7 @@ const AddUserToGroupDialog = ({
           className={style.confirmButton}
         >
           <span className={style.buttonText}>
-            {confirmButtonText || 'Legg til'}
+            {confirmButtonText || t('add')}
           </span>
         </Button>
       </DialogActions>

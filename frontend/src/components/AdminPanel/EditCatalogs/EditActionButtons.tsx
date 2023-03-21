@@ -2,6 +2,7 @@ import React from 'react'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import { KnowitColors } from '../../../styles'
+import { useTranslation } from 'react-i18next'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -47,19 +48,20 @@ const useStyles = makeStyles(() =>
 )
 
 const EditActionButtons = ({ onSave, onCancel, disabled }: any) => {
+  const { t } = useTranslation()
   const classes = useStyles()
 
   return (
     <div className={classes.root}>
       <Button onClick={onCancel} className={classes.cancelButton}>
-        <span className={classes.buttonText}>Avbryt</span>
+        <span className={classes.buttonText}>{t('abort')}</span>
       </Button>
       <Button
         disabled={disabled}
         onClick={onSave}
         className={classes.confirmButton}
       >
-        <span className={classes.buttonText}>Lagre</span>
+        <span className={classes.buttonText}>{t('save')}</span>
       </Button>
     </div>
   )

@@ -9,6 +9,7 @@ import {
   updateQuestionTextTopicAndCategory,
 } from '../catalogApi'
 import DeleteQuestionDialog from './DeleteQuestionDialog'
+import { useTranslation } from 'react-i18next'
 import QuestionListItem from './QuestionListItem'
 
 type QuestionListProps = {
@@ -28,6 +29,7 @@ const QuestionList = ({
   formDefinitionLabel,
   refreshQuestions,
 }: QuestionListProps) => {
+  const { t } = useTranslation()
   const [enableUpdates, setEnableUpdates] = useState<boolean>(true)
 
   const [showDeleteQuestionDialog, setShowDeleteQuestionDialog] =
@@ -80,7 +82,9 @@ const QuestionList = ({
 
   return (
     <>
-      {questions.length === 0 && <p>Ingen spørsmål i denne kategorien ennå.</p>}
+      {questions.length === 0 && (
+        <p>{t('admin.editCatalogs.noQuestionsInThisCategoryYet')}</p>
+      )}
       <List>
         {questions.map((q: Question, ind: number) => (
           <QuestionListItem

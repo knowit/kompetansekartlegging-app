@@ -10,6 +10,7 @@ import ErrorIcon from '@material-ui/icons/Error'
 
 import { dialogStyles } from '../../styles'
 import { OrganizationInfo } from './SuperAdminTypes'
+import { t } from 'i18next'
 
 interface DeleteOrganiationDialogProps {
   open: boolean
@@ -35,14 +36,18 @@ const DeleteOrganizationDialog: React.FC<DeleteOrganiationDialogProps> = ({
     >
       <DialogTitle className={style.dialogTitle}>
         <ErrorIcon fontSize="large" className={style.errorIcon}></ErrorIcon>
-        <span
-          className={style.dialogTitleText}
-        >{`Fjern organisasjonen ${organization.name}?`}</span>
+        <span className={style.dialogTitleText}>
+          {t('superAdmin.editOrganizations.removeOrganization', {
+            organization: organization.name,
+          })}
+        </span>
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Er du sikker på at du har lyst å fjerne organizasjonen{' '}
-          {organization.name}?{' '}
+          {t(
+            'superAdmin.editOrganizations.areYouSureYouWantToRemoveTheOrganization',
+            { organization: organization.name }
+          )}
         </DialogContentText>
       </DialogContent>
       <DialogActions className={style.alertButtons}>
@@ -50,10 +55,10 @@ const DeleteOrganizationDialog: React.FC<DeleteOrganiationDialogProps> = ({
           onClick={() => onConfirm(organization)}
           className={style.cancelButton}
         >
-          <span className={style.buttonText}>Fjern</span>
+          <span className={style.buttonText}>{t('remove')}</span>
         </Button>
         <Button onClick={onCancel} className={style.confirmButton}>
-          <span className={style.buttonText}>Avbryt</span>
+          <span className={style.buttonText}>{t('abort')}</span>
         </Button>
       </DialogActions>
     </Dialog>

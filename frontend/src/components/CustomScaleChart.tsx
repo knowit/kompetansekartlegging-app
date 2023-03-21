@@ -17,6 +17,7 @@ import {
 
 import { KnowitColors } from '../styles'
 import { CustomScaleChartProps } from '../types'
+import { useTranslation } from 'react-i18next'
 
 const numTicks = 5
 const heightPerColumn = 50
@@ -91,6 +92,7 @@ const PopupSlider = withStyles({
 })(Slider)
 
 export const CustomScaleChart = ({ ...props }: CustomScaleChartProps) => {
+  const { t } = useTranslation()
   const classes = useStyles()
 
   if (props.chartData.length === 0) return null
@@ -127,7 +129,7 @@ export const CustomScaleChart = ({ ...props }: CustomScaleChartProps) => {
                 disabled
               />
             </div>
-            <p className={classes.answer}>Svar: {value}</p>
+            <p className={classes.answer}>{t('answer') + `: ${value}`}</p>
           </div>
         )
       }

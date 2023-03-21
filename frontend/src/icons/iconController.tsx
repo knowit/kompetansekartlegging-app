@@ -13,40 +13,41 @@ import { ReactComponent as M5 } from '../icons/M - perfekt.svg'
 import { ReactComponent as M2 } from '../icons/M - vedbehov.svg'
 
 import { Tooltip } from '@material-ui/core'
+import i18n from '../i18n/i18n'
 import { Fragment } from 'react'
 
 const getIconDescription = (knowledge: boolean, level: number): string => {
   if (knowledge) {
     switch (level) {
       case 0:
-        return 'Kjenner ikke til området'
+        return i18n.t('competenceScale.unfamiliar')
       case 1:
-        return 'Noe innsikt'
+        return i18n.t('competenceScale.someInsight')
       case 2:
-        return 'Potensielt brukbar kompetanse'
+        return i18n.t('competenceScale.potentiallyUsable')
       case 3:
-        return 'Profesjonelt nivå'
+        return i18n.t('competenceScale.professional')
       case 4:
-        return 'Ekspert'
+        return i18n.t('competenceScale.expert')
       case 5:
-        return 'Superstjerne'
+        return i18n.t('competenceScale.superstar')
       default:
         return ''
     }
   }
   switch (level) {
     case 0:
-      return 'Nei. Dette vil jeg ikke jobbe med.'
+      return i18n.t('motivationScale.no')
     case 1:
-      return 'Nøytral. Ingen formening.'
+      return i18n.t('motivationScale.neutral')
     case 2:
-      return 'Tja. Kan hvis det er behov.'
+      return i18n.t('motivationScale.ish')
     case 3:
-      return 'Nysgjerring. Dette vil jeg lære mer om.'
+      return i18n.t('motivationScale.curious')
     case 4:
-      return 'Godt. Dette er det jeg ønsker å jobbe med.'
+      return i18n.t('motivationScale.good')
     case 5:
-      return 'Ildsjel. Jeg brenner for dette.'
+      return i18n.t('motivationScale.enthusiast')
     default:
       return ''
   }

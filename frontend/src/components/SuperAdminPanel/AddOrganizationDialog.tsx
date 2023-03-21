@@ -14,6 +14,7 @@ import { CloseIcon } from '../DescriptionTable'
 import { OrganizationInfo } from './SuperAdminTypes'
 import { useAppSelector } from '../../redux/hooks'
 import { selectUserState } from '../../redux/User'
+import { useTranslation } from 'react-i18next'
 
 interface AddOrganizationDialogProps {
   onCancel: () => void
@@ -30,6 +31,7 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
   onConfirm,
   open,
 }) => {
+  const { t } = useTranslation()
   const style = dialogStyles()
   const userState = useAppSelector(selectUserState)
   const [organizationName, setOrganizationName] = useState('')
@@ -58,7 +60,7 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
           justifyContent="space-between"
         >
           <span className={style.dialogTitleText}>
-            Legg til ny organisasjon
+            {t('superAdmin.editOrganizations.addNewOrganization')}
           </span>
           <IconButton className={style.closeButton} onClick={onCancel}>
             <CloseIcon />
@@ -67,32 +69,35 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
         <TextField
           autoFocus
           fullWidth
-          label="Navn"
+          label={t('name')}
           variant="outlined"
           error={organizationName === ''}
-          helperText={organizationName === '' && 'Navn kan ikke være tom.'}
+          helperText={organizationName === '' && t('nameCantBeEmpty')}
           value={organizationName}
           className={style.textField}
           onChange={(e: any) => setOrganizationName(e.target.value)}
         />
         <TextField
           fullWidth
-          label="ID"
+          label={t('superAdmin.editOrganizations.id')}
           variant="outlined"
           error={organizationID === ''}
-          helperText={organizationID === '' && 'ID kan ikke være tom.'}
+          helperText={
+            organizationID === '' &&
+            t('superAdmin.editOrganizations.idCantBeEmpty')
+          }
           value={organizationID}
           className={style.textField}
           onChange={(e: any) => setOrganizationID(e.target.value)}
         />
         <TextField
           fullWidth
-          label="Identifier attribute"
+          label={t('superAdmin.identifierAttribute')}
           variant="outlined"
           error={organizationIdentifierAttribute === ''}
           helperText={
             organizationIdentifierAttribute === '' &&
-            'Identifier attribute kan ikke være tom.'
+            t('superAdmin.editOrganizations.identifierAttributeCantBeEmpty')
           }
           value={organizationIdentifierAttribute}
           className={style.textField}
@@ -102,12 +107,12 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
         />
         <TextField
           fullWidth
-          label="Admin e-post" // TODO: i18n
+          label={t('superAdmin.editOrganizations.adminEmail')}
           variant="outlined"
           error={!emailRegex.test(organizationAdminEmail)}
           helperText={
             !emailRegex.test(organizationAdminEmail) &&
-            'Admin e-post er ugyldig.' // TODO: i18n
+            t('superAdmin.editOrganizations.adminEmailIsInvalid')
           }
           value={organizationAdminEmail}
           className={style.textField}
@@ -116,7 +121,7 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
       </DialogTitle>
       <DialogActions className={style.alertButtons}>
         <Button onClick={onCancel} className={style.cancelButton}>
-          <span className={style.buttonText}>Avbryt</span>
+          <span className={style.buttonText}>{t('abort')}</span>
         </Button>
         <Button
           disabled={organizationName === ''}
@@ -133,7 +138,7 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
           }
           className={style.confirmButton}
         >
-          <span className={style.buttonText}>Legg til</span>
+          <span className={style.buttonText}>{t('add')}</span>
         </Button>
       </DialogActions>
     </Dialog>

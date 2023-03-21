@@ -17,6 +17,7 @@ import AddCategoryDialog from './AddCategoryDialog'
 import Button from '../../mui/Button'
 import { ORGANIZATION_ID_ATTRIBUTE } from '../../../constants'
 import { Auth } from 'aws-amplify'
+import { useTranslation } from 'react-i18next'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -42,6 +43,7 @@ const useStyles = makeStyles(() =>
 )
 
 const EditCatalog = () => {
+  const { t } = useTranslation()
   const [user, setUser] = useState<any | null>(null)
 
   if (!user) {
@@ -90,7 +92,7 @@ const EditCatalog = () => {
   return (
     <>
       <Container maxWidth="lg" className={classes.container}>
-        {error && <p>An error occured: {error}</p>}
+        {error && <p>{t('errorOccured') + error}</p>}
         {loading && <CircularProgress />}
         {!error && !loading && categories && (
           <>
@@ -116,7 +118,7 @@ const EditCatalog = () => {
                 className={classes.addCategoryButton}
                 onClick={() => setShowAddCategoryDialog(true)}
               >
-                Legg til ny kategori
+                {t('admin.editCatalogs.addNewCategory')}
               </Button>
             </div>
             {showAddCategoryDialog && (

@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography'
 import commonStyles from '../AdminPanel/common.module.css'
 import DeleteUserFromGroupDialog from '../AdminPanel/DeleteUserFromGroupDialog'
 import GroupMembers from '../AdminPanel/GroupMembers'
+import { useTranslation } from 'react-i18next'
 
 const Main = ({
   allAvailableUsersAnnotated,
@@ -22,15 +23,16 @@ const Main = ({
   deleteMemberConfirm,
   viewMember,
 }: any) => {
+  const { t } = useTranslation()
   return (
     <Container maxWidth="md" className={commonStyles.container}>
-      {isError && <p>An error occured: {isError}</p>}
+      {isError && <p>{t('errorOccured') + isError}</p>}
       {isLoading && <CircularProgress />}
       {!isError && !isLoading && allAvailableUsersAnnotated && (
         <>
           <Box margin={3} marginLeft={2}>
             <Typography variant="h5" component="h2" color="textPrimary">
-              Min gruppe
+              {t('menu.myGroup')}
             </Typography>
           </Box>
           <GroupMembers
@@ -51,7 +53,7 @@ const Main = ({
         onExited={() => setMemberToDelete(null)}
         onConfirm={deleteMemberConfirm}
         user={memberToDelete && memberToDelete.user}
-        roleName="gruppen"
+        roleName={t('groupDefiniteForm')}
         disableRoleSuffix
       />
     </Container>

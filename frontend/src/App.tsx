@@ -19,6 +19,7 @@ import {
 } from './redux/User'
 import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth'
 import { useAppSelector, useAppDispatch } from './redux/hooks'
+import { useTranslation } from 'react-i18next'
 
 const userBranch = process ? process.env.REACT_APP_USER_BRANCH : '' // Process does not exist in Webpack 5?
 
@@ -85,6 +86,7 @@ const App = () => {
   const dispatch = useAppDispatch()
   const userState = useAppSelector(selectUserState)
 
+  const { t } = useTranslation()
   const style = appStyle()
   const [showFab, setShowFab] = useState<boolean>(true)
   const [answerHistoryOpen, setAnswerHistoryOpen] = useState<boolean>(false)
@@ -209,8 +211,10 @@ const App = () => {
                 textAlign: 'center',
               }}
             >
-              NB: Dette er et test miljø!{' '}
-              <Button onClick={() => setBannerOpen(false)}>Close</Button>
+              {t('thisIsATestEnvironment') + ' '}
+              <Button onClick={() => setBannerOpen(false)}>
+                {t('close').toUpperCase()}
+              </Button>
             </div>
           </Snackbar>
         ) : null}

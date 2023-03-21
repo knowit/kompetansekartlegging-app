@@ -11,6 +11,7 @@ import { getAttribute } from './helpers'
 import Table from '../mui/Table'
 import TableRow from '../mui/TableRow'
 import PictureAndNameCell from './PictureAndNameCell'
+import { useTranslation } from 'react-i18next'
 
 const User = ({ user, selected, setSelectedUser }: any) => {
   const name = getAttribute(user, 'name')
@@ -30,6 +31,7 @@ const User = ({ user, selected, setSelectedUser }: any) => {
 }
 
 const UsersTable = ({ users, selectedUser, setSelectedUser }: any) => {
+  const { t } = useTranslation()
   const isSelected = (user: any) =>
     selectedUser && user.Username === selectedUser.Username
 
@@ -41,8 +43,8 @@ const UsersTable = ({ users, selectedUser, setSelectedUser }: any) => {
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell>Ansatt</TableCell>
-            <TableCell>Email</TableCell>
+            <TableCell>{t('employee')}</TableCell>
+            <TableCell>{t('email')}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
