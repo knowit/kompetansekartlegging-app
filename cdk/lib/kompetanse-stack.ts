@@ -684,11 +684,19 @@ export class KompetanseStack extends Stack {
     batchCreateUserAlarm.addOkAction(new SnsAction(systemAdminTopic))
 
     // SlackAlarmForwarder setup
+    const slackWebhookSecret = new aws_secretsmanager.Secret(this, 'slack_webhook_url2', { // TODO: remove 2
+      secretName: 'slack_webhook_url2', // TODO: remove 2
+      generateSecretString: {
+        secretStringTemplate:
+          '{"url": "value must be set using AWS Console or CLI"}',
+        generateStringKey: 'url',
+      },
+    })
 
     const slackAlarmForwarderPermissions = new iam.PolicyStatement({
       actions: ['secretsmanager:GetSecretValue'],
       resources: [
-        'arn:aws:secretsmanager:eu-central-1:*:secret:slack_webhook_url2-*',
+        slackWebhookSecret.secretArn,
       ],
     })
 
@@ -702,15 +710,6 @@ export class KompetanseStack extends Stack {
         timeout: Duration.seconds(10),
       }
     )
-
-    new aws_secretsmanager.Secret(this, 'slack_webhook_url2', {
-      secretName: 'slack_webhook_url2',
-      generateSecretString: {
-        secretStringTemplate:
-          '{"url": "value must be set using AWS Console or CLI"}',
-        generateStringKey: 'url',
-      },
-    })
 
     systemAdminTopic.addSubscription(
       new aws_sns_subscriptions.LambdaSubscription(slackAlarmForwarder)
@@ -880,31 +879,28 @@ export class KompetanseStack extends Stack {
     }
 
     // configureNewOrganization setup
+
     const configureNewOrganizationStatement = new iam.PolicyStatement({
       actions: [
-        //'cognito-idp:Describe*',
-        //'cognito-idp:List*',
         'cognito-idp:CreateGroup',
         'cognito-idp:AdminCreateUser',
         'cognito-idp:AdminSetUserPassword',
         'cognito-idp:AdminAddUserToGroup',
-        'cognito-idp:AdminGetUser'
-        /*'cognito-identity:Describe*',
-        'cognito-identity:Get*',
-        'cognito-identity:List*',
-        'cognito-idp:Describe*',
-        'cognito-idp:AdminGetDevice',
-        'cognito-idp:AdminList*',
-        'cognito-idp:List*',
-        'cognito-sync:Describe*',
-        'cognito-sync:Get*',
-        'cognito-sync:List*',
-        'iam:ListOpenIdConnectProviders',
-        'iam:ListRoles',
-        'sns:ListPlatformApplications',*/
+        'cognito-idp:AdminGetUser',
+        'dynamodb:Scan',
+        'dynamodb:Query',
+        'dynamodb:PutItem'
       ],
       effect: iam.Effect.ALLOW,
-      resources: [pool.userPoolArn],
+      resources: [
+        pool.userPoolArn,
+        tableArns['FormDefinitionTable'],
+        `${tableArns['FormDefinitionTable']}/index/*`,
+        tableArns['CategoryTable'],
+        `${tableArns['CategoryTable']}/index/*`,
+        tableArns['QuestionTable'],
+        `${tableArns['QuestionTable']}/index/*`
+      ],
     })
 
     const configureNewOrganizationLambda = new python.PythonFunction(
@@ -914,7 +910,9 @@ export class KompetanseStack extends Stack {
         entry: path.join(__dirname, '/../backend/function/configureNewOrganization'),
         runtime: lambda.Runtime.PYTHON_3_9,
         environment: {
-          //ENV: ENV,
+          GROUP: 'admin',
+          ENV: ENV,
+          SOURCE_NAME: 'KompetanseStack',
           USER_POOL_ID: pool.userPoolId,
         },
         initialPolicy: [configureNewOrganizationStatement],
@@ -982,8 +980,6 @@ export class KompetanseStack extends Stack {
       endpoint: configureNewOrganizationApi.url,
       region: this.region
     }
-
-
 
 
     // ExternalAPI Usage plan setup

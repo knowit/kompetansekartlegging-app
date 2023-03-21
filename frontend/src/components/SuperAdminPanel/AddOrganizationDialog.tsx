@@ -12,11 +12,16 @@ import TextField from '@material-ui/core/TextField'
 import { dialogStyles } from '../../styles'
 import { CloseIcon } from '../DescriptionTable'
 import { OrganizationInfo } from './SuperAdminTypes'
-import { API, Auth } from 'aws-amplify'
+import { useAppSelector } from '../../redux/hooks'
+import { selectUserState } from '../../redux/User'
 
 interface AddOrganizationDialogProps {
   onCancel: () => void
-  onConfirm: (arg: OrganizationInfo) => void
+  onConfirm: (
+    arg: OrganizationInfo,
+    adminEmail: string,
+    requestingOrgId: string
+  ) => void
   open: boolean
 }
 
@@ -26,32 +31,14 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
   open,
 }) => {
   const style = dialogStyles()
+  const userState = useAppSelector(selectUserState)
   const [organizationName, setOrganizationName] = useState('')
   const [organizationID, setOrganizationID] = useState('')
   const [organizationIdentifierAttribute, setOrganizationIdentifierAttribute] =
     useState('')
+  const [organizationAdminEmail, setOrganizationAdminEmail] = useState('')
 
-  const organizationId = 'rairai'
-  const adminEmail = 'admin@admin'
-  const test = async () => {
-    try {
-      const data = await API.get('configureNewOrganizationAPI', '', {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `${(await Auth.currentSession())
-            .getAccessToken()
-            .getJwtToken()}`,
-        },
-        queryStringParameters: {
-          organization_id: `${organizationId}`,
-          admin_email: `${adminEmail}`,
-        },
-      })
-      console.log(JSON.stringify(data))
-    } catch (e) {
-      console.log(e)
-    }
-  }
+  const emailRegex = /^[^\s@]+@[^\s@]+$/
 
   return (
     <Dialog
@@ -89,7 +76,6 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
           onChange={(e: any) => setOrganizationName(e.target.value)}
         />
         <TextField
-          autoFocus
           fullWidth
           label="ID"
           variant="outlined"
@@ -100,7 +86,6 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
           onChange={(e: any) => setOrganizationID(e.target.value)}
         />
         <TextField
-          autoFocus
           fullWidth
           label="Identifier attribute"
           variant="outlined"
@@ -115,6 +100,19 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
             setOrganizationIdentifierAttribute(e.target.value)
           }
         />
+        <TextField
+          fullWidth
+          label="Admin e-post" // TODO: i18n
+          variant="outlined"
+          error={!emailRegex.test(organizationAdminEmail)}
+          helperText={
+            !emailRegex.test(organizationAdminEmail) &&
+            'Admin e-post er ugyldig.' // TODO: i18n
+          }
+          value={organizationAdminEmail}
+          className={style.textField}
+          onChange={(e: any) => setOrganizationAdminEmail(e.target.value)}
+        />
       </DialogTitle>
       <DialogActions className={style.alertButtons}>
         <Button onClick={onCancel} className={style.cancelButton}>
@@ -122,12 +120,16 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
         </Button>
         <Button
           disabled={organizationName === ''}
-          onClick={() => test()
-            /*onConfirm({
-              id: organizationID,
-              name: organizationName,
-              identifierAttribute: organizationIdentifierAttribute,
-            })*/
+          onClick={() =>
+            onConfirm(
+              {
+                id: organizationID,
+                name: organizationName,
+                identifierAttribute: organizationIdentifierAttribute,
+              },
+              organizationAdminEmail,
+              userState.organizationID
+            )
           }
           className={style.confirmButton}
         >

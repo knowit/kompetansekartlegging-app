@@ -1,27 +1,43 @@
 import json
-from os import environ
+import uuid
 import boto3
+from datetime import datetime
+from os import environ
 
-#import botocore.exceptions
-#for key, value in sorted(botocore.exceptions.__dict__.items()):
-#    if isinstance(value, type):
-#        print(key)
+env = environ.get("ENV")
+sourceName = environ.get("SOURCE_NAME")
+userpool_id = environ.get("USER_POOL_ID")
+allowedGroup = environ.get("GROUP")
+table_names = {
+    "FormDefinition": f"FormDefinition-{sourceName}-{env}",
+    "Category": f"Category-{sourceName}-{env}",
+    "Question": f"Question-{sourceName}-{env}",
+}
 
-userPoolId = environ.get("USER_POOL_ID")
 cognito_client = boto3.client("cognito-idp")
+dynamo_client = boto3.client('dynamodb')
 
 def handler(event, context):
     print(event)
+
+    groups = event["requestContext"]["authorizer"]["claims"]["cognito:groups"].split(",")
+    if (allowedGroup not in groups):
+        print("EXITING: User does not have permissions to perform superadmin tasks")
+        exit()
+
     org_id = event["queryStringParameters"]["organization_id"]
+    requesting_org_id = event["queryStringParameters"]["requesting_org_id"]
     email = event["queryStringParameters"]["admin_email"]
 
     create_groups(org_id)
 
     if user_already_exists(email):
-        print(f"User {email} already exists, adding to groups")
-        add_user_to_admin_groups(email, org_id)
+        print(f"User {email} already exists, adding user to groups")
+        add_user_to_groups(email, org_id)
     else:
         create_admin_user(org_id, email)
+
+    create_default_form_definition(org_id, requesting_org_id)
 
     return {
         'statusCode': 200,
@@ -40,7 +56,7 @@ def create_groups(orgId):
     for groupName in groupNamesToCreate:
         try:
             cognito_client.create_group(
-                UserPoolId=userPoolId,
+                UserPoolId=userpool_id,
                 GroupName=groupName
             )
             print(f'Group {groupName} created')
@@ -50,7 +66,7 @@ def create_groups(orgId):
 def user_already_exists(email):
     try:
         cognito_client.admin_get_user(
-            UserPoolId=userPoolId,
+            UserPoolId=userpool_id,
             Username=email
         )
         return True
@@ -69,69 +85,160 @@ def create_admin_user(org_id, email):
             'Value': org_id
         }
     ]
-    """
-    cognito_groups = []
-
-    response = cognito_client.list_groups(
-        UserPoolId = userPoolId
-    )
-
-    for group in response["Groups"]:
-        cognito_groups.append(group["GroupName"])
-
-    groupNextToken = None
-    if "PaginationToken" in response.keys():
-        groupNextToken = response["PaginationToken"]
-
-    while groupNextToken:
-        response = cognito_client.list_groups(
-            UserPoolId = userPoolId
-        )
-
-        for group in response["Groups"]:
-            cognito_groups.append(group["GroupName"])
-
-        groupNextToken = None
-        if "PaginationToken" in response.keys():
-            groupNextToken = response["PaginationToken"]
-
-    if not org_id in cognito_groups:
-        print(f"No organization with the id {org_id} exists in Cognito!")
-        exit()
-    """
 
     try:
         cognito_client.admin_create_user(
-            UserPoolId=userPoolId,
-            Username=email,
-            MessageAction="SUPPRESS",
-            UserAttributes=userAttributes
+            UserPoolId = userpool_id,
+            Username = email,
+            MessageAction = "SUPPRESS",
+            UserAttributes = userAttributes
         )
         
         cognito_client.admin_set_user_password(
-            UserPoolId=userPoolId,
-            Username=email,
-            Password="NotReal123",
-            Permanent=True
+            UserPoolId = userpool_id,
+            Username = email,
+            Password = "NotReal123",
+            Permanent = True
         )
-
-        add_user_to_admin_groups(email, org_id)
-
+        add_user_to_groups(email, org_id)
         print(f"Admin user {email} created for orgID {org_id}")
 
     except Exception as e:
         print((f"Could not create admin user {email} for orgID {org_id}"))
         print(e)
 
-def add_user_to_admin_groups(email, org_id):
-    cognito_client.admin_add_user_to_group(
-        UserPoolId=userPoolId,
-        Username=email,
-        GroupName=f'{org_id}'
+def add_user_to_groups(email, org_id):
+    try:
+        cognito_client.admin_add_user_to_group(
+            UserPoolId = userpool_id,
+            Username = email,
+            GroupName = f'{org_id}'
+        )
+        cognito_client.admin_add_user_to_group(
+            UserPoolId = userpool_id,
+            Username = email,
+            GroupName = f'{org_id}0admin'
+        )
+        print(f"User {email} added to groups")
+    except Exception as e:
+        print(f"Could not add user {email} to groups")
+        print(e)
+
+def create_default_form_definition(org_id, requesting_org_id):
+    org_admins = f"{org_id}0admin"
+    default_catalog_label = "Default Catalog"
+
+    if (default_form_definition_already_exists(org_id, default_catalog_label)) :
+        print(f"Catalog with label {default_catalog_label} already exists, skipping creation")
+    else:
+        catalogs_res = dynamo_client.scan(
+            TableName = table_names["FormDefinition"],
+            FilterExpression = "organizationID = :oid",
+            ExpressionAttributeValues = {":oid": {"S" : requesting_org_id}},
+            ProjectionExpression = 'id'
+        )
+
+        id_of_first_catalog = catalogs_res["Items"][0]["id"]["S"]
+
+        categories_res = dynamo_client.query(
+            TableName = table_names["Category"],
+            IndexName = "byFormDefinition",
+            KeyConditionExpression = "#formDef = :formDef",
+            ExpressionAttributeValues = {":formDef": {"S": id_of_first_catalog}},
+            ProjectionExpression = "id, description, #text, #index",
+            ExpressionAttributeNames = {
+                "#formDef": "formDefinitionID",
+                "#text": "text",
+                "#index": "index"
+            }
+        )
+        dt = f'{datetime.utcnow().isoformat(timespec="milliseconds")}Z'
+
+        catalog = catalogs_res["Items"][0]
+        catalog["label"] = "Default Catalog"
+        catalog["id"] = uuid.uuid4().__str__()
+
+        categories = []
+        questions = []
+
+        for category in categories_res["Items"]:
+            questions_res = dynamo_client.query(
+                TableName = table_names["Question"],
+                IndexName = "byCategory",
+                KeyConditionExpression = "#category = :category",
+                ExpressionAttributeValues = {":category": {"S": category["id"]["S"]}},
+                ProjectionExpression = "id, #text, #index, #type, scaleStart, scaleMiddle, scaleEnd, topic, categoryID",
+                ExpressionAttributeNames = {
+                    "#category": "categoryID",
+                    "#text": "text",
+                    "#index": "index",
+                    "#type": "type"
+                }
+            )
+
+            category["id"] = {"S": uuid.uuid4().__str__()}
+            category["formDefinitionID"] = {"S": catalog["id"]}
+            category["orgAdmins"] = {"S": org_admins}
+            category["organizationID"] = {"S": org_id}
+            category["createdAt"] = {"S": dt}
+            category["updatedAt"] = {"S": dt}
+            category["__typename"] = {"S": "Category"}
+
+            for question in questions_res["Items"]:
+                question["id"] = {"S": uuid.uuid4().__str__()}
+                question["categoryID"] = category["id"]
+                question["formDefinitionID"] = {"S": catalog["id"]}
+                question["createdAt"] = {"S": dt}
+                question["updatedAt"] = {"S": dt}
+                question["__typename"] = {"S": "Question"}
+                question["orgAdmins"] = {"S": org_admins}
+                question["organizationID"] = {"S": org_id}
+
+                questions.append(question)
+
+            categories.append(category)
+        
+        catalog["orgAdmins"] = org_admins
+        catalog["organizationID"] = org_id
+        catalog["sortKeyConstant"] = "formDefinitionConstant"
+        catalog["createdAt"] = dt
+        catalog["__typename"] = "FormDefinition"
+        catalog["updatedAt"] = dt
+        for key in catalog.keys():
+            catalog[key] = {'S': catalog[key]}
+
+        print("Copying catalog...")
+        dynamo_client.put_item(
+            TableName = table_names["FormDefinition"],
+            Item = catalog
+        )
+        print("Copied Catalog!")
+
+        print("Copying categories...")
+        for category in categories:
+            dynamo_client.put_item(
+                TableName = table_names["Category"],
+                Item = category
+            )
+        print("Copied Categories!")
+
+        print("Copying questions...")
+        for question in questions:
+            dynamo_client.put_item(
+                TableName = table_names["Question"],
+                Item = question
+            )
+        print("Copied Questions!")
+        print("Default Catalog created!")
+
+def default_form_definition_already_exists(org_id, default_catalog_label):
+    catalogs_res = dynamo_client.scan(
+        TableName = table_names["FormDefinition"],
+        FilterExpression = "organizationID = :oid AND label = :label",
+        ExpressionAttributeValues = {
+            ":oid": {"S" : org_id},
+            ":label": {"S" : default_catalog_label}
+        },
+        Select = "COUNT"
     )
-    cognito_client.admin_add_user_to_group(
-        UserPoolId=userPoolId,
-        Username=email,
-        GroupName=f'{org_id}0admin'
-    )
-    print(f"User {email} added to admin groups")
+    return(catalogs_res["Count"] > 0)
