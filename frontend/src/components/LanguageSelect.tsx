@@ -1,4 +1,4 @@
-import { MenuItem, Select } from '@material-ui/core'
+import { makeStyles, MenuItem, Select } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { availableLanguages } from '../i18n/i18n'
 import { I18n as amplifyI18n } from 'aws-amplify'
@@ -6,12 +6,29 @@ import LanguageIcon from '@material-ui/icons/Language'
 import { KnowitColors } from '../styles'
 
 type LanguageSelectProps = {
-  iconColor: string
+  color: string
   marginLeft?: number
 }
 
 export const LanguageSelect = (props: LanguageSelectProps) => {
   const { i18n } = useTranslation()
+
+  const classes = makeStyles({
+    select: {
+      '&:before': {
+        borderColor: props.color,
+      },
+      '&:after': {
+        borderColor: props.color,
+      },
+      '&:not(.Mui-disabled):hover::before': {
+        borderColor: props.color,
+      },
+    },
+    arrowIcon: {
+      fill: props.color,
+    },
+  })()
 
   const changeLanguage = (language: string) => {
     i18n.changeLanguage(language)
@@ -21,9 +38,15 @@ export const LanguageSelect = (props: LanguageSelectProps) => {
 
   return (
     <Select
+      className={classes.select}
       value={i18n.language}
+      inputProps={{
+        classes: {
+          icon: classes.arrowIcon,
+        },
+      }}
       onChange={(event) => changeLanguage(event.target.value as string)}
-      renderValue={() => <LanguageIcon style={{ color: props.iconColor }} />}
+      renderValue={() => <LanguageIcon style={{ color: props.color }} />}
       style={{ marginLeft: props.marginLeft }}
       aria-label={
         i18n.t('aria.selectLanguageLanguageIsSelected', {
