@@ -255,10 +255,14 @@ export const English: LanguageSchema = {
         identifierAttributeCantBeEmpty: "Identifier attribute can't be empty."
       },
       editSuperAdministrators: {
-        description: 'On this page you can add and remove super-administrators.'
+        description: 'On this page you can add and remove super-administrators.',
+        superAdministrator: 'Super-administrator',
+        addSuperAdministrator: 'Add super-administrator',
       },
       editOrganizationAdministrators: {
-        description: 'On this page you can add and remove organization-administrators.'
+        description: 'On this page you can add and remove organization-administrators.',
+        organizationAdministrator: 'Organization-administrator',
+        addOrganizationAdministrator: 'Add organization-administrator',
       }
     },
     adminApi: {

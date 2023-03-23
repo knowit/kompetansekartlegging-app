@@ -255,10 +255,14 @@ export const Norwegian: LanguageSchema = {
         identifierAttributeCantBeEmpty: 'Identifier attribute kan ikke være tom.'
       },
       editSuperAdministrators: {
-        description: 'På denne siden kan du legge til og fjerne super-administratorer.'
+        description: 'På denne siden kan du legge til og fjerne super-administratorer.',
+        superAdministrator: 'Super-administrator',
+        addSuperAdministrator: 'Legg til super-administrator',
       },
       editOrganizationAdministrators: {
-        description: 'På denne siden kan du legge til og fjerne organisasjon-administratorer.'
+        description: 'På denne siden kan du legge til og fjerne organisasjon-administratorer.',
+        organizationAdministrator: 'Organisasjon-administrator',
+        addOrganizationAdministrator: 'Legg til organisasjon-administrator'
       }
     },
     adminApi: {

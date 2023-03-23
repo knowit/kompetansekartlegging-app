@@ -254,9 +254,13 @@ export type LanguageSchema = {
       }
       editSuperAdministrators: {
         description: string
+        superAdministrator: string
+        addSuperAdministrator: string
       }
       editOrganizationAdministrators: {
         description: string
+        organizationAdministrator: string
+        addOrganizationAdministrator: string
       }
     }
     adminApi: {
