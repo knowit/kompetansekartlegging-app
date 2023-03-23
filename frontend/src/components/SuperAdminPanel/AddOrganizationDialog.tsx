@@ -68,7 +68,6 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
           onChange={(e: any) => setOrganizationName(e.target.value)}
         />
         <TextField
-          autoFocus
           fullWidth
           label={t('superAdmin.editOrganizations.id')}
           variant="outlined"
@@ -82,7 +81,6 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
           onChange={(e: any) => setOrganizationID(e.target.value)}
         />
         <TextField
-          autoFocus
           fullWidth
           label={t('superAdmin.identifierAttribute')}
           variant="outlined"

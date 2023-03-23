@@ -14,6 +14,7 @@ import { i18nDateToLocaleDateString } from '../../i18n/i18n'
 import AddMemberToGroupDialog from './AddMemberToGroupDialog'
 import { getAttribute } from './helpers'
 import PictureAndNameCell from './PictureAndNameCell'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
   const { t } = useTranslation()
@@ -39,6 +40,7 @@ const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
       {showLastAnsweredAt && <TableCell>{formLastAnsweredAt}</TableCell>}
       <TableCell>
         <Button
+          endIcon={<DeleteIcon />}
           onClick={() => deleteMember(user)}
           style={{ fontStyle: 'italic' }}
         >

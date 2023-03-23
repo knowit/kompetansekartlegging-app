@@ -109,6 +109,7 @@ const CatalogTable = ({
             <TableCell />
             <TableCell />
             <TableCell />
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
