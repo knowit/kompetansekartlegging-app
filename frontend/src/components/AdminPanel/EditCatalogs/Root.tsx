@@ -67,6 +67,7 @@ const Catalog = ({
               pathname: `/edit/${catalog.id}`,
               search: `?label=${name}`,
             }}
+            style={{ textDecoration: 'none' }}
           >
             <Button endIcon={<EditIcon />}>
               {t('admin.editCatalogs.modifyCatalog')}
