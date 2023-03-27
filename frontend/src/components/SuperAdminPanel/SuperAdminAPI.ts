@@ -41,8 +41,7 @@ export const getOrganizations = async (): Promise<
 
 export const addOrganization = async (
   organization: OrganizationInfo,
-  adminEmail: string,
-  requestingOrgId: string
+  adminEmail: string
 ) =>
   new Promise(async (resolve, reject) => {
     try {
@@ -64,7 +63,6 @@ export const addOrganization = async (
           queryStringParameters: {
             organization_id: `${organization.id}`,
             admin_email: `${adminEmail}`,
-            requesting_org_id: `${requestingOrgId}`,
           },
         })
       } catch (e) {

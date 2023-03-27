@@ -26,7 +26,6 @@ def handler(event, context):
         exit()
 
     org_id = event["queryStringParameters"]["organization_id"]
-    requesting_org_id = event["queryStringParameters"]["requesting_org_id"]
     email = event["queryStringParameters"]["admin_email"]
 
     create_groups(org_id)
@@ -37,7 +36,7 @@ def handler(event, context):
     else:
         create_admin_user(org_id, email)
 
-    create_default_form_definition(org_id, requesting_org_id)
+    create_default_form_definition(org_id)
 
     return {
         'statusCode': 200,
@@ -124,7 +123,7 @@ def add_user_to_groups(email, org_id):
         print(f"Could not add user {email} to groups")
         print(e)
 
-def create_default_form_definition(org_id, requesting_org_id):
+def create_default_form_definition(org_id):
     org_admins = f"{org_id}0admin"
     default_catalog_label = "Default Catalog"
 
@@ -134,7 +133,7 @@ def create_default_form_definition(org_id, requesting_org_id):
         catalogs_res = dynamo_client.scan(
             TableName = table_names["FormDefinition"],
             FilterExpression = "organizationID = :oid",
-            ExpressionAttributeValues = {":oid": {"S" : requesting_org_id}},
+            ExpressionAttributeValues = {":oid": {"S" : "knowitobjectnet"}},
             ProjectionExpression = 'id'
         )
 

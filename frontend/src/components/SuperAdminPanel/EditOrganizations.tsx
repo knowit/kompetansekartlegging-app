@@ -113,10 +113,9 @@ const EditOrganizations = () => {
 
   const addOrganizationConfirm = (
     organization: OrganizationInfo,
-    adminEmail: string,
-    requestingOrgId: string
+    adminEmail: string
   ) => {
-    addOrganization(organization, adminEmail, requestingOrgId)
+    addOrganization(organization, adminEmail)
       .then((res) => {
         setMutationError('')
       })

@@ -12,18 +12,12 @@ import TextField from '@material-ui/core/TextField'
 import { dialogStyles } from '../../styles'
 import { CloseIcon } from '../DescriptionTable'
 import { OrganizationInfo } from './SuperAdminTypes'
-import { useAppSelector } from '../../redux/hooks'
-import { selectUserState } from '../../redux/User'
 import { useTranslation } from 'react-i18next'
 import { CircularProgress } from '@material-ui/core'
 
 interface AddOrganizationDialogProps {
   onCancel: () => void
-  onConfirm: (
-    organization: OrganizationInfo,
-    adminEmail: string,
-    requestingOrgId: string
-  ) => void
+  onConfirm: (organization: OrganizationInfo, adminEmail: string) => void
   open: boolean
 }
 
@@ -34,7 +28,6 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
 }) => {
   const { t } = useTranslation()
   const style = dialogStyles()
-  const userState = useAppSelector(selectUserState)
   const [organizationName, setOrganizationName] = useState('')
   const [organizationID, setOrganizationID] = useState('')
   const [organizationIdentifierAttribute, setOrganizationIdentifierAttribute] =
@@ -146,8 +139,7 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
                   name: organizationName,
                   identifierAttribute: organizationIdentifierAttribute,
                 },
-                organizationAdminEmail,
-                userState.organizationID
+                organizationAdminEmail
               )
             }}
             className={style.confirmButton}
