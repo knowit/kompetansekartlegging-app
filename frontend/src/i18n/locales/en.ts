@@ -84,7 +84,6 @@ export const English: LanguageSchema = {
         downloadCatalogs: 'Download catalogs',
         editOrganizations: 'Edit organizations',
         editSuperAdministrators: 'Edit super-administrators',
-        editOrganizationAdministrators: 'Edit organization-administrators',
       },
     },
     navbar: {
@@ -260,9 +259,7 @@ export const English: LanguageSchema = {
         addSuperAdministrator: 'Add super-administrator',
       },
       editOrganizationAdministrators: {
-        description: 'On this page you can add and remove organization-administrators.',
-        organizationAdministrator: 'Organization-administrator',
-        addOrganizationAdministrator: 'Add organization-administrator',
+        description: 'On this page you can add and remove administrators for specific organizations.',
       }
     },
     adminApi: {

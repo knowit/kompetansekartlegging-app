@@ -84,7 +84,6 @@ export const Norwegian: LanguageSchema = {
         downloadCatalogs: 'Last ned kataloger',
         editOrganizations: 'Rediger organisasjoner',
         editSuperAdministrators: 'Rediger super-administratorer',
-        editOrganizationAdministrators: 'Rediger organisasjon-administratorer',
       },
     },
     navbar: {
@@ -260,9 +259,7 @@ export const Norwegian: LanguageSchema = {
         addSuperAdministrator: 'Legg til super-administrator',
       },
       editOrganizationAdministrators: {
-        description: 'På denne siden kan du legge til og fjerne organisasjon-administratorer.',
-        organizationAdministrator: 'Organisasjon-administrator',
-        addOrganizationAdministrator: 'Legg til organisasjon-administrator'
+        description: 'På denne siden kan du legge til og fjerne administratorer for spesifikke organisasjoner.',
       }
     },
     adminApi: {

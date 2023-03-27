@@ -82,7 +82,6 @@ export type LanguageSchema = {
         downloadCatalogs: string
         editOrganizations: string
         editSuperAdministrators: string
-        editOrganizationAdministrators: string
       }
     }
     navbar: {
@@ -259,8 +258,6 @@ export type LanguageSchema = {
       }
       editOrganizationAdministrators: {
         description: string
-        organizationAdministrator: string
-        addOrganizationAdministrator: string
       }
     }
     adminApi: {

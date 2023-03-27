@@ -66,7 +66,7 @@ const EditOrganizationAdmins = () => {
           <Card style={{ marginBottom: '24px' }} variant="outlined">
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
-                {t('menu.submenu.editOrganizationAdministrators')}
+                {t('menu.submenu.editAdministrators')}
               </Typography>
               {t('superAdmin.editOrganizationAdministrators.description')}
             </CardContent>
@@ -79,9 +79,7 @@ const EditOrganizationAdmins = () => {
             style={{ marginTop: '24px' }}
             onClick={() => setShowAddAdmin(true)}
           >
-            {t(
-              'superAdmin.editOrganizationAdministrators.addOrganizationAdministrator'
-            )}
+            {t('addAdministrator')}
           </Button>
         </>
       )}
@@ -91,9 +89,7 @@ const EditOrganizationAdmins = () => {
         onExited={clearSelectedAdmin}
         onConfirm={deleteAdminConfirm}
         user={adminToDelete}
-        roleName={t(
-          'superAdmin.editOrganizationAdministrators.organizationAdministrator'
-        ).toLowerCase()}
+        roleName={t('administrator').toLowerCase()}
       />
       {showAddAdmin && (
         <AddUserToGroupDialog
@@ -102,9 +98,7 @@ const EditOrganizationAdmins = () => {
           userGetFn={listAllUsersInOrganization}
           onCancel={hideShowAddAdmin}
           onConfirm={addAdminConfirm}
-          roleName={t(
-            'superAdmin.editOrganizationAdministrators.organizationAdministrator'
-          ).toLowerCase()}
+          roleName={t('administrator').toLowerCase()}
         />
       )}
     </Container>
