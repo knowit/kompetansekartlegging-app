@@ -250,7 +250,7 @@ export type LanguageSchema = {
         removeOrganization: string
         areYouSureYouWantToRemoveTheOrganization: string
         addNewOrganization: string
-        idCantBeEmpty: string
+        idCantBeEmptyOrContainZero: string
         identifierAttributeCantBeEmpty: string
         adminEmailIsInvalid: string
       }
@@ -303,7 +303,7 @@ export type LanguageSchema = {
       couldNotGetAListOfOrganizations: string
       couldNotAddTheOrganization: string
       couldNotDeleteTheOrganization: string
-      theNewOrganizationWasNotConfiguredProperly: string
+      theNewOrganizationWasNotProperlyConfigured: string
     }
     aria: {
       selectLanguageLanguageIsSelected: string

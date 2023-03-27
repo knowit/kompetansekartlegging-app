@@ -252,7 +252,7 @@ export const English: LanguageSchema = {
         removeOrganization: "Remove organization '{{organization}}'?",
         areYouSureYouWantToRemoveTheOrganization: "Are you sure you want to remove the organization '{{organization}}'?",
         addNewOrganization: 'Add new organization',
-        idCantBeEmpty: "ID can't be empty.",
+        idCantBeEmptyOrContainZero: "ID can't be empty or contain '0'.",
         identifierAttributeCantBeEmpty: "Identifier attribute can't be empty.",
         adminEmailIsInvalid: 'Admin email is invalid.'
       },
@@ -305,7 +305,7 @@ export const English: LanguageSchema = {
         couldNotGetAListOfOrganizations: 'Could not get a list of organizations.',
         couldNotAddTheOrganization: "Could not add the organization '{{organizationName}}'.",
         couldNotDeleteTheOrganization: "Could not delete the organization '{{organizationName}}'.",
-        theNewOrganizationWasNotConfiguredProperly: "The new organization '{{organizationName}}' was not properly configured.",
+        theNewOrganizationWasNotProperlyConfigured: "The new organization '{{organizationName}}' was not properly configured.",
     },
     aria: {
       selectLanguageLanguageIsSelected: 'select language, {{language}} is selected',

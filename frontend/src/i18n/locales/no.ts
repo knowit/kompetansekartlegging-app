@@ -252,7 +252,7 @@ export const Norwegian: LanguageSchema = {
         removeOrganization: "Fjern organisasjonen '{{organization}}'?",
         areYouSureYouWantToRemoveTheOrganization: "Er du sikker på at du har lyst til å fjerne organisasjonen '{{organization}}'?",
         addNewOrganization: 'Legg til ny organisasjon',
-        idCantBeEmpty: 'ID kan ikke være tom.',
+        idCantBeEmptyOrContainZero: "ID kan ikke være tom eller inneholde '0'.",
         identifierAttributeCantBeEmpty: 'Identifier attribute kan ikke være tom.',
         adminEmailIsInvalid: 'Admin e-post er ugyldig.',
       },
@@ -305,7 +305,7 @@ export const Norwegian: LanguageSchema = {
         couldNotGetAListOfOrganizations: 'Kunne ikke hente en liste med organisasjoner.',
         couldNotAddTheOrganization: "Kunne ikke legge til organisasjonen '{{organizationName}}'.",
         couldNotDeleteTheOrganization: "Kunne ikke slette organisasjonen '{{organizationName}}'.",
-        theNewOrganizationWasNotConfiguredProperly: "Den nye organisasjonen {{organizationName}} ble ikke konfigurert riktig.",
+        theNewOrganizationWasNotProperlyConfigured: "Den nye organisasjonen '{{organizationName}}' ble ikke konfigurert riktig.",
     },
     aria: {
       selectLanguageLanguageIsSelected: 'velg språk, {{language}} er valgt',

@@ -15,11 +15,12 @@ import { OrganizationInfo } from './SuperAdminTypes'
 import { useAppSelector } from '../../redux/hooks'
 import { selectUserState } from '../../redux/User'
 import { useTranslation } from 'react-i18next'
+import { CircularProgress } from '@material-ui/core'
 
 interface AddOrganizationDialogProps {
   onCancel: () => void
   onConfirm: (
-    arg: OrganizationInfo,
+    organization: OrganizationInfo,
     adminEmail: string,
     requestingOrgId: string
   ) => void
@@ -39,6 +40,7 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
   const [organizationIdentifierAttribute, setOrganizationIdentifierAttribute] =
     useState('')
   const [organizationAdminEmail, setOrganizationAdminEmail] = useState('')
+  const [isAddingOrganization, setIsAddingOrganization] = useState(false)
 
   const emailRegex = /^[^\s@]+@[^\s@]+$/
 
@@ -81,10 +83,10 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
           fullWidth
           label={t('superAdmin.editOrganizations.id')}
           variant="outlined"
-          error={organizationID === ''}
+          error={organizationID === '' || organizationID.includes('0')}
           helperText={
-            organizationID === '' &&
-            t('superAdmin.editOrganizations.idCantBeEmpty')
+            (organizationID === '' || organizationID.includes('0')) &&
+            t('superAdmin.editOrganizations.idCantBeEmptyOrContainZero')
           }
           value={organizationID}
           className={style.textField}
@@ -119,28 +121,41 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
           onChange={(e: any) => setOrganizationAdminEmail(e.target.value)}
         />
       </DialogTitle>
-      <DialogActions className={style.alertButtons}>
-        <Button onClick={onCancel} className={style.cancelButton}>
-          <span className={style.buttonText}>{t('abort')}</span>
-        </Button>
-        <Button
-          disabled={organizationName === ''}
-          onClick={() =>
-            onConfirm(
-              {
-                id: organizationID,
-                name: organizationName,
-                identifierAttribute: organizationIdentifierAttribute,
-              },
-              organizationAdminEmail,
-              userState.organizationID
-            )
-          }
-          className={style.confirmButton}
-        >
-          <span className={style.buttonText}>{t('add')}</span>
-        </Button>
-      </DialogActions>
+      {isAddingOrganization ? (
+        <div style={{ height: 65, display: 'flex', justifyContent: 'center' }}>
+          <CircularProgress />
+        </div>
+      ) : (
+        <DialogActions className={style.alertButtons}>
+          <Button onClick={onCancel} className={style.cancelButton}>
+            <span className={style.buttonText}>{t('abort')}</span>
+          </Button>
+          <Button
+            disabled={
+              organizationName === '' ||
+              organizationID === '' ||
+              organizationID.includes('0') ||
+              organizationIdentifierAttribute === '' ||
+              !emailRegex.test(organizationAdminEmail)
+            }
+            onClick={() => {
+              setIsAddingOrganization(true)
+              onConfirm(
+                {
+                  id: organizationID,
+                  name: organizationName,
+                  identifierAttribute: organizationIdentifierAttribute,
+                },
+                organizationAdminEmail,
+                userState.organizationID
+              )
+            }}
+            className={style.confirmButton}
+          >
+            <span className={style.buttonText}>{t('add')}</span>
+          </Button>
+        </DialogActions>
+      )}
     </Dialog>
   )
 }

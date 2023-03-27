@@ -972,7 +972,7 @@ export class KompetanseStack extends Stack {
           'method.response.header.Access-Control-Allow-Credentials': true,
           'method.response.header.Access-Control-Allow-Methods': true
         },
-        responseModels: {"application/json": gateway.Model.EMPTY_MODEL, "application/vnd.ms-excel": gateway.Model.EMPTY_MODEL}
+        responseModels: {"application/json": gateway.Model.EMPTY_MODEL}
       }],
     })
     ApiMap["configureNewOrganizationApi"] = {
