@@ -21,7 +21,7 @@ import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth'
 import { useAppSelector, useAppDispatch } from './redux/hooks'
 import { useTranslation } from 'react-i18next'
 
-const userBranch = process ? process.env.REACT_APP_USER_BRANCH : '' // Process does not exist in Webpack 5?
+const userBranch = import.meta.env.VITE_USER_BRANCH
 
 // console.log("Hosted branch: ", userBranch);
 
