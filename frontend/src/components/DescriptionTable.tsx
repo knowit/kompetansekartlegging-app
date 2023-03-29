@@ -202,7 +202,7 @@ export const DescriptionTable = ({
               aria-label={t('close') as string}
               className={style.closeButton}
               onClick={onClose}
-            >
+              size="large">
               <CloseIcon />
             </IconButton>
           </header>
@@ -220,7 +220,7 @@ export const DescriptionTable = ({
                 aria-label={t('close') as string}
                 className={style.closeButton}
                 onClick={onClose}
-              >
+                size="large">
                 <CloseIcon />
               </IconButton>
             )}
@@ -258,7 +258,7 @@ export const DescriptionTable = ({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default DescriptionTable

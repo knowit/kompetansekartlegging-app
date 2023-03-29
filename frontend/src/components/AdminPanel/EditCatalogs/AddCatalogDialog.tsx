@@ -38,7 +38,7 @@ const AddCatalogDialog = ({ onCancel, onConfirm, open }: any) => {
           <span className={style.dialogTitleText}>
             {t('admin.editCatalogs.createNewCatalog')}
           </span>
-          <IconButton className={style.closeButton} onClick={onCancel}>
+          <IconButton className={style.closeButton} onClick={onCancel} size="large">
             <CloseIcon />
           </IconButton>
         </Box>
@@ -67,7 +67,7 @@ const AddCatalogDialog = ({ onCancel, onConfirm, open }: any) => {
         </Button>
       </DialogActions>
     </Dialog>
-  )
+  );
 }
 
 export default AddCatalogDialog

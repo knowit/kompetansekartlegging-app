@@ -7,6 +7,7 @@
     "@aws-sdk/client-lambda": "^3.259.0",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
+    "@mui/codemod": "^5.11.14",
     "@mui/icons-material": "^5.11.11",
     "@mui/lab": "^5.0.0-alpha.124",
     "@mui/material": "^5.11.15",

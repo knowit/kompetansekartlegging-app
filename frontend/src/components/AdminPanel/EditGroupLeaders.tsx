@@ -41,22 +41,20 @@ const GroupLeader = (props: any) => {
   const email = getAttribute(groupLeader, 'email')
   const picture = getAttribute(groupLeader, 'picture')
 
-  return (
-    <>
-      <TableRow>
-        <TableCell>
-          <PictureAndNameCell name={name} picture={picture} />
-        </TableCell>
-        <TableCell>{email}</TableCell>
-        <TableCell>{username}</TableCell>
-        <TableCell>
-          <IconButton edge="end" onClick={() => deleteGroupLeader(groupLeader)}>
-            <DeleteIcon />
-          </IconButton>
-        </TableCell>
-      </TableRow>
-    </>
-  )
+  return <>
+    <TableRow>
+      <TableCell>
+        <PictureAndNameCell name={name} picture={picture} />
+      </TableCell>
+      <TableCell>{email}</TableCell>
+      <TableCell>{username}</TableCell>
+      <TableCell>
+        <IconButton edge="end" onClick={() => deleteGroupLeader(groupLeader)} size="large">
+          <DeleteIcon />
+        </IconButton>
+      </TableCell>
+    </TableRow>
+  </>;
 }
 
 const GroupLeaderTable = ({ groupLeaders, deleteGroupLeader }: any) => {

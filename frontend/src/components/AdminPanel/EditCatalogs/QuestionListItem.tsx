@@ -78,16 +78,10 @@ const QuestionListItem = ({
           <>
             {ind + 1}. {q.topic}
             <div className={classes.actions}>
-              <IconButton
-                onClick={() => setEditMode(true)}
-                className={classes.button}
-              >
+              <IconButton onClick={() => setEditMode(true)} className={classes.button} size="large">
                 <EditIcon />
               </IconButton>
-              <IconButton
-                onClick={() => deleteQuestion(q)}
-                className={classes.button}
-              >
+              <IconButton onClick={() => deleteQuestion(q)} className={classes.button} size="large">
                 <DeleteIcon />
               </IconButton>
               <ButtonGroup
@@ -120,7 +114,7 @@ const QuestionListItem = ({
         className={classes.listItemText}
       />
     </ListItem>
-  )
+  );
 }
 
 export default QuestionListItem

@@ -99,7 +99,7 @@ const AddMemberToGroupDialog = ({
           <span className={style.dialogTitleText}>
             {t('myGroup.addMembers')}
           </span>
-          <IconButton className={style.closeButton} onClick={onCancel}>
+          <IconButton className={style.closeButton} onClick={onCancel} size="large">
             <CloseIcon />
           </IconButton>
         </Box>
@@ -158,7 +158,7 @@ const AddMemberToGroupDialog = ({
         </Button>
       </DialogActions>
     </Dialog>
-  )
+  );
 }
 
 const useStylesSelectedUsers = makeStyles((theme) => ({

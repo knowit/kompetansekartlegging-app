@@ -52,7 +52,7 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
           <span className={style.dialogTitleText}>
             {t('superAdmin.editOrganizations.addNewOrganization')}
           </span>
-          <IconButton className={style.closeButton} onClick={onCancel}>
+          <IconButton className={style.closeButton} onClick={onCancel} size="large">
             <CloseIcon />
           </IconButton>
         </Box>
@@ -117,7 +117,7 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
         </Button>
       </DialogActions>
     </Dialog>
-  )
+  );
 }
 
 export default AddOrganizationDialog

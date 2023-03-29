@@ -38,22 +38,20 @@ const Admin = (props: any) => {
   const email = getAttribute(admin, 'email')
   const picture = getAttribute(admin, 'picture')
 
-  return (
-    <>
-      <TableRow>
-        <TableCell>
-          <PictureAndNameCell name={name} picture={picture} />
-        </TableCell>
-        <TableCell>{email}</TableCell>
-        <TableCell>{username}</TableCell>
-        <TableCell>
-          <IconButton edge="end" onClick={() => deleteAdmin(admin)}>
-            <DeleteIcon />
-          </IconButton>
-        </TableCell>
-      </TableRow>
-    </>
-  )
+  return <>
+    <TableRow>
+      <TableCell>
+        <PictureAndNameCell name={name} picture={picture} />
+      </TableCell>
+      <TableCell>{email}</TableCell>
+      <TableCell>{username}</TableCell>
+      <TableCell>
+        <IconButton edge="end" onClick={() => deleteAdmin(admin)} size="large">
+          <DeleteIcon />
+        </IconButton>
+      </TableCell>
+    </TableRow>
+  </>;
 }
 
 const AdminTable = ({ admins, deleteAdmin }: any) => {
