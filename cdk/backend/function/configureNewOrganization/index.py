@@ -15,38 +15,50 @@ table_names = {
 }
 
 cognito_client = boto3.client("cognito-idp")
-dynamo_client = boto3.client('dynamodb')
+dynamo_client = boto3.client("dynamodb")
 
 def handler(event, context):
     print(event)
 
     groups = event["requestContext"]["authorizer"]["claims"]["cognito:groups"].split(",")
     if (allowedGroup not in groups):
-        print("EXITING: User does not have permissions to perform superadmin tasks")
-        exit()
+        print("User does not have permissions to perform superadmin tasks")
+        return {
+            "statusCode": 401,
+            "headers": {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Credentials": True
+            },
+            "body": json.dumps("User does not have permissions to perform superadmin tasks")
+        }
 
     org_id = event["queryStringParameters"]["organization_id"]
     email = event["queryStringParameters"]["admin_email"]
 
     create_groups(org_id)
 
-    if user_already_exists(email):
-        print(f"User {email} already exists, adding user to groups")
-        add_user_to_groups(email, org_id)
+    if len(email) == 0:
+        print(f"No admin email provided, organization '{org_id}' is configured without admin user")
     else:
-        create_admin_user(org_id, email)
+        if user_already_exists(email):
+            print(f"User {email} already exists, adding user to groups")
+            add_user_to_groups(email, org_id)
+        else:
+            create_admin_user(org_id, email)
 
     create_default_form_definition(org_id)
 
     return {
-        'statusCode': 200,
+        "statusCode": 200,
         "headers": {
             "Content-Type": "application/json",
-            'Access-Control-Allow-Headers': 'Content-Type',
+            "Access-Control-Allow-Headers": "Content-Type",
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Credentials": True
         },
-        'body': json.dumps(f"Configured organization with ID '{org_id}'")
+        "body": json.dumps(f"Configured organization with ID '{org_id}'")
     }
 
 def create_groups(orgId):

@@ -36,6 +36,9 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
   const [isAddingOrganization, setIsAddingOrganization] = useState(false)
 
   const emailRegex = /^[^\s@]+@[^\s@]+$/
+  const isOrganizationAdminEmailValid =
+    organizationAdminEmail.length === 0 ||
+    emailRegex.test(organizationAdminEmail)
 
   return (
     <Dialog
@@ -62,6 +65,7 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
           </IconButton>
         </Box>
         <TextField
+          required
           autoFocus
           fullWidth
           label={t('name')}
@@ -73,6 +77,7 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
           onChange={(e: any) => setOrganizationName(e.target.value)}
         />
         <TextField
+          required
           fullWidth
           label={t('superAdmin.editOrganizations.id')}
           variant="outlined"
@@ -86,6 +91,7 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
           onChange={(e: any) => setOrganizationID(e.target.value)}
         />
         <TextField
+          required
           fullWidth
           label={t('superAdmin.identifierAttribute')}
           variant="outlined"
@@ -104,9 +110,9 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
           fullWidth
           label={t('superAdmin.editOrganizations.adminEmail')}
           variant="outlined"
-          error={!emailRegex.test(organizationAdminEmail)}
+          error={!isOrganizationAdminEmailValid}
           helperText={
-            !emailRegex.test(organizationAdminEmail) &&
+            !isOrganizationAdminEmailValid &&
             t('superAdmin.editOrganizations.adminEmailIsInvalid')
           }
           value={organizationAdminEmail}
@@ -129,7 +135,7 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
               organizationID === '' ||
               organizationID.includes('0') ||
               organizationIdentifierAttribute === '' ||
-              !emailRegex.test(organizationAdminEmail)
+              !isOrganizationAdminEmailValid
             }
             onClick={() => {
               setIsAddingOrganization(true)
