@@ -1,8 +1,9 @@
-import { makeStyles, MenuItem, Select } from '@material-ui/core'
+import { MenuItem, Select } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import { useTranslation } from 'react-i18next'
 import { availableLanguages } from '../i18n/i18n'
 import { I18n as amplifyI18n } from 'aws-amplify'
-import LanguageIcon from '@material-ui/icons/Language'
+import LanguageIcon from '@mui/icons-material/Language'
 import { KnowitColors } from '../styles'
 
 type LanguageSelectProps = {

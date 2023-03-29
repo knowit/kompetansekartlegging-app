@@ -1,5 +1,6 @@
-import { createStyles, withStyles, Theme } from '@material-ui/core/styles'
-import Table from '@material-ui/core/Table'
+import { createStyles, withStyles } from '@mui/styles'
+import { Theme } from '@mui/material/styles'
+import Table from '@mui/material/Table'
 
 const StyledTable = withStyles((theme: Theme) =>
   createStyles({

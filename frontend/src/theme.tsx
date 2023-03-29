@@ -1,4 +1,4 @@
-import { unstable_createMuiStrictModeTheme as createMuiTheme } from '@material-ui/core/styles'
+import { unstable_createMuiStrictModeTheme as createMuiTheme } from '@mui/material/styles'
 import { KnowitColors } from './styles'
 
 const theme = createMuiTheme({

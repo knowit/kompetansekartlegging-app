@@ -1,5 +1,6 @@
-import { Button, makeStyles } from '@material-ui/core'
-import ArrowForwardRoundedIcon from '@material-ui/icons/ArrowForwardRounded'
+import { Button } from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import { Fragment, useRef } from 'react'
 import { QuestionType as QuestionTypeT } from '../API'
 import { KnowitColors } from '../styles'

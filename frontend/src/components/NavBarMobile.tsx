@@ -5,13 +5,13 @@ import {
   Typography,
   List,
   ListItem,
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+} from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import React from 'react'
 import { KnowitColors } from '../styles'
 import { NavBarPropsMobile } from '../types'
-import MenuIcon from '@material-ui/icons/Menu'
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
+import MenuIcon from '@mui/icons-material/Menu'
+import SwipeableDrawer from '@mui/material/SwipeableDrawer'
 import { isIOS } from 'react-device-detect'
 import { LanguageSelect } from './LanguageSelect'
 import { useTranslation } from 'react-i18next'

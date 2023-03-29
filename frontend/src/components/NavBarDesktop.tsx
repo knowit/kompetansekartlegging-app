@@ -16,9 +16,9 @@ import {
   Paper,
   Popper,
   Toolbar,
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import HelpIcon from '@material-ui/icons/Help'
+} from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import HelpIcon from '@mui/icons-material/Help'
 import React, { useEffect, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { ReactComponent as KnowitLogo } from '../Logotype-Knowit-Digital-white 1.svg'

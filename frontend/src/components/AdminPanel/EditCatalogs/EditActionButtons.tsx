@@ -1,6 +1,6 @@
 import React from 'react'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
+import { makeStyles, createStyles } from '@mui/styles'
+import Button from '@mui/material/Button'
 import { KnowitColors } from '../../../styles'
 import { useTranslation } from 'react-i18next'
 

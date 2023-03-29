@@ -1,8 +1,8 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
 import { KnowitColors } from '../styles'
-import Tooltip from '@material-ui/core/Tooltip'
-import UpdateIcon from '@material-ui/icons/Update'
-import NotificationsActiveOutlinedIcon from '@material-ui/icons/NotificationsActiveOutlined'
+import Tooltip from '@mui/material/Tooltip'
+import UpdateIcon from '@mui/icons-material/Update'
+import NotificationsActiveOutlinedIcon from '@mui/icons-material/NotificationsActiveOutlined'
 import clsx from 'clsx'
 import { Millisecs } from '../helperFunctions'
 

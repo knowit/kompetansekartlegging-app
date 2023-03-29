@@ -1,5 +1,5 @@
-import Slider from '@material-ui/core/Slider'
-import { makeStyles, withStyles } from '@material-ui/core/styles'
+import Slider from '@mui/material/Slider'
+import { makeStyles, withStyles } from '@mui/styles'
 import {
   Bar,
   BarChart,

@@ -1,13 +1,13 @@
 import { useState } from 'react'
 
-import Button from '@material-ui/core/Button'
+import Button from '@mui/material/Button'
 
-import Box from '@material-ui/core/Box'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import IconButton from '@material-ui/core/IconButton'
-import TextField from '@material-ui/core/TextField'
+import Box from '@mui/material/Box'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogTitle from '@mui/material/DialogTitle'
+import IconButton from '@mui/material/IconButton'
+import TextField from '@mui/material/TextField'
 
 import { dialogStyles } from '../../../styles'
 import { CloseIcon } from '../../DescriptionTable'

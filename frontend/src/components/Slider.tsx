@@ -3,11 +3,13 @@ import { SliderProps } from '../types'
 import * as helper from '../helperFunctions'
 import { KnowitColors } from '../styles'
 import {
-  withStyles,
   Slider as CoreSlider,
   Theme,
+} from '@mui/material'
+import {
+  withStyles,
   makeStyles,
-} from '@material-ui/core'
+} from '@mui/styles'
 
 const ValueSlider = withStyles(
   {
