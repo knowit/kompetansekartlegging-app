@@ -131,7 +131,7 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
-      <LanguageSelect iconColor={KnowitColors.beige} marginLeft={15} />
+      <LanguageSelect color={KnowitColors.beige} marginLeft={15} />
       <List className={style.list}>
         {props.menuButtons}
         <ListItem className={style.logout} onClick={props.signout}>

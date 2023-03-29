@@ -12,7 +12,7 @@ import * as backup from 'aws-cdk-lib/aws-backup'
 import * as cam from 'aws-cdk-lib/aws-certificatemanager'
 import {
   ComparisonOperator,
-  Statistic,
+  Stats,
   TreatMissingData,
   Unit,
 } from 'aws-cdk-lib/aws-cloudwatch'
@@ -655,9 +655,9 @@ export class KompetanseStack extends Stack {
       createUserFormPolicy.attachToRole(batchCreateUser.role)
 
     const batchCreateUserMetric = batchCreateUser.metricDuration({
-      statistic: Statistic.MAXIMUM,
+      statistic: Stats.MAXIMUM,
       period: Duration.minutes(5),
-      unit: Unit.SECONDS,
+      unit: Unit.MILLISECONDS,
     })
 
     const batchCreateUserAlarm = new aws_cloudwatch.Alarm(
@@ -666,12 +666,12 @@ export class KompetanseStack extends Stack {
       {
         alarmName: `${ENV}-lambda-createUserFormBatch-timeout-alarm`,
         metric: batchCreateUserMetric,
-        threshold: batchCreateUserTimeoutSeconds,
+        threshold: Duration.seconds(batchCreateUserTimeoutSeconds).toMilliseconds(),
         comparisonOperator:
           ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
         treatMissingData: TreatMissingData.NOT_BREACHING,
         evaluationPeriods: 1,
-        alarmDescription: `Alarm when lambda createUserFormBatch times out (${batchCreateUserTimeoutSeconds} ${batchCreateUserMetric.unit!.toLowerCase()})`,
+        alarmDescription: `Alarm when lambda createUserFormBatch times out (${batchCreateUserTimeoutSeconds} seconds})`,
       }
     )
 

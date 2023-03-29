@@ -152,7 +152,7 @@ const Login = (props: { isMobile: boolean }) => {
   return showDevLogin ? (
     <>
       <div className={style.languageSelect}>
-        <LanguageSelect iconColor={KnowitColors.darkBrown} />
+        <LanguageSelect color={KnowitColors.darkBrown} />
       </div>
       <Authenticator
         formFields={formFields}
@@ -174,7 +174,7 @@ const Login = (props: { isMobile: boolean }) => {
       </div>
       <div className={style.frontDiv}>
         <div className={style.languageSelect}>
-          <LanguageSelect iconColor={KnowitColors.darkBrown} />
+          <LanguageSelect color={KnowitColors.darkBrown} />
         </div>
         <div className={style.headlineAlign}>
           <h1
