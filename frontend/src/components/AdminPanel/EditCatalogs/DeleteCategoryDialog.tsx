@@ -28,8 +28,9 @@ const DeleteCategoryDialog = ({
         style: { borderRadius: 30 },
       }}
       TransitionProps={{
-        onExited
-      }}>
+        onExited,
+      }}
+    >
       <DialogTitle className={style.dialogTitle}>
         <ErrorIcon fontSize="large" className={style.errorIcon}></ErrorIcon>
         <span className={style.dialogTitleText}>
@@ -60,7 +61,7 @@ const DeleteCategoryDialog = ({
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
 export default DeleteCategoryDialog

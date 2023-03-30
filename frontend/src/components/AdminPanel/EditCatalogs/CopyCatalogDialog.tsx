@@ -27,8 +27,9 @@ const CopyCatalogDialog = ({ onCancel, onConfirm, onExited, open }: any) => {
         style: { borderRadius: 30 },
       }}
       TransitionProps={{
-        onExited
-      }}>
+        onExited,
+      }}
+    >
       <DialogTitle>
         <Box
           component="div"
@@ -39,7 +40,11 @@ const CopyCatalogDialog = ({ onCancel, onConfirm, onExited, open }: any) => {
           <span className={style.dialogTitleText}>
             {t('admin.editCatalogs.copyCatalog')}
           </span>
-          <IconButton className={style.closeButton} onClick={onCancel} size="large">
+          <IconButton
+            className={style.closeButton}
+            onClick={onCancel}
+            size="large"
+          >
             <CloseIcon />
           </IconButton>
         </Box>
@@ -70,7 +75,7 @@ const CopyCatalogDialog = ({ onCancel, onConfirm, onExited, open }: any) => {
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
 export default CopyCatalogDialog

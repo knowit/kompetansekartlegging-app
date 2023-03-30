@@ -38,18 +38,24 @@ const Organization: React.FC<OrganizationProps> = ({
   organization,
   deleteOrganization,
 }) => {
-  return <>
-    <TableRow>
-      <TableCell>{organization.name}</TableCell>
-      <TableCell>{organization.id}</TableCell>
-      <TableCell>{organization.identifierAttribute}</TableCell>
-      <TableCell align="center">
-        <IconButton edge="end" onClick={() => deleteOrganization(organization)} size="large">
-          <DeleteIcon />
-        </IconButton>
-      </TableCell>
-    </TableRow>
-  </>;
+  return (
+    <>
+      <TableRow>
+        <TableCell>{organization.name}</TableCell>
+        <TableCell>{organization.id}</TableCell>
+        <TableCell>{organization.identifierAttribute}</TableCell>
+        <TableCell align="center">
+          <IconButton
+            edge="end"
+            onClick={() => deleteOrganization(organization)}
+            size="large"
+          >
+            <DeleteIcon />
+          </IconButton>
+        </TableCell>
+      </TableRow>
+    </>
+  )
 }
 
 interface OrganizationTableProps {

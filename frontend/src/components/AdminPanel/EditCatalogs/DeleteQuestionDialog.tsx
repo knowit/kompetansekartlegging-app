@@ -29,8 +29,9 @@ const DeleteQuestionDialog = ({
         style: { borderRadius: 30 },
       }}
       TransitionProps={{
-        onExited
-      }}>
+        onExited,
+      }}
+    >
       <DialogTitle className={style.dialogTitle}>
         <ErrorIcon fontSize="large" className={style.errorIcon} />
         <span className={style.dialogTitleText}>
@@ -53,7 +54,7 @@ const DeleteQuestionDialog = ({
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
 export default DeleteQuestionDialog

@@ -51,7 +51,7 @@ const Admin = (props: any) => {
         </IconButton>
       </TableCell>
     </TableRow>
-  );
+  )
 }
 
 const AdminTable = ({ admins, deleteAdmin }: any) => {

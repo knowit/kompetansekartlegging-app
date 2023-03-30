@@ -1,12 +1,6 @@
 import React from 'react'
-import {
-  createStyles,
-  makeStyles,
-  withStyles,
-} from '@mui/styles'
-import {
-  Theme,
-} from '@mui/material/styles'
+import { createStyles, makeStyles, withStyles } from '@mui/styles'
+import { Theme } from '@mui/material/styles'
 import InputBase from '@mui/material/InputBase'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'

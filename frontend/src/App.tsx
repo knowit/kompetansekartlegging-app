@@ -5,7 +5,11 @@ import { API, Auth, Hub } from 'aws-amplify'
 import awsconfig from './exports'
 import Content from './components/Content'
 import Login from './components/Login'
-import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles';
+import {
+  ThemeProvider,
+  Theme,
+  StyledEngineProvider,
+} from '@mui/material/styles'
 import { Button, debounce, Snackbar } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { isMobile } from 'react-device-detect'
@@ -22,12 +26,10 @@ import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth'
 import { useAppSelector, useAppDispatch } from './redux/hooks'
 import { useTranslation } from 'react-i18next'
 
-
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface DefaultTheme extends Theme {}
 }
-
 
 const userBranch = import.meta.env.VITE_USER_BRANCH
 
@@ -265,7 +267,7 @@ const App = () => {
         </div>
       </ThemeProvider>
     </StyledEngineProvider>
-  );
+  )
 }
 
 export default App

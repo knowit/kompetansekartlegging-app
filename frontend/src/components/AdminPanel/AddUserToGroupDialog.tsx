@@ -83,7 +83,11 @@ const AddUserToGroupDialog = ({
           <span className={style.dialogTitleText}>
             {title || t('add') + ' ' + roleName}
           </span>
-          <IconButton className={style.closeButton} onClick={onCancel} size="large">
+          <IconButton
+            className={style.closeButton}
+            onClick={onCancel}
+            size="large"
+          >
             <CloseIcon />
           </IconButton>
         </Box>
@@ -126,7 +130,7 @@ const AddUserToGroupDialog = ({
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
 export default AddUserToGroupDialog

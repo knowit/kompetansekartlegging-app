@@ -153,10 +153,18 @@ const CategoryListItem = ({
         className={classes.listItemText}
       />
       <ListItemSecondaryAction className={classes.actions}>
-        <IconButton onClick={() => setEditMode(true)} className={classes.button} size="large">
+        <IconButton
+          onClick={() => setEditMode(true)}
+          className={classes.button}
+          size="large"
+        >
           <EditIcon />
         </IconButton>
-        <IconButton onClick={() => deleteCategory(c)} className={classes.button} size="large">
+        <IconButton
+          onClick={() => deleteCategory(c)}
+          className={classes.button}
+          size="large"
+        >
           <DeleteIcon />
         </IconButton>
         <ButtonGroup
@@ -184,7 +192,7 @@ const CategoryListItem = ({
         </ButtonGroup>
       </ListItemSecondaryAction>
     </ListItem>
-  );
+  )
 }
 
 export default CategoryListItem

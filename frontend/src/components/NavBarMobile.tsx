@@ -152,7 +152,8 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
             color="inherit"
             aria-label={t('aria.menu') as string}
             onClick={toggleDrawer(true)}
-            size="large">
+            size="large"
+          >
             <MenuIcon fontSize="large" />
           </IconButton>
           <Typography variant="h6" noWrap className={style.headerText}>
@@ -172,7 +173,7 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
         {list()}
       </SwipeableDrawer>
     </div>
-  );
+  )
 }
 
 export default NavBarMobile
