@@ -36,20 +36,20 @@ const questionStyleDesktop = makeStyles({
     paddingBottom: 10,
   },
   answerArea: {
-    display: 'flex',
-    flexWrap: 'nowrap',
-    justifyContent: 'center',
+    display: 'grid',
+    gridTemplateColumns: 'max-content auto',
+    width: '92%',
+    marginLeft: '4%',
     alignItems: 'center',
   },
   sliderArea: {
-    marginLeft: 30,
-    marginRight: 20,
+    marginLeft: 25,
     padding: 20,
-    width: '75%',
+    width: '90%',
   },
   slider: {
-    marginRight: 15,
-    marginLeft: 15,
+    marginRight: 9,
+    marginLeft: 10,
   },
   iconArea: {
     width: '100%',
@@ -211,41 +211,33 @@ const KnowledgeMotivationSliders = ({
   const { t } = useTranslation()
 
   return (
-    <div>
-      <div className={style.answerArea}>
-        <div className={clsx(style.largeBold)}>
-          {t('competence').toUpperCase()}
-        </div>
-        <div className={style.sliderArea}>
-          <div className={style.iconArea}>
-            {Icon.GetIcons(true, style.icon)}
-          </div>
-          <div className={style.slider}>
-            <Slider
-              value={sliderValues?.knowledge || -2}
-              motivation={false}
-              sliderChanged={sliderChanged}
-              isMobile={isMobile}
-            />
-          </div>
+    <div className={style.answerArea}>
+      <div className={clsx(style.largeBold)}>
+        {t('competence').toUpperCase()}
+      </div>
+      <div className={style.sliderArea}>
+        <div className={style.iconArea}>{Icon.GetIcons(true, style.icon)}</div>
+        <div className={style.slider}>
+          <Slider
+            value={sliderValues?.knowledge || -2}
+            motivation={false}
+            sliderChanged={sliderChanged}
+            isMobile={isMobile}
+          />
         </div>
       </div>
-      <div className={style.answerArea}>
-        <div className={clsx(style.largeBold)}>
-          {t('motivation').toUpperCase()}
-        </div>
-        <div className={style.sliderArea}>
-          <div className={style.iconArea}>
-            {Icon.GetIcons(false, style.icon)}
-          </div>
-          <div className={style.slider}>
-            <Slider
-              value={sliderValues?.motivation || -2}
-              motivation={true}
-              sliderChanged={sliderChanged}
-              isMobile={isMobile}
-            />
-          </div>
+      <div className={clsx(style.largeBold)}>
+        {t('motivation').toUpperCase()}
+      </div>
+      <div className={style.sliderArea}>
+        <div className={style.iconArea}>{Icon.GetIcons(false, style.icon)}</div>
+        <div className={style.slider}>
+          <Slider
+            value={sliderValues?.motivation || -2}
+            motivation={true}
+            sliderChanged={sliderChanged}
+            isMobile={isMobile}
+          />
         </div>
       </div>
     </div>
