@@ -246,12 +246,14 @@ export const Norwegian: LanguageSchema = {
       editOrganizations: {
         description: 'På denne siden kan du legge til, fjerne og oppdatere organisasjoner.',
         id: 'ID',
+        adminEmail: 'Admin E-post',
         addOrganization: 'Legg til organisasjon',
         removeOrganization: "Fjern organisasjonen '{{organization}}'?",
         areYouSureYouWantToRemoveTheOrganization: "Er du sikker på at du har lyst til å fjerne organisasjonen '{{organization}}'?",
         addNewOrganization: 'Legg til ny organisasjon',
-        idCantBeEmpty: 'ID kan ikke være tom.',
-        identifierAttributeCantBeEmpty: 'Identifier attribute kan ikke være tom.'
+        idCantBeEmptyOrContainZero: "ID kan ikke være tom eller inneholde '0'.",
+        identifierAttributeCantBeEmpty: 'Identifier attribute kan ikke være tom.',
+        adminEmailIsInvalid: 'Admin e-post er ugyldig.',
       },
       editSuperAdministrators: {
         description: 'På denne siden kan du legge til og fjerne super-administratorer.',
@@ -303,7 +305,8 @@ export const Norwegian: LanguageSchema = {
     superAdminApi: {
         couldNotGetAListOfOrganizations: 'Kunne ikke hente en liste med organisasjoner.',
         couldNotAddTheOrganization: "Kunne ikke legge til organisasjonen '{{organizationName}}'.",
-        couldNotDeleteTheOrganization: "Kunne ikke slette organisasjonen '{{organizationName}}'."
+        couldNotDeleteTheOrganization: "Kunne ikke slette organisasjonen '{{organizationName}}'.",
+        theNewOrganizationWasNotProperlyConfigured: "Den nye organisasjonen '{{organizationName}}' ble ikke konfigurert riktig.",
     },
     aria: {
       selectLanguageLanguageIsSelected: 'velg språk, {{language}} er valgt',

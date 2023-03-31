@@ -244,12 +244,14 @@ export type LanguageSchema = {
       editOrganizations: {
         description: string
         id: string
+        adminEmail: string
         addOrganization: string
         removeOrganization: string
         areYouSureYouWantToRemoveTheOrganization: string
         addNewOrganization: string
-        idCantBeEmpty: string
+        idCantBeEmptyOrContainZero: string
         identifierAttributeCantBeEmpty: string
+        adminEmailIsInvalid: string
       }
       editSuperAdministrators: {
         description: string
@@ -302,6 +304,7 @@ export type LanguageSchema = {
       couldNotGetAListOfOrganizations: string
       couldNotAddTheOrganization: string
       couldNotDeleteTheOrganization: string
+      theNewOrganizationWasNotProperlyConfigured: string
     }
     aria: {
       selectLanguageLanguageIsSelected: string
