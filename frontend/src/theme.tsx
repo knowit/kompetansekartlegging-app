@@ -4,17 +4,6 @@ import {
 } from '@mui/material/styles'
 import { KnowitColors } from './styles'
 
-const theme = createMuiTheme(
-  adaptV4Theme({
-    palette: {
-      primary: {
-        main: KnowitColors.lightGreen,
-      },
-      secondary: {
-        main: KnowitColors.fuchsia,
-      },
-    },
-  })
-)
+const theme = createMuiTheme(adaptV4Theme({}))
 
 export default theme
