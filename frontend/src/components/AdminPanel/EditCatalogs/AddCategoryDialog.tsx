@@ -40,6 +40,7 @@ const AddCategoryDialog = ({ onCancel, onConfirm, open }: any) => {
           </IconButton>
         </Box>
         <TextField
+          autoFocus
           fullWidth
           label={t('admin.editCatalogs.nameOfNewCategory')}
           variant="outlined"
