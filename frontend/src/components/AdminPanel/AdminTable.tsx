@@ -54,7 +54,7 @@ const AdminTable = ({ admins, deleteAdmin, showOrgId }: AdminTableProps) => {
             <TableCell>{t('employee')}</TableCell>
             <TableCell>{t('email')}</TableCell>
             <TableCell>{t('username')}</TableCell>
-            {showOrgId && <TableCell>organization ID</TableCell>}
+            {showOrgId && <TableCell>{t('organizationID')}</TableCell>}
             <TableCell />
           </TableRow>
         </TableHead>
