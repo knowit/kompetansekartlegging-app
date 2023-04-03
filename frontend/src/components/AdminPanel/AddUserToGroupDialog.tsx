@@ -11,8 +11,6 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import IconButton from '@material-ui/core/IconButton'
 import TextField from '@material-ui/core/TextField'
 
-import { useAppSelector } from '../../redux/hooks'
-import { selectUserState } from '../../redux/User'
 import { useTranslation } from 'react-i18next'
 import { dialogStyles } from '../../styles'
 import { CloseIcon } from '../DescriptionTable'
@@ -27,13 +25,14 @@ const AddUserToGroupDialog = ({
   currentUsersInGroup,
   usersConstant,
   userGetFn,
+  userGetFnParams,
   roleName,
+  searchFieldPlaceholder,
   title,
   confirmButtonText,
 }: any) => {
   const { t } = useTranslation()
   const style = dialogStyles()
-  const userState = useAppSelector(selectUserState)
 
   const {
     result: users,
@@ -42,7 +41,7 @@ const AddUserToGroupDialog = ({
   } = useApiGet({
     getFn: userGetFn,
     constantResult: usersConstant,
-    params: userState.isSignedIn ? userState.organizationID : null,
+    params: userGetFnParams,
   })
   const [selectedUser, setSelectedUser] = useState<any>()
   const onSelect = (user: any) => {
@@ -89,11 +88,7 @@ const AddUserToGroupDialog = ({
         </Box>
         <TextField
           fullWidth
-          placeholder={
-            t('searchForEmployeeInOrganization', {
-              organization: userState.organizationName,
-            }) as string
-          }
+          placeholder={searchFieldPlaceholder}
           variant="outlined"
           value={nameFilter}
           className={style.searchField}
