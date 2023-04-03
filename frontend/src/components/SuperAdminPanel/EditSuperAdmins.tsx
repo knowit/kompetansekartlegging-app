@@ -1,13 +1,12 @@
 import { useState } from 'react'
 import CircularProgress from '@mui/material/CircularProgress'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
-import { useAppSelector } from '../../redux/hooks'
-import { selectAdminCognitoGroupName } from '../../redux/User'
 import { useTranslation } from 'react-i18next'
 import AddUserToGroupDialog from '../AdminPanel/AddUserToGroupDialog'
 import {
   addUserToGroup,
-  listAllUsersInOrganization,
+  listAdmins,
+  listAllUsers,
   removeUserFromGroup,
 } from '../AdminPanel/adminApi'
 import DeleteUserFromGroupDialog from '../AdminPanel/DeleteUserFromGroupDialog'
@@ -16,9 +15,10 @@ import { Button } from '@mui/material'
 import AdminTable from '../AdminPanel/AdminTable'
 import InfoCard from '../InfoCard'
 
+import { SUPER_ADMIN_COGNITO_GROUP } from '../../constants'
+
 const EditSuperAdmins = () => {
   const { t } = useTranslation()
-  const adminCognitoGroupName = useAppSelector(selectAdminCognitoGroupName)
 
   const {
     result: admins,
@@ -26,8 +26,7 @@ const EditSuperAdmins = () => {
     loading,
     refresh,
   } = useApiGet({
-    getFn: listAllUsersInOrganization,
-    params: adminCognitoGroupName,
+    getFn: listAdmins,
   })
   const [showAddAdmin, setShowAddAdmin] = useState<boolean>(false)
   const [showDeleteUserFromGroupDialog, setShowDeleteUserFromGroupDialog] =
@@ -39,14 +38,14 @@ const EditSuperAdmins = () => {
     setAdminToDelete(user)
   }
   const deleteAdminConfirm = async () => {
-    await removeUserFromGroup(adminCognitoGroupName, adminToDelete.Username)
+    await removeUserFromGroup(SUPER_ADMIN_COGNITO_GROUP, adminToDelete.Username)
     setShowDeleteUserFromGroupDialog(false)
     refresh()
   }
   const clearSelectedAdmin = () => setAdminToDelete(null)
   const hideShowAddAdmin = () => setShowAddAdmin(false)
   const addAdminConfirm = async (newAdminUser: any) => {
-    await addUserToGroup(adminCognitoGroupName, newAdminUser.Username)
+    await addUserToGroup(SUPER_ADMIN_COGNITO_GROUP, newAdminUser.Username)
     setShowAddAdmin(false)
     refresh()
   }
@@ -61,7 +60,12 @@ const EditSuperAdmins = () => {
             title="menu.submenu.editSuperAdministrators"
             description="superAdmin.editSuperAdministrators.description"
           />
-          <AdminTable admins={admins} deleteAdmin={deleteAdmin} />
+          <AdminTable
+            admins={admins}
+            deleteAdmin={deleteAdmin}
+            showOrgId={true}
+          />
+
           <Button
             variant="contained"
             startIcon={<PersonAddIcon />}
@@ -85,12 +89,13 @@ const EditSuperAdmins = () => {
         <AddUserToGroupDialog
           open={showAddAdmin}
           currentUsersInGroup={admins}
-          userGetFn={listAllUsersInOrganization}
+          userGetFn={listAllUsers}
           onCancel={hideShowAddAdmin}
           onConfirm={addAdminConfirm}
           roleName={t(
             'superAdmin.editSuperAdministrators.superAdministrator'
           ).toLowerCase()}
+          searchFieldPlaceholder={t('searchForEmployeeAcrossOrganizations')}
         />
       )}
     </div>

@@ -2,6 +2,7 @@ import { API, Auth } from 'aws-amplify'
 import {
   ADMIN_COGNITOGROUP_SUFFIX,
   GROUPLEADER_COGNITOGROUP_SUFFIX,
+  SUPER_ADMIN_COGNITO_GROUP,
 } from '../../constants'
 import i18n from '../../i18n/i18n'
 
@@ -146,7 +147,7 @@ const listGroupLeadersInOrganization = async (organizationID: string) =>
 const listGroupLeaders = async () => await listUsersInGroup('groupLeader')
 const listAdminsInOrganization = async (organizationID: string) =>
   await listUsersInGroup(`${organizationID}${ADMIN_COGNITOGROUP_SUFFIX}`)
-const listAdmins = async () => await listUsersInGroup('admin')
+const listAdmins = async () => await listUsersInGroup(SUPER_ADMIN_COGNITO_GROUP)
 
 const listAllUsers = async (limit = 60): Promise<ApiResponse<any[]>> => {
   let nextToken = ''

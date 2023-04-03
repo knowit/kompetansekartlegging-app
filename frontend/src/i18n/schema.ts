@@ -23,6 +23,7 @@ export type LanguageSchema = {
     groupDefiniteForm: string
     roleDefiniteForm: string
     searchForEmployeeInOrganization: string
+    searchForEmployeeAcrossOrganizations: string
     nameCantBeEmpty: string
     addAdministrator: string
     pressHereToSeeWhatTheIconsMean: string

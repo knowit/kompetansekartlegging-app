@@ -25,6 +25,7 @@ export const English: LanguageSchema = {
     groupDefiniteForm: 'group',
     roleDefiniteForm: ' role',
     searchForEmployeeInOrganization: 'Search for employee in {{organization}}',
+    searchForEmployeeAcrossOrganizations: 'Search for employee across organizations',
     nameCantBeEmpty: "Name can't be empty.",
     addAdministrator: 'Add administrator',
     pressHereToSeeWhatTheIconsMean: 'Press here to see what the icons mean',
@@ -167,7 +168,7 @@ export const English: LanguageSchema = {
       noGroupLeader: 'No group leader',
     },
     admin: {
-      areYouSureYouWantToRemoveNameFromRole: 'Are you sure you want to remove {{name}} from the {{role}}?',
+      areYouSureYouWantToDeleteNameFromRole: "Are you sure you want to delete '{{name}}' from the {{role}}?",
       removeNameFromRole: 'Remove {{name}} from the {{role}}?',
       editGroupLeaders: {
         description: "Group leaders can access their group members' answers. They can also choose their group members. On this page you can add and remove group leaders.",

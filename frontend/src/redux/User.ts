@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import {
   ADMIN_COGNITOGROUP_SUFFIX,
   GROUPLEADER_COGNITOGROUP_SUFFIX,
+  SUPER_ADMIN_COGNITO_GROUP,
 } from '../constants'
 import { getOrganizationNameByID } from '../helperFunctions'
 import { RootState } from './store'
@@ -46,7 +47,7 @@ const isAdmin = (cognitoGroups: Array<string>) =>
 const isGroupLeader = (cognitoGroups: Array<string>) =>
   hasRole('groupLeader', cognitoGroups)
 const isSuperAdmin = (cognitoGroups: Array<string>) => {
-  return cognitoGroups.includes('admin')
+  return cognitoGroups.includes(SUPER_ADMIN_COGNITO_GROUP)
 }
 
 const userToRoles = (user: any): UserRole[] => {
