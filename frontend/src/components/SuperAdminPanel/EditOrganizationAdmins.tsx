@@ -28,8 +28,8 @@ import DeleteUserFromGroupDialog from '../AdminPanel/DeleteUserFromGroupDialog'
 import { getAttribute } from '../AdminPanel/helpers'
 import PictureAndNameCell from '../AdminPanel/PictureAndNameCell'
 import useApiGet from '../AdminPanel/useApiGet'
-import Button from '../mui/Button'
-import Table from '../mui/Table'
+import { Button } from '@mui/material'
+import { Table } from '@mui/material'
 
 const Admin = (props: any) => {
   const { admin, deleteAdmin } = props

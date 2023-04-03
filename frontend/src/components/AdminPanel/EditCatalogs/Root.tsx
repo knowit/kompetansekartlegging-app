@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-
 import Container from '@mui/material/Container'
 import CircularProgress from '@mui/material/CircularProgress'
 import TableBody from '@mui/material/TableBody'
@@ -11,10 +10,9 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import DeleteIcon from '@mui/icons-material/Delete'
 import BookmarkIcon from '@mui/icons-material/Bookmark'
-import EditIcon from '@mui/icons-material/Edit'
+import { Edit as EditIcon } from '@mui/icons-material'
 import AddIcon from '@mui/icons-material/Add'
 import Typography from '@mui/material/Typography'
-
 import commonStyles from '../common.module.css'
 import useApiGet from '../useApiGet'
 import { compareByCreatedAt } from '../helpers'
@@ -25,9 +23,8 @@ import {
   createFormDefinition,
   copyFormDefinition,
 } from '../catalogApi'
-import Button from '../../mui/Button'
-import Table from '../../mui/Table'
-import TableRow from '../../mui/TableRow'
+import { Table, Button } from '@mui/material'
+import TableRow from '@mui/material/TableRow'
 import ActivateCatalogDialog from './ActivateCatalogDialog'
 import DeleteCatalogDialog from './DeleteCatalogDialog'
 import AddCatalogDialog from './AddCatalogDialog'

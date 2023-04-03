@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import React from 'react'
 import { QuestionType } from '../API'
 import {
@@ -10,12 +9,6 @@ import {
 import { CustomScaleChart } from './CustomScaleChart'
 import { CombinedChart } from './CombinedChart'
 import { CombinedChartMobile } from './CombinedChartMobile'
-
-const answerDiagramStyle = makeStyles({
-  answerDiagramContainer: {
-    paddingBottom: 50,
-  },
-})
 
 interface Scores {
   valueKnowledge: number[]
@@ -52,8 +45,6 @@ const scoresCustomScaleLabels = (
 }
 
 export default function AnswerDiagram({ ...props }: AnswerDiagramProps) {
-  const styles = answerDiagramStyle()
-
   const activeCategory = props.activeCategory
   const questionAnswers = props.questionAnswers.get(activeCategory)
   const knowledgeMotivationQuAns = questionAnswers?.filter(
@@ -89,7 +80,7 @@ export default function AnswerDiagram({ ...props }: AnswerDiagramProps) {
   return props.isMobile ? (
     <CombinedChartMobile chartData={knowledgeMotivationChartData} />
   ) : (
-    <div className={styles.answerDiagramContainer}>
+    <div>
       <CombinedChart chartData={knowledgeMotivationChartData} />
       <CustomScaleChart chartData={customScaleLabelsChartData} />
     </div>

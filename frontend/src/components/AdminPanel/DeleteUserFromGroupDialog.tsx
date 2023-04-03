@@ -8,7 +8,6 @@ import DialogTitle from '@mui/material/DialogTitle'
 import Button from '@mui/material/Button'
 import ErrorIcon from '@mui/icons-material/Error'
 
-import { dialogStyles } from '../../styles'
 import { getAttribute } from './helpers'
 import { useTranslation } from 'react-i18next'
 
@@ -23,7 +22,7 @@ const DeleteUserFromGroupDialog = ({
   children,
 }: any) => {
   const { t } = useTranslation()
-  const style = dialogStyles()
+
   const name = getAttribute(user, 'name')
   const role = disableRoleSuffix
     ? roleName
@@ -40,11 +39,9 @@ const DeleteUserFromGroupDialog = ({
         onExited,
       }}
     >
-      <DialogTitle className={style.dialogTitle}>
-        <ErrorIcon fontSize="large" className={style.errorIcon} />
-        <span className={style.dialogTitleText}>
-          {t('admin.removeNameFromRole', { name: name, role: role })}
-        </span>
+      <DialogTitle>
+        <ErrorIcon fontSize="large" />
+        <span>{t('admin.removeNameFromRole', { name: name, role: role })}</span>
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -55,12 +52,12 @@ const DeleteUserFromGroupDialog = ({
           {children}
         </DialogContentText>
       </DialogContent>
-      <DialogActions className={style.alertButtons}>
-        <Button onClick={onConfirm} className={style.cancelButton}>
-          <span className={style.buttonText}>{t('remove')}</span>
+      <DialogActions>
+        <Button onClick={onConfirm}>
+          <span>{t('remove')}</span>
         </Button>
-        <Button onClick={onCancel} className={style.confirmButton}>
-          <span className={style.buttonText}>{t('abort')}</span>
+        <Button onClick={onCancel}>
+          <span>{t('abort')}</span>
         </Button>
       </DialogActions>
     </Dialog>

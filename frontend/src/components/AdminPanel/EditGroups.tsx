@@ -7,7 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Collapse from '@mui/material/Collapse'
 import Container from '@mui/material/Container'
 import IconButton from '@mui/material/IconButton'
-import { makeStyles } from '@mui/styles'
+
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
@@ -21,9 +21,9 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import { getLatestUserFormUpdatedAtForUser } from '../../helperFunctions'
 import { useAppSelector } from '../../redux/hooks'
 import { selectUserState } from '../../redux/User'
-import Button from '../mui/Button'
-import Table from '../mui/Table'
-import TableRow from '../mui/TableRow'
+import { Button } from '@mui/material'
+import { Table } from '@mui/material'
+import TableRow from '@mui/material/TableRow'
 import AddUserToGroupDialog from './AddUserToGroupDialog'
 import {
   listAllUsersInOrganization as listAllAvailableUsersInOrganization,
@@ -50,15 +50,6 @@ import PictureAndNameEditCell from './PictureAndNameEditCell'
 import { useTranslation } from 'react-i18next'
 import useApiGet from './useApiGet'
 
-const useRowStyles = makeStyles({
-  root: {
-    '& > *': {
-      borderBottom: 'unset',
-    },
-  },
-  editIcon: {},
-})
-
 const Group = ({
   addMembersToGroup,
   deleteMember,
@@ -79,11 +70,10 @@ const Group = ({
   const picture = hasGroupLeader
     ? getAttribute(group.groupLeader, 'picture')
     : undefined
-  const classes = useRowStyles()
 
   return (
     <>
-      <TableRow className={classes.root} selected={open}>
+      <TableRow selected={open}>
         <TableCell>
           <IconButton size="small" onClick={() => setOpenId(group.id)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}

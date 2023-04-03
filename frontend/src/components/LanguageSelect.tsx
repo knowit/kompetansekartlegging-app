@@ -1,5 +1,5 @@
 import { MenuItem, Select } from '@mui/material'
-import { makeStyles } from '@mui/styles'
+
 import { useTranslation } from 'react-i18next'
 import { availableLanguages } from '../i18n/i18n'
 import { I18n as amplifyI18n } from 'aws-amplify'
@@ -14,23 +14,6 @@ type LanguageSelectProps = {
 export const LanguageSelect = (props: LanguageSelectProps) => {
   const { i18n } = useTranslation()
 
-  const classes = makeStyles({
-    select: {
-      '&:before': {
-        borderColor: props.color,
-      },
-      '&:after': {
-        borderColor: props.color,
-      },
-      '&:not(.Mui-disabled):hover::before': {
-        borderColor: props.color,
-      },
-    },
-    arrowIcon: {
-      fill: props.color,
-    },
-  })()
-
   const changeLanguage = (language: string) => {
     i18n.changeLanguage(language)
     amplifyI18n.setLanguage(language)
@@ -39,13 +22,7 @@ export const LanguageSelect = (props: LanguageSelectProps) => {
 
   return (
     <Select
-      className={classes.select}
       value={i18n.language}
-      inputProps={{
-        classes: {
-          icon: classes.arrowIcon,
-        },
-      }}
       onChange={(event) => changeLanguage(event.target.value as string)}
       renderValue={() => <LanguageIcon style={{ color: props.color }} />}
       style={{ marginLeft: props.marginLeft }}

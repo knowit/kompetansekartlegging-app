@@ -20,7 +20,7 @@ enum SubmenuCategory {
 
 const AdminPanel = ({ activeSubmenuItem }: AdminPanelProps) => {
   return (
-    <div className={style.container}>
+    <div>
       {activeSubmenuItem === SubmenuCategory.EDIT_GROUP_LEADERS && (
         <EditGroupLeaders />
       )}

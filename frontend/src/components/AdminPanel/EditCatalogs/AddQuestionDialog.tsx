@@ -15,13 +15,13 @@ import RadioGroup from '@mui/material/RadioGroup'
 import TextField from '@mui/material/TextField'
 
 import { QuestionType } from '../../../API'
-import { dialogStyles } from '../../../styles'
+
 import { CloseIcon } from '../../DescriptionTable'
 import { useTranslation } from 'react-i18next'
 
 const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
   const { t } = useTranslation()
-  const style = dialogStyles()
+
   const [topic, setTopic] = useState('')
   const [description, setDescription] = useState('')
   const [questionType, setQuestionType] = useState<QuestionType>(
@@ -76,14 +76,8 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
           display="flex"
           justifyContent="space-between"
         >
-          <span className={style.dialogTitleText}>
-            {t('admin.editCatalogs.addNewQuestion')}
-          </span>
-          <IconButton
-            className={style.closeButton}
-            onClick={onCancel}
-            size="large"
-          >
+          <span>{t('admin.editCatalogs.addNewQuestion')}</span>
+          <IconButton onClick={onCancel} size="large">
             <CloseIcon />
           </IconButton>
         </Box>
@@ -96,7 +90,6 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
             topic === '' && t('admin.editCatalogs.subjectCantBeEmpty')
           }
           value={topic}
-          className={style.textField}
           onChange={(e: any) => setTopic(e.target.value)}
         />
       </DialogTitle>
@@ -113,7 +106,6 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
             description === '' && t('admin.editCatalogs.descriptionCantBeEmpty')
           }
           value={description}
-          className={style.textField}
           onChange={(e: any) => setDescription(e.target.value)}
         />
         <FormControl component="fieldset">
@@ -140,39 +132,35 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
                 label={t('admin.editCatalogs.start')}
                 variant="outlined"
                 value={questionConfig.scaleStart}
-                className={style.textField}
                 onChange={onQuestionConfigChange('scaleStart')}
               />
               <TextField
                 label={t('admin.editCatalogs.middle')}
                 variant="outlined"
                 value={questionConfig.scaleMiddle}
-                className={style.textField}
                 onChange={onQuestionConfigChange('scaleMiddle')}
               />
               <TextField
                 label={t('admin.editCatalogs.end')}
                 variant="outlined"
                 value={questionConfig.scaleEnd}
-                className={style.textField}
                 onChange={onQuestionConfigChange('scaleEnd')}
               />
             </Box>
           </FormControl>
         )}
       </DialogContent>
-      <DialogActions className={style.alertButtons}>
-        <Button onClick={onCancel} className={style.cancelButton}>
-          <span className={style.buttonText}>{t('abort')}</span>
+      <DialogActions>
+        <Button onClick={onCancel}>
+          <span>{t('abort')}</span>
         </Button>
         <Button
           disabled={!isCompleted}
           onClick={() =>
             onConfirm(topic, description, questionType, questionConfig)
           }
-          className={style.confirmButton}
         >
-          <span className={style.buttonText}>{t('add')}</span>
+          <span>{t('add')}</span>
         </Button>
       </DialogActions>
     </Dialog>

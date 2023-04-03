@@ -1,5 +1,5 @@
 import { Button } from '@mui/material'
-import clsx from 'clsx'
+
 import { useTranslation } from 'react-i18next'
 import { SubmenuCategory } from './SuperAdminPanel'
 import React from 'react'
@@ -9,7 +9,6 @@ type SuperAdminMenuProps = {
   show: boolean
   selected: boolean
   setShowFab: React.Dispatch<React.SetStateAction<boolean>>
-  style: any
   activeSubmenuItem: any
   setActiveSubmenuItem: any
   setActivePanel: any
@@ -18,7 +17,6 @@ const SuperAdminMenu = ({
   show,
   selected,
   setShowFab,
-  style,
   activeSubmenuItem,
   setActiveSubmenuItem,
   setActivePanel,
@@ -50,18 +48,13 @@ const SuperAdminMenu = ({
   return (
     <>
       <Button
-        className={clsx(style.MenuButton, {
-          [style.menuButtonActive]: selected,
-        })}
         onClick={() => {
           setShowFab(false)
           setActiveSubmenuItem(SubmenuCategory.EDIT_ORGANIZATIONS)
           setActivePanel(Panel.SuperAdmin)
         }}
       >
-        <div className={clsx(style.menuButtonText)}>
-          {t('menu.superAdmin').toUpperCase()}
-        </div>
+        <div>{t('menu.superAdmin').toUpperCase()}</div>
       </Button>
 
       {selected &&
@@ -70,21 +63,11 @@ const SuperAdminMenu = ({
           .map((cat) => (
             <Button
               key={cat.key}
-              className={clsx(style.MenuButton, {
-                [style.menuButtonActive]: activeSubmenuItem === cat.key,
-              })}
               onClick={async () => {
                 setActiveSubmenuItem(cat.key)
               }}
             >
-              <span
-                className={clsx(
-                  style.menuButtonText,
-                  style.menuButtonCategoryText
-                )}
-              >
-                {cat.text}
-              </span>
+              <span>{cat.text}</span>
             </Button>
           ))}
     </>

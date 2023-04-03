@@ -8,7 +8,6 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import ErrorIcon from '@mui/icons-material/Error'
 
-import { dialogStyles } from '../../styles'
 import { OrganizationInfo } from './SuperAdminTypes'
 import { t } from 'i18next'
 
@@ -25,8 +24,6 @@ const DeleteOrganizationDialog: React.FC<DeleteOrganiationDialogProps> = ({
   onCancel,
   organization,
 }) => {
-  const style = dialogStyles()
-
   return (
     <Dialog
       open={open}
@@ -34,9 +31,9 @@ const DeleteOrganizationDialog: React.FC<DeleteOrganiationDialogProps> = ({
         style: { borderRadius: 30 },
       }}
     >
-      <DialogTitle className={style.dialogTitle}>
-        <ErrorIcon fontSize="large" className={style.errorIcon}></ErrorIcon>
-        <span className={style.dialogTitleText}>
+      <DialogTitle>
+        <ErrorIcon fontSize="large"></ErrorIcon>
+        <span>
           {t('superAdmin.editOrganizations.removeOrganization', {
             organization: organization.name,
           })}
@@ -50,15 +47,12 @@ const DeleteOrganizationDialog: React.FC<DeleteOrganiationDialogProps> = ({
           )}
         </DialogContentText>
       </DialogContent>
-      <DialogActions className={style.alertButtons}>
-        <Button
-          onClick={() => onConfirm(organization)}
-          className={style.cancelButton}
-        >
-          <span className={style.buttonText}>{t('remove')}</span>
+      <DialogActions>
+        <Button onClick={() => onConfirm(organization)}>
+          <span>{t('remove')}</span>
         </Button>
-        <Button onClick={onCancel} className={style.confirmButton}>
-          <span className={style.buttonText}>{t('abort')}</span>
+        <Button onClick={onCancel}>
+          <span>{t('abort')}</span>
         </Button>
       </DialogActions>
     </Dialog>

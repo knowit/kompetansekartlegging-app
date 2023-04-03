@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import { KnowitColors } from '../styles'
 import { QuestionAnswer } from '../types'
 import React from 'react'
@@ -8,32 +7,6 @@ import UpdateIcon from '@mui/icons-material/Update'
 import { staleAnswersLimit } from './AlertNotification'
 import { useTranslation } from 'react-i18next'
 import { i18nDateToLocaleDateString } from '../i18n/i18n'
-
-const useStyles = makeStyles({
-  root: {},
-  blockOK: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    fontWeight: 'normal',
-    alignItems: 'center',
-    padding: 5,
-    color: KnowitColors.darkBrown,
-  },
-  blockAlert: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    padding: 5,
-    fontWeight: 'bold',
-    color: KnowitColors.fuchsia,
-  },
-  warningText: {
-    fontFamily: 'Arial',
-    fontSize: '14px',
-    marginLeft: 10,
-    color: KnowitColors.darkBrown,
-  },
-})
 
 export enum AlertType {
   Incomplete,
@@ -45,7 +18,6 @@ export const BlockInfo = (props: {
   questions: QuestionAnswer[] | undefined
 }) => {
   const { t } = useTranslation()
-  const classes = useStyles()
 
   enum TimeType {
     MINUTES, // For testing
@@ -77,12 +49,10 @@ export const BlockInfo = (props: {
 
   if (questions.length > answeredQuestions.length)
     return (
-      <div className={classes.root}>
-        <div className={classes.blockAlert}>
+      <div>
+        <div>
           <ErrorOutlineRoundedIcon />
-          <div className={classes.warningText}>
-            {t('myAnswers.blockHasNotBeenCompleted')}
-          </div>
+          <div>{t('myAnswers.blockHasNotBeenCompleted')}</div>
         </div>
       </div>
     )
@@ -96,10 +66,10 @@ export const BlockInfo = (props: {
   const timeDiff = now - timeOfOldestQuestion
   if (timeDiff > staleAnswersLimit) {
     return (
-      <div className={classes.root}>
-        <div className={classes.blockAlert}>
+      <div>
+        <div>
           <UpdateIcon />
-          <div className={classes.warningText}>
+          <div>
             {t('myAnswers.itHasBeenTimeSinceTheBlockWasUpdated', {
               time: timeBetweenString(timeOfOldestQuestion, now, TimeType.DAYS),
             })}
@@ -109,10 +79,10 @@ export const BlockInfo = (props: {
     )
   } else {
     return (
-      <div className={classes.root}>
-        <div className={classes.blockOK}>
+      <div>
+        <div>
           <CheckCircleOutlineRoundedIcon />
-          <div className={classes.warningText}>
+          <div>
             {t('myAnswers.theBlockWasLastUpdatedDate', {
               date: i18nDateToLocaleDateString(new Date(timeOfOldestQuestion)),
               interpolation: { escapeValue: false },

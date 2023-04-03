@@ -14,19 +14,9 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import TreeItem from '@mui/lab/TreeItem'
-import { makeStyles } from '@mui/styles'
+
 import { useTranslation } from 'react-i18next'
 import { TFunction } from 'i18next'
-
-const answerHistoryStyles = makeStyles({
-  historyView: {
-    height: '100%',
-    widht: '100%',
-  },
-  content: {
-    maxHeight: '70vh',
-  },
-})
 
 function* generator() {
   let i = 0
@@ -49,7 +39,6 @@ const parseScore = (
 
 export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
   const { t } = useTranslation()
-  const style = answerHistoryStyles()
 
   const handleClose = () => {
     props.setHistoryViewOpen(false)
@@ -93,7 +82,6 @@ export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
 
     return (
       <TreeView
-        className={style.historyView}
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpanded={['root']}
         defaultExpandIcon={<ChevronRightIcon />}
@@ -124,7 +112,7 @@ export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
         <DialogTitle id="scroll-dialog-title">
           {t('content.answerHistory')}
         </DialogTitle>
-        <DialogContent dividers={true} className={style.content}>
+        <DialogContent dividers={true}>
           <HistoryTreeView data={props.history} />
         </DialogContent>
         <DialogActions>

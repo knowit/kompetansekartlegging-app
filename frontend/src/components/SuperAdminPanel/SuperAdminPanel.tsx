@@ -16,7 +16,7 @@ enum SubmenuCategory {
 
 const SuperAdminPanel = ({ activeSubmenuItem }: SuperAdminPanelProps) => {
   return (
-    <div className={style.container}>
+    <div>
       {activeSubmenuItem === SubmenuCategory.EDIT_ORGANIZATIONS && (
         <EditOrganizations />
       )}

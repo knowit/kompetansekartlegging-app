@@ -17,7 +17,7 @@ import {
   Popper,
   Toolbar,
 } from '@mui/material'
-import { makeStyles } from '@mui/styles'
+
 import HelpIcon from '@mui/icons-material/Help'
 import React, { useEffect, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
@@ -29,55 +29,6 @@ import { useTranslation } from 'react-i18next'
 import { KnowitColors } from '../styles'
 import { NavBarPropsDesktop, UserRole } from '../types'
 
-const navbarStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    zIndex: 100,
-  },
-  navigation: {
-    flexGrow: 1,
-  },
-  logoutButton: {
-    marginRight: theme.spacing(2),
-  },
-  button: {
-    width: '100px',
-  },
-  header: {
-    color: KnowitColors.white,
-    backgroundColor: KnowitColors.darkBrown,
-  },
-  userName: {
-    margin: '5px',
-    fontFamily: 'Arial',
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    fontSize: '20px',
-    lineHeight: '23px',
-    color: KnowitColors.white,
-  },
-  dropdownMenuButton: {
-    marginLeft: 'auto',
-  },
-  dropdownMenu: {
-    backgroundColor: KnowitColors.beige,
-    color: KnowitColors.darkBrown,
-  },
-  userPicture: {
-    margin: '5px',
-    width: '44px',
-    height: '44px',
-  },
-  logo: {},
-  title: {
-    fontFamily: 'Arial',
-    fontSize: '25px',
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    paddingLeft: 20,
-  },
-}))
-
 const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
   const { t, i18n } = useTranslation()
   const userState = useAppSelector(selectUserState)
@@ -85,7 +36,6 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
   const [avatarMenuOpen, setAvatarMenuOpen] = useState<boolean>(false)
   // return focus to the button when we transitioned from !avatarMenuOpen -> avatarMenuOpen
   const avatarMenuPrevOpen = React.useRef(avatarMenuOpen)
-  const style = navbarStyles()
 
   const [deleteAlertOpen, setDeleteAlertOpen] = useState<boolean>(false)
   const anchorRef = useRef<HTMLButtonElement>(null)
@@ -158,21 +108,6 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
 
   const [isHelpModalOpen, setHelpModalOpen] = useState<boolean>(false)
 
-  const modalstyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    minWidth: '20%',
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    // boxShadow: 24,
-    maxHeight: '80%',
-    overflowY: 'auto',
-    p: 4,
-    borderRadius: 10,
-  }
-
   const [helpMarkdown, setHelpMarkdown] = useState<any>()
 
   useEffect(() => {
@@ -189,25 +124,25 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
   }, [i18n.language])
 
   return (
-    <div className={style.root}>
+    <div>
       <AppBar position="static">
-        <Toolbar className={style.header}>
-          <div className={style.logo}>
+        <Toolbar>
+          <div>
             <KnowitLogo />
           </div>
           <LanguageSelect color={KnowitColors.creme} />
-          <h1 className={style.title}>
+          <h1>
             {t('navbar.competenceMappingFor')} {userState.organizationName}
           </h1>
 
-          {/* <Button variant="contained" className={classes.logoutButton} onClick={() => Auth.signOut()}>Sign out</Button>  */}
-          <div className={style.dropdownMenuButton}>
+          {/* <Button variant="contained"  onClick={() => Auth.signOut()}>Sign out</Button>  */}
+          <div>
             {userState.roles.includes(UserRole.Admin) ? (
               <Modal
                 open={isHelpModalOpen}
                 onClose={() => setHelpModalOpen(false)}
               >
-                <Box sx={modalstyle}>
+                <Box>
                   <ReactMarkdown>{helpMarkdown}</ReactMarkdown>
                 </Box>
               </Modal>
@@ -218,10 +153,10 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
                 aria-controls={avatarMenuOpen ? 'menu-list-grow' : undefined}
                 // onClick={() => {}}
                 aria-label={t('aria.helpButton') as string}
-                endIcon={<HelpIcon style={{ color: KnowitColors.white }} />}
+                endIcon={<HelpIcon />}
                 onClick={() => setHelpModalOpen(true)}
               >
-                <div className={style.userName}>{t('navbar.help')}</div>
+                <div>{t('navbar.help')}</div>
               </Button>
             ) : null}
             <Button
@@ -231,9 +166,8 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
               onClick={handleToggle}
               aria-label={t('aria.toggleDropdownMenu') as string}
             >
-              <div className={style.userName}>{userState.name}</div>
+              <div>{userState.name}</div>
               <Avatar
-                className={style.userPicture}
                 src={userState.picture}
                 alt={t('navbar.profilePicture') as string}
               />
@@ -248,20 +182,13 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
               disablePortal
             >
               {({ TransitionProps, placement }) => (
-                <Grow
-                  {...TransitionProps}
-                  style={{
-                    transformOrigin:
-                      placement === 'bottom' ? 'center top' : 'center bottom',
-                  }}
-                >
+                <Grow {...TransitionProps}>
                   <Paper>
                     <ClickAwayListener onClickAway={handleClose}>
                       <MenuList
                         autoFocusItem={avatarMenuOpen}
                         id="menu-list-grow"
                         onKeyDown={handleListKeyDown}
-                        className={style.dropdownMenu}
                       >
                         {/* Removed for user testing, i18n if uncommenting
                                         <MenuItem onClick={handleDisplayAnswers}>Vis alle lagrede svar</MenuItem>

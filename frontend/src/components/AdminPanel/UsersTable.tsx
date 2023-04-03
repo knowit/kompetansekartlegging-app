@@ -8,8 +8,8 @@ import TableHead from '@mui/material/TableHead'
 import Paper from '@mui/material/Paper'
 
 import { getAttribute } from './helpers'
-import Table from '../mui/Table'
-import TableRow from '../mui/TableRow'
+import { Table } from '@mui/material'
+import TableRow from '@mui/material/TableRow'
 import PictureAndNameCell from './PictureAndNameCell'
 import { useTranslation } from 'react-i18next'
 

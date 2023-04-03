@@ -1,6 +1,4 @@
 import { Button, ListItem } from '@mui/material'
-import { makeStyles } from '@mui/styles'
-import clsx from 'clsx'
 import React, { Fragment, useEffect, useState } from 'react'
 import { CreateQuestionAnswerInput, QuestionType } from '../API'
 import * as customQueries from '../graphql/custom-queries'
@@ -60,87 +58,6 @@ export enum MenuButton {
   LeaderCategory,
   Other,
 }
-
-export const contentStyleDesktop = makeStyles({
-  cardHolder: {
-    display: 'flex',
-    flexDirection: 'column',
-    // overflow: 'hidden',
-    height: '100%',
-  },
-})
-
-export const contentStyleMobile = makeStyles({
-  contentContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    // overflowY: 'scroll',
-    overflowX: 'hidden',
-    height: '100%',
-  },
-  panel: {
-    background: KnowitColors.white,
-    height: '100%',
-    width: '100%',
-    marginTop: 56,
-  },
-})
-
-const contentStyle = makeStyles({
-  contentContainer: {
-    height: '100%',
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    overflow: 'scroll',
-  },
-  menu: {
-    background: KnowitColors.beige,
-    width: '20%',
-    height: 'max-content',
-    paddingLeft: 10,
-    paddingTop: 10,
-    paddingBottom: 20,
-    display: 'flex',
-    flexDirection: 'column',
-    borderRadius: '0px 0px 30px 0px',
-    boxShadow: '0px 4px 4px rgb(0 0 0 / 15%)',
-    zIndex: 1,
-  },
-  MenuButton: {
-    borderRadius: `${cardCornerRadius}px 0 0 ${cardCornerRadius}px`,
-    '&:hover': {
-      background: KnowitColors.white,
-    },
-    textTransform: 'none',
-  },
-  menuButtonActive: {
-    background: KnowitColors.white,
-    marginRight: -2,
-  },
-  menuButtonText: {
-    fontSize: 15,
-    textAlign: 'left',
-    width: '100%',
-    marginLeft: 10,
-    fontWeight: 'bold',
-    display: 'flex',
-    color: KnowitColors.darkBrown,
-  },
-  menuButtonCategoryText: {
-    fontSize: 12,
-    marginLeft: 20,
-    display: 'flex',
-  },
-  hideCategoryButtons: {
-    display: 'none',
-  },
-  panel: {
-    background: KnowitColors.white,
-    height: '100%',
-    width: '80%',
-  },
-})
 
 const updateCategoryAlerts = (
   questionAnswers: Map<string, QuestionAnswer[]>,
@@ -393,9 +310,6 @@ const Content = ({ ...props }: ContentProps) => {
     category: undefined,
   })
 
-  const style = contentStyle()
-  const mobileStyle = contentStyleMobile()
-
   //TODO: Remove this function when refactor is done. Needed to not change mobile too much for now
   const dummyFunctionForRefactor = () => {
     return
@@ -443,18 +357,6 @@ const Content = ({ ...props }: ContentProps) => {
         console.log('Other button pressed', category)
         break
     }
-  }
-
-  const keepButtonActive = (buttonType: MenuButton): string => {
-    switch (buttonType) {
-      case MenuButton.Overview:
-        return activePanel === Panel.Overview ? style.menuButtonActive : ''
-      case MenuButton.MyAnswers:
-        return activePanel === Panel.MyAnswers ? style.menuButtonActive : ''
-      case MenuButton.GroupLeader:
-        return activePanel === Panel.GroupLeader ? style.menuButtonActive : ''
-    }
-    return ''
   }
 
   const getMainMenuAlertElement = (): JSX.Element => {
@@ -520,15 +422,11 @@ const Content = ({ ...props }: ContentProps) => {
         buttons.push(
           <Button
             key={butt.text}
-            className={clsx(
-              style.MenuButton,
-              keepButtonActive(butt.buttonType)
-            )}
             onClick={() => {
               checkIfCategoryIsSubmitted(butt.buttonType, undefined)
             }}
           >
-            <div className={clsx(style.menuButtonText)}>
+            <div>
               {butt.text}
               {butt.buttonType === MenuButton.MyAnswers
                 ? getMainMenuAlertElement()
@@ -541,23 +439,11 @@ const Content = ({ ...props }: ContentProps) => {
             buttons.push(
               <Button
                 key={butt.text}
-                className={clsx(
-                  style.MenuButton,
-                  activeCategory === butt.text ? style.menuButtonActive : '',
-                  activePanel === butt.activePanel
-                    ? ''
-                    : style.hideCategoryButtons
-                )}
                 onClick={() => {
                   checkIfCategoryIsSubmitted(butt.buttonType, butt.text)
                 }}
               >
-                <div
-                  className={clsx(
-                    style.menuButtonText,
-                    style.menuButtonCategoryText
-                  )}
-                >
+                <div>
                   {index + 1}. {butt.text}
                   {alerts?.categoryMap.has(butt.text) ? (
                     <AlertNotification
@@ -664,12 +550,7 @@ const Content = ({ ...props }: ContentProps) => {
   }
 
   return (
-    <div
-      className={
-        props.isMobile ? mobileStyle.contentContainer : style.contentContainer
-      }
-      ref={props.mobileNavRef}
-    >
+    <div ref={props.mobileNavRef}>
       {props.isMobile ? (
         <NavBarMobile
           menuButtons={setUpMobileMenu()}
@@ -677,7 +558,7 @@ const Content = ({ ...props }: ContentProps) => {
           signout={props.signout}
         />
       ) : (
-        <div className={style.menu}>
+        <div>
           {setupDesktopMenu()}
           <GroupLeaderMenu
             members={groupMembers}
@@ -687,7 +568,6 @@ const Content = ({ ...props }: ContentProps) => {
             setActiveSubmenuItem={setActiveSubmenuItem}
             activeSubmenuItem={activeSubmenuItem}
             setShowFab={props.setShowFab}
-            style={style}
           />
           <AdminMenu
             show={isAdmin}
@@ -696,7 +576,6 @@ const Content = ({ ...props }: ContentProps) => {
             setActivePanel={setActivePanel}
             setActiveSubmenuItem={setActiveSubmenuItem}
             activeSubmenuItem={activeSubmenuItem}
-            style={style}
           />
           <SuperAdminMenu
             show={isSuperAdmin}
@@ -705,13 +584,10 @@ const Content = ({ ...props }: ContentProps) => {
             setActivePanel={setActivePanel}
             setActiveSubmenuItem={setActiveSubmenuItem}
             activeSubmenuItem={activeSubmenuItem}
-            style={style}
           />
         </div>
       )}
-      <div className={props.isMobile ? mobileStyle.panel : style.panel}>
-        {setupPanel()}
-      </div>
+      <div>{setupPanel()}</div>
       <AlertDialog
         setAlertDialogOpen={setAlertDialogOpen}
         alertDialogOpen={alertDialogOpen}

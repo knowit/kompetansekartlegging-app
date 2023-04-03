@@ -1,113 +1,11 @@
 import { Button } from '@mui/material'
-import { makeStyles } from '@mui/styles'
+
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import { Fragment, useRef } from 'react'
 import { QuestionType as QuestionTypeT } from '../API'
-import { KnowitColors } from '../styles'
 import { FormProps, SliderValues } from '../types'
 import Question from './Question'
 import { useTranslation } from 'react-i18next'
-
-const FormStyleDesktop = makeStyles({
-  root: {
-    paddingBottom: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 5,
-    backgroundColor: KnowitColors.white,
-    width: '100%',
-    boxSizing: 'border-box',
-    borderRadius: 10,
-  },
-  blockButtons: {
-    width: '90%',
-    maxWidth: 1200,
-    display: 'flex',
-    justifyContent: 'space-around',
-    margin: '30px 0px 50px',
-  },
-  submitButton: {
-    paddingLeft: 20,
-    paddingRight: 20,
-    borderRadius: 18,
-    fontWeight: 'bold',
-    textTransform: 'none',
-    color: KnowitColors.black,
-    backgroundColor: KnowitColors.white,
-    borderWidth: 2,
-    borderStyle: 'solid',
-    borderColor: KnowitColors.lightGreen,
-    '&:hover': {
-      background: KnowitColors.ecaluptus,
-    },
-  },
-  submitAndProceedButton: {
-    paddingLeft: 20,
-    paddingRight: 20,
-    borderRadius: 18,
-    fontWeight: 'bold',
-    textTransform: 'none',
-    color: KnowitColors.black,
-    backgroundColor: KnowitColors.lightGreen,
-    '&:hover': {
-      background: KnowitColors.ecaluptus,
-    },
-  },
-  buttonIcon: {
-    paddingLeft: 10,
-  },
-})
-
-const FormStyleMobile = makeStyles({
-  root: {
-    paddingBottom: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 5,
-    backgroundColor: KnowitColors.white,
-    width: '100%',
-    boxSizing: 'border-box',
-    borderRadius: 10,
-  },
-  blockButtons: {
-    padding: 10,
-    display: 'flex',
-    flexDirection: 'column-reverse',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    // marginBottom: 50
-  },
-  submitButton: {
-    margin: 10,
-    width: '80%',
-    borderRadius: 18,
-    fontWeight: 'bold',
-    textTransform: 'none',
-    color: KnowitColors.black,
-    backgroundColor: KnowitColors.white,
-    borderWidth: 2,
-    borderStyle: 'solid',
-    borderColor: KnowitColors.lightGreen,
-    '&:hover': {
-      background: KnowitColors.ecaluptus,
-    },
-  },
-  submitAndProceedButton: {
-    margin: 10,
-    width: '80%',
-    borderRadius: 18,
-    fontWeight: 'bold',
-    textTransform: 'none',
-    color: KnowitColors.black,
-    backgroundColor: KnowitColors.lightGreen,
-    '&:hover': {
-      background: KnowitColors.ecaluptus,
-    },
-  },
-  buttonIcon: {
-    paddingLeft: 10,
-  },
-})
 
 type QuestionType = {
   id: string
@@ -121,8 +19,6 @@ type QuestionType = {
 export const Form = ({ ...props }: FormProps) => {
   const { t } = useTranslation()
   const sliderValues = useRef<Map<string, SliderValues>>(new Map()) //String is questionid, values are knowledge and motivation
-
-  const style = props.isMobile ? FormStyleMobile() : FormStyleDesktop()
 
   const setSliderValues = (questionId: string, values: SliderValues) => {
     sliderValues.current.set(questionId, values)
@@ -185,9 +81,9 @@ export const Form = ({ ...props }: FormProps) => {
     return (
       <Fragment>
         {getQuestionsForCategory(undefined)}
-        <div className={style.blockButtons}>
+        <div>
           {props.categories.length > 0 ? (
-            <Button onClick={handleClickSubmit} className={style.submitButton}>
+            <Button onClick={handleClickSubmit}>
               {t('myAnswers.submitAnswersAndQuit')}
             </Button>
           ) : (
@@ -195,12 +91,9 @@ export const Form = ({ ...props }: FormProps) => {
           )}
           {props.categories.findIndex((cat) => cat === props.activeCategory) !==
           props.categories.length - 1 ? (
-            <Button
-              onClick={handleClickProceed}
-              className={style.submitAndProceedButton}
-            >
+            <Button onClick={handleClickProceed}>
               {t('myAnswers.saveAndContinue')}
-              <ArrowForwardRoundedIcon className={style.buttonIcon} />
+              <ArrowForwardRoundedIcon />
             </Button>
           ) : (
             ''
@@ -210,5 +103,5 @@ export const Form = ({ ...props }: FormProps) => {
     )
   }
 
-  return <div className={style.root}>{createQuestionCategory()}</div>
+  return <div>{createQuestionCategory()}</div>
 }

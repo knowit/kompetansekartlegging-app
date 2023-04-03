@@ -1,4 +1,3 @@
-import makeStyles from '@mui/styles/makeStyles'
 import { useEffect, useState } from 'react'
 import {
   BarChart,
@@ -31,78 +30,6 @@ const getMaxColumnsForWidth = () => {
   return Math.floor(width / scalingFactor)
 }
 
-const useStyles = makeStyles({
-  tooltip: {
-    backgroundColor: KnowitColors.white,
-    padding: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
-    opacity: 0.9,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: KnowitColors.darkBrown,
-  },
-  label: {
-    color: KnowitColors.darkBrown,
-    fontWeight: 'bold',
-  },
-  knowledge: {
-    color: KnowitColors.greyGreen,
-  },
-  motivation: {
-    color: KnowitColors.darkGreen,
-  },
-  chartContainer: {
-    width: '100%',
-    // height: '100%',
-    // minHeight: 300,
-    height: 410,
-    // display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bulletRoot: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  pageBullet: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginLeft: 4,
-    marginRight: 4,
-    backgroundColor: KnowitColors.lightGreen,
-  },
-  pageBulletCurrent: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginLeft: 4,
-    marginRight: 4,
-    backgroundColor: KnowitColors.darkGreen,
-  },
-  // Removes svg lines framing the chart to more closely correspond with desired design.
-  '@global': {
-    'g.recharts-cartesian-grid-vertical > line:last-child': {
-      display: 'none',
-    },
-    'g.recharts-cartesian-grid-vertical > line:nth-last-child(2)': {
-      display: 'none',
-    },
-    'g.recharts-cartesian-grid-horizontal > line:last-child': {
-      display: 'none',
-    },
-    'g.recharts-cartesian-grid-horizontal > line:nth-last-child(2)': {
-      display: 'none',
-    },
-  },
-})
-
 const createPagedData = (
   chartData: ChartData[],
   maxColumnsPerPage: number
@@ -129,7 +56,6 @@ export const CombinedChartMobile = ({
   ...props
 }: CombinedChartProps): JSX.Element => {
   const { t } = useTranslation()
-  const classes = useStyles()
 
   const [chartPages, setChartPages] = useState<ChartData[][]>([])
   const [currentPage, setCurrentPage] = useState(0)
@@ -166,13 +92,9 @@ export const CombinedChartMobile = ({
 
   const createPager = (): JSX.Element => {
     return (
-      <div className={classes.bulletRoot}>
+      <div>
         {chartPages.map((_, index) =>
-          index === currentPage ? (
-            <div key={index} className={classes.pageBulletCurrent} />
-          ) : (
-            <div key={index} className={classes.pageBullet} />
-          )
+          index === currentPage ? <div key={index} /> : <div key={index} />
         )}
       </div>
     )
@@ -213,7 +135,7 @@ export const CombinedChartMobile = ({
   })
 
   return (
-    <div className={classes.chartContainer} {...swipeHandlers}>
+    <div>
       <ResponsiveContainer>
         <BarChart
           barGap={-10}
@@ -356,12 +278,12 @@ const renderLabelTick = ({ ...props }: TickLabelProps) => {
 //                 props.payload[1]?.payload.valueMotivation[1] - chartSplitAt
 //             ).toFixed(1);
 //             return (
-//                 <div className={classes.tooltip}>
-//                     <p className={classes.label}>{props.label}</p>
-//                     <p className={classes.knowledge}>
+//                 <div>
+//                     <p >{props.label}</p>
+//                     <p >
 //                         {`Kompetanse: ${knowledgeValue}`}
 //                     </p>
-//                     <p className={classes.motivation}>
+//                     <p >
 //                         {`Motivasjon: ${motivationValue}`}
 //                     </p>
 //                 </div>

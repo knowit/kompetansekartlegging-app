@@ -1,5 +1,4 @@
 import React from 'react'
-import clsx from 'clsx'
 
 import { Button } from '@mui/material'
 
@@ -37,28 +36,16 @@ const GroupLeaderMenu = ({
           setActivePanel(Panel.GroupLeader)
         }}
       >
-        <div className={clsx(style.menuButtonText)}>
-          {t('menu.myGroup').toUpperCase()}
-        </div>
+        <div>{t('menu.myGroup').toUpperCase()}</div>
       </Button>
 
       {selected &&
         items.map((member: any) => (
           <Button
             key={member.name}
-            className={clsx(style.MenuButton, {
-              [style.menuButtonActive]: activeSubmenuItem === member.username,
-            })}
             onClick={() => setActiveSubmenuItem(member.username)}
           >
-            <span
-              className={clsx(
-                style.menuButtonText,
-                style.menuButtonCategoryText
-              )}
-            >
-              {member.name}
-            </span>
+            <span>{member.name}</span>
           </Button>
         ))}
     </>

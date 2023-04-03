@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button'
-import { makeStyles } from '@mui/styles'
+
 import React, { useEffect, useState } from 'react'
 import { roundDecimals } from '../helperFunctions'
 import { KnowitColors } from '../styles'
@@ -7,73 +7,6 @@ import { ChartData, ResultData, ResultDiagramProps } from '../types'
 import { CombinedChart } from './CombinedChart'
 import { CombinedChartMobile } from './CombinedChartMobile'
 import { useTranslation } from 'react-i18next'
-
-const graphStyle = makeStyles({
-  resultDiagramContainer: {
-    width: '100%',
-    paddingTop: 20,
-  },
-  resultDiagramContainerMobile: {
-    width: '90%',
-  },
-  chartButtonMobile: {
-    position: 'fixed',
-    zIndex: 101, //Navbar has very high z-index
-    height: '30px',
-    borderRadius: '15px',
-    top: '15px',
-    right: '30px',
-    padding: '10px',
-    backgroundColor: KnowitColors.white,
-    color: KnowitColors.darkBrown,
-    fontWeight: 'bold',
-    fontSize: '14px',
-    '&:hover': {
-      backgroundColor: KnowitColors.white,
-    },
-  },
-  chartButton: {
-    margin: '0px 20px 0px 20px',
-    width: '90px',
-    height: '30px',
-    borderRadius: '15px',
-    backgroundColor: KnowitColors.white,
-    color: KnowitColors.darkBrown,
-    fontWeight: 'normal',
-    fontSize: '14px',
-    border: 2,
-    borderStyle: 'solid',
-    borderColor: KnowitColors.lightGreen,
-  },
-  chartButtonActive: {
-    margin: '0px 20px 0px 20px',
-    width: '90px',
-    height: '30px',
-    borderRadius: '15px',
-    backgroundColor: KnowitColors.lightGreen,
-    color: KnowitColors.darkBrown,
-    fontWeight: 'bold',
-    fontSize: '14px',
-    '&:hover': {
-      backgroundColor: KnowitColors.lightGreen,
-    },
-  },
-  header: {
-    padding: '0px 0px 20px 30px',
-    display: 'flex',
-    alignItems: 'center',
-    maxWidth: 1200,
-    fontFamily: 'Arial',
-    fontSize: '22px',
-    fontWeight: 'bold',
-  },
-  buttonGroup: {
-    display: 'flex',
-    flexGrow: 1,
-    maxWidth: 900,
-    justifyContent: 'center',
-  },
-})
 
 export enum OverviewType {
   AVERAGE,
@@ -137,7 +70,6 @@ const recalculate = (
 
 export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
   const { t } = useTranslation()
-  const style = graphStyle()
 
   const [chartData, setChartData] = useState<ChartData[]>([])
   const [currentType, setOverviewType] = useState<OverviewType>(
@@ -339,9 +271,6 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
   const getButton = (type: OverviewType): JSX.Element => {
     return (
       <Button
-        className={
-          currentType === type ? style.chartButtonActive : style.chartButton
-        }
         onClick={() => {
           selectChartType(type)
         }}
@@ -352,9 +281,8 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
   }
 
   return props.isMobile ? (
-    <div className={style.resultDiagramContainerMobile}>
+    <div>
       <Button
-        className={style.chartButtonMobile}
         onClick={() => {
           cycleChartType()
         }}
@@ -368,10 +296,10 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
       />
     </div>
   ) : (
-    <div className={style.resultDiagramContainer}>
-      <div className={style.header}>
+    <div>
+      <div>
         {t('menu.overview').toUpperCase()}
-        <div className={style.buttonGroup}>
+        <div>
           {getButton(OverviewType.HIGHEST)}
           {getButton(OverviewType.AVERAGE)}
           {getButton(OverviewType.MEDIAN)}

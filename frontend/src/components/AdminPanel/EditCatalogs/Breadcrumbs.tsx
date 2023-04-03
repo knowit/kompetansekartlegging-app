@@ -1,9 +1,7 @@
 import React from 'react'
-import { makeStyles, createStyles } from '@mui/styles'
-import { Theme } from '@mui/material/styles'
-import Link, { LinkProps } from '@mui/material/Link'
-import Typography from '@mui/material/Typography'
-import Breadcrumbs from '@mui/material/Breadcrumbs'
+import { Link, LinkProps } from '@mui/material'
+import { Typography } from '@mui/material'
+import { Breadcrumbs } from '@mui/material'
 import { Route } from 'react-router'
 import { Link as RouterLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -18,25 +16,6 @@ const getBreadcrumbNameMap = (
   }
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      paddingLeft: '24px',
-      paddingBottom: '24px',
-      display: 'flex',
-      flexDirection: 'column',
-      width: '100%',
-    },
-    lists: {
-      backgroundColor: theme.palette.background.paper,
-      marginTop: theme.spacing(1),
-    },
-    nested: {
-      paddingLeft: theme.spacing(4),
-    },
-  })
-)
-
 interface LinkRouterProps extends LinkProps {
   to: string
   replace?: boolean
@@ -48,11 +27,11 @@ const LinkRouter = (props: LinkRouterProps) => (
 
 const RouterBreadcrumbs = ({ extraCrumbsMap, urlOverrides }: any) => {
   const { t } = useTranslation()
-  const classes = useStyles()
+
   const crumbNameMap = { ...getBreadcrumbNameMap(t), ...extraCrumbsMap }
 
   return (
-    <div className={classes.root}>
+    <div>
       <Route>
         {({ location }) => {
           const pathnames = location.pathname.split('/').filter((x) => x)

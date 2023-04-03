@@ -1,12 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
-
-import { makeStyles, createStyles } from '@mui/styles'
-import CircularProgress from '@mui/material/CircularProgress'
-import Container from '@mui/material/Container'
-import Box from '@mui/material/Box'
-import AddIcon from '@mui/icons-material/Add'
-
+import { Container, CircularProgress, Box } from '@mui/material'
+import { Add as AddIcon } from '@mui/icons-material'
 import { listCategoriesByFormDefinitionID, createCategory } from '../catalogApi'
 import useApiGet from '../useApiGet'
 import { compareByIndex } from '../helpers'
@@ -14,33 +9,10 @@ import CategoryList from './CategoryList'
 import RouterBreadcrumbs from './Breadcrumbs'
 import useQuery from './useQuery'
 import AddCategoryDialog from './AddCategoryDialog'
-import Button from '../../mui/Button'
+import { Button } from '@mui/material'
 import { ORGANIZATION_ID_ATTRIBUTE } from '../../../constants'
 import { Auth } from 'aws-amplify'
 import { useTranslation } from 'react-i18next'
-
-const useStyles = makeStyles(() =>
-  createStyles({
-    container: {
-      marginLeft: '0 !important',
-      display: 'flex',
-      flexWrap: 'wrap',
-    },
-    categoryList: {
-      marginLeft: '0',
-      marginRight: '0',
-    },
-    floatingMenu: {
-      padding: '8px 0 0 48px',
-      width: '250px',
-    },
-    addCategoryButton: {
-      borderRadius: '30px',
-      width: '20ch',
-      marginTop: 0,
-    },
-  })
-)
 
 const EditCatalog = () => {
   const { t } = useTranslation()
@@ -50,7 +22,6 @@ const EditCatalog = () => {
     Auth.currentAuthenticatedUser().then(setUser)
   }
 
-  const classes = useStyles()
   const { id: formDefinitionID } = useParams<Record<string, string>>()
   const query = useQuery()
   const label = query.get('label')
@@ -91,7 +62,7 @@ const EditCatalog = () => {
 
   return (
     <>
-      <Container maxWidth="lg" className={classes.container}>
+      <Container maxWidth="lg">
         {error && <p>{t('errorOccured') + error}</p>}
         {loading && <CircularProgress />}
         {!error && !loading && categories && (
@@ -102,7 +73,7 @@ const EditCatalog = () => {
                 urlOverrides={breadCrumbsUrlOverrides}
               />
             </Box>
-            <Container fixed maxWidth="sm" className={classes.categoryList}>
+            <Container fixed maxWidth="sm">
               <CategoryList
                 categories={categories}
                 refresh={refresh}
@@ -110,12 +81,11 @@ const EditCatalog = () => {
                 formDefinitionLabel={label}
               />
             </Container>
-            <div className={classes.floatingMenu}>
+            <div>
               <Button
                 variant="contained"
                 color="primary"
                 startIcon={<AddIcon />}
-                className={classes.addCategoryButton}
                 onClick={() => setShowAddCategoryDialog(true)}
               >
                 {t('admin.editCatalogs.addNewCategory')}

@@ -1,4 +1,3 @@
-import makeStyles from '@mui/styles/makeStyles'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -26,66 +25,6 @@ const numTicks = 5
 const chartSplitAt = numTicks + 2
 const heightPerColumn = 50
 
-const useStyles = makeStyles({
-  tooltipRoot: {
-    backgroundColor: KnowitColors.white,
-    paddingLeft: 10,
-    paddingRight: 10,
-    opacity: 0.9,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: KnowitColors.darkBrown,
-  },
-  label: {
-    fill: KnowitColors.darkBrown,
-    fontFamily: 'Arial',
-    fontSize: '20px',
-    fontWeight: 'bold',
-    textAnchor: 'start',
-    opacity: 1,
-  },
-  tooltipLabel: {
-    fill: KnowitColors.darkBrown,
-    fontFamily: 'Arial',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    textAnchor: 'start',
-    opacity: 1,
-  },
-  knowledge: {
-    color: KnowitColors.darkGreen,
-    fontSize: '13px',
-    fontWeight: 'bold',
-  },
-  motivation: {
-    color: KnowitColors.greyGreen,
-    fontSize: '13px',
-    fontWeight: 'bold',
-  },
-  combinedChartContainer: {
-    width: '100%',
-    maxWidth: 1200,
-    // height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    fontWeight: 'bold',
-    fontSize: '15px',
-  },
-  '@global': {
-    'g.recharts-cartesian-grid-horizontal > line:last-child': {
-      display: 'none',
-    },
-    'g.recharts-cartesian-grid-horizontal > line:nth-last-child(2)': {
-      display: 'none',
-    },
-    'g.recharts-cartesian-grid-vertical > line:last-child': {
-      display: 'none',
-    },
-  },
-})
-
 const getLabel = (
   isTop: any,
   topGetFn: () => any,
@@ -100,11 +39,10 @@ const getLabel = (
 
 export const CombinedChart = ({ ...props }: CombinedChartProps) => {
   const { t } = useTranslation()
-  const classes = useStyles()
 
   if (props.chartData.length === 0) return null
 
-  const RenderCustomTooltip = (classes: any) => {
+  const RenderCustomTooltip = () => {
     const validate = (msg: string | undefined) => {
       if (msg === '') return t('notAnswered')
       else return msg
@@ -130,12 +68,12 @@ export const CombinedChart = ({ ...props }: CombinedChartProps) => {
         )
 
         return (
-          <div className={classes.tooltipRoot}>
-            <p className={classes.tooltipLabel}>{props.label}</p>
-            <p className={classes.knowledge}>
+          <div>
+            <p>{props.label}</p>
+            <p>
               {knowledgeLabel}: {knowledgeValue}
             </p>
-            <p className={classes.motivation}>
+            <p>
               {motivationLabel}: {motivationValue}
             </p>
           </div>
@@ -146,7 +84,7 @@ export const CombinedChart = ({ ...props }: CombinedChartProps) => {
   }
 
   return (
-    <div className={classes.combinedChartContainer}>
+    <div>
       <ResponsiveContainer
         width="100%"
         height={heightPerColumn * props.chartData.length + 90}
@@ -184,7 +122,7 @@ export const CombinedChart = ({ ...props }: CombinedChartProps) => {
           />
           <Tooltip
             wrapperStyle={{ outline: 'none' }}
-            content={RenderCustomTooltip(classes)}
+            content={RenderCustomTooltip()}
             cursor={{ fill: KnowitColors.ecaluptus, opacity: 0.3 }}
           />
           <Bar
@@ -198,12 +136,12 @@ export const CombinedChart = ({ ...props }: CombinedChartProps) => {
             fill={KnowitColors.lightGreen}
           />
           <ReferenceLine x={0} stroke={KnowitColors.darkGreen}>
-            <Label className={classes.label} position="top" offset={50}>
+            <Label position="top" offset={50}>
               {t('competence').toUpperCase()}
             </Label>
           </ReferenceLine>
           <ReferenceLine x={chartSplitAt} stroke={KnowitColors.darkGreen}>
-            <Label className={classes.label} position="top" offset={50}>
+            <Label position="top" offset={50}>
               {t('motivation').toUpperCase()}
             </Label>
           </ReferenceLine>
@@ -222,13 +160,7 @@ const renderCustomAxisTicks = () => {
       isKnowledge = false
     }
     return (
-      <foreignObject
-        x={props.x - 12}
-        y={props.y - 24}
-        width={24}
-        height={24}
-        style={{ color: KnowitColors.darkBrown }}
-      >
+      <foreignObject x={props.x - 12} y={props.y - 24} width={24} height={24}>
         {GetIcon(isKnowledge, Math.round(iconNumber))};
       </foreignObject>
     )

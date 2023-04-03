@@ -1,5 +1,5 @@
 import { Button } from '@mui/material'
-import clsx from 'clsx'
+
 import { useTranslation } from 'react-i18next'
 import { SubmenuCategory } from './AdminPanel'
 import React from 'react'
@@ -9,7 +9,6 @@ type AdminMenuProps = {
   show: boolean
   selected: boolean
   setShowFab: React.Dispatch<React.SetStateAction<boolean>>
-  style: any
   activeSubmenuItem: any
   setActiveSubmenuItem: any
   setActivePanel: any
@@ -18,7 +17,6 @@ const AdminMenu = ({
   show,
   selected,
   setShowFab,
-  style,
   activeSubmenuItem,
   setActiveSubmenuItem,
   setActivePanel,
@@ -59,9 +57,6 @@ const AdminMenu = ({
   return (
     <>
       <Button
-        className={clsx(style.MenuButton, {
-          [style.menuButtonActive]: selected,
-        })}
         onClick={() => {
           // main pane is same as edit group leader pane atm
           setShowFab(false)
@@ -69,9 +64,7 @@ const AdminMenu = ({
           setActivePanel(Panel.Admin)
         }}
       >
-        <div className={clsx(style.menuButtonText)}>
-          {t('menu.admin').toUpperCase()}
-        </div>
+        <div>{t('menu.admin').toUpperCase()}</div>
       </Button>
 
       {selected &&
@@ -80,9 +73,6 @@ const AdminMenu = ({
           .map((cat) => (
             <Button
               key={cat.key}
-              className={clsx(style.MenuButton, {
-                [style.menuButtonActive]: activeSubmenuItem === cat.key,
-              })}
               onClick={async () => {
                 if (cat.hasInternalRouting) {
                   setActiveSubmenuItem(SubmenuCategory.HIDDEN)
@@ -91,14 +81,7 @@ const AdminMenu = ({
                 setActiveSubmenuItem(cat.key)
               }}
             >
-              <span
-                className={clsx(
-                  style.menuButtonText,
-                  style.menuButtonCategoryText
-                )}
-              >
-                {cat.text}
-              </span>
+              <span>{cat.text}</span>
             </Button>
           ))}
     </>

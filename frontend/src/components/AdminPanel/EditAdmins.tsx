@@ -17,8 +17,8 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { useAppSelector } from '../../redux/hooks'
 import { selectAdminCognitoGroupName } from '../../redux/User'
 import { useTranslation } from 'react-i18next'
-import Button from '../mui/Button'
-import Table from '../mui/Table'
+import { Button } from '@mui/material'
+import { Table } from '@mui/material'
 import AddUserToGroupDialog from './AddUserToGroupDialog'
 import {
   addUserToGroup,

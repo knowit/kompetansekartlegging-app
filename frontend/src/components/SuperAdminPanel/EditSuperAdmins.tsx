@@ -23,13 +23,12 @@ import {
   listAllUsersInOrganization,
   removeUserFromGroup,
 } from '../AdminPanel/adminApi'
-import commonStyles from '../AdminPanel/common.module.css'
 import DeleteUserFromGroupDialog from '../AdminPanel/DeleteUserFromGroupDialog'
 import { getAttribute } from '../AdminPanel/helpers'
 import PictureAndNameCell from '../AdminPanel/PictureAndNameCell'
 import useApiGet from '../AdminPanel/useApiGet'
-import Button from '../mui/Button'
-import Table from '../mui/Table'
+import { Button } from '@mui/material'
+import { Table } from '@mui/material'
 
 const Admin = (props: any) => {
   const { admin, deleteAdmin } = props
@@ -64,7 +63,7 @@ const AdminTable = ({ admins, deleteAdmin }: any) => {
   const { t } = useTranslation()
 
   return (
-    <TableContainer className={commonStyles.tableContainer}>
+    <TableContainer>
       <Table stickyHeader>
         <TableHead>
           <TableRow>
@@ -120,7 +119,7 @@ const EditSuperAdmins = () => {
   }
 
   return (
-    <Container maxWidth="md" className={commonStyles.container}>
+    <Container maxWidth="md">
       {error && <p>{t('errorOccured') + error}</p>}
       {loading && <CircularProgress />}
       {!error && !loading && admins && (

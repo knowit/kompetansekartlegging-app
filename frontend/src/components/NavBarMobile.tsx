@@ -6,7 +6,7 @@ import {
   List,
   ListItem,
 } from '@mui/material'
-import { makeStyles } from '@mui/styles'
+
 import React from 'react'
 import { KnowitColors } from '../styles'
 import { NavBarPropsMobile } from '../types'
@@ -16,83 +16,9 @@ import { isIOS } from 'react-device-detect'
 import { LanguageSelect } from './LanguageSelect'
 import { useTranslation } from 'react-i18next'
 
-const navbarStyles = makeStyles((theme) => ({
-  toolbar: theme.mixins.toolbar,
-  drawer: {
-    // [theme.breakpoints.up('sm')]: {
-    //   width: drawerWidth,
-    //   flexShrink: 0,
-    // },
-  },
-  paper: {
-    backgroundColor: KnowitColors.darkBrown,
-    color: KnowitColors.beige,
-    borderRadius: '0px 50px 0px 0px',
-  },
-  panel: {
-    background: KnowitColors.greyGreen,
-  },
-  menuButton: {
-    marginRight: theme.spacing(1),
-  },
-  root: {
-    flexGrow: 1,
-    zIndex: 100,
-    position: 'fixed',
-    width: '100%',
-    top: '0',
-    height: 55,
-  },
-  logoutButton: {
-    marginRight: theme.spacing(2),
-  },
-  button: {
-    width: '100px',
-  },
-  header: {
-    backgroundColor: KnowitColors.beige,
-    boxShadow: 'none',
-    color: KnowitColors.darkBrown,
-  },
-  userName: {
-    margin: '5px',
-    fontFamily: 'Arial',
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    fontSize: '20px',
-    lineHeight: '23px',
-    color: KnowitColors.ecaluptus,
-    marginLeft: 'auto',
-  },
-  userPicture: {
-    margin: '5px',
-    width: '44px',
-    height: '44px',
-  },
-  headerText: {
-    fontWeight: 700,
-    fontSize: 20,
-  },
-
-  listContainer: {
-    width: 250,
-    height: '90%',
-  },
-  logout: {
-    marginTop: 'auto',
-  },
-  list: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    flex: '1',
-    fontWeight: 700,
-  },
-}))
-
 const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
   const { t } = useTranslation()
-  const style = navbarStyles()
+
   // const [mobileOpen, setMobileOpen] = React.useState(false);
   const [drawerOpen, setDrawerOpen] = React.useState(false)
 
@@ -126,16 +52,15 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
 
   const list = () => (
     <div
-      className={style.listContainer}
       role="presentation"
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
       <LanguageSelect color={KnowitColors.beige} marginLeft={15} />
-      <List className={style.list}>
+      <List>
         {props.menuButtons}
-        <ListItem className={style.logout} onClick={props.signout}>
-          {/* <Avatar className={style.userPicture} src={props.userPicture} alt={t('navbar.profilePicture') as string} /> */}
+        <ListItem onClick={props.signout}>
+          {/* <Avatar  src={props.userPicture} alt={t('navbar.profilePicture') as string} /> */}
           {t('navbar.signOut')}
         </ListItem>
       </List>
@@ -143,12 +68,11 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
   )
 
   return (
-    <div className={style.root}>
-      <AppBar position="static" className={style.header}>
+    <div>
+      <AppBar position="static">
         <Toolbar>
           <IconButton
             edge="start"
-            className={style.menuButton}
             color="inherit"
             aria-label={t('aria.menu') as string}
             onClick={toggleDrawer(true)}
@@ -156,13 +80,12 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
           >
             <MenuIcon fontSize="large" />
           </IconButton>
-          <Typography variant="h6" noWrap className={style.headerText}>
+          <Typography variant="h6" noWrap>
             {navbarHeader()}
           </Typography>
         </Toolbar>
       </AppBar>
       <SwipeableDrawer
-        classes={{ paper: style.paper }}
         disableBackdropTransition={!isIOS}
         disableDiscovery={isIOS}
         anchor={'left'}

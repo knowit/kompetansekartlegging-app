@@ -8,7 +8,6 @@ import DialogTitle from '@mui/material/DialogTitle'
 import Button from '@mui/material/Button'
 import ErrorIcon from '@mui/icons-material/Error'
 
-import { dialogStyles } from '../../styles'
 import { useTranslation } from 'react-i18next'
 
 const DeleteGroupDialog = ({
@@ -19,7 +18,6 @@ const DeleteGroupDialog = ({
   open,
 }: any) => {
   const { t } = useTranslation()
-  const style = dialogStyles()
 
   return (
     <Dialog
@@ -29,24 +27,18 @@ const DeleteGroupDialog = ({
         style: { borderRadius: 30 },
       }}
     >
-      <DialogTitle className={style.dialogTitle}>
-        <ErrorIcon fontSize="large" className={style.errorIcon} />
-        <span className={style.dialogTitleText}>
-          {t('admin.editGroups.removeGroupQuestion')}
-        </span>
+      <DialogTitle>
+        <ErrorIcon fontSize="large" />
+        <span>{t('admin.editGroups.removeGroupQuestion')}</span>
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
           {t('admin.editGroups.areYouSureYouWantToRemoveTheGroup')}
         </DialogContentText>
       </DialogContent>
-      <DialogActions className={style.alertButtons}>
-        <Button onClick={onConfirm} className={style.cancelButton}>
-          {t('remove').toUpperCase()}
-        </Button>
-        <Button onClick={onCancel} className={style.confirmButton}>
-          {t('abort').toUpperCase()}
-        </Button>
+      <DialogActions>
+        <Button onClick={onConfirm}>{t('remove').toUpperCase()}</Button>
+        <Button onClick={onCancel}>{t('abort').toUpperCase()}</Button>
       </DialogActions>
     </Dialog>
   )

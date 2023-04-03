@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react'
-import style from './GroupLeaderPanel.module.css'
-
 import { Group } from '../../API'
 import {
   listAllUsersInOrganization as listAllAvailableUsersInOrganization,
@@ -186,7 +184,7 @@ const GroupLeaderPanel = ({
   }, [allAvailableUsersAnnotated, setMembers, groupId])
 
   return (
-    <div className={style.container}>
+    <div>
       {activeSubmenuItem === 'MAIN' ? (
         <Main
           allAvailableUsersAnnotated={allAvailableUsersAnnotated}

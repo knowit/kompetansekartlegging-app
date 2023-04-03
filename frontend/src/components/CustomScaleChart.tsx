@@ -1,5 +1,4 @@
 import Slider from '@mui/material/Slider'
-import { makeStyles, withStyles } from '@mui/styles'
 import {
   Bar,
   BarChart,
@@ -22,78 +21,8 @@ import { useTranslation } from 'react-i18next'
 const numTicks = 5
 const heightPerColumn = 50
 
-const useStyles = makeStyles({
-  tooltipRoot: {
-    backgroundColor: KnowitColors.white,
-    paddingLeft: 10,
-    paddingRight: 10,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: KnowitColors.darkBrown,
-    minWidth: '400px',
-  },
-  tooltipLabel: {
-    fill: KnowitColors.darkBrown,
-    fontFamily: 'Arial',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    textAnchor: 'start',
-    opacity: 1,
-  },
-  answer: {
-    color: KnowitColors.darkGreen,
-    fontSize: '13px',
-    fontWeight: 'bold',
-  },
-  popupSlider: { padding: '10px' },
-  popupLabels: {
-    margin: '0 0 10px 0',
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  popupLabel: {
-    fontSize: '0.75rem',
-    textAlign: 'center',
-  },
-  chartContainer: {
-    width: '100%',
-    maxWidth: 1200,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    fontWeight: 'bold',
-    fontSize: '15px',
-  },
-  '@global': {
-    'g.recharts-cartesian-grid-horizontal > line:last-child': {
-      display: 'none',
-    },
-    'g.recharts-cartesian-grid-horizontal > line:nth-last-child(2)': {
-      display: 'none',
-    },
-    'g.recharts-cartesian-grid-vertical > line:last-child': {
-      display: 'none',
-    },
-  },
-})
-
-const PopupSlider = withStyles({
-  mark: {
-    backgroundColor: '#bfbfbf',
-    height: 8,
-    width: 1,
-    marginTop: -3,
-  },
-  markActive: {
-    opacity: 1,
-    backgroundColor: 'currentColor',
-  },
-})(Slider)
-
 export const CustomScaleChart = ({ ...props }: CustomScaleChartProps) => {
   const { t } = useTranslation()
-  const classes = useStyles()
 
   if (props.chartData.length === 0) return null
 
@@ -112,15 +41,15 @@ export const CustomScaleChart = ({ ...props }: CustomScaleChartProps) => {
         const endLabel = props.payload[0]?.payload.endLabel
 
         return (
-          <div className={classes.tooltipRoot}>
-            <p className={classes.tooltipLabel}>{props.label}</p>
-            <div className={classes.popupSlider}>
-              <div className={classes.popupLabels}>
-                <span className={classes.popupLabel}>{startLabel}</span>
-                <span className={classes.popupLabel}>{middleLabel}</span>
-                <span className={classes.popupLabel}>{endLabel}</span>
+          <div>
+            <p>{props.label}</p>
+            <div>
+              <div>
+                <span>{startLabel}</span>
+                <span>{middleLabel}</span>
+                <span>{endLabel}</span>
               </div>
-              <PopupSlider
+              <Slider
                 value={value}
                 step={0.125}
                 marks={marks}
@@ -129,7 +58,7 @@ export const CustomScaleChart = ({ ...props }: CustomScaleChartProps) => {
                 disabled
               />
             </div>
-            <p className={classes.answer}>{t('answer') + `: ${value}`}</p>
+            <p>{t('answer') + `: ${value}`}</p>
           </div>
         )
       }
@@ -138,7 +67,7 @@ export const CustomScaleChart = ({ ...props }: CustomScaleChartProps) => {
   }
 
   return (
-    <div className={classes.chartContainer}>
+    <div>
       <ResponsiveContainer
         width="100%"
         height={heightPerColumn * props.chartData.length + 90}
@@ -175,7 +104,6 @@ export const CustomScaleChart = ({ ...props }: CustomScaleChartProps) => {
           />
           <Tooltip
             wrapperStyle={{ outline: 'none' }}
-            content={RenderCustomTooltip(classes)}
             cursor={{ fill: KnowitColors.ecaluptus, opacity: 0.3 }}
           />
           <Bar

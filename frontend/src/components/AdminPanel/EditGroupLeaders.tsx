@@ -19,8 +19,8 @@ import {
   selectUserState,
 } from '../../redux/User'
 import { useTranslation } from 'react-i18next'
-import Button from '../mui/Button'
-import Table from '../mui/Table'
+import { Button } from '@mui/material'
+import { Table } from '@mui/material'
 import AddUserToGroupDialog from './AddUserToGroupDialog'
 import {
   addUserToGroup,

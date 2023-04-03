@@ -9,7 +9,6 @@ import DialogTitle from '@mui/material/DialogTitle'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 
-import { dialogStyles } from '../../styles'
 import { CloseIcon } from '../DescriptionTable'
 import { OrganizationInfo } from './SuperAdminTypes'
 import { useTranslation } from 'react-i18next'
@@ -26,7 +25,7 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
   open,
 }) => {
   const { t } = useTranslation()
-  const style = dialogStyles()
+
   const [organizationName, setOrganizationName] = useState('')
   const [organizationID, setOrganizationID] = useState('')
   const [organizationIdentifierAttribute, setOrganizationIdentifierAttribute] =
@@ -49,14 +48,8 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
           display="flex"
           justifyContent="space-between"
         >
-          <span className={style.dialogTitleText}>
-            {t('superAdmin.editOrganizations.addNewOrganization')}
-          </span>
-          <IconButton
-            className={style.closeButton}
-            onClick={onCancel}
-            size="large"
-          >
+          <span>{t('superAdmin.editOrganizations.addNewOrganization')}</span>
+          <IconButton onClick={onCancel} size="large">
             <CloseIcon />
           </IconButton>
         </Box>
@@ -68,7 +61,6 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
           error={organizationName === ''}
           helperText={organizationName === '' && t('nameCantBeEmpty')}
           value={organizationName}
-          className={style.textField}
           onChange={(e: any) => setOrganizationName(e.target.value)}
         />
         <TextField
@@ -82,7 +74,6 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
             t('superAdmin.editOrganizations.idCantBeEmpty')
           }
           value={organizationID}
-          className={style.textField}
           onChange={(e: any) => setOrganizationID(e.target.value)}
         />
         <TextField
@@ -96,15 +87,14 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
             t('superAdmin.editOrganizations.identifierAttributeCantBeEmpty')
           }
           value={organizationIdentifierAttribute}
-          className={style.textField}
           onChange={(e: any) =>
             setOrganizationIdentifierAttribute(e.target.value)
           }
         />
       </DialogTitle>
-      <DialogActions className={style.alertButtons}>
-        <Button onClick={onCancel} className={style.cancelButton}>
-          <span className={style.buttonText}>{t('abort')}</span>
+      <DialogActions>
+        <Button onClick={onCancel}>
+          <span>{t('abort')}</span>
         </Button>
         <Button
           disabled={organizationName === ''}
@@ -115,9 +105,8 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
               identifierAttribute: organizationIdentifierAttribute,
             })
           }
-          className={style.confirmButton}
         >
-          <span className={style.buttonText}>{t('add')}</span>
+          <span>{t('add')}</span>
         </Button>
       </DialogActions>
     </Dialog>

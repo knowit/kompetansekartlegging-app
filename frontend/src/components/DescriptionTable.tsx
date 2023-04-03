@@ -1,8 +1,5 @@
 import React from 'react'
 import * as Icon from '../icons/iconController'
-import { makeStyles } from '@mui/styles'
-import clsx from 'clsx'
-import { KnowitColors } from '../styles'
 import IconButton from '@mui/material/IconButton'
 import SvgIcon from '@mui/material/SvgIcon'
 import i18n from '../i18n/i18n'
@@ -17,75 +14,6 @@ export const CloseIcon = () => (
     </svg>
   </SvgIcon>
 )
-
-const DescTableStyle = makeStyles({
-  root: {
-    width: '100%',
-    maxWidth: '100%',
-    height: '100%',
-    maxHeight: 'inherit',
-    borderRadius: 'inherit',
-    display: 'flex',
-    flexDirection: 'column',
-    color: KnowitColors.darkBrown,
-  },
-  overflowContainer: {
-    overflow: 'auto',
-    borderRadius: 'inherit',
-  },
-  scaleRow: {
-    margin: '15px 20px',
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  scaleTitle: {
-    display: 'flex',
-    fontSize: '18px',
-    lineHeight: '17px',
-    fontFamily: 'Arial',
-    fontWeight: 700,
-    textTransform: 'uppercase',
-    margin: '20px 0',
-  },
-  mobileTitleRow: {
-    margin: '20px 20px 0 20px',
-  },
-  mobileTitle: {
-    fontSize: '22px',
-    margin: '0px',
-  },
-  closeButton: {
-    color: 'black',
-  },
-  container: {
-    display: 'flex',
-    alignItems: 'center',
-    margin: '5px 0',
-  },
-  iconArea: {
-    height: 30,
-    paddingRight: 5,
-  },
-  icon: {
-    height: '100%',
-  },
-  textBlock: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  heading: {
-    textAlign: 'left',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  text: {
-    textAlign: 'left',
-    fontSize: 12,
-  },
-})
 
 type ScaleContainerProps = {
   icon: JSX.Element
@@ -178,29 +106,25 @@ export const DescriptionTable = ({
   isMobile,
 }: DescriptionTableProps) => {
   const { t } = useTranslation()
-  const style = DescTableStyle()
 
   const ScaleContainer = ({ ...props }: ScaleContainerProps) => (
-    <div className={style.container}>
-      <div className={style.iconArea}>{props.icon}</div>
-      <div className={style.textBlock}>
-        <div className={style.heading}>{props.heading}</div>
-        <div className={style.text}>{props.text}</div>
+    <div>
+      <div style={{ maxWidth: '20px' }}>{props.icon}</div>
+      <div>
+        <div>{props.heading}</div>
+        <div>{props.text}</div>
       </div>
     </div>
   )
 
   return (
-    <div className={style.root}>
+    <div>
       {isMobile && (
-        <div className={clsx([style.scaleRow, style.mobileTitleRow])}>
-          <header className={style.header}>
-            <h2 className={clsx([style.scaleTitle, style.mobileTitle])}>
-              {t('scaleDescription')}
-            </h2>
+        <div>
+          <header>
+            <h2>{t('scaleDescription')}</h2>
             <IconButton
               aria-label={t('close') as string}
-              className={style.closeButton}
               onClick={onClose}
               size="large"
             >
@@ -210,16 +134,13 @@ export const DescriptionTable = ({
         </div>
       )}
 
-      <div className={style.overflowContainer}>
-        <div className={style.scaleRow}>
-          <header className={style.header}>
-            <h2 className={style.scaleTitle}>
-              {t('competenceScale.competenceScale')}
-            </h2>
+      <div>
+        <div>
+          <header>
+            <h2>{t('competenceScale.competenceScale')}</h2>
             {!isMobile && (
               <IconButton
                 aria-label={t('close') as string}
-                className={style.closeButton}
                 onClick={onClose}
                 size="large"
               >
@@ -232,7 +153,7 @@ export const DescriptionTable = ({
             return (
               <ScaleContainer
                 key={`competence-${i}`}
-                icon={<Icon className={style.iconArea} />}
+                icon={<Icon />}
                 heading={obj.heading}
                 text={obj.text}
               />
@@ -240,18 +161,16 @@ export const DescriptionTable = ({
           })}
         </div>
 
-        <div className={style.scaleRow}>
-          <header className={style.header}>
-            <h2 className={style.scaleTitle}>
-              {i18n.t('motivationScale.motivationScale')}
-            </h2>
+        <div>
+          <header>
+            <h2>{i18n.t('motivationScale.motivationScale')}</h2>
           </header>
           {getMotivation().map((obj, i) => {
             const Icon = obj.icon
             return (
               <ScaleContainer
                 key={`motivation-${i}`}
-                icon={<Icon className={style.iconArea} />}
+                icon={<Icon />}
                 heading={obj.heading}
                 text={obj.text}
               />
