@@ -25,7 +25,7 @@ const GroupLeaderMenu = ({
     <ListItemButton
       key={member.name}
       onClick={() => {
-        setActiveSubmenuItem('MAIN')
+        setActiveSubmenuItem(member.name)
         setActivePanel(Panel.GroupLeader)
       }}
     >
