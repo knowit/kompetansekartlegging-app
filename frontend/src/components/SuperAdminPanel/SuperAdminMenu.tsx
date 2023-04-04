@@ -52,6 +52,7 @@ const SuperAdminMenu = ({
         key={cat.key}
         onClick={async () => {
           setActiveSubmenuItem(cat.key)
+          setActivePanel(Panel.SuperAdmin)
         }}
       >
         <ListItemText>{cat.text}</ListItemText>

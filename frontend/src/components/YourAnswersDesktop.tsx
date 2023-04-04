@@ -30,46 +30,44 @@ export const YourAnswersDesktop = ({ ...props }: YourAnswerProps) => {
     <div>
       <div>
         <div>
+          <div>{props.activeCategory}</div>
           <div>
-            <div>{props.activeCategory}</div>
-            <div>
-              <BlockInfo
-                questions={props.questionAnswers.get(props.activeCategory)}
-              />
-              <Button onClick={() => props.enableAnswerEditMode()}>
-                {t('myAnswers.fillOut')}
-              </Button>
-            </div>
-          </div>
-          <div>{getCategoryDescription()}</div>
-
-          <div>
-            <AnswerDiagram
-              questionAnswers={props.questionAnswers}
-              activeCategory={props.activeCategory}
-              isMobile={false}
+            <BlockInfo
+              questions={props.questionAnswers.get(props.activeCategory)}
             />
+            <Button onClick={() => props.enableAnswerEditMode()}>
+              {t('myAnswers.fillOut')}
+            </Button>
           </div>
         </div>
+        <div>{getCategoryDescription()}</div>
+
         <div>
-          <div>
-            <ProgressBar
-              alerts={props.alerts}
-              totalQuestions={props.formDefinition?.questions.items.length ?? 0}
-            />
-            <h2>{props.activeCategory}</h2>
-          </div>
+          <AnswerDiagram
+            questionAnswers={props.questionAnswers}
+            activeCategory={props.activeCategory}
+            isMobile={false}
+          />
+        </div>
+      </div>
+      <div>
+        <div>
+          <ProgressBar
+            alerts={props.alerts}
+            totalQuestions={props.formDefinition?.questions.items.length ?? 0}
+          />
+          <h2>{props.activeCategory}</h2>
+        </div>
 
-          <div>
-            <div>{getCategoryDescription()}</div>
+        <div>
+          <div>{getCategoryDescription()}</div>
 
-            <Form
-              {...props}
-              scrollToTop={scrollToTop}
-              isMobile={false}
-              alerts={props.alerts}
-            />
-          </div>
+          <Form
+            {...props}
+            scrollToTop={scrollToTop}
+            isMobile={false}
+            alerts={props.alerts}
+          />
         </div>
       </div>
     </div>

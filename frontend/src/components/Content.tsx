@@ -380,6 +380,7 @@ const Content = ({ ...props }: ContentProps) => {
         <ListItemButton
           key={cat}
           onClick={() => {
+            setActivePanel(Panel.MyAnswers)
             checkIfCategoryIsSubmitted(MenuButton.Category, cat)
           }}
         >
@@ -454,53 +455,50 @@ const Content = ({ ...props }: ContentProps) => {
 
   return (
     <div className="content">
-      {props.isMobile ? (
-        ''
-      ) : (
-        <Drawer className="menu" variant="permanent" anchor="left">
-          <List>
-            <ListItemButton onClick={() => setActivePanel(Panel.Overview)}>
-              <ListItemText>{t('menu.overview')}</ListItemText>
-            </ListItemButton>
+      <Drawer className="menu" variant="permanent" anchor="left">
+        <List>
+          <ListItemButton onClick={() => setActivePanel(Panel.Overview)}>
+            <ListItemText>{t('menu.overview')}</ListItemText>
+          </ListItemButton>
 
-            <MenuItem
-              selected={activePanel === Panel.MyAnswers}
-              show={true}
-              setActivePanel={setActivePanel}
-              panelType={Panel.MyAnswers}
-              content={setupMyAnswers()}
-              text={t('menu.myAnswers')}
-              alert={alerts?.qidMap.size ?? 0}
-            />
+          <MenuItem
+            selected={activePanel === Panel.MyAnswers}
+            show={true}
+            setActivePanel={setActivePanel}
+            panelType={Panel.MyAnswers}
+            content={setupMyAnswers()}
+            text={t('menu.myAnswers')}
+            alert={alerts?.qidMap.size ?? 0}
+          />
 
-            <GroupLeaderMenu
-              members={groupMembers}
-              show={true}
-              selected={activePanel === Panel.GroupLeader}
-              setActivePanel={setActivePanel}
-              setActiveSubmenuItem={setActiveSubmenuItem}
-              activeSubmenuItem={activeSubmenuItem}
-              setShowFab={props.setShowFab}
-            />
+          <GroupLeaderMenu
+            members={groupMembers}
+            show={true}
+            selected={activePanel === Panel.GroupLeader}
+            setActivePanel={setActivePanel}
+            setActiveSubmenuItem={setActiveSubmenuItem}
+            activeSubmenuItem={activeSubmenuItem}
+            setShowFab={props.setShowFab}
+          />
 
-            <AdminMenu
-              show={isAdmin}
-              setActivePanel={setActivePanel}
-              setActiveSubmenuItem={setActiveSubmenuItem}
-              activeSubmenuItem={activeSubmenuItem}
-            />
+          <AdminMenu
+            show={isAdmin}
+            setActivePanel={setActivePanel}
+            setActiveSubmenuItem={setActiveSubmenuItem}
+            activeSubmenuItem={activeSubmenuItem}
+          />
 
-            <SuperAdminMenu
-              show={isSuperAdmin}
-              selected={activePanel === Panel.SuperAdmin}
-              setShowFab={props.setShowFab}
-              setActivePanel={setActivePanel}
-              setActiveSubmenuItem={setActiveSubmenuItem}
-              activeSubmenuItem={activeSubmenuItem}
-            />
-          </List>
-        </Drawer>
-      )}
+          <SuperAdminMenu
+            show={isSuperAdmin}
+            selected={activePanel === Panel.SuperAdmin}
+            setShowFab={props.setShowFab}
+            setActivePanel={setActivePanel}
+            setActiveSubmenuItem={setActiveSubmenuItem}
+            activeSubmenuItem={activeSubmenuItem}
+          />
+        </List>
+      </Drawer>
+
       <div className="panel">{setupPanel()}</div>
       <AlertDialog
         setAlertDialogOpen={setAlertDialogOpen}

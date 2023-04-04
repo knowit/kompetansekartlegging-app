@@ -22,7 +22,13 @@ const GroupLeaderMenu = ({
   }))
 
   const content = items.map((member: any) => (
-    <Button key={member.name} onClick={() => setActiveSubmenuItem('MAIN')}>
+    <Button
+      key={member.name}
+      onClick={() => {
+        setActiveSubmenuItem('MAIN')
+        setActivePanel(Panel.GroupLeader)
+      }}
+    >
       <span>{member.name}</span>
     </Button>
   ))
