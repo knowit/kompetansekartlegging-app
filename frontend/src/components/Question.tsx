@@ -1,9 +1,7 @@
 import React from 'react'
-import clsx from 'clsx'
 import { QuestionType } from '../API'
 import { QuestionProps, SliderKnowledgeMotivationValues } from '../types'
 import Slider from './Slider'
-import { KnowitColors } from '../styles'
 import * as Icon from '../icons/iconController'
 import { AlertNotification } from './AlertNotification'
 import { useTranslation } from 'react-i18next'
@@ -82,13 +80,11 @@ const KnowledgeMotivationSliders = ({
   const { t } = useTranslation()
 
   return (
-    <div className={style.answerArea}>
-      <div className={clsx(style.largeBold)}>
-        {t('competence').toUpperCase()}
-      </div>
-      <div className={style.sliderArea}>
-        <div className={style.iconArea}>{Icon.GetIcons(true, style.icon)}</div>
-        <div className={style.slider}>
+    <div>
+      <div>{t('competence').toUpperCase()}</div>
+      <div>
+        <div>{Icon.GetIcons(true)}</div>
+        <div>
           <Slider
             value={sliderValues?.knowledge || -2}
             motivation={false}
@@ -97,12 +93,10 @@ const KnowledgeMotivationSliders = ({
           />
         </div>
       </div>
-      <div className={clsx(style.largeBold)}>
-        {t('motivation').toUpperCase()}
-      </div>
-      <div className={style.sliderArea}>
-        <div className={style.iconArea}>{Icon.GetIcons(false, style.icon)}</div>
-        <div className={style.slider}>
+      <div>{t('motivation').toUpperCase()}</div>
+      <div>
+        <div>{Icon.GetIcons(false)}</div>
+        <div>
           <Slider
             value={sliderValues?.motivation || -2}
             motivation={true}
@@ -116,7 +110,6 @@ const KnowledgeMotivationSliders = ({
 }
 
 const CustomLabelSlider = ({
-  style,
   sliderValues,
   sliderChanged,
   question,
@@ -126,15 +119,15 @@ const CustomLabelSlider = ({
   const labels = [question.scaleStart, question.scaleEnd].filter((l) => !!l)
   return (
     <div>
-      <div className={style.answerArea}>
-        <div className={clsx(style.largeBold)}>{t('answer').toUpperCase()}</div>
-        <div className={style.sliderArea}>
-          <div className={style.iconArea}>
+      <div>
+        <div>{t('answer').toUpperCase()}</div>
+        <div>
+          <div>
             {labels?.map((l: string) => (
               <span key={l}>{l}</span>
             ))}
           </div>
-          <div className={style.slider}>
+          <div>
             <Slider
               value={sliderValues.customScaleValue || -2}
               motivation={false}
