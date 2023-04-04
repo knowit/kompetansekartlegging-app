@@ -59,6 +59,7 @@ const AdminMenu = ({
             setActiveSubmenuItem(SubmenuCategory.HIDDEN)
             await new Promise((resolve) => setTimeout(resolve, 50))
           }
+          setActivePanel(Panel.Admin)
           setActiveSubmenuItem(cat.key)
         }}
       >

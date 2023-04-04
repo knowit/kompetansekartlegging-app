@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { SliderProps } from '../types'
 import * as helper from '../helperFunctions'
-import { KnowitColors } from '../styles'
 import { Slider as CoreSlider } from '@mui/material'
 
 const marks = new Array(51).fill(undefined).map((_v, i) => {
@@ -25,8 +24,6 @@ const Slider = ({ ...props }: SliderProps) => {
 
   return (
     <CoreSlider
-      // valueLabelDisplay="on"
-      // valueLabelFormat={value => roundDecimals(value, 1)}
       value={sliderValue}
       onChange={sliderChanged}
       onChangeCommitted={sliderCommitted}
