@@ -73,30 +73,9 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
     props.signout()
   }
 
-  // const handleDeleteAnswers = (event: React.MouseEvent<EventTarget>) => {
-  //     if (
-  //         anchorRef.current &&
-  //         anchorRef.current.contains(event.target as HTMLElement)
-  //     ) {
-  //         return;
-  //     }
-  //     setDeleteAlertOpen(true);
-  // };
-
   const handleCloseAlert = () => {
     setDeleteAlertOpen(false)
   }
-
-  // const handleDisplayAnswers = (event: React.MouseEvent<EventTarget>) => {
-  //     if (
-  //         anchorRef.current &&
-  //         anchorRef.current.contains(event.target as HTMLElement)
-  //     ) {
-  //         return;
-  //     }
-  //     props.displayAnswers();
-  //     // setAvatarMenuOpen(false);
-  // };
 
   useEffect(() => {
     if (avatarMenuPrevOpen.current === true && avatarMenuOpen === false) {
@@ -124,111 +103,109 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
   }, [i18n.language])
 
   return (
-    <div>
-      <AppBar position="static">
-        <Toolbar>
-          <div>
-            <KnowitLogo />
-          </div>
-          <LanguageSelect color={KnowitColors.creme} />
-          <h1>
-            {t('navbar.competenceMappingFor')} {userState.organizationName}
-          </h1>
+    <AppBar className="header">
+      <Toolbar>
+        <div>
+          <KnowitLogo />
+        </div>
+        <LanguageSelect color={KnowitColors.creme} />
+        <h1>
+          {t('navbar.competenceMappingFor')} {userState.organizationName}
+        </h1>
 
-          {/* <Button variant="contained"  onClick={() => Auth.signOut()}>Sign out</Button>  */}
-          <div>
-            {userState.roles.includes(UserRole.Admin) ? (
-              <Modal
-                open={isHelpModalOpen}
-                onClose={() => setHelpModalOpen(false)}
-              >
-                <Box>
-                  <ReactMarkdown>{helpMarkdown}</ReactMarkdown>
-                </Box>
-              </Modal>
-            ) : null}
-            {userState.roles.includes(UserRole.Admin) ? (
-              <Button
-                ref={anchorRef}
-                aria-controls={avatarMenuOpen ? 'menu-list-grow' : undefined}
-                // onClick={() => {}}
-                aria-label={t('aria.helpButton') as string}
-                endIcon={<HelpIcon />}
-                onClick={() => setHelpModalOpen(true)}
-              >
-                <div>{t('navbar.help')}</div>
-              </Button>
-            ) : null}
+        {/* <Button variant="contained"  onClick={() => Auth.signOut()}>Sign out</Button>  */}
+        <div>
+          {userState.roles.includes(UserRole.Admin) ? (
+            <Modal
+              open={isHelpModalOpen}
+              onClose={() => setHelpModalOpen(false)}
+            >
+              <Box>
+                <ReactMarkdown>{helpMarkdown}</ReactMarkdown>
+              </Box>
+            </Modal>
+          ) : null}
+          {userState.roles.includes(UserRole.Admin) ? (
             <Button
               ref={anchorRef}
               aria-controls={avatarMenuOpen ? 'menu-list-grow' : undefined}
-              aria-haspopup="true"
-              onClick={handleToggle}
-              aria-label={t('aria.toggleDropdownMenu') as string}
+              // onClick={() => {}}
+              aria-label={t('aria.helpButton') as string}
+              endIcon={<HelpIcon />}
+              onClick={() => setHelpModalOpen(true)}
             >
-              <div>{userState.name}</div>
-              <Avatar
-                src={userState.picture}
-                alt={t('navbar.profilePicture') as string}
-              />
+              <div>{t('navbar.help')}</div>
             </Button>
+          ) : null}
+          <Button
+            ref={anchorRef}
+            aria-controls={avatarMenuOpen ? 'menu-list-grow' : undefined}
+            aria-haspopup="true"
+            onClick={handleToggle}
+            aria-label={t('aria.toggleDropdownMenu') as string}
+          >
+            <div>{userState.name}</div>
+            <Avatar
+              src={userState.picture}
+              alt={t('navbar.profilePicture') as string}
+            />
+          </Button>
 
-            <Popper
-              open={avatarMenuOpen}
-              anchorEl={anchorRef.current}
-              placement={'bottom-end'}
-              role={undefined}
-              transition
-              disablePortal
-            >
-              {({ TransitionProps, placement }) => (
-                <Grow {...TransitionProps}>
-                  <Paper>
-                    <ClickAwayListener onClickAway={handleClose}>
-                      <MenuList
-                        autoFocusItem={avatarMenuOpen}
-                        id="menu-list-grow"
-                        onKeyDown={handleListKeyDown}
-                      >
-                        {/* Removed for user testing, i18n if uncommenting
+          <Popper
+            open={avatarMenuOpen}
+            anchorEl={anchorRef.current}
+            placement={'bottom-end'}
+            role={undefined}
+            transition
+            disablePortal
+          >
+            {({ TransitionProps, placement }) => (
+              <Grow {...TransitionProps}>
+                <Paper>
+                  <ClickAwayListener onClickAway={handleClose}>
+                    <MenuList
+                      autoFocusItem={avatarMenuOpen}
+                      id="menu-list-grow"
+                      onKeyDown={handleListKeyDown}
+                    >
+                      {/* Removed for user testing, i18n if uncommenting
                                         <MenuItem onClick={handleDisplayAnswers}>Vis alle lagrede svar</MenuItem>
                                         <MenuItem onClick={handleDeleteAnswers}>Slett alle svar</MenuItem> */}
-                        <MenuItem onClick={handleCloseSignout}>
-                          {t('navbar.signOut')}
-                        </MenuItem>
-                      </MenuList>
-                    </ClickAwayListener>
-                  </Paper>
-                </Grow>
-              )}
-            </Popper>
-            <Dialog
-              open={deleteAlertOpen}
-              onClose={handleCloseAlert}
-              aria-labelledby="dialogtitle"
-              aria-describedby="dialogdescription"
-            >
-              <DialogTitle id="dialogtitle">
-                {t('navbar.doYouWantToDeleteYourAnswers')}
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="dialogdescription">
-                  {t('navbar.thisWillDeleteAllAnswers')}
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={() => 1} color="primary">
-                  {t('confirm')}
-                </Button>
-                <Button onClick={handleCloseAlert} color="primary" autoFocus>
-                  {t('abort')}
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </div>
-        </Toolbar>
-      </AppBar>
-    </div>
+                      <MenuItem onClick={handleCloseSignout}>
+                        {t('navbar.signOut')}
+                      </MenuItem>
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper>
+          <Dialog
+            open={deleteAlertOpen}
+            onClose={handleCloseAlert}
+            aria-labelledby="dialogtitle"
+            aria-describedby="dialogdescription"
+          >
+            <DialogTitle id="dialogtitle">
+              {t('navbar.doYouWantToDeleteYourAnswers')}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="dialogdescription">
+                {t('navbar.thisWillDeleteAllAnswers')}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => 1} color="primary">
+                {t('confirm')}
+              </Button>
+              <Button onClick={handleCloseAlert} color="primary" autoFocus>
+                {t('abort')}
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+      </Toolbar>
+    </AppBar>
   )
 }
 

@@ -1,23 +1,18 @@
-import { Button } from '@mui/material'
+import { ListItemButton, ListItemText } from '@mui/material'
 
 import { useTranslation } from 'react-i18next'
 import { SubmenuCategory } from './AdminPanel'
-import React from 'react'
 import { Panel } from '../../types'
+import { MenuItem } from '../MenuItem'
 
 type AdminMenuProps = {
   show: boolean
-  selected: boolean
-  setShowFab: React.Dispatch<React.SetStateAction<boolean>>
   activeSubmenuItem: any
   setActiveSubmenuItem: any
   setActivePanel: any
 }
 const AdminMenu = ({
   show,
-  selected,
-  setShowFab,
-  activeSubmenuItem,
   setActiveSubmenuItem,
   setActivePanel,
 }: AdminMenuProps) => {
@@ -54,37 +49,33 @@ const AdminMenu = ({
     },
   ]
 
-  return (
-    <>
-      <Button
-        onClick={() => {
-          // main pane is same as edit group leader pane atm
-          setShowFab(false)
-          setActiveSubmenuItem(SubmenuCategory.EDIT_GROUP_LEADERS)
-          setActivePanel(Panel.Admin)
+  const content = items
+    .filter((x) => !x.hidden)
+    .map((cat) => (
+      <ListItemButton
+        key={cat.key}
+        onClick={async () => {
+          if (cat.hasInternalRouting) {
+            setActiveSubmenuItem(SubmenuCategory.HIDDEN)
+            await new Promise((resolve) => setTimeout(resolve, 50))
+          }
+          setActiveSubmenuItem(cat.key)
         }}
       >
-        <div>{t('menu.admin').toUpperCase()}</div>
-      </Button>
+        <ListItemText primary={cat.text} />
+      </ListItemButton>
+    ))
 
-      {selected &&
-        items
-          .filter((x) => !x.hidden)
-          .map((cat) => (
-            <Button
-              key={cat.key}
-              onClick={async () => {
-                if (cat.hasInternalRouting) {
-                  setActiveSubmenuItem(SubmenuCategory.HIDDEN)
-                  await new Promise((resolve) => setTimeout(resolve, 50))
-                }
-                setActiveSubmenuItem(cat.key)
-              }}
-            >
-              <span>{cat.text}</span>
-            </Button>
-          ))}
-    </>
+  return (
+    <MenuItem
+      panelType={Panel.Admin}
+      text={t('menu.admin')}
+      setActivePanel={setActivePanel}
+      show
+      selected
+      content={content}
+      alert={0}
+    />
   )
 }
 

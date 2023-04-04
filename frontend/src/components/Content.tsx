@@ -1,4 +1,11 @@
-import { Button, ListItem } from '@mui/material'
+import {
+  Badge,
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemText,
+  Box,
+} from '@mui/material'
 import React, { Fragment, useEffect, useState } from 'react'
 import { CreateQuestionAnswerInput, QuestionType } from '../API'
 import * as customQueries from '../graphql/custom-queries'
@@ -12,7 +19,6 @@ import {
   selectIsSuperAdmin,
   selectUserState,
 } from '../redux/User'
-import { KnowitColors } from '../styles'
 import {
   Alert,
   AlertState,
@@ -47,8 +53,7 @@ import { SuperAdminMenu } from './SuperAdminPanel/SuperAdminMenu'
 import { SuperAdminPanel } from './SuperAdminPanel/SuperAdminPanel'
 import { useTranslation } from 'react-i18next'
 import { TFunction } from 'i18next'
-
-const cardCornerRadius = 40
+import { MenuItem } from './MenuItem'
 
 export enum MenuButton {
   Overview,
@@ -359,133 +364,31 @@ const Content = ({ ...props }: ContentProps) => {
     }
   }
 
-  const getMainMenuAlertElement = (): JSX.Element => {
-    const totalAlerts = alerts?.qidMap.size ?? 0
-    if (totalAlerts > 0)
-      return (
-        <AlertNotification
-          type={AlertType.Multiple}
-          message={t('content.answerOutdatedOrIncomplete')}
-          size={0}
-        />
-      )
-    else return <Fragment />
-  }
-
   ;<AlertNotification
     type={AlertType.Multiple}
     message={t('content.answerOutdatedOrIncomplete')}
     size={0}
   />
 
-  /**
-   *  Setup for the button array structure:
-   *
-   *  text: string - The text on the button
-   *  buttonType: MenuButton - The type of button it is
-   *  subButtons: Array of Objects - Only define if having sub buttons (like categories for answers)
-   *      subButton's Objects: text: string - The tet of the button (index is added in front automaticly)
-   *                           buttonType: MenuButton - The type of button it is, not same as 'parent'
-   *                           activePanel: Panel - What panel is needed to be active for this button to show up
-   *
-   *  NOTE: Active panel should be changed somehow to instead check if parent button is active or not
-   */
   const isSuperAdmin = useAppSelector(selectIsSuperAdmin)
   const isAdmin = useAppSelector(selectIsAdmin)
   const isGroupLeader = useAppSelector(selectIsGroupLeader)
 
-  const buttonSetup = [
-    {
-      text: t('menu.overview').toUpperCase(),
-      buttonType: MenuButton.Overview,
-      show: true,
-    },
-    {
-      text: t('menu.myAnswers').toUpperCase(),
-      buttonType: MenuButton.MyAnswers,
-      subButtons: categories.map((cat) => {
-        return {
-          text: cat,
-          buttonType: MenuButton.Category,
-          activePanel: Panel.MyAnswers,
-        }
-      }),
-      show: true,
-    },
-  ]
-
-  const setupDesktopMenu = (): JSX.Element[] => {
-    const buttons: JSX.Element[] = []
-    buttonSetup
-      .filter((b) => b.show)
-      .forEach((butt) => {
-        buttons.push(
-          <Button
-            key={butt.text}
-            onClick={() => {
-              checkIfCategoryIsSubmitted(butt.buttonType, undefined)
-            }}
-          >
-            <div>
-              {butt.text}
-              {butt.buttonType === MenuButton.MyAnswers
-                ? getMainMenuAlertElement()
-                : ''}
-            </div>
-          </Button>
-        )
-        if (butt.subButtons) {
-          butt.subButtons.forEach((butt, index) => {
-            buttons.push(
-              <Button
-                key={butt.text}
-                onClick={() => {
-                  checkIfCategoryIsSubmitted(butt.buttonType, butt.text)
-                }}
-              >
-                <div>
-                  {index + 1}. {butt.text}
-                  {alerts?.categoryMap.has(butt.text) ? (
-                    <AlertNotification
-                      type={AlertType.Multiple}
-                      message={t(
-                        'content.unansweredOrOutdatedQuestionsInCategory'
-                      )}
-                      size={alerts.categoryMap.get(butt.text)}
-                    />
-                  ) : (
-                    ''
-                  )}
-                </div>
-              </Button>
-            )
-          })
-        }
-      })
-
-    return buttons
-  }
-
-  const setUpMobileMenu = () => {
-    const listItems: JSX.Element[] = []
-
-    buttonSetup.forEach((butt) => {
-      listItems.push(
-        <ListItem
-          key={butt.text}
+  const setupMyAnswers = (): JSX.Element[] => {
+    return categories.map((cat, index) => {
+      return (
+        <ListItemButton
+          key={cat}
           onClick={() => {
-            checkIfCategoryIsSubmitted(butt.buttonType, undefined)
+            checkIfCategoryIsSubmitted(MenuButton.Category, cat)
           }}
         >
-          {butt.text}
-          {butt.buttonType === MenuButton.MyAnswers
-            ? getMainMenuAlertElement()
-            : ''}
-        </ListItem>
+          <Badge badgeContent={alerts?.categoryMap.get(cat)} color="secondary">
+            <ListItemText>{cat}</ListItemText>
+          </Badge>
+        </ListItemButton>
       )
     })
-
-    return listItems
   }
 
   const enableAnswerEditMode = () => {
@@ -550,44 +453,55 @@ const Content = ({ ...props }: ContentProps) => {
   }
 
   return (
-    <div ref={props.mobileNavRef}>
+    <div className="content">
       {props.isMobile ? (
-        <NavBarMobile
-          menuButtons={setUpMobileMenu()}
-          activePanel={activePanel}
-          signout={props.signout}
-        />
+        ''
       ) : (
-        <div>
-          {setupDesktopMenu()}
-          <GroupLeaderMenu
-            members={groupMembers}
-            show={isGroupLeader}
-            selected={activePanel === Panel.GroupLeader}
-            setActivePanel={setActivePanel}
-            setActiveSubmenuItem={setActiveSubmenuItem}
-            activeSubmenuItem={activeSubmenuItem}
-            setShowFab={props.setShowFab}
-          />
-          <AdminMenu
-            show={isAdmin}
-            selected={activePanel === Panel.Admin}
-            setShowFab={props.setShowFab}
-            setActivePanel={setActivePanel}
-            setActiveSubmenuItem={setActiveSubmenuItem}
-            activeSubmenuItem={activeSubmenuItem}
-          />
-          <SuperAdminMenu
-            show={isSuperAdmin}
-            selected={activePanel === Panel.SuperAdmin}
-            setShowFab={props.setShowFab}
-            setActivePanel={setActivePanel}
-            setActiveSubmenuItem={setActiveSubmenuItem}
-            activeSubmenuItem={activeSubmenuItem}
-          />
-        </div>
+        <Drawer className="menu" variant="permanent" anchor="left">
+          <List>
+            <ListItemButton onClick={() => setActivePanel(Panel.Overview)}>
+              <ListItemText>{t('menu.overview')}</ListItemText>
+            </ListItemButton>
+
+            <MenuItem
+              selected={activePanel === Panel.MyAnswers}
+              show={true}
+              setActivePanel={setActivePanel}
+              panelType={Panel.MyAnswers}
+              content={setupMyAnswers()}
+              text={t('menu.myAnswers')}
+              alert={alerts?.qidMap.size ?? 0}
+            />
+
+            <GroupLeaderMenu
+              members={groupMembers}
+              show={true}
+              selected={activePanel === Panel.GroupLeader}
+              setActivePanel={setActivePanel}
+              setActiveSubmenuItem={setActiveSubmenuItem}
+              activeSubmenuItem={activeSubmenuItem}
+              setShowFab={props.setShowFab}
+            />
+
+            <AdminMenu
+              show={isAdmin}
+              setActivePanel={setActivePanel}
+              setActiveSubmenuItem={setActiveSubmenuItem}
+              activeSubmenuItem={activeSubmenuItem}
+            />
+
+            <SuperAdminMenu
+              show={isSuperAdmin}
+              selected={activePanel === Panel.SuperAdmin}
+              setShowFab={props.setShowFab}
+              setActivePanel={setActivePanel}
+              setActiveSubmenuItem={setActiveSubmenuItem}
+              activeSubmenuItem={activeSubmenuItem}
+            />
+          </List>
+        </Drawer>
       )}
-      <div>{setupPanel()}</div>
+      <div className="panel">{setupPanel()}</div>
       <AlertDialog
         setAlertDialogOpen={setAlertDialogOpen}
         alertDialogOpen={alertDialogOpen}

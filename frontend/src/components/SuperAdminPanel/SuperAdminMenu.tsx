@@ -1,9 +1,9 @@
-import { Button } from '@mui/material'
-
+import { ListItemButton, ListItemText } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { SubmenuCategory } from './SuperAdminPanel'
 import React from 'react'
 import { Panel } from '../../types'
+import { MenuItem } from '../MenuItem'
 
 type SuperAdminMenuProps = {
   show: boolean
@@ -45,32 +45,29 @@ const SuperAdminMenu = ({
     },
   ]
 
-  return (
-    <>
-      <Button
-        onClick={() => {
-          setShowFab(false)
-          setActiveSubmenuItem(SubmenuCategory.EDIT_ORGANIZATIONS)
-          setActivePanel(Panel.SuperAdmin)
+  const content = items
+    .filter((x) => !x.hidden)
+    .map((cat) => (
+      <ListItemButton
+        key={cat.key}
+        onClick={async () => {
+          setActiveSubmenuItem(cat.key)
         }}
       >
-        <div>{t('menu.superAdmin').toUpperCase()}</div>
-      </Button>
+        <ListItemText>{cat.text}</ListItemText>
+      </ListItemButton>
+    ))
 
-      {selected &&
-        items
-          .filter((x) => !x.hidden)
-          .map((cat) => (
-            <Button
-              key={cat.key}
-              onClick={async () => {
-                setActiveSubmenuItem(cat.key)
-              }}
-            >
-              <span>{cat.text}</span>
-            </Button>
-          ))}
-    </>
+  return (
+    <MenuItem
+      panelType={Panel.SuperAdmin}
+      text={'menu.superAdmin'}
+      setActivePanel={setActivePanel}
+      show
+      selected
+      content={content}
+      alert={0}
+    />
   )
 }
 

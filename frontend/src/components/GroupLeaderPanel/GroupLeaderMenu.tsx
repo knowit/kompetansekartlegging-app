@@ -1,20 +1,17 @@
 import React from 'react'
-
-import { Button } from '@mui/material'
-
+import { Button, ListItemButton, ListItemText } from '@mui/material'
 import { getAttribute } from '../AdminPanel/helpers'
 import { Panel } from '../../types'
 import { useTranslation } from 'react-i18next'
+import { MenuItem } from '../MenuItem'
 
 const GroupLeaderMenu = ({
   members,
   show,
   selected,
   setActivePanel,
-  activeSubmenuItem,
   setActiveSubmenuItem,
   setShowFab,
-  style,
 }: any) => {
   const { t } = useTranslation()
   if (!show) return null
@@ -24,30 +21,29 @@ const GroupLeaderMenu = ({
     username: m.Username,
   }))
 
+  const content = items.map((member: any) => (
+    <Button key={member.name} onClick={() => setActiveSubmenuItem('MAIN')}>
+      <span>{member.name}</span>
+    </Button>
+  ))
+
   return (
     <>
-      <Button
-        className={clsx(style.MenuButton, {
-          [style.menuButtonActive]: selected,
-        })}
-        onClick={() => {
-          setShowFab(true)
-          setActiveSubmenuItem('MAIN')
-          setActivePanel(Panel.GroupLeader)
-        }}
-      >
-        <div>{t('menu.myGroup').toUpperCase()}</div>
-      </Button>
-
-      {selected &&
-        items.map((member: any) => (
-          <Button
-            key={member.name}
-            onClick={() => setActiveSubmenuItem(member.username)}
-          >
-            <span>{member.name}</span>
-          </Button>
-        ))}
+      {members.length === 0 ? (
+        <ListItemButton onClick={() => setActivePanel(Panel.GroupLeader)}>
+          <ListItemText>{t('menu.myGroup')}</ListItemText>
+        </ListItemButton>
+      ) : (
+        <MenuItem
+          panelType={Panel.GroupLeader}
+          text={t('menu.myGroup')}
+          setActivePanel={setActivePanel}
+          show
+          selected
+          content={content}
+          alert={0}
+        />
+      )}
     </>
   )
 }

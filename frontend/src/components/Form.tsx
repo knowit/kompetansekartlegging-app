@@ -17,6 +17,7 @@ type QuestionType = {
 }
 
 export const Form = ({ ...props }: FormProps) => {
+  console.log(props.activeCategory)
   const { t } = useTranslation()
   const sliderValues = useRef<Map<string, SliderValues>>(new Map()) //String is questionid, values are knowledge and motivation
 

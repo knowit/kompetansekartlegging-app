@@ -4,7 +4,7 @@ import {
   SliderKnowledgeMotivationValues,
   SliderProps,
 } from '../types'
-import { Slider } from '@mui/material'
+import Slider from './Slider'
 import * as Icon from '../icons/iconController'
 import { AlertNotification } from './AlertNotification'
 import { useTranslation } from 'react-i18next'
@@ -83,20 +83,30 @@ const KnowledgeMotivationSliders = ({
   return (
     <div>
       <div>
-        <div>{t('competence').toUpperCase()}</div>
+        <div>{t('competence')}</div>
         <div>
           <div>{Icon.GetIcons(true)}</div>
           <div>
-            <Slider />
+            <Slider
+              value={sliderValues?.knowledge || -2}
+              motivation={false}
+              sliderChanged={sliderChanged}
+              isMobile={isMobile}
+            />
           </div>
         </div>
       </div>
       <div>
-        <div>{t('motivation').toUpperCase()}</div>
+        <div>{t('motivation')}</div>
         <div>
           <div>{Icon.GetIcons(false)}</div>
           <div>
-            <Slider />
+            <Slider
+              value={sliderValues?.motivation || -2}
+              motivation={true}
+              sliderChanged={sliderChanged}
+              isMobile={isMobile}
+            />
           </div>
         </div>
       </div>
