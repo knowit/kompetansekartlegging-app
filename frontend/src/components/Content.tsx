@@ -469,6 +469,7 @@ const Content = ({ ...props }: ContentProps) => {
             content={setupMyAnswers()}
             text={t('menu.myAnswers')}
             alert={alerts?.qidMap.size ?? 0}
+            setActiveSubmenuItem={setActiveSubmenuItem}
           />
 
           <GroupLeaderMenu

@@ -70,6 +70,7 @@ const AdminMenu = ({
   return (
     <MenuItem
       panelType={Panel.Admin}
+      setActiveSubmenuItem={setActiveSubmenuItem}
       text={t('menu.admin')}
       setActivePanel={setActivePanel}
       show

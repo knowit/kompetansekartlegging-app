@@ -64,6 +64,7 @@ const SuperAdminMenu = ({
       panelType={Panel.SuperAdmin}
       text={'menu.superAdmin'}
       setActivePanel={setActivePanel}
+      setActiveSubmenuItem={setActiveSubmenuItem}
       show
       selected
       content={content}

@@ -18,6 +18,7 @@ type MenuItemProps = {
   content: any
   text: string
   alert: any
+  setActiveSubmenuItem: any
 }
 const MenuItem = ({
   show,
@@ -26,6 +27,7 @@ const MenuItem = ({
   content,
   text,
   alert,
+  setActiveSubmenuItem,
 }: MenuItemProps) => {
   const { t } = useTranslation()
   if (!show) return null
@@ -38,6 +40,7 @@ const MenuItem = ({
         onClick={() => {
           setActivePanel(panelType)
           setOpen(!open)
+          setActiveSubmenuItem('MAIN')
         }}
       >
         <Badge badgeContent={alert} color="secondary">

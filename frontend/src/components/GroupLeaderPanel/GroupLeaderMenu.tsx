@@ -22,34 +22,29 @@ const GroupLeaderMenu = ({
   }))
 
   const content = items.map((member: any) => (
-    <Button
+    <ListItemButton
       key={member.name}
       onClick={() => {
         setActiveSubmenuItem('MAIN')
         setActivePanel(Panel.GroupLeader)
       }}
     >
-      <span>{member.name}</span>
-    </Button>
+      <ListItemText>{member.name}</ListItemText>
+    </ListItemButton>
   ))
 
   return (
     <>
-      {members.length === 0 ? (
-        <ListItemButton onClick={() => setActivePanel(Panel.GroupLeader)}>
-          <ListItemText>{t('menu.myGroup')}</ListItemText>
-        </ListItemButton>
-      ) : (
-        <MenuItem
-          panelType={Panel.GroupLeader}
-          text={t('menu.myGroup')}
-          setActivePanel={setActivePanel}
-          show
-          selected
-          content={content}
-          alert={0}
-        />
-      )}
+      <MenuItem
+        panelType={Panel.GroupLeader}
+        text={t('menu.myGroup')}
+        setActivePanel={setActivePanel}
+        show
+        selected
+        content={content}
+        alert={0}
+        setActiveSubmenuItem={setActiveSubmenuItem}
+      />
     </>
   )
 }
