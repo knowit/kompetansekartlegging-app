@@ -1,13 +1,13 @@
+import React from 'react'
+import clsx from 'clsx'
 import { QuestionType } from '../API'
-import {
-  QuestionProps,
-  SliderKnowledgeMotivationValues,
-  SliderProps,
-} from '../types'
+import { QuestionProps, SliderKnowledgeMotivationValues } from '../types'
 import Slider from './Slider'
+import { KnowitColors } from '../styles'
 import * as Icon from '../icons/iconController'
 import { AlertNotification } from './AlertNotification'
 import { useTranslation } from 'react-i18next'
+
 const Question = ({ ...props }: QuestionProps) => {
   const question = props.questionAnswer.question
   const questionId = question.id
@@ -74,61 +74,73 @@ const Question = ({ ...props }: QuestionProps) => {
 }
 
 const KnowledgeMotivationSliders = ({
+  style,
+  sliderValues,
   sliderChanged,
-  value: sliderValues,
   isMobile,
-}: SliderProps) => {
+}: any) => {
   const { t } = useTranslation()
 
   return (
-    <div>
-      <div>
-        <div>{t('competence')}</div>
-        <div>
-          <div>{Icon.GetIcons(true)}</div>
-          <div>
-            <Slider
-              value={sliderValues?.knowledge || -2}
-              motivation={false}
-              sliderChanged={sliderChanged}
-              isMobile={isMobile}
-            />
-          </div>
+    <div className={style.answerArea}>
+      <div className={clsx(style.largeBold)}>
+        {t('competence').toUpperCase()}
+      </div>
+      <div className={style.sliderArea}>
+        <div className={style.iconArea}>{Icon.GetIcons(true, style.icon)}</div>
+        <div className={style.slider}>
+          <Slider
+            value={sliderValues?.knowledge || -2}
+            motivation={false}
+            sliderChanged={sliderChanged}
+            isMobile={isMobile}
+          />
         </div>
       </div>
-      <div>
-        <div>{t('motivation')}</div>
-        <div>
-          <div>{Icon.GetIcons(false)}</div>
-          <div>
-            <Slider
-              value={sliderValues?.motivation || -2}
-              motivation={true}
-              sliderChanged={sliderChanged}
-              isMobile={isMobile}
-            />
-          </div>
+      <div className={clsx(style.largeBold)}>
+        {t('motivation').toUpperCase()}
+      </div>
+      <div className={style.sliderArea}>
+        <div className={style.iconArea}>{Icon.GetIcons(false, style.icon)}</div>
+        <div className={style.slider}>
+          <Slider
+            value={sliderValues?.motivation || -2}
+            motivation={true}
+            sliderChanged={sliderChanged}
+            isMobile={isMobile}
+          />
         </div>
       </div>
     </div>
   )
 }
 
-const CustomLabelSlider = ({ question }: any) => {
+const CustomLabelSlider = ({
+  style,
+  sliderValues,
+  sliderChanged,
+  question,
+  isMobile,
+}: any) => {
   const { t } = useTranslation()
   const labels = [question.scaleStart, question.scaleEnd].filter((l) => !!l)
   return (
     <div>
-      <div>
-        <div> </div>
-        <div>
-          <div>
+      <div className={style.answerArea}>
+        <div className={clsx(style.largeBold)}>{t('answer').toUpperCase()}</div>
+        <div className={style.sliderArea}>
+          <div className={style.iconArea}>
             {labels?.map((l: string) => (
               <span key={l}>{l}</span>
             ))}
           </div>
-          <div>
-            <Slider />
+          <div className={style.slider}>
+            <Slider
+              value={sliderValues.customScaleValue || -2}
+              motivation={false}
+              sliderChanged={sliderChanged}
+              isMobile={isMobile}
+            />
           </div>
         </div>
       </div>
