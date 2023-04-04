@@ -4,7 +4,7 @@ import * as helper from '../helperFunctions'
 import { Slider as CoreSlider } from '@mui/material'
 
 const marks = new Array(51).fill(undefined).map((_v, i) => {
-  return { value: i / 10 || 0, label: '<div>hi</div>' }
+  return { value: i / 10 || 0 }
 })
 const Slider = ({ ...props }: SliderProps) => {
   const [sliderValue, setSliderValue] = useState<number>(-1)
