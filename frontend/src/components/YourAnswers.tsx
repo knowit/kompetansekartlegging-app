@@ -6,9 +6,16 @@ import { BlockInfo } from './BlockInfo'
 import { Form } from './Form'
 import ProgressBar from './ProgressBar'
 import { useTranslation } from 'react-i18next'
+import styled from '@emotion/styled'
 
-const cardCornerRadius = 40
-const zIndex = 20
+interface HideableProps {
+  hidden: boolean
+}
+
+const Hideable = styled.div<HideableProps>`
+  display: ${(props) => (props.hidden ? 'block' : 'none')};
+`
+const StyledForm = styled.div()
 
 export const YourAnswers = ({ ...props }: YourAnswerProps) => {
   const { t } = useTranslation()
@@ -27,39 +34,30 @@ export const YourAnswers = ({ ...props }: YourAnswerProps) => {
   }
 
   return (
-    <div>
-      <div>
-        <div>
-          <div>{props.activeCategory}</div>
-          <div>
-            <BlockInfo
-              questions={props.questionAnswers.get(props.activeCategory)}
-            />
-            <Button onClick={() => props.enableAnswerEditMode()}>
-              {t('myAnswers.fillOut')}
-            </Button>
-          </div>
-        </div>
+    <>
+      <Hideable hidden={!props.answerEditMode}>
+        <h2>{props.activeCategory}</h2>
+        <BlockInfo
+          questions={props.questionAnswers.get(props.activeCategory)}
+        />
+        <Button onClick={() => props.enableAnswerEditMode()}>
+          {t('myAnswers.fillOut')}
+        </Button>
         <div>{getCategoryDescription()}</div>
+        <AnswerDiagram
+          questionAnswers={props.questionAnswers}
+          activeCategory={props.activeCategory}
+          isMobile={false}
+        />
+      </Hideable>
 
-        <div>
-          <AnswerDiagram
-            questionAnswers={props.questionAnswers}
-            activeCategory={props.activeCategory}
-            isMobile={false}
-          />
-        </div>
-      </div>
-      <div>
-        <div>
+      <Hideable hidden={props.answerEditMode}>
+        <StyledForm inEditMode={props.answerEditMode}>
           <ProgressBar
             alerts={props.alerts}
             totalQuestions={props.formDefinition?.questions.items.length ?? 0}
           />
-          <h2>{props.activeCategory}</h2>
-        </div>
 
-        <div>
           <div>{getCategoryDescription()}</div>
 
           <Form
@@ -68,9 +66,9 @@ export const YourAnswers = ({ ...props }: YourAnswerProps) => {
             isMobile={false}
             alerts={props.alerts}
           />
-        </div>
-      </div>
-    </div>
+        </StyledForm>
+      </Hideable>
+    </>
   )
 }
 

@@ -459,7 +459,7 @@ const Content = ({ ...props }: ContentProps) => {
             items={myAnswers}
             text={'menu.myAnswers'}
             alert={alerts?.qidMap.size ?? 0}
-            setActiveSubmenuItem={setActiveSubmenuItem}
+            setActiveSubmenuItem={setActiveCategory}
             activeSubmenuItem={activeCategory}
           />
 
