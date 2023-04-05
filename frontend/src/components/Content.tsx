@@ -448,7 +448,10 @@ const Content = ({ ...props }: ContentProps) => {
     <div className="content">
       <Drawer className="menu" variant="permanent" anchor="left">
         <List>
-          <ListItemButton onClick={() => setActivePanel(Panel.Overview)}>
+          <ListItemButton
+            selected={activePanel === Panel.Overview}
+            onClick={() => setActivePanel(Panel.Overview)}
+          >
             <ListItemText>{t('menu.overview')}</ListItemText>
           </ListItemButton>
           <DropdownMenuItem
