@@ -47,7 +47,7 @@ import {
   setFirstAnswers,
 } from './answersApi'
 import { Overview } from './cards/Overview'
-import { YourAnswers } from './cards/YourAnswers'
+import { YourAnswers } from './YourAnswers'
 import { GroupLeaderPanel } from './GroupLeaderPanel/'
 import NavBarMobile from './NavBarMobile'
 import { superAdminItems } from './SuperAdminPanel/SuperAdminMenu'

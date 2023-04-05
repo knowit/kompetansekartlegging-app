@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 const cardCornerRadius = 40
 const zIndex = 20
 
-export const YourAnswersDesktop = ({ ...props }: YourAnswerProps) => {
+export const YourAnswers = ({ ...props }: YourAnswerProps) => {
   const { t } = useTranslation()
 
   const scrollRef = React.useRef<HTMLDivElement>(null)
@@ -73,3 +73,5 @@ export const YourAnswersDesktop = ({ ...props }: YourAnswerProps) => {
     </div>
   )
 }
+
+export default YourAnswers
