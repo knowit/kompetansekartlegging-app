@@ -54,7 +54,7 @@ import { superAdminItems } from './SuperAdminPanel/SuperAdminMenu'
 import { SuperAdminPanel } from './SuperAdminPanel/SuperAdminPanel'
 import { useTranslation } from 'react-i18next'
 import { TFunction } from 'i18next'
-import { MenuItem } from './MenuItem'
+import { DropdownMenuItem } from './DropdownMenuItem'
 import getGroupMenuitems from './GroupLeaderPanel/GroupLeaderMenu'
 
 export enum MenuButton {
@@ -451,7 +451,7 @@ const Content = ({ ...props }: ContentProps) => {
           <ListItemButton onClick={() => setActivePanel(Panel.Overview)}>
             <ListItemText>{t('menu.overview')}</ListItemText>
           </ListItemButton>
-          <MenuItem
+          <DropdownMenuItem
             panelId={Panel.MyAnswers}
             show={true}
             setActivePanel={setActivePanel}
@@ -464,7 +464,7 @@ const Content = ({ ...props }: ContentProps) => {
             setAnswerMode={setAnswerEditMode}
           />
 
-          <MenuItem
+          <DropdownMenuItem
             panelId={Panel.GroupLeader}
             show={isAdmin} //TODO: remove
             setActivePanel={setActivePanel}
@@ -477,7 +477,7 @@ const Content = ({ ...props }: ContentProps) => {
             setAnswerMode={setAnswerEditMode}
           />
 
-          <MenuItem
+          <DropdownMenuItem
             panelId={Panel.Admin}
             show={isAdmin}
             setActivePanel={setActivePanel}
@@ -490,7 +490,7 @@ const Content = ({ ...props }: ContentProps) => {
             setAnswerMode={setAnswerEditMode}
           />
 
-          <MenuItem
+          <DropdownMenuItem
             panelId={Panel.SuperAdmin}
             show={isAdmin} //TODO: remove
             setActivePanel={setActivePanel}

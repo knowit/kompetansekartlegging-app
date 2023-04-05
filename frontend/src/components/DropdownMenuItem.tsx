@@ -23,7 +23,7 @@ type MenuItemProps = {
   activeSubmenuItem: string
   setAnswerMode: any
 }
-const MenuItem = ({
+const DropdownMenuItem = ({
   show,
   panelId,
   setActivePanel,
@@ -60,7 +60,6 @@ const MenuItem = ({
   return (
     <Fragment>
       <ListItemButton
-        selected={panelId === curActivePanel}
         onClick={() => {
           if (panelId != Panel.MyAnswers) {
             setAnswerMode(false)
@@ -83,4 +82,4 @@ const MenuItem = ({
   )
 }
 
-export { MenuItem }
+export { DropdownMenuItem }
