@@ -356,10 +356,6 @@ export type YourAnswerProps = {
   answerEditMode: boolean
   isMobile: boolean
   alerts: AlertState | undefined
-  checkIfCategoryIsSubmitted: (
-    buttonType: MenuButton,
-    category?: string | undefined
-  ) => void
   collapseMobileCategories: boolean
   categoryNavRef: React.MutableRefObject<HTMLInputElement | null>
   scrollToTop: () => void
@@ -414,12 +410,7 @@ export type NavBarPropsMobile = {
 export type AlertDialogProps = {
   setAlertDialogOpen: (alertDialogOpen: boolean) => void
   alertDialogOpen: boolean
-  changeActiveCategory: (newCategoryIndex: string) => void
-  clickedCategory: string
-  setIsCategorySubmitted: (categorySubmitted: boolean) => void
-  resetAnswers: () => void
-  isMobile: boolean
-  leaveFormButtonClicked?: () => void
+  leaveFormButtonClicked: any
 }
 
 export type AnswerHistoryProps = {

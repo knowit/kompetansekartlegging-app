@@ -1,12 +1,5 @@
-import {
-  Badge,
-  Drawer,
-  List,
-  ListItemButton,
-  ListItemText,
-  Box,
-} from '@mui/material'
-import React, { Fragment, useEffect, useState } from 'react'
+import { Drawer, List, ListItemButton, ListItemText } from '@mui/material'
+import React, { useEffect, useState } from 'react'
 import { CreateQuestionAnswerInput, QuestionType } from '../API'
 import * as customQueries from '../graphql/custom-queries'
 import * as helper from '../helperFunctions'
@@ -56,6 +49,7 @@ import { useTranslation } from 'react-i18next'
 import { TFunction } from 'i18next'
 import { DropdownMenuItem } from './DropdownMenuItem'
 import getGroupMenuitems from './GroupLeaderPanel/GroupLeaderMenu'
+import { getCategory } from '../graphql/queries'
 
 export enum MenuButton {
   Overview,
@@ -122,24 +116,27 @@ const Content = ({ ...props }: ContentProps) => {
   )
   const [, setUserAnswers] = useState<UserAnswer[]>([]) //Used only for getting data on load
   const [userAnswersLoaded, setUserAnswersLoaded] = useState(false)
-  // const [submitFeedback, setSubmitFeedback] = useState<string>("");
   const [categories, setCategories] = useState<string[]>([])
   const [questionAnswers, setQuestionAnswers] = useState<
     Map<string, QuestionAnswer[]>
   >(new Map())
-  // const [answersBeforeSubmitted, setAnswersBeforeSubmitted] = useState<AnswerData[]>([]);
   const [answersBeforeSubmitted, setAnswersBeforeSubmitted] = useState<
     Map<string, QuestionAnswer[]>
   >(new Map())
-  // const [historyViewOpen, setHistoryViewOpen] = useState<boolean>(false);
   const [answerLog, setAnswerLog] = useState<UserFormWithAnswers[]>([])
   const [alertDialogOpen, setAlertDialogOpen] = useState<boolean>(false)
   const [isCategorySubmitted, setIsCategorySubmitted] = useState<boolean>(true)
   const [activePanel, setActivePanel] = useState<Panel>(Panel.Overview)
-  const [activeCategory, setActiveCategory] = useState<string>('dkjfgdrjkg')
+  const [activeCategory, setActiveCategory] = useState<string>('MAIN')
   const [answerEditMode, setAnswerEditMode] = useState<boolean>(false)
   const [alerts, setAlerts] = useState<AlertState>()
   const [activeSubmenuItem, setActiveSubmenuItem] = useState<string>('')
+
+  const [lastClickedPanel, setlastClickedPanel] = useState<Panel>(
+    Panel.Overview
+  )
+  const [lastClickedCategory, setLastClickedCategory] = useState<string>('MAIN')
+  const [lastClickedSubmenu, setLastClickedSubmenu] = useState<string>('')
 
   const updateAnswer = (
     category: string,
@@ -213,7 +210,6 @@ const Content = ({ ...props }: ContentProps) => {
         'QuestionAnswer'
       )
     ).map((result) => result.data?.batchCreateQuestionAnswer)
-    // console.log("Result: ", result);
     if (!result || result.length === 0) {
       return
     }
@@ -222,11 +218,6 @@ const Content = ({ ...props }: ContentProps) => {
   const changeActiveCategory = (newActiveCategory: string) => {
     setActiveCategory(newActiveCategory)
     setAnswerEditMode(false)
-  }
-
-  const resetAnswers = () => {
-    // setAnswers(JSON.parse(JSON.stringify(answersBeforeSubmitted))) // json.parse to deep copy
-    setQuestionAnswers(new Map(answersBeforeSubmitted))
   }
 
   const submitAndProceed = () => {
@@ -240,7 +231,6 @@ const Content = ({ ...props }: ContentProps) => {
 
   useEffect(() => {
     setActiveCategory(categories[0])
-    // setAnswerEditMode(false);
   }, [categories])
 
   useEffect(() => {
@@ -306,65 +296,6 @@ const Content = ({ ...props }: ContentProps) => {
       }
     }
   }, [isCategorySubmitted])
-
-  const [lastButtonClicked, setLastButtonClicked] = useState<{
-    buttonType: MenuButton
-    category?: string
-  }>({
-    //Custom type might better be moved to type variable
-    buttonType: MenuButton.Overview,
-    category: undefined,
-  })
-
-  //TODO: Remove this function when refactor is done. Needed to not change mobile too much for now
-  const dummyFunctionForRefactor = () => {
-    return
-  }
-
-  const checkIfCategoryIsSubmitted = (
-    buttonType: MenuButton,
-    category?: string
-  ) => {
-    if (isCategorySubmitted) {
-      menuButtonClicked(buttonType, category)
-    } else {
-      setLastButtonClicked({
-        buttonType: buttonType,
-        category: category,
-      })
-      setAlertDialogOpen(true)
-    }
-  }
-
-  const leaveFormButtonClicked = () => {
-    setAnswerEditMode(false)
-    setAlertDialogOpen(false)
-    setIsCategorySubmitted(true)
-    resetAnswers()
-    menuButtonClicked(lastButtonClicked.buttonType, lastButtonClicked.category)
-  }
-
-  const menuButtonClicked = (buttonType: MenuButton, category?: string) => {
-    props.setShowFab(true)
-    switch (buttonType) {
-      case MenuButton.Overview:
-        setActivePanel(Panel.Overview)
-        break
-      case MenuButton.MyAnswers:
-        setActivePanel(Panel.MyAnswers)
-        if (category) setActiveCategory(category)
-        break
-      case MenuButton.Category:
-        setActiveCategory(category || '')
-        setAnswerEditMode(false)
-        break
-      case MenuButton.Other:
-        setActivePanel(Panel.Other)
-        console.log('Other button pressed', category)
-        break
-    }
-  }
-
   ;<AlertNotification
     type={AlertType.Multiple}
     message={t('content.answerOutdatedOrIncomplete')}
@@ -386,6 +317,39 @@ const Content = ({ ...props }: ContentProps) => {
   const enableAnswerEditMode = () => {
     setAnswersBeforeSubmitted(new Map(questionAnswers))
     setAnswerEditMode(true)
+  }
+
+  const handleMenuClick = (panelSource: Panel, itemSource: string) => {
+    const isInAnswer = panelSource === Panel.MyAnswers
+    if (answerEditMode) {
+      setlastClickedPanel(panelSource)
+      if (isInAnswer) {
+        setLastClickedCategory(itemSource)
+      } else {
+        setLastClickedSubmenu(itemSource)
+      }
+      setAlertDialogOpen(true)
+    } else {
+      setActivePanel(panelSource)
+      if (isInAnswer) {
+        setActiveCategory(itemSource)
+        setActiveSubmenuItem('NONE')
+      } else {
+        setActiveCategory('NONE')
+        setActiveSubmenuItem(itemSource)
+      }
+    }
+  }
+
+  const leaveFormButtonClicked = () => {
+    setAnswerEditMode(false)
+    setActivePanel(lastClickedPanel)
+    if (lastClickedPanel === Panel.MyAnswers) {
+      setActiveCategory(lastClickedCategory)
+    } else {
+      setActiveSubmenuItem(lastClickedSubmenu)
+    }
+    setAlertDialogOpen(false)
   }
 
   const [groupMembers, setGroupMembers] = useState<any>([])
@@ -418,7 +382,6 @@ const Content = ({ ...props }: ContentProps) => {
             answerEditMode={answerEditMode}
             isMobile={props.isMobile}
             alerts={alerts}
-            checkIfCategoryIsSubmitted={checkIfCategoryIsSubmitted}
             collapseMobileCategories={props.collapseMobileCategories}
             categoryNavRef={props.categoryNavRef}
             scrollToTop={props.scrollToTop}
@@ -438,8 +401,6 @@ const Content = ({ ...props }: ContentProps) => {
         return <AdminPanel activeSubmenuItem={activeSubmenuItem} />
       case Panel.SuperAdmin:
         return <SuperAdminPanel activeSubmenuItem={activeSubmenuItem} />
-      case Panel.Other:
-        return <div>Hello! This is the "Other" panel :D</div>
     }
     return <div>Not implemented</div>
   }
@@ -450,74 +411,58 @@ const Content = ({ ...props }: ContentProps) => {
         <List>
           <ListItemButton
             selected={activePanel === Panel.Overview}
-            onClick={() => setActivePanel(Panel.Overview)}
+            onClick={() => handleMenuClick(Panel.Overview, 'MAIN')}
           >
             <ListItemText>{t('menu.overview')}</ListItemText>
           </ListItemButton>
           <DropdownMenuItem
             panelId={Panel.MyAnswers}
             show={true}
-            setActivePanel={setActivePanel}
-            curActivePanel={activePanel}
             items={myAnswers}
             text={'menu.myAnswers'}
-            alert={alerts?.qidMap.size ?? 0}
-            setActiveSubmenuItem={setActiveCategory}
+            alert={alerts?.qidMap.size !== 0 ? '!' : 0}
             activeSubmenuItem={activeCategory}
-            setAnswerMode={setAnswerEditMode}
+            handleMenuClick={handleMenuClick}
           />
 
           <DropdownMenuItem
             panelId={Panel.GroupLeader}
             show={isAdmin} //TODO: remove
-            setActivePanel={setActivePanel}
-            curActivePanel={activePanel}
             items={getGroupMenuitems(groupMembers)}
             text={'menu.myGroup'}
             alert={0}
-            setActiveSubmenuItem={setActiveSubmenuItem}
             activeSubmenuItem={activeSubmenuItem}
-            setAnswerMode={setAnswerEditMode}
+            handleMenuClick={handleMenuClick}
           />
 
           <DropdownMenuItem
             panelId={Panel.Admin}
             show={isAdmin}
-            setActivePanel={setActivePanel}
-            curActivePanel={activePanel}
             items={adminItems}
             text={'menu.admin'}
             alert={0}
-            setActiveSubmenuItem={setActiveSubmenuItem}
             activeSubmenuItem={activeSubmenuItem}
-            setAnswerMode={setAnswerEditMode}
+            handleMenuClick={handleMenuClick}
           />
 
           <DropdownMenuItem
             panelId={Panel.SuperAdmin}
             show={isAdmin} //TODO: remove
-            setActivePanel={setActivePanel}
-            curActivePanel={activePanel}
             items={superAdminItems}
             text={'menu.superAdmin'}
             alert={0}
-            setActiveSubmenuItem={setActiveSubmenuItem}
             activeSubmenuItem={activeSubmenuItem}
-            setAnswerMode={setAnswerEditMode}
+            handleMenuClick={handleMenuClick}
           />
         </List>
       </Drawer>
 
       <div className="panel">{setupPanel()}</div>
+
       <AlertDialog
         setAlertDialogOpen={setAlertDialogOpen}
         alertDialogOpen={alertDialogOpen}
-        changeActiveCategory={dummyFunctionForRefactor} //setActiveCategory}
-        clickedCategory={activeCategory}
-        setIsCategorySubmitted={setIsCategorySubmitted}
-        resetAnswers={resetAnswers}
-        leaveFormButtonClicked={leaveFormButtonClicked} //Temp added here, replace changeActiveCategory
-        isMobile={props.isMobile}
+        leaveFormButtonClicked={leaveFormButtonClicked}
       />
       <AnswerHistory
         history={answerLog}

@@ -14,26 +14,20 @@ import { Panel } from '../types'
 type MenuItemProps = {
   panelId: Panel
   show: boolean
-  setActivePanel: any
-  curActivePanel: Panel
   items: any
   text: string
   alert: any
-  setActiveSubmenuItem: any
   activeSubmenuItem: string
-  setAnswerMode: any
+  handleMenuClick: any
 }
 const DropdownMenuItem = ({
   show,
   panelId,
-  setActivePanel,
-  curActivePanel,
   items,
   text,
   alert,
-  setActiveSubmenuItem,
   activeSubmenuItem,
-  setAnswerMode,
+  handleMenuClick,
 }: MenuItemProps) => {
   if (!show) return null
 
@@ -45,10 +39,7 @@ const DropdownMenuItem = ({
     items.map((item: any) => (
       <ListItemButton
         key={item.key}
-        onClick={() => {
-          setActiveSubmenuItem(item.key)
-          setActivePanel(panelId)
-        }}
+        onClick={() => handleMenuClick(panelId, item.key)}
         selected={item.key === activeSubmenuItem}
       >
         <Badge badgeContent={item.alert} color="secondary">
@@ -61,12 +52,8 @@ const DropdownMenuItem = ({
     <Fragment>
       <ListItemButton
         onClick={() => {
-          if (panelId != Panel.MyAnswers) {
-            setAnswerMode(false)
-          }
-          setActivePanel(panelId)
+          handleMenuClick(panelId, 'MAIN')
           setDrawerOpen(!drawerOpen)
-          setActiveSubmenuItem('MAIN')
         }}
       >
         <Badge badgeContent={alert} color="secondary">
