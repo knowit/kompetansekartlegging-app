@@ -31,7 +31,8 @@ import {
   UserAnswer,
   UserFormWithAnswers,
 } from '../types'
-import { AdminMenu, AdminPanel } from './AdminPanel/'
+import { AdminPanel } from './AdminPanel/'
+import adminItems from './AdminPanel/AdminMenu'
 import { AlertDialog } from './AlertDialog'
 import {
   AlertNotification,
@@ -47,13 +48,14 @@ import {
 } from './answersApi'
 import { Overview } from './cards/Overview'
 import { YourAnswers } from './cards/YourAnswers'
-import { GroupLeaderMenu, GroupLeaderPanel } from './GroupLeaderPanel/'
+import { GroupLeaderPanel } from './GroupLeaderPanel/'
 import NavBarMobile from './NavBarMobile'
-import { SuperAdminMenu } from './SuperAdminPanel/SuperAdminMenu'
+import { superAdminItems } from './SuperAdminPanel/SuperAdminMenu'
 import { SuperAdminPanel } from './SuperAdminPanel/SuperAdminPanel'
 import { useTranslation } from 'react-i18next'
 import { TFunction } from 'i18next'
 import { MenuItem } from './MenuItem'
+import getGroupMenuitems from './GroupLeaderPanel/GroupLeaderMenu'
 
 export enum MenuButton {
   Overview,
@@ -246,7 +248,6 @@ const Content = ({ ...props }: ContentProps) => {
   }, [questionAnswers, t])
 
   useEffect(() => {
-    // console.log('fetchLastFormDefitniio');
     fetchLastFormDefinition(
       setFormDefinition,
       (formDef) => createQuestionAnswers(formDef, setCategories),
@@ -374,23 +375,13 @@ const Content = ({ ...props }: ContentProps) => {
   const isAdmin = useAppSelector(selectIsAdmin)
   const isGroupLeader = useAppSelector(selectIsGroupLeader)
 
-  const setupMyAnswers = (): JSX.Element[] => {
-    return categories.map((cat, index) => {
-      return (
-        <ListItemButton
-          key={cat}
-          onClick={() => {
-            setActivePanel(Panel.MyAnswers)
-            checkIfCategoryIsSubmitted(MenuButton.Category, cat)
-          }}
-        >
-          <Badge badgeContent={alerts?.categoryMap.get(cat)} color="secondary">
-            <ListItemText>{cat}</ListItemText>
-          </Badge>
-        </ListItemButton>
-      )
-    })
-  }
+  const myAnswers = categories.map((cat, index) => {
+    return {
+      key: cat,
+      text: cat,
+      alert: alerts?.categoryMap.get(cat),
+    }
+  })
 
   const enableAnswerEditMode = () => {
     setAnswersBeforeSubmitted(new Map(questionAnswers))
@@ -460,42 +451,52 @@ const Content = ({ ...props }: ContentProps) => {
           <ListItemButton onClick={() => setActivePanel(Panel.Overview)}>
             <ListItemText>{t('menu.overview')}</ListItemText>
           </ListItemButton>
-
           <MenuItem
-            selected={activePanel === Panel.MyAnswers}
+            panelId={Panel.MyAnswers}
             show={true}
             setActivePanel={setActivePanel}
-            panelType={Panel.MyAnswers}
-            content={setupMyAnswers()}
-            text={t('menu.myAnswers')}
+            curActivePanel={activePanel}
+            items={myAnswers}
+            text={'menu.myAnswers'}
             alert={alerts?.qidMap.size ?? 0}
             setActiveSubmenuItem={setActiveSubmenuItem}
+            activeSubmenuItem={activeCategory}
           />
 
-          <GroupLeaderMenu
-            members={groupMembers}
-            show={true}
-            selected={activePanel === Panel.GroupLeader}
+          <MenuItem
+            panelId={Panel.GroupLeader}
+            show={isAdmin} //TODO: remove
             setActivePanel={setActivePanel}
+            curActivePanel={activePanel}
+            items={getGroupMenuitems(groupMembers)}
+            text={'menu.myGroup'}
+            alert={0}
             setActiveSubmenuItem={setActiveSubmenuItem}
-            activeSubmenuItem={activeSubmenuItem}
-            setShowFab={props.setShowFab}
+            activeSubmenuItem={activeCategory}
           />
 
-          <AdminMenu
+          <MenuItem
+            panelId={Panel.Admin}
             show={isAdmin}
             setActivePanel={setActivePanel}
+            curActivePanel={activePanel}
+            items={adminItems}
+            text={'menu.admin'}
+            alert={0}
             setActiveSubmenuItem={setActiveSubmenuItem}
-            activeSubmenuItem={activeSubmenuItem}
+            activeSubmenuItem={activeCategory}
           />
 
-          <SuperAdminMenu
-            show={isSuperAdmin}
-            selected={activePanel === Panel.SuperAdmin}
-            setShowFab={props.setShowFab}
+          <MenuItem
+            panelId={Panel.SuperAdmin}
+            show={isAdmin} //TODO: remove
             setActivePanel={setActivePanel}
+            curActivePanel={activePanel}
+            items={superAdminItems}
+            text={'menu.superAdmin'}
+            alert={0}
             setActiveSubmenuItem={setActiveSubmenuItem}
-            activeSubmenuItem={activeSubmenuItem}
+            activeSubmenuItem={activeCategory}
           />
         </List>
       </Drawer>
