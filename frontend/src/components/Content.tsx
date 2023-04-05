@@ -472,7 +472,7 @@ const Content = ({ ...props }: ContentProps) => {
             text={'menu.myGroup'}
             alert={0}
             setActiveSubmenuItem={setActiveSubmenuItem}
-            activeSubmenuItem={activeCategory}
+            activeSubmenuItem={activeSubmenuItem}
           />
 
           <MenuItem
@@ -484,7 +484,7 @@ const Content = ({ ...props }: ContentProps) => {
             text={'menu.admin'}
             alert={0}
             setActiveSubmenuItem={setActiveSubmenuItem}
-            activeSubmenuItem={activeCategory}
+            activeSubmenuItem={activeSubmenuItem}
           />
 
           <MenuItem
@@ -496,7 +496,7 @@ const Content = ({ ...props }: ContentProps) => {
             text={'menu.superAdmin'}
             alert={0}
             setActiveSubmenuItem={setActiveSubmenuItem}
-            activeSubmenuItem={activeCategory}
+            activeSubmenuItem={activeSubmenuItem}
           />
         </List>
       </Drawer>

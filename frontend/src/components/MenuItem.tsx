@@ -39,20 +39,21 @@ const MenuItem = ({
 
   const [drawerOpen, setDrawerOpen] = React.useState(false)
 
-  const subMenuItems = items.map((item: any) => (
-    <ListItemButton
-      key={item.key}
-      selected={item.key === activeSubmenuItem}
-      onClick={() => {
-        setActiveSubmenuItem(item.key)
-        setActivePanel(panelId)
-      }}
-    >
-      <Badge badgeContent={item.alert} color="secondary">
-        <ListItemText>{t(item.text)}</ListItemText>
-      </Badge>
-    </ListItemButton>
-  ))
+  const subMenuItems = (activeSubmenuItem: any, items: any) =>
+    items.map((item: any) => (
+      <ListItemButton
+        key={item.key}
+        onClick={() => {
+          setActiveSubmenuItem(item.key)
+          setActivePanel(panelId)
+        }}
+        selected={item.key === activeSubmenuItem}
+      >
+        <Badge badgeContent={item.alert} color="secondary">
+          <ListItemText>{t(item.text)}</ListItemText>
+        </Badge>
+      </ListItemButton>
+    ))
 
   return (
     <Fragment>
@@ -71,7 +72,7 @@ const MenuItem = ({
       </ListItemButton>
 
       <Collapse in={drawerOpen} timeout="auto" unmountOnExit>
-        <List component="div">{subMenuItems}</List>
+        <List component="div">{subMenuItems(activeSubmenuItem, items)}</List>
       </Collapse>
     </Fragment>
   )
