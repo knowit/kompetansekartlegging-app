@@ -21,6 +21,7 @@ type MenuItemProps = {
   alert: any
   setActiveSubmenuItem: any
   activeSubmenuItem: string
+  setAnswerMode: any
 }
 const MenuItem = ({
   show,
@@ -32,6 +33,7 @@ const MenuItem = ({
   alert,
   setActiveSubmenuItem,
   activeSubmenuItem,
+  setAnswerMode,
 }: MenuItemProps) => {
   if (!show) return null
 
@@ -60,6 +62,9 @@ const MenuItem = ({
       <ListItemButton
         selected={panelId === curActivePanel}
         onClick={() => {
+          if (panelId != Panel.MyAnswers) {
+            setAnswerMode(false)
+          }
           setActivePanel(panelId)
           setDrawerOpen(!drawerOpen)
           setActiveSubmenuItem('MAIN')

@@ -461,6 +461,7 @@ const Content = ({ ...props }: ContentProps) => {
             alert={alerts?.qidMap.size ?? 0}
             setActiveSubmenuItem={setActiveCategory}
             activeSubmenuItem={activeCategory}
+            setAnswerMode={setAnswerEditMode}
           />
 
           <MenuItem
@@ -473,6 +474,7 @@ const Content = ({ ...props }: ContentProps) => {
             alert={0}
             setActiveSubmenuItem={setActiveSubmenuItem}
             activeSubmenuItem={activeSubmenuItem}
+            setAnswerMode={setAnswerEditMode}
           />
 
           <MenuItem
@@ -485,6 +487,7 @@ const Content = ({ ...props }: ContentProps) => {
             alert={0}
             setActiveSubmenuItem={setActiveSubmenuItem}
             activeSubmenuItem={activeSubmenuItem}
+            setAnswerMode={setAnswerEditMode}
           />
 
           <MenuItem
@@ -497,6 +500,7 @@ const Content = ({ ...props }: ContentProps) => {
             alert={0}
             setActiveSubmenuItem={setActiveSubmenuItem}
             activeSubmenuItem={activeSubmenuItem}
+            setAnswerMode={setAnswerEditMode}
           />
         </List>
       </Drawer>

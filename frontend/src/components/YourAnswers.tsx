@@ -15,8 +15,6 @@ interface HideableProps {
 const Hideable = styled.div<HideableProps>`
   display: ${(props) => (props.hidden ? 'block' : 'none')};
 `
-const StyledForm = styled.div()
-
 export const YourAnswers = ({ ...props }: YourAnswerProps) => {
   const { t } = useTranslation()
 
@@ -31,6 +29,10 @@ export const YourAnswers = ({ ...props }: YourAnswerProps) => {
       (q) => q.category.text === props.activeCategory
     )
     return categoryDesc?.category.description ?? ''
+  }
+
+  if (props.activeCategory === 'MAIN') {
+    return <></>
   }
 
   return (
@@ -52,21 +54,19 @@ export const YourAnswers = ({ ...props }: YourAnswerProps) => {
       </Hideable>
 
       <Hideable hidden={props.answerEditMode}>
-        <StyledForm inEditMode={props.answerEditMode}>
-          <ProgressBar
-            alerts={props.alerts}
-            totalQuestions={props.formDefinition?.questions.items.length ?? 0}
-          />
+        <ProgressBar
+          alerts={props.alerts}
+          totalQuestions={props.formDefinition?.questions.items.length ?? 0}
+        />
 
-          <div>{getCategoryDescription()}</div>
+        <div>{getCategoryDescription()}</div>
 
-          <Form
-            {...props}
-            scrollToTop={scrollToTop}
-            isMobile={false}
-            alerts={props.alerts}
-          />
-        </StyledForm>
+        <Form
+          {...props}
+          scrollToTop={scrollToTop}
+          isMobile={false}
+          alerts={props.alerts}
+        />
       </Hideable>
     </>
   )
