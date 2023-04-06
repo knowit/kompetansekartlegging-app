@@ -113,7 +113,7 @@ const EditOrganizations = () => {
 
   const addOrganizationConfirm = (organization: OrganizationInfo) => {
     addOrganization(organization)
-      .then((res) => {
+      .then(() => {
         setMutationError('')
       })
       .catch((err) => {
@@ -132,7 +132,7 @@ const EditOrganizations = () => {
 
   const deleteOrganizationConfirm = (organization: OrganizationInfo) => {
     removeOrganization(organization)
-      .then((res) => {
+      .then(() => {
         setMutationError('')
       })
       .catch((err) => {
