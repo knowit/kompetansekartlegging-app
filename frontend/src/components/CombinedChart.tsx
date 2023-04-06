@@ -84,70 +84,65 @@ export const CombinedChart = ({ ...props }: CombinedChartProps) => {
   }
 
   return (
-    <div>
-      <ResponsiveContainer
-        width="100%"
-        height={heightPerColumn * props.chartData.length + 90}
+    <ResponsiveContainer
+      width="100%"
+      height={heightPerColumn * props.chartData.length + 90}
+    >
+      <BarChart
+        barGap={-15}
+        barSize={15}
+        maxBarSize={15}
+        layout="vertical"
+        data={props.chartData}
+        margin={{ top: 50 }}
       >
-        <BarChart
-          barGap={-15}
-          barSize={15}
-          maxBarSize={15}
-          layout="vertical"
-          data={props.chartData}
-          margin={{ top: 50, right: 50, bottom: 6, left: 50 }}
-        >
-          <CartesianGrid
-            horizontal={true}
-            vertical={true}
-            strokeDasharray="2 5"
-          />
-          <XAxis
-            tickLine={false}
-            axisLine={false}
-            orientation="top"
-            dataKey="value"
-            type="number"
-            padding={{ left: 0, right: 20 }}
-            domain={[0, chartSplitAt + numTicks]}
-            ticks={[0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12]}
-            tick={renderCustomAxisTicks()}
-          />
-          <YAxis
-            width={200}
-            dataKey="name"
-            type="category"
-            interval={0}
-            tick={{ fill: KnowitColors.darkBrown }}
-          />
-          <Tooltip
-            wrapperStyle={{ outline: 'none' }}
-            content={RenderCustomTooltip()}
-            cursor={{ fill: KnowitColors.ecaluptus, opacity: 0.3 }}
-          />
-          <Bar
-            radius={[0, 10, 10, 0]}
-            dataKey="valueKnowledge"
-            fill={KnowitColors.darkGreen}
-          />
-          <Bar
-            radius={[0, 10, 10, 0]}
-            dataKey="valueMotivation"
-            fill={KnowitColors.lightGreen}
-          />
-          <ReferenceLine x={0} stroke={KnowitColors.darkGreen}>
-            <Label position="top" offset={50}>
-              {t('competence').toUpperCase()}
-            </Label>
-          </ReferenceLine>
-          <ReferenceLine x={chartSplitAt} stroke={KnowitColors.darkGreen}>
-            <Label position="top" offset={50}>
-              {t('motivation').toUpperCase()}
-            </Label>
-          </ReferenceLine>
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
+        <CartesianGrid
+          horizontal={true}
+          vertical={true}
+          strokeDasharray="2 5"
+        />
+        <XAxis
+          tickLine={false}
+          axisLine={false}
+          orientation="top"
+          dataKey="value"
+          type="number"
+          ticks={[0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12]}
+          tick={renderCustomAxisTicks()}
+        />
+        <YAxis
+          dataKey="name"
+          type="category"
+          interval={0}
+          tick={{ fill: KnowitColors.darkBrown }}
+        />
+        <Tooltip
+          wrapperStyle={{ outline: 'none' }}
+          content={RenderCustomTooltip()}
+          cursor={{ fill: KnowitColors.ecaluptus, opacity: 0.3 }}
+        />
+        <Bar
+          radius={[0, 10, 10, 0]}
+          dataKey="valueKnowledge"
+          fill={KnowitColors.darkGreen}
+        />
+        <Bar
+          radius={[0, 10, 10, 0]}
+          dataKey="valueMotivation"
+          fill={KnowitColors.lightGreen}
+        />
+        <ReferenceLine x={0} stroke={KnowitColors.darkGreen}>
+          <Label position="top" offset={50}>
+            {t('competence').toUpperCase()}
+          </Label>
+        </ReferenceLine>
+        <ReferenceLine x={chartSplitAt} stroke={KnowitColors.darkGreen}>
+          <Label position="top" offset={50}>
+            {t('motivation').toUpperCase()}
+          </Label>
+        </ReferenceLine>
+      </BarChart>
+    </ResponsiveContainer>
   )
 }
 
