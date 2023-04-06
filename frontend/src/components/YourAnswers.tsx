@@ -38,7 +38,7 @@ export const YourAnswers = ({ ...props }: YourAnswerProps) => {
   return (
     <>
       <Hideable hidden={!props.answerEditMode}>
-        <h2>{props.activeCategory}</h2>
+        <h1>{props.activeCategory}</h1>
         <BlockInfo
           questions={props.questionAnswers.get(props.activeCategory)}
         />
