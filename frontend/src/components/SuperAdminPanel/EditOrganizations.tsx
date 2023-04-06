@@ -111,9 +111,12 @@ const EditOrganizations = () => {
   const [organizationToBeDeleted, setOrganizationToBeDeleted] =
     useState<OrganizationInfo | null>(null)
 
-  const addOrganizationConfirm = (organization: OrganizationInfo) => {
-    addOrganization(organization)
-      .then(() => {
+  const addOrganizationConfirm = (
+    organization: OrganizationInfo,
+    adminEmail: string
+  ) => {
+    addOrganization(organization, adminEmail)
+      .then((res) => {
         setMutationError('')
       })
       .catch((err) => {
