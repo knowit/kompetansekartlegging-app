@@ -2,11 +2,27 @@ import { useTranslation } from 'react-i18next'
 import { Fragment, useEffect, useState } from 'react'
 import { wrapString } from '../helperFunctions'
 import { GetIcon } from '../icons/iconController'
-import { KnowitColors } from '../styles'
 import { HighlightsProps, TopicScoreWithIcon } from '../types'
+import styled from '@emotion/styled'
 
-const barIconSize = 24
-const barIconSizeMobile = 20
+const StyledHighlights = styled.article`
+  #focusAreas {
+    display: flex;
+    flex-direction: row;
+  }
+  #strengths {
+    display: flex;
+    flex-direction: column;
+  }
+  #ambitions {
+    display: flex;
+    flex-direction: column;
+  }
+  .highlightList {
+    display: flex;
+    flex-direction: row;
+  }
+`
 
 export default function Highlights({ ...props }: HighlightsProps) {
   const { t } = useTranslation()
@@ -71,71 +87,53 @@ export default function Highlights({ ...props }: HighlightsProps) {
     generateShortlist()
   }, [props.questionAnswers])
 
-  const createMotivationHighlights = (): JSX.Element => {
-    if (motivationAboveCutoff.length === 0) {
-      return (
-        <div>
-          <div>{t('overview.yourTopAmbitionsWillBeDisplayedHere')}</div>
-        </div>
-      )
+  const createHighlights = (
+    aboveCutoff: TopicScoreWithIcon[],
+    text: string,
+    isKnowledge: boolean
+  ): JSX.Element => {
+    if (aboveCutoff.length === 0) {
+      return <div>{t(text)}</div>
     }
     return (
-      <div>
-        <div>
-          <div />
-          {motivationAboveCutoff.map((el, i) => (
-            <div key={i}>
-              <div>
-                <div>{GetIcon(false, el.icon)}</div>
-              </div>
-              <div>{wrapString(el.topic, maxTopicStringLength).join('\n')}</div>
-            </div>
-          ))}
-        </div>
+      <div className="highlightList">
+        {aboveCutoff.map((el: any, i) => (
+          <div key={i}>
+            <div>{GetIcon(isKnowledge, el.icon)}</div>
+            <div>{wrapString(el.topic, maxTopicStringLength).join('\n')}</div>
+          </div>
+        ))}
       </div>
     )
   }
 
-  const createKnowledgeHighlights = (): JSX.Element => {
-    if (knowledgeAboveCutoff.length === 0) {
-      return (
-        <div>
-          <div>{t('overview.yourTopStrengthsWillBeDisplayedHere')}</div>
-        </div>
-      )
-    }
-    return (
-      <div>
-        <div>
-          <div />
-          {knowledgeAboveCutoff.map((el, i) => (
-            <div key={i}>
-              <div>
-                <div>{GetIcon(true, el.icon)}</div>
-              </div>
-              <div>{wrapString(el.topic, maxTopicStringLength).join('\n')}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    )
-  }
+  const knowledgeHighlights = createHighlights(
+    knowledgeAboveCutoff,
+    'overview.yourTopStrengthsWillBeDisplayedHere',
+    true
+  )
+
+  const motivationHighlights = createHighlights(
+    motivationAboveCutoff,
+    'overview.yourTopAmbitionsWillBeDisplayedHere',
+    false
+  )
 
   if (props.questionAnswers.size === 0) return <Fragment />
   else
     return (
-      <div>
-        <div>{t('overview.focusAreas')}</div>
-        <div>
-          <div>
-            <div>{t('overview.topStrengths')}</div>
-            {createKnowledgeHighlights()}
-          </div>
-          <div>
-            <div>{t('overview.topAmbitions')}</div>
-            {createMotivationHighlights()}
-          </div>
-        </div>
-      </div>
+      <StyledHighlights>
+        <h1>{t('overview.focusAreas')}</h1>
+        <article id="focusAreas">
+          <section id={'strengths'}>
+            <h2>{t('overview.topStrengths')}</h2>
+            {knowledgeHighlights}
+          </section>
+          <section id="ambitions">
+            <h2>{t('overview.topAmbitions')}</h2>
+            {motivationHighlights}
+          </section>
+        </article>
+      </StyledHighlights>
     )
 }
