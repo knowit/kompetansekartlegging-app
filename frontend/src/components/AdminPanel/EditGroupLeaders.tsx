@@ -144,9 +144,8 @@ const EditGroupLeaders = () => {
         <>
           <Card variant="outlined">
             <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                {t('menu.submenu.editGroupLeaders')}
-              </Typography>
+              {t('menu.submenu.editGroupLeaders')}
+
               {t('admin.editGroupLeaders.description')}
             </CardContent>
           </Card>

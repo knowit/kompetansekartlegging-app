@@ -122,9 +122,8 @@ const EditAdmins = () => {
         <>
           <Card variant="outlined">
             <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                {t('admin.editAdmins.editAdministrators')}
-              </Typography>
+              {t('admin.editAdmins.editAdministrators')}
+
               {t('admin.editAdmins.description')}
             </CardContent>
           </Card>

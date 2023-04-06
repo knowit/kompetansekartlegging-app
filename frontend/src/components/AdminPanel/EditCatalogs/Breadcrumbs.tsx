@@ -46,9 +46,7 @@ const RouterBreadcrumbs = ({ extraCrumbsMap, urlOverrides }: any) => {
                 const to = `/${pathnames.slice(0, index + 1).join('/')}`
 
                 return last ? (
-                  <Typography color="textPrimary" key={to}>
-                    {crumbNameMap[to]}
-                  </Typography>
+                  <div key={to}>{crumbNameMap[to]}</div>
                 ) : (
                   <LinkRouter
                     color="inherit"

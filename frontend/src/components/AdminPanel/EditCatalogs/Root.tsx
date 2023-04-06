@@ -195,9 +195,8 @@ const Root = () => {
         <>
           <Card variant="outlined">
             <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                {t('menu.submenu.editCatalogs')}
-              </Typography>
+              {t('menu.submenu.editCatalogs')}
+
               {t('admin.editCatalogs.description')}
             </CardContent>
           </Card>

@@ -97,9 +97,8 @@ const Group = ({
         <TableCell colSpan={5}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
-              <Typography variant="h6" gutterBottom>
-                {t('admin.editGroups.members')}
-              </Typography>
+              {t('admin.editGroups.members')}
+
               <GroupMembers
                 allUsers={users}
                 members={group.members}
@@ -376,9 +375,8 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
         <>
           <Card>
             <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                {t('menu.submenu.editGroups')}
-              </Typography>
+              {t('menu.submenu.editGroups')}
+
               {t('admin.editGroups.description')}
             </CardContent>
           </Card>

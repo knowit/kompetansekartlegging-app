@@ -79,9 +79,8 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
           >
             <MenuIcon fontSize="large" />
           </IconButton>
-          <Typography variant="h6" noWrap>
-            {navbarHeader()}
-          </Typography>
+
+          {navbarHeader()}
         </Toolbar>
       </AppBar>
       <SwipeableDrawer

@@ -127,9 +127,8 @@ const EditOrganizationAdmins = () => {
         <>
           <Card style={{ marginBottom: '24px' }} variant="outlined">
             <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                {t('menu.submenu.editOrganizationAdministrators')}
-              </Typography>
+              {t('menu.submenu.editOrganizationAdministrators')}
+
               {t('superAdmin.editOrganizationAdministrators.description')}
             </CardContent>
           </Card>

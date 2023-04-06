@@ -46,9 +46,8 @@ const DownloadExcel = () => {
     <Container className={commonStyles.container}>
       <Card variant="outlined">
         <CardContent>
-          <Typography color="textSecondary" gutterBottom>
-            {t('menu.submenu.downloadCatalogs')}
-          </Typography>
+          {t('menu.submenu.downloadCatalogs')}
+
           {t('admin.downloadCatalogs.description')}
         </CardContent>
       </Card>

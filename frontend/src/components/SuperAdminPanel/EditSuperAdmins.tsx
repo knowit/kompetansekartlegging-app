@@ -126,9 +126,8 @@ const EditSuperAdmins = () => {
         <>
           <Card variant="outlined">
             <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                {t('menu.submenu.editSuperAdministrators')}
-              </Typography>
+              {t('menu.submenu.editSuperAdministrators')}
+
               {t('superAdmin.editSuperAdministrators.description')}
             </CardContent>
           </Card>

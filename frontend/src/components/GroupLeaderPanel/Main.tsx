@@ -31,9 +31,7 @@ const Main = ({
       {!isError && !isLoading && allAvailableUsersAnnotated && (
         <>
           <Box margin={3} marginLeft={2}>
-            <Typography variant="h5" component="h2" color="textPrimary">
-              {t('menu.myGroup')}
-            </Typography>
+            {t('menu.myGroup')}
           </Box>
           <GroupMembers
             allUsers={allAvailableUsersAnnotated}
