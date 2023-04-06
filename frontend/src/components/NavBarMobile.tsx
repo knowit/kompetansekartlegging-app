@@ -28,10 +28,9 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
   const navbarHeader = () => {
     switch (props.activePanel) {
       case 0:
-        return t('menu.overview').toUpperCase()
+        return t('menu.overview')
       case 1:
-        return t('menu.myAnswers').toUpperCase()
-      default:
+        return t('menu.myAnswers')
         return ''
     }
   }

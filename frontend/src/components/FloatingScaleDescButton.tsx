@@ -1,7 +1,6 @@
 import { Fab, Modal, Tooltip } from '@mui/material'
 
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { KnowitColors } from '../styles'
 import DescriptionTable from './DescriptionTable'
 import { useTranslation } from 'react-i18next'
 
@@ -79,7 +78,7 @@ const FloatingScaleDescButton = ({
           variant="extended"
           onClick={() => setScaleDescOpen((scaleDescOpen) => !scaleDescOpen)}
         >
-          {t('scaleDescription').toUpperCase()}
+          {t('scaleDescription')}
         </Fab>
       )}
     </>

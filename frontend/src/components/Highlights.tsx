@@ -125,14 +125,14 @@ export default function Highlights({ ...props }: HighlightsProps) {
   else
     return (
       <div>
-        <div>{t('overview.focusAreas').toUpperCase()}</div>
+        <div>{t('overview.focusAreas')}</div>
         <div>
           <div>
-            <div>{t('overview.topStrengths').toUpperCase()}</div>
+            <div>{t('overview.topStrengths')}</div>
             {createKnowledgeHighlights()}
           </div>
           <div>
-            <div>{t('overview.topAmbitions').toUpperCase()}</div>
+            <div>{t('overview.topAmbitions')}</div>
             {createMotivationHighlights()}
           </div>
         </div>

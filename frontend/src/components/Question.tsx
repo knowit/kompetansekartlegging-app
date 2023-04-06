@@ -81,7 +81,7 @@ const KnowledgeMotivationSliders = ({
 
   return (
     <div>
-      <div>{t('competence').toUpperCase()}</div>
+      <div>{t('competence')}</div>
       <div>
         <div>{Icon.GetIcons(true)}</div>
         <div>
@@ -93,7 +93,7 @@ const KnowledgeMotivationSliders = ({
           />
         </div>
       </div>
-      <div>{t('motivation').toUpperCase()}</div>
+      <div>{t('motivation')}</div>
       <div>
         <div>{Icon.GetIcons(false)}</div>
         <div>
@@ -120,7 +120,7 @@ const CustomLabelSlider = ({
   return (
     <div>
       <div>
-        <div>{t('answer').toUpperCase()}</div>
+        <div>{t('answer')}</div>
         <div>
           <div>
             {labels?.map((l: string) => (

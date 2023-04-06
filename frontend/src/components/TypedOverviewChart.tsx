@@ -260,11 +260,11 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
   const translateOverviewType = (type: OverviewType) => {
     switch (type) {
       case OverviewType.AVERAGE:
-        return t('overview.overviewType.average').toUpperCase()
+        return t('overview.overviewType.average')
       case OverviewType.MEDIAN:
-        return t('overview.overviewType.median').toUpperCase()
+        return t('overview.overviewType.median')
       case OverviewType.HIGHEST:
-        return t('overview.overviewType.highest').toUpperCase()
+        return t('overview.overviewType.highest')
     }
   }
 
@@ -298,7 +298,7 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
   ) : (
     <div>
       <div>
-        {t('menu.overview').toUpperCase()}
+        {t('menu.overview')}
         <div>
           {getButton(OverviewType.HIGHEST)}
           {getButton(OverviewType.AVERAGE)}

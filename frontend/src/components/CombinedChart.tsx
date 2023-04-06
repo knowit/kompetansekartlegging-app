@@ -133,12 +133,12 @@ export const CombinedChart = ({ ...props }: CombinedChartProps) => {
         />
         <ReferenceLine x={0} stroke={KnowitColors.darkGreen}>
           <Label position="top" offset={50}>
-            {t('competence').toUpperCase()}
+            {t('competence')}
           </Label>
         </ReferenceLine>
         <ReferenceLine x={chartSplitAt} stroke={KnowitColors.darkGreen}>
           <Label position="top" offset={50}>
-            {t('motivation').toUpperCase()}
+            {t('motivation')}
           </Label>
         </ReferenceLine>
       </BarChart>

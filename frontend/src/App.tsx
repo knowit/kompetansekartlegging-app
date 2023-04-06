@@ -223,9 +223,7 @@ const App = () => {
           >
             <Alert severity="warning">
               {t('thisIsATestEnvironment') + ' '}
-              <Button onClick={() => setBannerOpen(false)}>
-                {t('close').toUpperCase()}
-              </Button>
+              <Button onClick={() => setBannerOpen(false)}>{t('close')}</Button>
             </Alert>
           </Snackbar>
         ) : null}

@@ -185,7 +185,7 @@ export const CombinedChartMobile = ({
               fontWeight="bold"
               fill={KnowitColors.darkBrown}
             >
-              {t('motivation').toUpperCase()}
+              {t('motivation')}
             </Label>
           </ReferenceLine>
           <ReferenceLine
@@ -205,7 +205,7 @@ export const CombinedChartMobile = ({
               fontWeight="bold"
               fill={KnowitColors.darkBrown}
             >
-              {t('competence').toUpperCase()}
+              {t('competence')}
             </Label>
           </ReferenceLine>
           <ReferenceLine
