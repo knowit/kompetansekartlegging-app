@@ -120,7 +120,7 @@ const EditAdmins = () => {
       {loading && <CircularProgress />}
       {!error && !loading && admins && (
         <>
-          <Card style={{ marginBottom: '24px' }} variant="outlined">
+          <Card variant="outlined">
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
                 {t('admin.editAdmins.editAdministrators')}
@@ -133,7 +133,6 @@ const EditAdmins = () => {
             variant="contained"
             color="primary"
             startIcon={<PersonAddIcon />}
-            style={{ marginTop: '24px' }}
             onClick={() => setShowAddAdmin(true)}
           >
             {t('addAdministrator')}

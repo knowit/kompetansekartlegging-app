@@ -193,7 +193,7 @@ const Root = () => {
       {loading && <CircularProgress />}
       {!error && !loading && catalogs && (
         <>
-          <Card style={{ marginBottom: '24px' }} variant="outlined">
+          <Card variant="outlined">
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
                 {t('menu.submenu.editCatalogs')}
@@ -211,7 +211,6 @@ const Root = () => {
             variant="contained"
             color="primary"
             startIcon={<AddIcon />}
-            style={{ marginTop: '24px' }}
             onClick={() => setShowAddCatalogDialog(true)}
           >
             {t('admin.editCatalogs.createNewCatalog')}

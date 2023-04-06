@@ -38,10 +38,7 @@ const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
       <TableCell onClick={onClick}>{email}</TableCell>
       {showLastAnsweredAt && <TableCell>{formLastAnsweredAt}</TableCell>}
       <TableCell>
-        <Button
-          onClick={() => deleteMember(user)}
-          style={{ fontStyle: 'italic' }}
-        >
+        <Button onClick={() => deleteMember(user)}>
           {t('myGroup.removeFromGroup')}
         </Button>
       </TableCell>

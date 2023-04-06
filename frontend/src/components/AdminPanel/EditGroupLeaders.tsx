@@ -142,7 +142,7 @@ const EditGroupLeaders = () => {
       {loading && <CircularProgress />}
       {!error && !loading && groupLeaders && (
         <>
-          <Card style={{ marginBottom: '24px' }} variant="outlined">
+          <Card variant="outlined">
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
                 {t('menu.submenu.editGroupLeaders')}

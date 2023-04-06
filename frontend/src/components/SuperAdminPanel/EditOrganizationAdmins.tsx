@@ -138,7 +138,6 @@ const EditOrganizationAdmins = () => {
             variant="contained"
             color="primary"
             startIcon={<PersonAddIcon />}
-            style={{ marginTop: '24px' }}
             onClick={() => setShowAddAdmin(true)}
           >
             {t('addAdministrator')}

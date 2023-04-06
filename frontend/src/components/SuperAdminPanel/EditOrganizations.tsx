@@ -155,7 +155,7 @@ const EditOrganizations = () => {
       {loading && <CircularProgress />}
       {!error && !loading && (
         <>
-          <Card style={{ marginBottom: '24px' }} variant="outlined">
+          <Card variant="outlined">
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
                 {t('menu.submenu.editOrganizations')}
@@ -171,7 +171,6 @@ const EditOrganizations = () => {
             variant="contained"
             color="primary"
             startIcon={<AddIcon />}
-            style={{ marginTop: '24px' }}
             onClick={() => setShowAddOrganization(true)}
           >
             {t('superAdmin.editOrganizations.addOrganization')}

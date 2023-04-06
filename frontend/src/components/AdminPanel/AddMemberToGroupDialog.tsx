@@ -200,7 +200,7 @@ const UsersTable = ({ users, selectedUsers, setSelectedUser }: any) => {
     selectedUsers.some((u: any) => u.Username === user.Username)
 
   return (
-    <TableContainer component={Paper} style={{ height: '100%' }}>
+    <TableContainer component={Paper}>
       <Table stickyHeader>
         <TableHead>
           <TableRow>

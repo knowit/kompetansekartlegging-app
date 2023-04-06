@@ -124,7 +124,7 @@ const EditSuperAdmins = () => {
       {loading && <CircularProgress />}
       {!error && !loading && admins && (
         <>
-          <Card style={{ marginBottom: '24px' }} variant="outlined">
+          <Card variant="outlined">
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
                 {t('menu.submenu.editSuperAdministrators')}
@@ -137,7 +137,6 @@ const EditSuperAdmins = () => {
             variant="contained"
             color="primary"
             startIcon={<PersonAddIcon />}
-            style={{ marginTop: '24px' }}
             onClick={() => setShowAddAdmin(true)}
           >
             {t('addAdministrator')}

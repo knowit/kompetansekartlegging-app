@@ -44,7 +44,7 @@ const DownloadExcel = () => {
 
   return (
     <Container className={commonStyles.container}>
-      <Card style={{ marginBottom: '24px' }} variant="outlined">
+      <Card variant="outlined">
         <CardContent>
           <Typography color="textSecondary" gutterBottom>
             {t('menu.submenu.downloadCatalogs')}
@@ -123,22 +123,11 @@ const DownloadExcelTable = ({ formDefinitions }: FormDefinitions) => {
                 {i18nDateToLocaleDateString(new Date(formDef.createdAt))}
               </TableCell>
               <TableCell align="center">
-                <div
-                  style={{
-                    height: '5.65rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
-                >
+                <div>
                   {formDef.id === idOfDownloadingForm ? (
                     <>
                       {isExcelError ? (
-                        <p
-                          style={{
-                            whiteSpace: 'pre-wrap',
-                            margin: '0 auto',
-                          }}
-                        >
+                        <p>
                           {t(
                             'admin.downloadCatalogs.downloadFailedIsTheCatalogEmpty'
                           )}
@@ -149,9 +138,6 @@ const DownloadExcelTable = ({ formDefinitions }: FormDefinitions) => {
                     </>
                   ) : (
                     <Button
-                      style={{ margin: '0 auto' }}
-                      variant="contained"
-                      color="primary"
                       endIcon={<GetAppIcon />}
                       onClick={() => {
                         downloadExcel(formDef.id, formDef.label)

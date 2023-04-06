@@ -34,15 +34,7 @@ export const LanguageSelect = (props: LanguageSelectProps) => {
     >
       {Object.keys(availableLanguages).map((language) => (
         <MenuItem key={language} value={language}>
-          <div
-            style={{
-              fontSize: 14,
-              fontWeight: 'bold',
-              color: KnowitColors.darkBrown,
-            }}
-          >
-            {availableLanguages[language]}
-          </div>
+          <div>{availableLanguages[language]}</div>
         </MenuItem>
       ))}
     </Select>
