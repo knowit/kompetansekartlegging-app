@@ -319,6 +319,12 @@ const Content = ({ ...props }: ContentProps) => {
     setAnswerEditMode(true)
   }
 
+  const showFabPanels = [Panel.Overview, Panel.MyAnswers, Panel.GroupLeader]
+
+  useEffect(() => {
+    props.setShowFab(activePanel in showFabPanels)
+  }, [activePanel])
+
   const handleMenuClick = (panelSource: Panel, itemSource: string) => {
     const isInAnswer = panelSource === Panel.MyAnswers
     if (answerEditMode) {
@@ -350,6 +356,7 @@ const Content = ({ ...props }: ContentProps) => {
       setActiveSubmenuItem(lastClickedSubmenu)
     }
     setAlertDialogOpen(false)
+    props.setShowFab(activePanel in showFabPanels)
   }
 
   const [groupMembers, setGroupMembers] = useState<any>([])
