@@ -20,7 +20,6 @@ const CopyCatalogDialog = ({ onCancel, onConfirm, onExited, open }: any) => {
       open={open}
       onClose={onCancel}
       fullWidth
-      maxWidth="sm"
       PaperProps={{
         style: { borderRadius: 30 },
       }}

@@ -25,7 +25,7 @@ const Main = ({
 }: any) => {
   const { t } = useTranslation()
   return (
-    <Container maxWidth="md" className={commonStyles.container}>
+    <Container className={commonStyles.container}>
       {isError && <p>{t('errorOccured') + isError}</p>}
       {isLoading && <CircularProgress />}
       {!isError && !isLoading && allAvailableUsersAnnotated && (

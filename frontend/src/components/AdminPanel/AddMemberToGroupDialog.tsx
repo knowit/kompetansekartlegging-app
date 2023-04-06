@@ -85,7 +85,6 @@ const AddMemberToGroupDialog = ({
       open={open}
       onClose={onClose}
       fullWidth
-      maxWidth="sm"
       PaperProps={{
         style: { borderRadius: 30 },
       }}

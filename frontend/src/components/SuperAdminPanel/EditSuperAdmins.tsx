@@ -119,7 +119,7 @@ const EditSuperAdmins = () => {
   }
 
   return (
-    <Container maxWidth="md">
+    <Container>
       {error && <p>{t('errorOccured') + error}</p>}
       {loading && <CircularProgress />}
       {!error && !loading && admins && (

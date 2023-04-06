@@ -36,7 +36,6 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
       open={open}
       onClose={onCancel}
       fullWidth
-      maxWidth="sm"
       PaperProps={{
         style: { borderRadius: 30 },
       }}

@@ -101,7 +101,7 @@ const EditCategory = () => {
 
   return (
     <>
-      <Container maxWidth="lg">
+      <Container>
         {error && <p>{t('errorOccured') + error}</p>}
         {loading && <CircularProgress />}
         {!error && !loading && categories && (
@@ -112,7 +112,7 @@ const EditCategory = () => {
                 urlOverrides={breadCrumbsUrlOverrides}
               />
             </Box>
-            <Container maxWidth="sm">
+            <Container>
               <QuestionList
                 id={id}
                 categories={categories}

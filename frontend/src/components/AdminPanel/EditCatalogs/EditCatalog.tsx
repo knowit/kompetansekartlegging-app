@@ -62,7 +62,7 @@ const EditCatalog = () => {
 
   return (
     <>
-      <Container maxWidth="lg">
+      <Container>
         {error && <p>{t('errorOccured') + error}</p>}
         {loading && <CircularProgress />}
         {!error && !loading && categories && (
@@ -73,7 +73,7 @@ const EditCatalog = () => {
                 urlOverrides={breadCrumbsUrlOverrides}
               />
             </Box>
-            <Container fixed maxWidth="sm">
+            <Container fixed>
               <CategoryList
                 categories={categories}
                 refresh={refresh}

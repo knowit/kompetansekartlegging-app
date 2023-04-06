@@ -43,7 +43,7 @@ const DownloadExcel = () => {
   })
 
   return (
-    <Container maxWidth="md" className={commonStyles.container}>
+    <Container className={commonStyles.container}>
       <Card style={{ marginBottom: '24px' }} variant="outlined">
         <CardContent>
           <Typography color="textSecondary" gutterBottom>

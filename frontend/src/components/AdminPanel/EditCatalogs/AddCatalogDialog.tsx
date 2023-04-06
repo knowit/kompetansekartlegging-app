@@ -22,7 +22,6 @@ const AddCatalogDialog = ({ onCancel, onConfirm, open }: any) => {
       open={open}
       onClose={onCancel}
       fullWidth
-      maxWidth="sm"
       PaperProps={{
         style: { borderRadius: 30 },
       }}
