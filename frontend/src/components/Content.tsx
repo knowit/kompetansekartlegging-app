@@ -434,7 +434,7 @@ const Content = ({ ...props }: ContentProps) => {
 
           <DropdownMenuItem
             panelId={Panel.GroupLeader}
-            show={isAdmin} //TODO: remove
+            show={isGroupLeader}
             items={getGroupMenuitems(groupMembers)}
             text={'menu.myGroup'}
             alert={0}
@@ -454,7 +454,7 @@ const Content = ({ ...props }: ContentProps) => {
 
           <DropdownMenuItem
             panelId={Panel.SuperAdmin}
-            show={isAdmin} //TODO: remove
+            show={isSuperAdmin}
             items={superAdminItems}
             text={'menu.superAdmin'}
             alert={0}
