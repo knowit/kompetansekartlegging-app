@@ -141,7 +141,7 @@ const formFields = {
   },
 }
 
-const userBranch = process ? process.env.REACT_APP_USER_BRANCH : ''
+const userBranch = import.meta.env.VITE_USER_BRANCH
 const isNotProd = userBranch !== 'master'
 const Login = (props: { isMobile: boolean }) => {
   // console.log("/tree/", userBranch, isNotProd);

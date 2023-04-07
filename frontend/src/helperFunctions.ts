@@ -69,8 +69,7 @@ const splitArray = <T>(array: T[]): T[][] => {
 */
 export const callBatchGraphQL = async <T>(
   query: any,
-  variables: { input: any[]; organizationID: string },
-  table: string
+  variables: { input: any[]; organizationID: string }
 ): Promise<GraphQLResult<T>[]> => {
   if (variables.input.length === 0) {
     console.error('Array size must be more than 0 in a batch mutation')
