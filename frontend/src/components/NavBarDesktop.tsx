@@ -19,6 +19,8 @@ import {
 } from '@mui/material'
 
 import HelpIcon from '@mui/icons-material/Help'
+import { Tooltip } from '@mui/material'
+import { IconButton } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { ReactComponent as KnowitLogo } from '../Logotype-Knowit-Digital-white 1.svg'
@@ -28,6 +30,19 @@ import { LanguageSelect } from './LanguageSelect'
 import { useTranslation } from 'react-i18next'
 import { KnowitColors } from '../styles'
 import { NavBarPropsDesktop, UserRole } from '../types'
+import { styled } from '@mui/material/styles'
+
+const StyledToolbar = styled(Toolbar)({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+})
+
+const StyledButtonBox = styled(Box)({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+})
 
 const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
   const { t, i18n } = useTranslation()
@@ -104,39 +119,37 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
 
   return (
     <AppBar className="header">
-      <Toolbar>
-        <div>
-          <KnowitLogo />
-        </div>
-        <LanguageSelect color={KnowitColors.creme} />
+      <StyledToolbar>
+        <KnowitLogo />
+
         <h1>
           {t('navbar.competenceMappingFor')} {userState.organizationName}
         </h1>
 
-        {/* <Button variant="contained"  onClick={() => Auth.signOut()}>Sign out</Button>  */}
-        <div>
+        <StyledButtonBox id="buttons">
           {userState.roles.includes(UserRole.Admin) ? (
             <Modal
               open={isHelpModalOpen}
               onClose={() => setHelpModalOpen(false)}
             >
-              <Box>
+              <>
                 <ReactMarkdown>{helpMarkdown}</ReactMarkdown>
-              </Box>
+              </>
             </Modal>
           ) : null}
           {userState.roles.includes(UserRole.Admin) ? (
-            <Button
-              ref={anchorRef}
-              aria-controls={avatarMenuOpen ? 'menu-list-grow' : undefined}
-              // onClick={() => {}}
-              aria-label={t('aria.helpButton') as string}
-              endIcon={<HelpIcon />}
-              onClick={() => setHelpModalOpen(true)}
-            >
-              <div>{t('navbar.help')}</div>
-            </Button>
+            <Tooltip title={t('navbar.help')}>
+              <IconButton
+                onClick={() => setHelpModalOpen(true)}
+                ref={anchorRef}
+                aria-controls={avatarMenuOpen ? 'menu-list-grow' : undefined}
+                aria-label={t('aria.helpButton') as string}
+              >
+                <HelpIcon />
+              </IconButton>
+            </Tooltip>
           ) : null}
+          <LanguageSelect />
           <Button
             ref={anchorRef}
             aria-controls={avatarMenuOpen ? 'menu-list-grow' : undefined}
@@ -150,61 +163,62 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
               alt={t('navbar.profilePicture') as string}
             />
           </Button>
+        </StyledButtonBox>
 
-          <Popper
-            open={avatarMenuOpen}
-            anchorEl={anchorRef.current}
-            placement={'bottom-end'}
-            role={undefined}
-            transition
-            disablePortal
-          >
-            {({ TransitionProps, placement }) => (
-              <Grow {...TransitionProps}>
-                <Paper>
-                  <ClickAwayListener onClickAway={handleClose}>
-                    <MenuList
-                      autoFocusItem={avatarMenuOpen}
-                      id="menu-list-grow"
-                      onKeyDown={handleListKeyDown}
-                    >
-                      {/* Removed for user testing, i18n if uncommenting
+        <Popper
+          open={avatarMenuOpen}
+          anchorEl={anchorRef.current}
+          placement={'bottom-end'}
+          role={undefined}
+          transition
+          disablePortal
+        >
+          {({ TransitionProps, placement }) => (
+            <Grow {...TransitionProps}>
+              <Paper>
+                <ClickAwayListener onClickAway={handleClose}>
+                  <MenuList
+                    autoFocusItem={avatarMenuOpen}
+                    id="menu-list-grow"
+                    onKeyDown={handleListKeyDown}
+                  >
+                    {/* Removed for user testing, i18n if uncommenting
                                         <MenuItem onClick={handleDisplayAnswers}>Vis alle lagrede svar</MenuItem>
                                         <MenuItem onClick={handleDeleteAnswers}>Slett alle svar</MenuItem> */}
-                      <MenuItem onClick={handleCloseSignout}>
-                        {t('navbar.signOut')}
-                      </MenuItem>
-                    </MenuList>
-                  </ClickAwayListener>
-                </Paper>
-              </Grow>
-            )}
-          </Popper>
-          <Dialog
-            open={deleteAlertOpen}
-            onClose={handleCloseAlert}
-            aria-labelledby="dialogtitle"
-            aria-describedby="dialogdescription"
-          >
-            <DialogTitle id="dialogtitle">
-              {t('navbar.doYouWantToDeleteYourAnswers')}
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id="dialogdescription">
-                {t('navbar.thisWillDeleteAllAnswers')}
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => 1} color="primary">
-                {t('confirm')}
-              </Button>
-              <Button onClick={handleCloseAlert} color="primary" autoFocus>
-                {t('abort')}
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
-      </Toolbar>
+                    <MenuItem onClick={handleCloseSignout}>
+                      {t('navbar.signOut')}
+                    </MenuItem>
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            </Grow>
+          )}
+        </Popper>
+
+        <Dialog
+          open={deleteAlertOpen}
+          onClose={handleCloseAlert}
+          aria-labelledby="dialogtitle"
+          aria-describedby="dialogdescription"
+        >
+          <DialogTitle id="dialogtitle">
+            {t('navbar.doYouWantToDeleteYourAnswers')}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="dialogdescription">
+              {t('navbar.thisWillDeleteAllAnswers')}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => 1} color="primary">
+              {t('confirm')}
+            </Button>
+            <Button onClick={handleCloseAlert} color="primary" autoFocus>
+              {t('abort')}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </StyledToolbar>
     </AppBar>
   )
 }

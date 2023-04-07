@@ -4,14 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { availableLanguages } from '../i18n/i18n'
 import { I18n as amplifyI18n } from 'aws-amplify'
 import LanguageIcon from '@mui/icons-material/Language'
-import { KnowitColors } from '../styles'
 
-type LanguageSelectProps = {
-  color: string
-  marginLeft?: number
-}
-
-export const LanguageSelect = (props: LanguageSelectProps) => {
+export const LanguageSelect = () => {
   const { i18n } = useTranslation()
 
   const changeLanguage = (language: string) => {
@@ -24,8 +18,6 @@ export const LanguageSelect = (props: LanguageSelectProps) => {
     <Select
       value={i18n.language}
       onChange={(event) => changeLanguage(event.target.value as string)}
-      renderValue={() => <LanguageIcon style={{ color: props.color }} />}
-      style={{ marginLeft: props.marginLeft }}
       aria-label={
         i18n.t('aria.selectLanguageLanguageIsSelected', {
           language: availableLanguages[i18n.language],
@@ -34,7 +26,7 @@ export const LanguageSelect = (props: LanguageSelectProps) => {
     >
       {Object.keys(availableLanguages).map((language) => (
         <MenuItem key={language} value={language}>
-          <div>{availableLanguages[language]}</div>
+          {availableLanguages[language]}
         </MenuItem>
       ))}
     </Select>
