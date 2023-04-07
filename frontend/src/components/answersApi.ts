@@ -194,7 +194,7 @@ const getUserAnswers = async (
   } else {
     // console.log("Found no user form!", paginatedUserform);
     setActivePanel(Panel.MyAnswers)
-    setAnswerEditMode(true)
+    setAnswerEditMode(false)
     setUserAnswersLoaded(true)
     setFirstTimeLogin(true)
     if (!isMobile) {
