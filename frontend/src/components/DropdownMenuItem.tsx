@@ -35,6 +35,8 @@ const DropdownMenuItem = ({
 
   const [drawerOpen, setDrawerOpen] = React.useState(false)
 
+  const hasChildren = items.length !== 0
+
   const subMenuItems = (activeSubmenuItem: any, items: any) =>
     items.map((item: any) => (
       <ListItemButton
@@ -53,13 +55,13 @@ const DropdownMenuItem = ({
       <ListItemButton
         onClick={() => {
           handleMenuClick(panelId, 'MAIN')
-          setDrawerOpen(!drawerOpen)
+          hasChildren && setDrawerOpen(!drawerOpen)
         }}
       >
         <Badge badgeContent={alert} color="secondary">
           <ListItemText>{t(text)}</ListItemText>
         </Badge>
-        {drawerOpen ? <ExpandLess /> : <ExpandMore />}
+        {hasChildren && (drawerOpen ? <ExpandLess /> : <ExpandMore />)}
       </ListItemButton>
 
       <Collapse in={drawerOpen} timeout="auto" unmountOnExit>
