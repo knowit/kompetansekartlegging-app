@@ -3,6 +3,13 @@ import { Fab, Modal, Tooltip } from '@mui/material'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import DescriptionTable from './DescriptionTable'
 import { useTranslation } from 'react-i18next'
+import styled from '@emotion/styled'
+
+const FabContainer = styled.div`
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+`
 
 type FloatingScaleDescButtonProps = {
   isMobile: boolean
@@ -41,7 +48,7 @@ const FloatingScaleDescButton = ({
   }
 
   return (
-    <>
+    <FabContainer>
       {scaleDescOpen && (
         <Modal
           open={scaleDescOpen}
@@ -81,7 +88,7 @@ const FloatingScaleDescButton = ({
           {t('scaleDescription')}
         </Fab>
       )}
-    </>
+    </FabContainer>
   )
 }
 

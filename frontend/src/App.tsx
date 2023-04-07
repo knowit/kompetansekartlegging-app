@@ -10,7 +10,6 @@ import {
   Theme,
   StyledEngineProvider,
 } from '@mui/material/styles'
-import { Box } from '@mui/material'
 import { Button, debounce, Snackbar, Alert } from '@mui/material'
 import { isMobile } from 'react-device-detect'
 import FloatingScaleDescButton from './components/FloatingScaleDescButton'
@@ -25,34 +24,7 @@ import {
 import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth'
 import { useAppSelector, useAppDispatch } from './redux/hooks'
 import { useTranslation } from 'react-i18next'
-import styled from '@emotion/styled'
 
-const navbarHeight = 100
-const menuWidth = 250
-
-const Container = styled.div`
-  .header {
-    max-height: ${navbarHeight}px;
-  }
-
-  .content {
-    margin-top: ${navbarHeight}px;
-    min-height: calc(100vh - ${navbarHeight}px)
-  }
-
-  .menu {
-    .MuiPaper-root {
-      margin-top: ${navbarHeight}px;
-      z-index: 0;
-      width: ${menuWidth}px;
-      box-sizing: border-box;
-    },
-
-  }
-  .panel {
-    margin-left: ${menuWidth}px;
-  }
-`
 const userBranch = import.meta.env.VITE_USER_BRANCH
 
 // console.log("Hosted branch: ", userBranch);
