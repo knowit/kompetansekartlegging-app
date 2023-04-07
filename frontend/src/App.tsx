@@ -30,7 +30,7 @@ import styled from '@emotion/styled'
 const navbarHeight = 100
 const menuWidth = 250
 
-const AppContainer = styled.div`
+const Container = styled.div`
   .header {
     max-height: ${navbarHeight}px;
   }
@@ -229,7 +229,7 @@ const App = () => {
         ) : null}
 
         {userState.isSignedIn ? (
-          <AppContainer>
+          <>
             {isMobile ? null : (
               <NavBarDesktop
                 displayAnswers={displayAnswers}
@@ -258,7 +258,7 @@ const App = () => {
                 isMobile={isMobile}
               />
             )}
-          </AppContainer>
+          </>
         ) : (
           <Login isMobile={isMobile} />
         )}

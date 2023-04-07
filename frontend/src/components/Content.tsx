@@ -1,4 +1,10 @@
-import { Drawer, List, ListItemButton, ListItemText } from '@mui/material'
+import {
+  Container,
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemText,
+} from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { CreateQuestionAnswerInput, QuestionType } from '../API'
 import * as customQueries from '../graphql/custom-queries'
@@ -50,6 +56,30 @@ import { TFunction } from 'i18next'
 import { DropdownMenuItem } from './DropdownMenuItem'
 import getGroupMenuitems from './GroupLeaderPanel/GroupLeaderMenu'
 import { getCategory } from '../graphql/queries'
+import styled from '@emotion/styled'
+
+const navbarHeight = 100
+const menuWidth = 250
+
+const ContentContainer = styled.div`
+  .header {
+    max-height: ${navbarHeight}px;
+  }
+
+  .menu {
+    .MuiPaper-root {
+      padding-top: ${navbarHeight}px;
+      z-index: 0;
+      width: ${menuWidth}px;
+      box-sizing: border-box;
+    },
+
+  }
+  .panel {
+    padding-top: ${navbarHeight}px;
+    margin-left: ${menuWidth}px;
+  }
+`
 
 export enum MenuButton {
   Overview,
@@ -413,7 +443,7 @@ const Content = ({ ...props }: ContentProps) => {
   }
 
   return (
-    <div className="content">
+    <ContentContainer>
       <Drawer className="menu" variant="permanent" anchor="left">
         <List>
           <ListItemButton
@@ -464,7 +494,7 @@ const Content = ({ ...props }: ContentProps) => {
         </List>
       </Drawer>
 
-      <div className="panel">{setupPanel()}</div>
+      <Container className="panel">{setupPanel()}</Container>
 
       <AlertDialog
         setAlertDialogOpen={setAlertDialogOpen}
@@ -477,7 +507,7 @@ const Content = ({ ...props }: ContentProps) => {
         setHistoryViewOpen={props.setAnswerHistoryOpen}
         isMobile={props.isMobile}
       />
-    </div>
+    </ContentContainer>
   )
 }
 
