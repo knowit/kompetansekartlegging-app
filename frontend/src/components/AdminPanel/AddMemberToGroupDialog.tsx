@@ -116,11 +116,7 @@ const AddMemberToGroupDialog = ({
           />
           <FormControlLabel
             control={
-              <Switch
-                checked={showOnlyUnset}
-                onChange={toggleShowOnlyUnset}
-                color="primary"
-              />
+              <Switch checked={showOnlyUnset} onChange={toggleShowOnlyUnset} />
             }
             label={t('myGroup.showOnlyEmployeesWithoutGroupLeader')}
           />

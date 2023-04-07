@@ -91,7 +91,6 @@ const GroupMembers = ({
       </TableContainer>
       <Button
         variant="contained"
-        color="primary"
         startIcon={<PersonAddIcon />}
         onClick={() => setOpen(true)}
       >

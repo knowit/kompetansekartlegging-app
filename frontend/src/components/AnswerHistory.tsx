@@ -116,9 +116,7 @@ export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
           <HistoryTreeView data={props.history} />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            {t('close')}
-          </Button>
+          <Button onClick={handleClose}>{t('close')}</Button>
         </DialogActions>
       </Dialog>
     </div>

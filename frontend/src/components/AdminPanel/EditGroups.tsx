@@ -393,7 +393,6 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
           />
           <Button
             variant="contained"
-            color="primary"
             startIcon={<AddIcon />}
             onClick={() => setShowAddGroup(true)}
           >

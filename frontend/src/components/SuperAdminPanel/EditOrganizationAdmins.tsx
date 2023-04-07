@@ -135,7 +135,6 @@ const EditOrganizationAdmins = () => {
           <AdminTable admins={admins} deleteAdmin={deleteAdmin} />
           <Button
             variant="contained"
-            color="primary"
             startIcon={<PersonAddIcon />}
             onClick={() => setShowAddAdmin(true)}
           >

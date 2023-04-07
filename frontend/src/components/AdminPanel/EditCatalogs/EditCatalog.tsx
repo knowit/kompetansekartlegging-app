@@ -84,7 +84,6 @@ const EditCatalog = () => {
             <div>
               <Button
                 variant="contained"
-                color="primary"
                 startIcon={<AddIcon />}
                 onClick={() => setShowAddCategoryDialog(true)}
               >

@@ -210,10 +210,8 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => 1} color="primary">
-              {t('confirm')}
-            </Button>
-            <Button onClick={handleCloseAlert} color="primary" autoFocus>
+            <Button onClick={() => 1}>{t('confirm')}</Button>
+            <Button onClick={handleCloseAlert} autoFocus>
               {t('abort')}
             </Button>
           </DialogActions>

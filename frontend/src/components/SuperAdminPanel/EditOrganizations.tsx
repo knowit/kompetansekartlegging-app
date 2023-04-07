@@ -168,7 +168,6 @@ const EditOrganizations = () => {
           />
           <Button
             variant="contained"
-            color="primary"
             startIcon={<AddIcon />}
             onClick={() => setShowAddOrganization(true)}
           >

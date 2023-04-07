@@ -208,7 +208,6 @@ const Root = () => {
           />
           <Button
             variant="contained"
-            color="primary"
             startIcon={<AddIcon />}
             onClick={() => setShowAddCatalogDialog(true)}
           >

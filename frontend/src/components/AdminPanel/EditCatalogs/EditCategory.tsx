@@ -125,7 +125,6 @@ const EditCategory = () => {
             <div>
               <Button
                 variant="contained"
-                color="primary"
                 startIcon={<AddIcon />}
                 onClick={() => setShowAddQuestionDialog(true)}
               >

@@ -155,7 +155,6 @@ const EditGroupLeaders = () => {
           />
           <Button
             variant="contained"
-            color="primary"
             startIcon={<PersonAddIcon />}
             onClick={() => setShowAddGroupLeader(true)}
           >
