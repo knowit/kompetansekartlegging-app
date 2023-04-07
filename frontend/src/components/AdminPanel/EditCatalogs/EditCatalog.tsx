@@ -62,7 +62,7 @@ const EditCatalog = () => {
 
   return (
     <>
-      <Container>
+      <>
         {error && <p>{t('errorOccured') + error}</p>}
         {loading && <CircularProgress />}
         {!error && !loading && categories && (
@@ -73,14 +73,14 @@ const EditCatalog = () => {
                 urlOverrides={breadCrumbsUrlOverrides}
               />
             </Box>
-            <Container fixed>
+            <>
               <CategoryList
                 categories={categories}
                 refresh={refresh}
                 formDefinitionID={formDefinitionID}
                 formDefinitionLabel={label}
               />
-            </Container>
+            </>
             <div>
               <Button
                 variant="contained"
@@ -100,7 +100,7 @@ const EditCatalog = () => {
             )}
           </>
         )}
-      </Container>
+      </>
     </>
   )
 }

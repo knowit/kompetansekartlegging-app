@@ -115,7 +115,7 @@ const EditAdmins = () => {
   }
 
   return (
-    <Container className={commonStyles.container}>
+    <>
       {error && <p>{t('errorOccured') + error}</p>}
       {loading && <CircularProgress />}
       {!error && !loading && admins && (
@@ -156,7 +156,7 @@ const EditAdmins = () => {
           roleName={t('administrator').toLowerCase()}
         />
       )}
-    </Container>
+    </>
   )
 }
 

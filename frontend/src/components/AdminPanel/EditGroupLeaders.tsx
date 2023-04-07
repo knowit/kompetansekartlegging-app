@@ -137,7 +137,7 @@ const EditGroupLeaders = () => {
   }
 
   return (
-    <Container className={commonStyles.container}>
+    <>
       {error && <p>{t('errorOccured') + error}</p>}
       {loading && <CircularProgress />}
       {!error && !loading && groupLeaders && (
@@ -183,7 +183,7 @@ const EditGroupLeaders = () => {
           onConfirm={addGroupLeaderConfirm}
         />
       )}
-    </Container>
+    </>
   )
 }
 

@@ -43,7 +43,7 @@ const DownloadExcel = () => {
   })
 
   return (
-    <Container className={commonStyles.container}>
+    <>
       <Card variant="outlined">
         <CardContent>
           {t('menu.submenu.downloadCatalogs')}
@@ -56,7 +56,7 @@ const DownloadExcel = () => {
       {!error && !loading && formDefinitions && (
         <DownloadExcelTable formDefinitions={formDefinitions} />
       )}
-    </Container>
+    </>
   )
 }
 

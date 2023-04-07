@@ -119,7 +119,7 @@ const EditSuperAdmins = () => {
   }
 
   return (
-    <Container>
+    <div>
       {error && <p>{t('errorOccured') + error}</p>}
       {loading && <CircularProgress />}
       {!error && !loading && admins && (
@@ -160,7 +160,7 @@ const EditSuperAdmins = () => {
           roleName={t('administrator').toLowerCase()}
         />
       )}
-    </Container>
+    </div>
   )
 }
 

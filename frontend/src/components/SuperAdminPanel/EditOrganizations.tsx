@@ -145,7 +145,7 @@ const EditOrganizations = () => {
   }
 
   return (
-    <Container className={commonStyles.container}>
+    <>
       {error && <p>{t('errorOccured') + error}</p>}
       {mutationError && (
         <>
@@ -200,7 +200,7 @@ const EditOrganizations = () => {
           organization={organizationToBeDeleted}
         />
       )}
-    </Container>
+    </>
   )
 }
 

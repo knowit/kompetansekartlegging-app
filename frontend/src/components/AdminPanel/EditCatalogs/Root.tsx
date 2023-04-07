@@ -188,7 +188,7 @@ const Root = () => {
   }
 
   return (
-    <Container className={commonStyles.container}>
+    <>
       {error && <p>{t('errorOccured') + error}</p>}
       {loading && <CircularProgress />}
       {!error && !loading && catalogs && (
@@ -243,7 +243,7 @@ const Root = () => {
           onConfirm={copyCatalogConfirm}
         />
       )}
-    </Container>
+    </>
   )
 }
 

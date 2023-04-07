@@ -368,7 +368,7 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
   ])
 
   return (
-    <Container className={commonStyles.container}>
+    <>
       {isError && <p>{t('errorOccured') + isError}</p>}
       {isLoading && <CircularProgress />}
       {!isError && !isLoading && groups && (
@@ -441,7 +441,7 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
           onConfirm={addGroupConfirm}
         />
       )}
-    </Container>
+    </>
   )
 }
 

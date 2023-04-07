@@ -25,7 +25,7 @@ const Main = ({
 }: any) => {
   const { t } = useTranslation()
   return (
-    <Container className={commonStyles.container}>
+    <>
       {isError && <p>{t('errorOccured') + isError}</p>}
       {isLoading && <CircularProgress />}
       {!isError && !isLoading && allAvailableUsersAnnotated && (
@@ -54,7 +54,7 @@ const Main = ({
         roleName={t('groupDefiniteForm')}
         disableRoleSuffix
       />
-    </Container>
+    </>
   )
 }
 
