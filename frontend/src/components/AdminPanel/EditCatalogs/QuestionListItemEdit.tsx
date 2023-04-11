@@ -10,10 +10,10 @@ import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 
 import { QuestionType } from '../../../API'
-import { KnowitColors } from '../../../styles'
 import CategoriesSelect from './CategoriesSelect'
 import { useTranslation } from 'react-i18next'
 import EditActionButtons from './EditActionButtons'
+import TextField from '@mui/material/TextField'
 
 const initialConfig = (q: any) => {
   if (q.type === QuestionType.CustomScaleLabels) {
