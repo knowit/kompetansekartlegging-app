@@ -8,7 +8,7 @@ on:
         required: true
       aws_region:
         type: string
-        default: 'eu-central-1'
+        default: "eu-central-1"
       deploy_backend_only:
         type: boolean
         default: false
@@ -61,6 +61,7 @@ jobs:
         if: inputs.deploy_backend_only == false
         env:
           VITE_USER_BRANCH: ${{ inputs.aws_environment == 'prod' && 'master' || 'dev' }}
+          NODE_OPTIONS: "--max_old_space_size=4096"
         run: |
           cd cdk && npx ts-node --prefer-ts-exts hooks/hooks.ts && \
           npm run codegen && \
@@ -85,6 +86,6 @@ jobs:
           SLACK_COLOR: ${{ needs.deploy.result }}
           SLACK_USERNAME: Kompetansekartlegging deploy bot
           SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOY_WEBHOOK_URL }}
-          SLACK_MESSAGE: '[Deploy to ${{inputs.aws_environment}}] - ${{ github.event.head_commit.message }}'
+          SLACK_MESSAGE: "[Deploy to ${{inputs.aws_environment}}] - ${{ github.event.head_commit.message }}"
           MSG_MINIMAL: event,commit
           SLACK_FOOTER:
