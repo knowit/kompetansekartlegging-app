@@ -21,7 +21,7 @@ import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth'
 import { useAppSelector, useAppDispatch } from './redux/hooks'
 import { useTranslation } from 'react-i18next'
 
-const userBranch = import.meta.env.VITE_USER_BRANCH
+const userBranch = process ? process.env.REACT_APP_USER_BRANCH : '' // Process does not exist in Webpack 5?
 
 // console.log("Hosted branch: ", userBranch);
 
@@ -126,10 +126,13 @@ const App = () => {
       .then((res) => {
         if (cognitoUserContainsAttributes(res)) {
           Auth.currentSession().then((currentSession) => {
-            res.refreshSession(currentSession.getRefreshToken(), () => {
-              dispatch(setUserInfo(res))
-              dispatch(fetchOrganizationNameByID(res))
-            })
+            res.refreshSession(
+              currentSession.getRefreshToken(),
+              (err: any, session: any) => {
+                dispatch(setUserInfo(res))
+                dispatch(fetchOrganizationNameByID(res))
+              }
+            )
           })
         }
       })
