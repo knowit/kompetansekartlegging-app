@@ -30,6 +30,7 @@ import DeleteUserFromGroupDialog from './DeleteUserFromGroupDialog'
 import { getAttribute } from './helpers'
 import PictureAndNameCell from './PictureAndNameCell'
 import useApiGet from './useApiGet'
+import InfoCard from '../InfoCard'
 
 const Admin = (props: any) => {
   const { admin, deleteAdmin } = props
@@ -120,13 +121,10 @@ const EditAdmins = () => {
       {loading && <CircularProgress />}
       {!error && !loading && admins && (
         <>
-          <Card variant="outlined">
-            <CardContent>
-              {t('admin.editAdmins.editAdministrators')}
-
-              {t('admin.editAdmins.description')}
-            </CardContent>
-          </Card>
+          <InfoCard
+            title="admin.editAdmins.editAdministrators"
+            description="admin.editAdmins.description"
+          />
           <AdminTable admins={admins} deleteAdmin={deleteAdmin} />
           <Button
             variant="contained"

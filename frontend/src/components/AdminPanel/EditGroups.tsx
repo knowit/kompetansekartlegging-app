@@ -49,6 +49,7 @@ import { compareByCreatedAt, compareByName, getAttribute } from './helpers'
 import PictureAndNameEditCell from './PictureAndNameEditCell'
 import { useTranslation } from 'react-i18next'
 import useApiGet from './useApiGet'
+import InfoCard from '../InfoCard'
 
 const Group = ({
   addMembersToGroup,
@@ -373,13 +374,10 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
       {isLoading && <CircularProgress />}
       {!isError && !isLoading && groups && (
         <>
-          <Card>
-            <CardContent>
-              {t('menu.submenu.editGroups')}
-
-              {t('admin.editGroups.description')}
-            </CardContent>
-          </Card>
+          <InfoCard
+            title="menu.submenu.editGroups"
+            description="admin.editGroups.description"
+          />
           <GroupsTable
             groups={groups}
             deleteGroup={deleteGroup}

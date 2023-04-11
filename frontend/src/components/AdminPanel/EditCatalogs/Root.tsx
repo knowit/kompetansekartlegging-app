@@ -31,6 +31,7 @@ import AddCatalogDialog from './AddCatalogDialog'
 import { useTranslation } from 'react-i18next'
 import { i18nDateToLocaleString } from '../../../i18n/i18n'
 import CopyCatalogDialog from './CopyCatalogDialog'
+import InfoCard from '../../InfoCard'
 
 const Catalog = ({
   catalog,
@@ -193,13 +194,10 @@ const Root = () => {
       {loading && <CircularProgress />}
       {!error && !loading && catalogs && (
         <>
-          <Card variant="outlined">
-            <CardContent>
-              {t('menu.submenu.editCatalogs')}
-
-              {t('admin.editCatalogs.description')}
-            </CardContent>
-          </Card>
+          <InfoCard
+            title="menu.submenu.editCatalogs"
+            description="admin.editCatalogs.description"
+          />
           <CatalogTable
             catalogs={catalogs}
             deleteCatalog={deleteCatalog}

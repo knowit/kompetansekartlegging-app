@@ -30,6 +30,7 @@ import PictureAndNameCell from '../AdminPanel/PictureAndNameCell'
 import useApiGet from '../AdminPanel/useApiGet'
 import { Button } from '@mui/material'
 import { Table } from '@mui/material'
+import InfoCard from '../InfoCard'
 
 const Admin = (props: any) => {
   const { admin, deleteAdmin } = props
@@ -125,13 +126,10 @@ const EditOrganizationAdmins = () => {
       {loading && <CircularProgress />}
       {!error && !loading && admins && (
         <>
-          <Card style={{ marginBottom: '24px' }} variant="outlined">
-            <CardContent>
-              {t('menu.submenu.editOrganizationAdministrators')}
-
-              {t('superAdmin.editOrganizationAdministrators.description')}
-            </CardContent>
-          </Card>
+          <InfoCard
+            title="menu.submenu.editOrganizationAdministrators"
+            description="superAdmin.editOrganizationAdministrators.description"
+          />
           <AdminTable admins={admins} deleteAdmin={deleteAdmin} />
           <Button
             variant="contained"

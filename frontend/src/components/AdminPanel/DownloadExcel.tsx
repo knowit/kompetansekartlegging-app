@@ -19,6 +19,7 @@ import { Table } from '@mui/material'
 import commonStyles from './common.module.css'
 import { useTranslation } from 'react-i18next'
 import { i18nDateToLocaleDateString } from '../../i18n/i18n'
+import InfoCard from '../InfoCard'
 
 type FormDefinition = {
   id: string
@@ -44,13 +45,10 @@ const DownloadExcel = () => {
 
   return (
     <>
-      <Card variant="outlined">
-        <CardContent>
-          {t('menu.submenu.downloadCatalogs')}
-
-          {t('admin.downloadCatalogs.description')}
-        </CardContent>
-      </Card>
+      <InfoCard
+        title="menu.submenu.downloadCatalogs"
+        description="admin.downloadCatalogs.description"
+      />
       {error && <p>{t('errorOccured') + error}</p>}
       {loading && <CircularProgress />}
       {!error && !loading && formDefinitions && (

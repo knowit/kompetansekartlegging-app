@@ -28,6 +28,7 @@ import {
   removeOrganization,
 } from './SuperAdminAPI'
 import { OrganizationInfo } from './SuperAdminTypes'
+import InfoCard from '../InfoCard'
 
 interface OrganizationProps {
   organization: OrganizationInfo
@@ -155,13 +156,10 @@ const EditOrganizations = () => {
       {loading && <CircularProgress />}
       {!error && !loading && (
         <>
-          <Card variant="outlined">
-            <CardContent>
-              {t('menu.submenu.editOrganizations')}
-
-              {t('superAdmin.editOrganizations.description')}
-            </CardContent>
-          </Card>
+          <InfoCard
+            title="menu.submenu.editOrganizations"
+            description="superAdmin.editOrganizations.description"
+          />
           <OrganizationTable
             organizations={organizations}
             deleteOrganization={openDeleteOrganizationDialog}

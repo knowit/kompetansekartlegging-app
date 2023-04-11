@@ -33,6 +33,7 @@ import DeleteUserFromGroupDialog from './DeleteUserFromGroupDialog'
 import { getAttribute } from './helpers'
 import PictureAndNameCell from './PictureAndNameCell'
 import useApiGet from './useApiGet'
+import InfoCard from '../InfoCard'
 
 const GroupLeader = (props: any) => {
   const { groupLeader, deleteGroupLeader } = props
@@ -142,13 +143,11 @@ const EditGroupLeaders = () => {
       {loading && <CircularProgress />}
       {!error && !loading && groupLeaders && (
         <>
-          <Card variant="outlined">
-            <CardContent>
-              {t('menu.submenu.editGroupLeaders')}
+          <InfoCard
+            title="menu.submenu.editGroupLeaders"
+            description="admin.editGroupLeaders.description"
+          />
 
-              {t('admin.editGroupLeaders.description')}
-            </CardContent>
-          </Card>
           <GroupLeaderTable
             groupLeaders={groupLeaders}
             deleteGroupLeader={deleteGroupLeader}
