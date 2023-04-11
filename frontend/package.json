@@ -12,15 +12,14 @@
     "aws-amplify": "^5.0.11",
     "clsx": "^1.2.1",
     "i18next": "^22.4.10",
-    "react-i18next": "^12.2.0",
     "react": "^16.14.0",
     "react-device-detect": "^2.2.2",
     "react-dom": "^16.14.0",
+    "react-i18next": "^12.2.0",
     "react-markdown": "^8.0.5",
     "react-redux": "^8.0.5",
     "react-router": "^5.3.4",
     "react-router-dom": "^5.3.4",
-    "react-scripts": "^4.0.3",
     "react-swipeable": "^7.0.0",
     "recharts": "^2.3.2",
     "uuid": "^9.0.0"
@@ -36,12 +35,12 @@
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
       "eslint:recommended",
       "plugin:@typescript-eslint/recommended"
     ],
     "plugins": [
-      "prettier"
+      "prettier",
+      "react-hooks"
     ],
     "rules": {
       "prettier/prettier": "warn",
@@ -84,11 +83,17 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/recharts": "^1.8.24",
     "@types/uuid": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@vitejs/plugin-react": "^3.1.0",
     "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "^2.8.3",
     "typescript": "^4.9.4",
-    "@typescript-eslint/eslint-plugin": "^4.33.0",
-    "eslint-config-prettier": "^8.6.0",
-    "eslint-plugin-prettier": "^4.2.1"
+    "vite": "^4.2.1",
+    "vite-plugin-node-polyfills": "^0.7.0",
+    "vite-plugin-svgr": "^2.4.0",
+    "vite-tsconfig-paths": "^4.0.7"
   }
 }

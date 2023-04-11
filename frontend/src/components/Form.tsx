@@ -108,15 +108,6 @@ const FormStyleMobile = makeStyles({
   },
 })
 
-type QuestionType = {
-  id: string
-  text: string
-  topic: string
-  category: {
-    text: string
-  }
-}
-
 export const Form = ({ ...props }: FormProps) => {
   const { t } = useTranslation()
   const sliderValues = useRef<Map<string, SliderValues>>(new Map()) //String is questionid, values are knowledge and motivation
@@ -128,9 +119,7 @@ export const Form = ({ ...props }: FormProps) => {
     props.updateAnswer(props.activeCategory, sliderValues.current)
   }
 
-  const getQuestionsForCategory = (
-    _items: QuestionType[] | undefined
-  ): JSX.Element[] => {
+  const getQuestionsForCategory = (): JSX.Element[] => {
     //console.log("Props to make questions from: ", props.questionAnswers);
     const questionAnswers =
       props.questionAnswers
@@ -183,7 +172,7 @@ export const Form = ({ ...props }: FormProps) => {
     if (!props.formDefinition) return <Fragment />
     return (
       <Fragment>
-        {getQuestionsForCategory(undefined)}
+        {getQuestionsForCategory()}
         <div className={style.blockButtons}>
           {props.categories.length > 0 ? (
             <Button onClick={handleClickSubmit} className={style.submitButton}>
