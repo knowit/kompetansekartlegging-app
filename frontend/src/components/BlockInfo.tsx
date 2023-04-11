@@ -50,10 +50,8 @@ export const BlockInfo = (props: {
   if (questions.length > answeredQuestions.length)
     return (
       <div>
-        <div>
-          <ErrorOutlineRoundedIcon />
-          <div>{t('myAnswers.blockHasNotBeenCompleted')}</div>
-        </div>
+        <ErrorOutlineRoundedIcon color="warning" />
+        <div>{t('myAnswers.blockHasNotBeenCompleted')}</div>
       </div>
     )
 
@@ -67,27 +65,23 @@ export const BlockInfo = (props: {
   if (timeDiff > staleAnswersLimit) {
     return (
       <div>
+        <UpdateIcon color="warning" />
         <div>
-          <UpdateIcon />
-          <div>
-            {t('myAnswers.itHasBeenTimeSinceTheBlockWasUpdated', {
-              time: timeBetweenString(timeOfOldestQuestion, now, TimeType.DAYS),
-            })}
-          </div>
+          {t('myAnswers.itHasBeenTimeSinceTheBlockWasUpdated', {
+            time: timeBetweenString(timeOfOldestQuestion, now, TimeType.DAYS),
+          })}
         </div>
       </div>
     )
   } else {
     return (
       <div>
+        <CheckCircleOutlineRoundedIcon color="success" />
         <div>
-          <CheckCircleOutlineRoundedIcon />
-          <div>
-            {t('myAnswers.theBlockWasLastUpdatedDate', {
-              date: i18nDateToLocaleDateString(new Date(timeOfOldestQuestion)),
-              interpolation: { escapeValue: false },
-            })}
-          </div>
+          {t('myAnswers.theBlockWasLastUpdatedDate', {
+            date: i18nDateToLocaleDateString(new Date(timeOfOldestQuestion)),
+            interpolation: { escapeValue: false },
+          })}
         </div>
       </div>
     )

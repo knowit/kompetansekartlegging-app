@@ -45,7 +45,7 @@ const DropdownMenuItem = ({
         onClick={() => handleMenuClick(panelId, item.key)}
         selected={item.key === activeSubmenuItem}
       >
-        <Badge badgeContent={item.alert} color="secondary">
+        <Badge badgeContent={item.alert} color="warning">
           <ListItemText>{t(item.text)}</ListItemText>
         </Badge>
       </ListItemButton>
@@ -59,7 +59,7 @@ const DropdownMenuItem = ({
           hasChildren && setDrawerOpen(!drawerOpen)
         }}
       >
-        <Badge badgeContent={alert} color="secondary">
+        <Badge badgeContent={alert} color="warning">
           <ListItemText>{t(text)}</ListItemText>
         </Badge>
         {hasChildren && (drawerOpen ? <ExpandLess /> : <ExpandMore />)}

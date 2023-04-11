@@ -10,10 +10,8 @@ const theme = createTheme({
       main: KnowitColors.darkBrown,
       dark: KnowitColors.black,
     },
-    secondary: {
-      light: KnowitColors.lightGreen,
-      main: KnowitColors.green,
-      dark: KnowitColors.darkGreen,
+    warning: {
+      main: KnowitColors.fuchsia,
     },
   },
   components: {

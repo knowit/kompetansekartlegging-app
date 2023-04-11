@@ -42,7 +42,10 @@ export const YourAnswers = ({ ...props }: YourAnswerProps) => {
         <BlockInfo
           questions={props.questionAnswers.get(props.activeCategory)}
         />
-        <Button onClick={() => props.enableAnswerEditMode()}>
+        <Button
+          variant="contained"
+          onClick={() => props.enableAnswerEditMode()}
+        >
           {t('myAnswers.fillOut')}
         </Button>
         <div>{getCategoryDescription()}</div>
