@@ -132,9 +132,9 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
               open={isHelpModalOpen}
               onClose={() => setHelpModalOpen(false)}
             >
-              <>
+              <div className="modalContent">
                 <ReactMarkdown>{helpMarkdown}</ReactMarkdown>
-              </>
+              </div>
             </Modal>
           ) : null}
           {userState.roles.includes(UserRole.Admin) ? (

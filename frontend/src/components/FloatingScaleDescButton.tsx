@@ -54,12 +54,11 @@ const FloatingScaleDescButton = ({
           open={scaleDescOpen}
           onClose={() => setScaleDescOpen((scaleDescOpen) => !scaleDescOpen)}
         >
-          <div>
+          <div className="modalContent">
             <DescriptionTable
               onClose={() => setScaleDescOpen(false)}
               isMobile={isMobile}
             />
-            <div></div>
           </div>
         </Modal>
       )}

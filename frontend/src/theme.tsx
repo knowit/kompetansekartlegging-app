@@ -32,6 +32,24 @@ const theme = createTheme({
         },
       },
     },
+    MuiModal: {
+      styleOverrides: {
+        root: {
+          '.modalContent': {
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            minWidth: '50vw',
+            backgroundColor: KnowitColors.white,
+            border: '2px solid #000',
+            maxHeight: '80%',
+            overflowY: 'auto',
+            padding: '20px',
+          },
+        },
+      },
+    },
   },
 })
 
