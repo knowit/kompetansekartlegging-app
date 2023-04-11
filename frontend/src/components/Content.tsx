@@ -284,8 +284,7 @@ const Content = ({ ...props }: ContentProps) => {
     const result = (
       await helper.callBatchGraphQL<CreateQuestionAnswerResult>(
         customQueries.batchCreateQuestionAnswer2,
-        { input: quAnsInput, organizationID: userState.organizationID },
-        'QuestionAnswer'
+        { input: quAnsInput, organizationID: userState.organizationID }
       )
     ).map((result) => result.data?.batchCreateQuestionAnswer)
     // console.log("Result: ", result);
