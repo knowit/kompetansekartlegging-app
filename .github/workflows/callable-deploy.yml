@@ -65,7 +65,7 @@ jobs:
         run: |
           cd cdk && npx ts-node --prefer-ts-exts hooks/hooks.ts && \
           npm run codegen && \
-          cd ../frontend && echo $VITE_USER_BRANCH >> .env && \
+          cd ../frontend && echo $REACT_APP_USER_BRANCH >> .env && \
           CI='' npm run build \
 
       - name: Deploy frontend to ${{ inputs.aws_environment }}

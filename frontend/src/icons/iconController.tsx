@@ -108,7 +108,7 @@ const CreateHover = (
       key={key ? key : null}
       title={getIconDescription(knowledge, level)}
     >
-      <div> {element} </div>
+      {element}
     </Tooltip>
   )
 }
