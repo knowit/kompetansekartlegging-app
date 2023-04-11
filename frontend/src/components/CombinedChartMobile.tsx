@@ -207,8 +207,8 @@ export const CombinedChartMobile = ({
   }
 
   const swipeHandlers = useSwipeable({
-    onSwipedLeft: () => changePageLeft(),
-    onSwipedRight: () => changePageRight(),
+    onSwipedLeft: (_eventData) => changePageLeft(),
+    onSwipedRight: (_eventData) => changePageRight(),
     ...swipeConfig,
   })
 

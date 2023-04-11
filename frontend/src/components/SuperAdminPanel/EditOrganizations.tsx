@@ -116,7 +116,7 @@ const EditOrganizations = () => {
     adminEmail: string
   ) => {
     addOrganization(organization, adminEmail)
-      .then(() => {
+      .then((res) => {
         setMutationError('')
       })
       .catch((err) => {
@@ -135,7 +135,7 @@ const EditOrganizations = () => {
 
   const deleteOrganizationConfirm = (organization: OrganizationInfo) => {
     removeOrganization(organization)
-      .then(() => {
+      .then((res) => {
         setMutationError('')
       })
       .catch((err) => {
