@@ -50,6 +50,15 @@ const theme = createTheme({
         },
       },
     },
+    MuiCollapse: {
+      styleOverrides: {
+        root: {
+          '.submenuItem': {
+            paddingLeft: '20px',
+          },
+        },
+      },
+    },
   },
 })
 

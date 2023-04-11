@@ -40,6 +40,7 @@ const DropdownMenuItem = ({
   const subMenuItems = (activeSubmenuItem: any, items: any) =>
     items.map((item: any) => (
       <ListItemButton
+        className="submenuItem"
         key={item.key}
         onClick={() => handleMenuClick(panelId, item.key)}
         selected={item.key === activeSubmenuItem}
