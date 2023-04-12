@@ -14,6 +14,7 @@ import { i18nDateToLocaleDateString } from '../../i18n/i18n'
 import AddMemberToGroupDialog from './AddMemberToGroupDialog'
 import { getAttribute } from './helpers'
 import PictureAndNameCell from './PictureAndNameCell'
+import { KnowitColors } from '../../styles'
 
 const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
   const { t } = useTranslation()
@@ -40,7 +41,7 @@ const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
       <TableCell>
         <Button
           onClick={() => deleteMember(user)}
-          style={{ fontStyle: 'italic' }}
+          style={{ fontStyle: 'italic', color: KnowitColors.black }}
         >
           {t('myGroup.removeFromGroup')}
         </Button>

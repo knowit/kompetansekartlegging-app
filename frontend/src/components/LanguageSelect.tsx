@@ -16,7 +16,12 @@ export const LanguageSelect = (props: LanguageSelectProps) => {
 
   const classes = makeStyles({
     select: {
-      '&:before': {
+      '& .MuiOutlinedInput-notchedOutline': { border: 0 },
+      borderColor: props.color,
+      borderRadius: 0,
+      borderWidth: 1,
+      height: 35,
+      /*'&:before': {
         borderColor: props.color,
       },
       '&:after': {
@@ -24,7 +29,7 @@ export const LanguageSelect = (props: LanguageSelectProps) => {
       },
       '&:not(.Mui-disabled):hover::before': {
         borderColor: props.color,
-      },
+      },*/
     },
     arrowIcon: {
       fill: props.color,
@@ -39,6 +44,7 @@ export const LanguageSelect = (props: LanguageSelectProps) => {
 
   return (
     <Select
+      sx={{ borderBottom: 2 }}
       className={classes.select}
       value={i18n.language}
       inputProps={{

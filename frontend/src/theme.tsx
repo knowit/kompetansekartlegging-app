@@ -1,3 +1,4 @@
+import { grey } from '@mui/material/colors'
 import {
   unstable_createMuiStrictModeTheme as createMuiTheme,
   adaptV4Theme,
@@ -13,6 +14,7 @@ const theme = createMuiTheme(
       secondary: {
         main: KnowitColors.fuchsia,
       },
+      grey: grey,
     },
   })
 )

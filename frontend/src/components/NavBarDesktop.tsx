@@ -170,7 +170,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
     maxHeight: '80%',
     overflowY: 'auto',
     p: 4,
-    borderRadius: 10,
+    //borderRadius: 10,
   }
 
   const [helpMarkdown, setHelpMarkdown] = useState<any>()

@@ -15,7 +15,7 @@ import RadioGroup from '@mui/material/RadioGroup'
 import TextField from '@mui/material/TextField'
 
 import { QuestionType } from '../../../API'
-import { dialogStyles } from '../../../styles'
+import { dialogStyles, KnowitColors } from '../../../styles'
 import { CloseIcon } from '../../DescriptionTable'
 import { useTranslation } from 'react-i18next'
 
@@ -114,6 +114,7 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
           }
           value={description}
           className={style.textField}
+          style={{ marginRight: 0 }}
           onChange={(e: any) => setDescription(e.target.value)}
         />
         <FormControl component="fieldset">
