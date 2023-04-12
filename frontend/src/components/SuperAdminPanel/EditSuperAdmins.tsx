@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next'
 import AddUserToGroupDialog from '../AdminPanel/AddUserToGroupDialog'
 import {
   addUserToGroup,
-  listAdmins,
+  listSuperAdmins,
   listAllUsers,
   removeUserFromGroup,
 } from '../AdminPanel/adminApi'
@@ -31,7 +31,7 @@ const EditSuperAdmins = () => {
     loading,
     refresh,
   } = useApiGet({
-    getFn: listAdmins,
+    getFn: listSuperAdmins,
   })
   const [showAddAdmin, setShowAddAdmin] = useState<boolean>(false)
   const [showDeleteUserFromGroupDialog, setShowDeleteUserFromGroupDialog] =
