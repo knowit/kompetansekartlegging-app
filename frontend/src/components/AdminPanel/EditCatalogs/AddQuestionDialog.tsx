@@ -84,6 +84,7 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
           </IconButton>
         </Box>
         <TextField
+          autoFocus
           fullWidth
           label={t('admin.editCatalogs.subjectOfTheNewQuestion')}
           variant="outlined"
