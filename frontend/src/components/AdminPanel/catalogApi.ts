@@ -1,17 +1,17 @@
 import { v4 as uuidv4 } from 'uuid'
 
+import { API, Auth } from 'aws-amplify'
 import { callGraphQL } from '../../helperFunctions'
 import { store } from '../../redux/store'
 
 import {
-  // CategoriesByFormDefinitionQuery,
-  Query,
-  Mutation,
   Category,
   // DeleteCategoryMutation,
   // DeleteFormDefinitionMutation,
   // DeleteQuestionMutation,
   FormDefinition,
+  Mutation,
+  Query,
   Question,
   // QuestionsByCategoryQuery,
   // UpdateCategoryMutation,
@@ -20,25 +20,24 @@ import {
   // CreateFormDefinitionMutation,
   // CreateCategoryMutation,
   QuestionType,
-  // CreateQuestionMutation,
-  // FormDefinitionByOrganizationIdQuery,
 } from '../../API'
+import {
+  createCategory as createCategoryGq,
+  createFormDefinition as createFormDefinitionGq,
+  createQuestion as createQuestionGq,
+  deleteCategory as deleteCategoryGq,
+  deleteFormDefinition as deleteFormDefinitionGq,
+  deleteQuestion as deleteQuestionGq,
+  updateCategory as updateCategoryGq,
+  updateFormDefinition as updateFormDefinitionGq,
+  updateQuestion as updateQuestionGq,
+} from '../../graphql/mutations'
 import {
   categoriesByFormDefinition,
   formDefinitionByOrganizationId,
   questionsByCategory,
 } from '../../graphql/queries'
-import {
-  updateCategory as updateCategoryGq,
-  updateQuestion as updateQuestionGq,
-  updateFormDefinition as updateFormDefinitionGq,
-  deleteFormDefinition as deleteFormDefinitionGq,
-  deleteCategory as deleteCategoryGq,
-  deleteQuestion as deleteQuestionGq,
-  createFormDefinition as createFormDefinitionGq,
-  createCategory as createCategoryGq,
-  createQuestion as createQuestionGq,
-} from '../../graphql/mutations'
+import i18n from '../../i18n/i18n'
 import { ApiResponse } from './adminApi'
 
 const listAllFormDefinitionsForLoggedInUser = async (): Promise<
@@ -51,7 +50,10 @@ const listAllFormDefinitionsForLoggedInUser = async (): Promise<
     )
   } catch (e) {
     return {
-      error: `Could not get a list of all form definitions for organization id '${organizationID}'.`,
+      error: i18n.t(
+        'catalogApi.couldNotGetAListOfAllFormDefinitionsForOrganizationID',
+        { organizationID: organizationID }
+      ),
     }
   }
 }
@@ -79,7 +81,9 @@ const listAllFormDefinitionsByOrganizationID = async (
   } catch (e) {
     console.log(e)
     return {
-      error: `listAllFormDefinitionsByOrganizationID: Could not get a list of all form definitions for organization id '${organizationID}'.`,
+      error: i18n.t('catalogApi.listAllFormDefinitionsByOrganizationIDError', {
+        organizationID: organizationID,
+      }),
     }
   }
 }
@@ -107,7 +111,10 @@ const listCategoriesByFormDefinitionID = async (
     return { result: els || [] }
   } catch (e) {
     return {
-      error: `Could not get a list of categories for form definition id '${formDefinitionID}'.`,
+      error: i18n.t(
+        'catalogApi.couldNotGetAListOfCategoriesForFormDefinitionID',
+        { formDefinitionID: formDefinitionID }
+      ),
     }
   }
 }
@@ -142,7 +149,9 @@ const listQuestionsByCategoryID = async (
     return { result: els || [] }
   } catch (e) {
     return {
-      error: `Could not get a list of questions for category id '${categoryID}'.`,
+      error: i18n.t('catalogApi.couldNotGetAListOfQuestionsForCategoryID', {
+        categoryID: categoryID,
+      }),
     }
   }
 }
@@ -163,7 +172,9 @@ const updateCategory = async (
     return { result: el || null }
   } catch (e) {
     return {
-      error: `Could not update category '${id}'.`,
+      error: i18n.t('catalogApi.couldNotUpdateCategoryWithID', {
+        categoryID: id,
+      }),
     }
   }
 }
@@ -196,7 +207,9 @@ const updateQuestion = async (
     return { result: el || null }
   } catch (e) {
     return {
-      error: `Could not update question '${id}'.`,
+      error: i18n.t('catalogApi.couldNotUpdateQuestionWithID', {
+        questionID: id,
+      }),
     }
   }
 }
@@ -236,7 +249,9 @@ const updateFormDefinition = async (
     return { result: el || null }
   } catch (e) {
     return {
-      error: `Could not update form definition '${id}'.`,
+      error: i18n.t('catalogApi.couldNotUpdateFormDefinitionWithID', {
+        formDefinitionID: id,
+      }),
     }
   }
 }
@@ -259,7 +274,9 @@ const deleteFormDefinition = async (id: string): Promise<ApiResponse<null>> => {
     return { result: null }
   } catch (e) {
     return {
-      error: `Could not delete form definition '${id}'.`,
+      error: i18n.t('catalogApi.couldNotDeleteFormDefinitionWithID', {
+        formDefinitionID: id,
+      }),
     }
   }
 }
@@ -275,7 +292,9 @@ const deleteCategory = async (id: string): Promise<ApiResponse<null>> => {
     return { result: null }
   } catch (e) {
     return {
-      error: `Could not delete category '${id}'.`,
+      error: i18n.t('catalogApi.couldNotDeleteCategoryWithID', {
+        categoryID: id,
+      }),
     }
   }
 }
@@ -291,7 +310,34 @@ const deleteQuestion = async (id: string): Promise<ApiResponse<null>> => {
     return { result: null }
   } catch (e) {
     return {
-      error: `Could not delete question '${id}'.`,
+      error: i18n.t('catalogApi.couldNotDeleteQuestionWithID', {
+        questionID: id,
+      }),
+    }
+  }
+}
+
+const copyFormDefinition = async (
+  formDefinitionId: string,
+  name: string
+): Promise<ApiResponse<null>> => {
+  try {
+    await API.get('CreateCopyCatalogAPI', '', {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${(await Auth.currentSession())
+          .getAccessToken()
+          .getJwtToken()}`,
+      },
+      queryStringParameters: {
+        formDefId: `${formDefinitionId}`,
+        formDefLabel: `${name}`,
+      },
+    })
+    return { result: null }
+  } catch (e) {
+    return {
+      error: `Could not copy form definition '${formDefinitionId}'.`,
     }
   }
 }
@@ -316,7 +362,9 @@ const createFormDefinition = async (
     return { result: el || null }
   } catch (e) {
     return {
-      error: `Could not create form definition '${name}'.`,
+      error: i18n.t('catalogApi.couldNotCreateTheFormDefinition', {
+        catalogName: name,
+      }),
     }
   }
 }
@@ -345,7 +393,9 @@ const createCategory = async (
     return { result: el || null }
   } catch (e) {
     return {
-      error: `Could not create category '${name}'.`,
+      error: i18n.t('catalogApi.couldNotCreateTheCategory', {
+        categoryName: name,
+      }),
     }
   }
 }
@@ -380,7 +430,9 @@ const createQuestion = async (
     return { result: el || null }
   } catch (e) {
     return {
-      error: `Could not create question '${topic}'.`,
+      error: i18n.t('catalogApi.couldNotCreateTheQuestion', {
+        question: topic,
+      }),
     }
   }
 }
@@ -397,6 +449,7 @@ export {
   deleteFormDefinition,
   deleteCategory,
   deleteQuestion,
+  copyFormDefinition,
   createFormDefinition,
   createCategory,
   createQuestion,

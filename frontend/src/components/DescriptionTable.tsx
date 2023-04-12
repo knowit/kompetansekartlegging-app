@@ -1,10 +1,12 @@
-import React from 'react'
-import * as Icon from '../icons/iconController'
 import { makeStyles } from '@material-ui/core'
-import clsx from 'clsx'
-import { KnowitColors } from '../styles'
 import IconButton from '@material-ui/core/IconButton'
 import SvgIcon from '@material-ui/core/SvgIcon'
+import clsx from 'clsx'
+import React from 'react'
+import { useTranslation } from 'react-i18next'
+import i18n from '../i18n/i18n'
+import * as Icon from '../icons/iconController'
+import { KnowitColors } from '../styles'
 
 export const CloseIcon = () => (
   <SvgIcon>
@@ -98,69 +100,70 @@ type ScaleContainerObject = {
 }
 
 // Possibly a better way to do this...
-const COMPETENCE: ScaleContainerObject[] = [
+// Function > variable to support i18n language change
+const getCompetence = (): ScaleContainerObject[] => [
   {
     icon: Icon.K5,
-    heading: 'Superstjerne',
-    text: 'En etterspurt spesialist, som fungerer som nyskapende eller strategisk kraft på området',
+    heading: i18n.t('competenceScale.superstar'),
+    text: i18n.t('competenceScale.description.superstar'),
   },
   {
     icon: Icon.K4,
-    heading: 'Ekspert',
-    text: 'Har særdeles god kontroll og en etablert posisjon på området',
+    heading: i18n.t('competenceScale.expert'),
+    text: i18n.t('competenceScale.description.expert'),
   },
   {
     icon: Icon.K3,
-    heading: 'Profesjonelt nivå',
-    text: 'Har god kontroll og kan jobbe selvstendig med ikke-trivielle problemstillinger innenfor området',
+    heading: i18n.t('competenceScale.professional'),
+    text: i18n.t('competenceScale.description.professional'),
   },
   {
     icon: Icon.K2,
-    heading: 'Potensielt brukbar kompetanse',
-    text: 'Kompetanse som enten ikke er testet i oppdrag eller der man inntil videre trenger støtte fra andre i teamet',
+    heading: i18n.t('competenceScale.potentiallyUsable'),
+    text: i18n.t('competenceScale.description.potentiallyUsable'),
   },
 
   {
     icon: Icon.K1,
-    heading: 'Noe innsikt',
-    text: 'Har noe innsikt i området, samt evne til å resonnere over eller løse oppgaver på et ikke-profesjonelt nivå innenfor området',
+    heading: i18n.t('competenceScale.someInsight'),
+    text: i18n.t('competenceScale.description.someInsight'),
   },
   {
     icon: Icon.K0,
-    heading: 'Kjenner ikke til området',
+    heading: i18n.t('competenceScale.unfamiliar'),
     text: '',
   },
 ]
 
-const MOTIVATION: ScaleContainerObject[] = [
+const getMotivation = (): ScaleContainerObject[] => [
   {
     icon: Icon.M5,
-    heading: 'Ildsjel. Jeg brenner for dette.',
+    heading: i18n.t('motivationScale.enthusiast'),
     text: '',
   },
   {
     icon: Icon.M4,
-    heading: 'Godt. Dette er det jeg ønsker å jobbe med.',
+    heading: i18n.t('motivationScale.good'),
     text: '',
   },
   {
     icon: Icon.M3,
-    heading: 'Nysgjerring. Dette vil jeg lære mer om.',
+    heading: i18n.t('motivationScale.curious'),
     text: '',
   },
   {
     icon: Icon.M2,
-    heading: 'Tja. Kan hvis det er behov.',
+    heading: i18n.t('motivationScale.ish'),
     text: '',
   },
   {
     icon: Icon.M1,
-    heading: 'Nøytral. Ingen formening.',
+    heading: i18n.t('motivationScale.neutral'),
     text: '',
   },
   {
     icon: Icon.M0,
-    heading: 'Nei. Dette vil jeg ikke jobbe med.',
+    heading: i18n.t('motivationScale.no'),
     text: '',
   },
 ]
@@ -174,6 +177,7 @@ export const DescriptionTable = ({
   onClose,
   isMobile,
 }: DescriptionTableProps) => {
+  const { t } = useTranslation()
   const style = DescTableStyle()
 
   const ScaleContainer = ({ ...props }: ScaleContainerProps) => (
@@ -192,10 +196,10 @@ export const DescriptionTable = ({
         <div className={clsx([style.scaleRow, style.mobileTitleRow])}>
           <header className={style.header}>
             <h2 className={clsx([style.scaleTitle, style.mobileTitle])}>
-              Skalabeskrivelse
+              {t('scaleDescription')}
             </h2>
             <IconButton
-              aria-label="close"
+              aria-label={t('close') as string}
               className={style.closeButton}
               onClick={onClose}
             >
@@ -208,10 +212,12 @@ export const DescriptionTable = ({
       <div className={style.overflowContainer}>
         <div className={style.scaleRow}>
           <header className={style.header}>
-            <h2 className={style.scaleTitle}>Kompetanseskala</h2>
+            <h2 className={style.scaleTitle}>
+              {t('competenceScale.competenceScale')}
+            </h2>
             {!isMobile && (
               <IconButton
-                aria-label="close"
+                aria-label={t('close') as string}
                 className={style.closeButton}
                 onClick={onClose}
               >
@@ -219,8 +225,7 @@ export const DescriptionTable = ({
               </IconButton>
             )}
           </header>
-
-          {COMPETENCE.map((obj, i) => {
+          {getCompetence().map((obj, i) => {
             const Icon = obj.icon
             return (
               <ScaleContainer
@@ -235,9 +240,11 @@ export const DescriptionTable = ({
 
         <div className={style.scaleRow}>
           <header className={style.header}>
-            <h2 className={style.scaleTitle}>Motivasjonsskala</h2>
+            <h2 className={style.scaleTitle}>
+              {i18n.t('motivationScale.motivationScale')}
+            </h2>
           </header>
-          {MOTIVATION.map((obj, i) => {
+          {getMotivation().map((obj, i) => {
             const Icon = obj.icon
             return (
               <ScaleContainer

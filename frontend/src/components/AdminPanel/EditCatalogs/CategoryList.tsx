@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 
 import List from '@material-ui/core/List'
 
+import { useTranslation } from 'react-i18next'
 import { Category } from '../../../API'
 import {
   deleteCategory as deleteCategoryApi,
@@ -19,6 +20,7 @@ const CategoryList = ({
   formDefinitionID,
   formDefinitionLabel,
 }: any) => {
+  const { t } = useTranslation()
   const history = useHistory()
   const [enableUpdates, setEnableUpdates] = useState<boolean>(true)
 
@@ -72,7 +74,7 @@ const CategoryList = ({
   return (
     <>
       {categories.length === 0 && (
-        <p>Ingen kategorier i denne katalogen ennå.</p>
+        <p>{t('admin.editCatalogs.noCategoriesInThisCatalogYet')}</p>
       )}
       <List>
         {categories.map((c: Category, ind: number) => {

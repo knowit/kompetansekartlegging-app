@@ -8,7 +8,7 @@ on:
         required: true
       aws_region:
         type: string
-        default: 'eu-central-1'
+        default: "eu-central-1"
       deploy_backend_only:
         type: boolean
         default: false
@@ -22,6 +22,8 @@ on:
         required: true
       azure:
         required: true
+      SLACK_DEPLOY_WEBHOOK_URL:
+        required: true
 
 jobs:
   deploy:
@@ -34,7 +36,7 @@ jobs:
           node-version: "16"
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.aws_access_key_id }}
           aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
@@ -58,13 +60,32 @@ jobs:
       - name: Prepare frontend ${{ inputs.aws_environment }} deployment
         if: inputs.deploy_backend_only == false
         env:
-          REACT_APP_USER_BRANCH: ${{ inputs.aws_environment == 'prod' && 'master' || 'dev' }}
+          VITE_USER_BRANCH: ${{ inputs.aws_environment == 'prod' && 'master' || 'dev' }}
+          NODE_OPTIONS: "--max_old_space_size=4096"
         run: |
           cd cdk && npx ts-node --prefer-ts-exts hooks/hooks.ts && \
           npm run codegen && \
-          cd ../frontend && echo $REACT_APP_USER_BRANCH >> .env && \
+          cd ../frontend && echo $VITE_USER_BRANCH >> .env && \
           CI='' npm run build \
 
       - name: Deploy frontend to ${{ inputs.aws_environment }}
         if: inputs.deploy_backend_only == false
         run: cd frontend-cdk && npx cdk deploy --require-approval never
+
+  slackNotification:
+    if: ${{ always() }}
+    needs: deploy
+    name: Slack Notification
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: kompetansekartlegging-deployments
+          SLACK_COLOR: ${{ needs.deploy.result }}
+          SLACK_USERNAME: Kompetansekartlegging deploy bot
+          SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOY_WEBHOOK_URL }}
+          SLACK_MESSAGE: "[Deploy to ${{inputs.aws_environment}}] - ${{ github.event.head_commit.message }}"
+          MSG_MINIMAL: event,commit
+          SLACK_FOOTER:

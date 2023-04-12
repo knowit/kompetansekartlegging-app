@@ -8,17 +8,18 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import ErrorIcon from '@material-ui/icons/Error'
 
-import { dialogStyles } from '../../styles'
+import { t } from 'i18next'
 import { Organization } from '../../api/organizations/types'
+import { dialogStyles } from '../../styles'
 
-interface DeleteOrganiationDialogProps {
+interface DeleteOrganizationDialogProps {
   open: boolean
   onConfirm: (arg: Organization) => void
   onCancel: () => void
   organization: Organization
 }
 
-const DeleteOrganizationDialog: React.FC<DeleteOrganiationDialogProps> = ({
+const DeleteOrganizationDialog: React.FC<DeleteOrganizationDialogProps> = ({
   open,
   onConfirm,
   onCancel,
@@ -35,14 +36,18 @@ const DeleteOrganizationDialog: React.FC<DeleteOrganiationDialogProps> = ({
     >
       <DialogTitle className={style.dialogTitle}>
         <ErrorIcon fontSize="large" className={style.errorIcon}></ErrorIcon>
-        <span
-          className={style.dialogTitleText}
-        >{`Fjern organisasjonen ${organization.orgname}?`}</span>
+        <span className={style.dialogTitleText}>
+          {t('superAdmin.editOrganizations.removeOrganization', {
+            organization: organization.orgname,
+          })}
+        </span>
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Er du sikker på at du har lyst å fjerne organizasjonen{' '}
-          {organization.orgname}?{' '}
+          {t(
+            'superAdmin.editOrganizations.areYouSureYouWantToRemoveTheOrganization',
+            { organization: organization.orgname }
+          )}
         </DialogContentText>
       </DialogContent>
       <DialogActions className={style.alertButtons}>
@@ -50,10 +55,10 @@ const DeleteOrganizationDialog: React.FC<DeleteOrganiationDialogProps> = ({
           onClick={() => onConfirm(organization)}
           className={style.cancelButton}
         >
-          <span className={style.buttonText}>Fjern</span>
+          <span className={style.buttonText}>{t('remove')}</span>
         </Button>
         <Button onClick={onCancel} className={style.confirmButton}>
-          <span className={style.buttonText}>Avbryt</span>
+          <span className={style.buttonText}>{t('abort')}</span>
         </Button>
       </DialogActions>
     </Dialog>

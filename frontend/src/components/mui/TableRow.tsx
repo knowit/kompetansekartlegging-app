@@ -1,8 +1,8 @@
-import { createStyles, withStyles, Theme } from '@material-ui/core/styles'
 import TableRow from '@material-ui/core/TableRow'
+import { createStyles, withStyles } from '@material-ui/core/styles'
 import { KnowitColors } from '../../styles'
 
-const StyledTableRow = withStyles((theme: Theme) =>
+const StyledTableRow = withStyles(() =>
   createStyles({
     root: {
       transition: '100ms',

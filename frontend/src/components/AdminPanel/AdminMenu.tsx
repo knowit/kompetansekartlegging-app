@@ -1,7 +1,9 @@
 import { Button } from '@material-ui/core'
 import clsx from 'clsx'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { Panel } from '../../types'
+import { SubmenuCategory } from './AdminPanel'
 
 type AdminMenuProps = {
   show: boolean
@@ -21,27 +23,34 @@ const AdminMenu = ({
   setActiveSubmenuItem,
   setActivePanel,
 }: AdminMenuProps) => {
+  const { t } = useTranslation()
   if (!show) return null
 
   const items = [
     {
-      text: 'Rediger gruppeledere',
+      key: SubmenuCategory.EDIT_GROUP_LEADERS,
+      text: t('menu.submenu.editGroupLeaders'),
     },
     {
-      text: 'Rediger grupper',
+      key: SubmenuCategory.EDIT_GROUPS,
+      text: t('menu.submenu.editGroups'),
     },
     {
-      text: 'Rediger administratorer',
+      key: SubmenuCategory.EDIT_ADMINS,
+      text: t('menu.submenu.editAdministrators'),
     },
     {
-      text: 'Rediger kataloger',
+      key: SubmenuCategory.EDIT_CATALOGS,
+      text: t('menu.submenu.editCatalogs'),
       hasInternalRouting: true,
     },
     {
-      text: 'Last ned kataloger',
+      key: SubmenuCategory.DOWNLOAD_CATALOGS,
+      text: t('menu.submenu.downloadCatalogs'),
     },
     // refactor this one out once the whole app uses routing
     {
+      key: SubmenuCategory.HIDDEN,
       text: 'hidden',
       hidden: true,
     },
@@ -56,11 +65,13 @@ const AdminMenu = ({
         onClick={() => {
           // main pane is same as edit group leader pane atm
           setShowFab(false)
-          setActiveSubmenuItem('Rediger gruppeledere')
+          setActiveSubmenuItem(SubmenuCategory.EDIT_GROUP_LEADERS)
           setActivePanel(Panel.Admin)
         }}
       >
-        <div className={clsx(style.menuButtonText)}>ADMIN</div>
+        <div className={clsx(style.menuButtonText)}>
+          {t('menu.admin').toUpperCase()}
+        </div>
       </Button>
 
       {selected &&
@@ -68,16 +79,16 @@ const AdminMenu = ({
           .filter((x) => !x.hidden)
           .map((cat) => (
             <Button
-              key={cat.text}
+              key={cat.key}
               className={clsx(style.MenuButton, {
-                [style.menuButtonActive]: activeSubmenuItem === cat.text,
+                [style.menuButtonActive]: activeSubmenuItem === cat.key,
               })}
               onClick={async () => {
                 if (cat.hasInternalRouting) {
-                  setActiveSubmenuItem('hidden')
+                  setActiveSubmenuItem(SubmenuCategory.HIDDEN)
                   await new Promise((resolve) => setTimeout(resolve, 50))
                 }
-                setActiveSubmenuItem(cat.text)
+                setActiveSubmenuItem(cat.key)
               }}
             >
               <span

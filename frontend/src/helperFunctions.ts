@@ -1,9 +1,10 @@
-import { API, graphqlOperation } from 'aws-amplify'
 import { GraphQLResult } from '@aws-amplify/api'
-import { UserFormList, UserFormWithAnswers } from './types'
-import * as customQueries from './graphql/custom-queries'
+import { API, graphqlOperation } from 'aws-amplify'
 import { Query } from './API'
+import * as customQueries from './graphql/custom-queries'
 import { getOrganization } from './graphql/queries'
+import i18n from './i18n/i18n'
+import { UserFormList, UserFormWithAnswers } from './types'
 
 /*
     Used to call graphql queries and mutations.
@@ -68,8 +69,7 @@ const splitArray = <T>(array: T[]): T[][] => {
 */
 export const callBatchGraphQL = async <T>(
   query: any,
-  variables: { input: any[]; organizationID: string },
-  table: string
+  variables: { input: any[]; organizationID: string }
 ): Promise<GraphQLResult<T>[]> => {
   if (variables.input.length === 0) {
     console.error('Array size must be more than 0 in a batch mutation')
@@ -158,10 +158,10 @@ export const getOrganizationNameByID = (organizationID: string) =>
       if (typeof organizationName === 'string') {
         resolve(organizationName)
       } else {
-        reject('no org found')
+        reject(i18n.t('noOrganizationFound'))
       }
     } catch (e) {
-      reject('no org found')
+      reject(i18n.t('noOrganizationFound'))
     }
   })
 
@@ -211,6 +211,6 @@ export const getLatestUserFormUpdatedAtForUser = (
       sorted ? resolve(sorted[0]) : resolve(null)
     } catch (e) {
       console.log(e)
-      reject('error while fetching updatedAt from latest UserForm')
+      reject(i18n.t('errorWhileFetchingUpdatedAtFromLatestUserForm'))
     }
   })

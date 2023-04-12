@@ -1,16 +1,15 @@
-import React from 'react'
-
-import commonStyles from './common.module.css'
+import Paper from '@material-ui/core/Paper'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
-import Paper from '@material-ui/core/Paper'
+import commonStyles from './common.module.css'
 
-import { getAttribute } from './helpers'
+import { useTranslation } from 'react-i18next'
 import Table from '../mui/Table'
 import TableRow from '../mui/TableRow'
 import PictureAndNameCell from './PictureAndNameCell'
+import { getAttribute } from './helpers'
 
 const User = ({ user, selected, setSelectedUser }: any) => {
   const name = getAttribute(user, 'name')
@@ -30,6 +29,7 @@ const User = ({ user, selected, setSelectedUser }: any) => {
 }
 
 const UsersTable = ({ users, selectedUser, setSelectedUser }: any) => {
+  const { t } = useTranslation()
   const isSelected = (user: any) =>
     selectedUser && user.Username === selectedUser.Username
 
@@ -41,8 +41,8 @@ const UsersTable = ({ users, selectedUser, setSelectedUser }: any) => {
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell>Ansatt</TableCell>
-            <TableCell>Email</TableCell>
+            <TableCell>{t('employee')}</TableCell>
+            <TableCell>{t('email')}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

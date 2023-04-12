@@ -13,6 +13,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 
+import { useTranslation } from 'react-i18next'
 import { KnowitColors } from '../../../styles'
 import EditActionButtons from './EditActionButtons'
 
@@ -86,6 +87,8 @@ const CategoryListItem = ({
   enableUpdates,
   categories,
 }: any) => {
+  const { t } = useTranslation()
+
   const [editMode, setEditMode] = useState<boolean>(false)
   const [text, setText] = useState<string>(c.text)
   const [description, setDescription] = useState<string>(c.description || '')
@@ -111,14 +114,15 @@ const CategoryListItem = ({
           <>
             <TextField
               fullWidth
-              label="Navn"
+              label={t('name')}
               variant="outlined"
               value={text}
               className={classes.textField}
               onChange={(e: any) => setText(e.target.value)}
               error={text.length === 0}
               helperText={
-                text.length === 0 && 'Navnet på kategorien kan ikke være tomt.'
+                text.length === 0 &&
+                t('admin.editCatalogs.nameOfTheCategoryCantBeEmpty')
               }
             />
             <TextField
@@ -126,7 +130,7 @@ const CategoryListItem = ({
               multiline
               minRows={4}
               maxRows={6}
-              label="Beskrivelse"
+              label={t('description')}
               variant="outlined"
               value={description}
               className={classes.textField}

@@ -1,14 +1,19 @@
-import React from 'react'
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
+import Breadcrumbs from '@material-ui/core/Breadcrumbs'
 import Link, { LinkProps } from '@material-ui/core/Link'
 import Typography from '@material-ui/core/Typography'
-import Breadcrumbs from '@material-ui/core/Breadcrumbs'
+import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
+import { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import { Route } from 'react-router'
 import { Link as RouterLink } from 'react-router-dom'
 
-const breadcrumbNameMap: { [key: string]: string } = {
-  '/add': 'Legg til',
-  '/edit': 'Endre',
+const getBreadcrumbNameMap = (
+  t: TFunction<'translation', undefined, 'translation'>
+) => {
+  return {
+    '/add': t('add'),
+    '/edit': t('admin.editCatalogs.modify'),
+  }
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -40,8 +45,9 @@ const LinkRouter = (props: LinkRouterProps) => (
 )
 
 const RouterBreadcrumbs = ({ extraCrumbsMap, urlOverrides }: any) => {
+  const { t } = useTranslation()
   const classes = useStyles()
-  const crumbNameMap = { ...breadcrumbNameMap, ...extraCrumbsMap }
+  const crumbNameMap = { ...getBreadcrumbNameMap(t), ...extraCrumbsMap }
 
   return (
     <div className={classes.root}>
@@ -52,7 +58,7 @@ const RouterBreadcrumbs = ({ extraCrumbsMap, urlOverrides }: any) => {
           return location.pathname !== '/' ? (
             <Breadcrumbs>
               <LinkRouter color="inherit" to="/">
-                Kataloger
+                {t('admin.editCatalogs.catalogs')}
               </LinkRouter>
               {pathnames.map((value, index) => {
                 const last = index === pathnames.length - 1

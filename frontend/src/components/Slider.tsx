@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import { SliderProps } from '../types'
-import * as helper from '../helperFunctions'
-import { KnowitColors } from '../styles'
 import {
-  withStyles,
   Slider as CoreSlider,
   Theme,
   makeStyles,
+  withStyles,
 } from '@material-ui/core'
+import { useEffect, useState } from 'react'
+import * as helper from '../helperFunctions'
+import { KnowitColors } from '../styles'
+import { SliderProps } from '../types'
 
 const ValueSlider = withStyles(
   {
@@ -129,7 +129,7 @@ interface StyleProps {
   markColor: string
 }
 
-const useStyles = makeStyles<Theme, StyleProps>((_theme: Theme) => ({
+const useStyles = makeStyles<Theme, StyleProps>(() => ({
   markActive: (props) => ({
     opacity: 1,
     backgroundColor: props.markColor,

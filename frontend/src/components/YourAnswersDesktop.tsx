@@ -1,6 +1,7 @@
 import { Button, makeStyles } from '@material-ui/core'
 import clsx from 'clsx'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { KnowitColors } from '../styles'
 import { Panel, YourAnswerProps } from '../types'
 import AnswerDiagram from './AnswerDiagram'
@@ -158,6 +159,7 @@ const yourAnwersStyle = makeStyles({
 })
 
 export const YourAnswersDesktop = ({ ...props }: YourAnswerProps) => {
+  const { t } = useTranslation()
   const style = yourAnwersStyle()
 
   const scrollRef = React.useRef<HTMLDivElement>(null)
@@ -202,7 +204,7 @@ export const YourAnswersDesktop = ({ ...props }: YourAnswerProps) => {
                 className={style.editButton}
                 onClick={() => props.enableAnswerEditMode()}
               >
-                Fyll ut
+                {t('myAnswers.fillOut')}
               </Button>
             </div>
           </div>

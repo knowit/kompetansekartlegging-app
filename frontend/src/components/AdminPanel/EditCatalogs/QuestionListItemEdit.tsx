@@ -11,6 +11,7 @@ import RadioGroup from '@material-ui/core/RadioGroup'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 
+import { useTranslation } from 'react-i18next'
 import { QuestionType } from '../../../API'
 import { KnowitColors } from '../../../styles'
 import CategoriesSelect from './CategoriesSelect'
@@ -55,11 +56,13 @@ const useQuestionListStyles = makeStyles(() =>
       marginBottom: '8px',
       '& legend': {
         color: KnowitColors.white,
+        opacity: '38%',
         fontSize: '0.75rem',
       },
       '& span': {
         color: `${KnowitColors.white} !important`,
         fontSize: '0.75rem',
+        opacity: '38%',
         fontWeight: 'normal',
       },
     },
@@ -84,6 +87,8 @@ const QuestionListItemEdit = ({
   categories,
   setEditMode,
 }: any) => {
+  const { t } = useTranslation()
+
   const [topic, setTopic] = useState<string>(q.topic)
   const [text, setText] = useState<string>(q.text)
   const [categoryID, setCategoryID] = useState<string>(q.categoryID)
@@ -129,13 +134,16 @@ const QuestionListItemEdit = ({
             <Box display="flex" alignItems="center">
               <TextField
                 fullWidth
-                label="Emne"
+                label={t('admin.editCatalogs.subject')}
                 variant="outlined"
                 value={topic}
                 className={classes.textField}
                 onChange={(e: any) => setTopic(e.target.value)}
                 error={topic.length === 0}
-                helperText={topic.length === 0 && 'Emnet kan ikke være tomt.'}
+                helperText={
+                  topic.length === 0 &&
+                  t('admin.editCatalogs.subjectCantBeEmpty')
+                }
               />
               <CategoriesSelect
                 categoryID={categoryID}
@@ -148,28 +156,32 @@ const QuestionListItemEdit = ({
               multiline
               minRows={4}
               maxRows={6}
-              label="Beskrivelse"
+              label={t('description')}
               variant="outlined"
               error={text === ''}
-              helperText={text === '' && 'Beskrivelsen kan ikke være tom.'}
+              helperText={
+                text === '' && t('admin.editCatalogs.descriptionCantBeEmpty')
+              }
               value={text}
               className={classes.textField}
               onChange={(e: any) => setText(e.target.value)}
             />
             <FormControl component="fieldset" className={classes.questionType}>
-              <FormLabel component="legend">Spørsmålstype</FormLabel>
+              <FormLabel component="legend">
+                {t('admin.editCatalogs.typeOfQuestion')}
+              </FormLabel>
               <RadioGroup row value={questionType}>
                 <FormControlLabel
                   disabled
                   value={QuestionType.KnowledgeMotivation}
                   control={<Radio />}
-                  label="Kunnskap / Motivasjon"
+                  label={t('admin.editCatalogs.competenceSlashMotivation')}
                 />
                 <FormControlLabel
                   disabled
                   value={QuestionType.CustomScaleLabels}
                   control={<Radio />}
-                  label="Egendefinerte skala overskrifter"
+                  label={t('admin.editCatalogs.customScaleHeadlines')}
                 />
               </RadioGroup>
             </FormControl>
@@ -177,21 +189,21 @@ const QuestionListItemEdit = ({
               <FormControl fullWidth component="fieldset">
                 <Box display="flex" justifyContent="space-between">
                   <TextField
-                    label="Start"
+                    label={t('admin.editCatalogs.start')}
                     variant="outlined"
                     value={questionConfig.scaleStart}
                     className={classes.textField}
                     onChange={onQuestionConfigChange('scaleStart')}
                   />
                   <TextField
-                    label="Midt"
+                    label={t('admin.editCatalogs.middle')}
                     variant="outlined"
                     value={questionConfig.scaleMiddle}
                     className={classes.textField}
                     onChange={onQuestionConfigChange('scaleMiddle')}
                   />
                   <TextField
-                    label="Slutt"
+                    label={t('admin.editCatalogs.end')}
                     variant="outlined"
                     value={questionConfig.scaleEnd}
                     className={classes.textField}

@@ -1,6 +1,6 @@
-import setAppSyncAuth from './setAppSyncAuth'
-import initializeDatabase from './initializeDatabase'
 import * as fs from 'fs'
+import initializeDatabase from './initializeDatabase'
+import setAppSyncAuth from './setAppSyncAuth'
 
 const file = fs.readFileSync('outputs.json', { encoding: 'utf-8' })
 
@@ -114,3 +114,4 @@ export default exports;
 //         endpoint: outputs.KompetanseExternalApiEndpoint650AEEDF
 //     },
 // ];
+

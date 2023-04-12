@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core'
 import clsx from 'clsx'
 import { Fragment, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { wrapString } from '../helperFunctions'
 import { GetIcon } from '../icons/iconController'
 import { KnowitColors } from '../styles'
@@ -171,6 +172,7 @@ const highlightsStyle = makeStyles({
 })
 
 export default function Highlights({ ...props }: HighlightsProps) {
+  const { t } = useTranslation()
   const style = highlightsStyle()
 
   const [knowledgeAboveCutoff, setKnowledgeAboveCutoff] = useState<
@@ -203,7 +205,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
     const generateShortlist = () => {
       const shortlistMotivation: TopicScoreWithIcon[] = []
       const shortlistKnowledge: TopicScoreWithIcon[] = []
-      props.questionAnswers.forEach((quAns, _cat) => {
+      props.questionAnswers.forEach((quAns) => {
         quAns.forEach((answer) => {
           if (answer.knowledge >= shortlistCutoff) {
             shortlistKnowledge.push({
@@ -243,7 +245,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
               props.isMobile ? style.barSizeMobile : style.barSize
             )}
           >
-            Her kommer dine topp-ambisjoner
+            {t('overview.yourTopAmbitionsWillBeDisplayedHere')}
           </div>
         </div>
       )
@@ -295,7 +297,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
               props.isMobile ? style.barSizeMobile : style.barSize
             )}
           >
-            Her kommer dine topp-styrker
+            {t('overview.yourTopStrengthsWillBeDisplayedHere')}
           </div>
         </div>
       )
@@ -342,7 +344,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
     return (
       <div className={props.isMobile ? style.rootMobile : style.root}>
         <div className={props.isMobile ? style.hidden : style.title}>
-          FOKUSOMRÅDER
+          {t('overview.focusAreas').toUpperCase()}
         </div>
         <div
           className={props.isMobile ? style.containerMobile : style.container}
@@ -351,7 +353,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
             <div
               className={props.isMobile ? style.headingMobile : style.heading}
             >
-              TOPP STYRKER
+              {t('overview.topStrengths').toUpperCase()}
             </div>
             {createKnowledgeHighlights()}
           </div>
@@ -359,7 +361,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
             <div
               className={props.isMobile ? style.headingMobile : style.heading}
             >
-              TOPP AMBISJONER
+              {t('overview.topAmbitions').toUpperCase()}
             </div>
             {createMotivationHighlights()}
           </div>

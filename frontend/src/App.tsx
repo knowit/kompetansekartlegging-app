@@ -3,25 +3,26 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import './App.css'
 // import awsconfig from "./aws-exports";
 import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth'
-import { Button, debounce, makeStyles, Snackbar } from '@material-ui/core'
+import { Button, Snackbar, debounce, makeStyles } from '@material-ui/core'
 import { ThemeProvider } from '@material-ui/core/styles'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { isMobile } from 'react-device-detect'
+import { useTranslation } from 'react-i18next'
 import Content from './components/Content'
 import FloatingScaleDescButton from './components/FloatingScaleDescButton'
 import Login from './components/Login'
 import NavBarDesktop from './components/NavBarDesktop'
 import awsconfig from './exports'
-import { useAppDispatch, useAppSelector } from './redux/hooks'
 import {
   fetchOrganizationNameByID,
   selectUserState,
   setUserInfo,
   setUserInfoLogOut,
 } from './redux/User'
+import { useAppDispatch, useAppSelector } from './redux/hooks'
 import theme from './theme'
 
-const userBranch = process ? process.env.REACT_APP_USER_BRANCH : '' // Process does not exist in Webpack 5?
+const userBranch = import.meta.env.VITE_USER_BRANCH
 
 // console.log("Hosted branch: ", userBranch);
 
@@ -88,6 +89,7 @@ const App = () => {
   const dispatch = useAppDispatch()
   const userState = useAppSelector(selectUserState)
 
+  const { t } = useTranslation()
   const style = appStyle()
   const [showFab, setShowFab] = useState<boolean>(true)
   const [answerHistoryOpen, setAnswerHistoryOpen] = useState<boolean>(false)
@@ -127,13 +129,10 @@ const App = () => {
       .then((res) => {
         if (cognitoUserContainsAttributes(res)) {
           Auth.currentSession().then((currentSession) => {
-            res.refreshSession(
-              currentSession.getRefreshToken(),
-              (err: any, session: any) => {
-                dispatch(setUserInfo(res))
-                dispatch(fetchOrganizationNameByID(res))
-              }
-            )
+            res.refreshSession(currentSession.getRefreshToken(), () => {
+              dispatch(setUserInfo(res))
+              dispatch(fetchOrganizationNameByID(res))
+            })
           })
         }
       })
@@ -213,8 +212,10 @@ const App = () => {
                   textAlign: 'center',
                 }}
               >
-                NB: Dette er et test miljø!{' '}
-                <Button onClick={() => setBannerOpen(false)}>Close</Button>
+                {t('thisIsATestEnvironment') + ' '}
+                <Button onClick={() => setBannerOpen(false)}>
+                  {t('close').toUpperCase()}
+                </Button>
               </div>
             </Snackbar>
           ) : null}

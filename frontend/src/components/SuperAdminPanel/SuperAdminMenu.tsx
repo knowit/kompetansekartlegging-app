@@ -1,7 +1,9 @@
 import { Button } from '@material-ui/core'
 import clsx from 'clsx'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { Panel } from '../../types'
+import { SubmenuCategory } from './SuperAdminPanel'
 
 type SuperAdminMenuProps = {
   show: boolean
@@ -21,20 +23,25 @@ const SuperAdminMenu = ({
   setActiveSubmenuItem,
   setActivePanel,
 }: SuperAdminMenuProps) => {
+  const { t } = useTranslation()
   if (!show) return null
 
   const items = [
     {
-      text: 'Rediger organisasjoner',
+      key: SubmenuCategory.EDIT_ORGANIZATIONS,
+      text: t('menu.submenu.editOrganizations'),
     },
     {
-      text: 'Rediger super-administratorer',
+      key: SubmenuCategory.EDIT_SUPER_ADMINS,
+      text: t('menu.submenu.editSuperAdministrators'),
     },
     {
-      text: 'Rediger organisasjon-administratorer',
+      key: SubmenuCategory.EDIT_ORGANIZATION_ADMINS,
+      text: t('menu.submenu.editAdministrators'),
     },
     // refactor this one out once the whole app uses routing
     {
+      key: SubmenuCategory.HIDDEN,
       text: 'hidden',
       hidden: true,
     },
@@ -47,13 +54,14 @@ const SuperAdminMenu = ({
           [style.menuButtonActive]: selected,
         })}
         onClick={() => {
-          // main pane is same as edit group leader pane atm
           setShowFab(false)
-          setActiveSubmenuItem('Rediger organisasjoner')
+          setActiveSubmenuItem(SubmenuCategory.EDIT_ORGANIZATIONS)
           setActivePanel(Panel.SuperAdmin)
         }}
       >
-        <div className={clsx(style.menuButtonText)}>SUPER-ADMIN</div>
+        <div className={clsx(style.menuButtonText)}>
+          {t('menu.superAdmin').toUpperCase()}
+        </div>
       </Button>
 
       {selected &&
@@ -61,12 +69,12 @@ const SuperAdminMenu = ({
           .filter((x) => !x.hidden)
           .map((cat) => (
             <Button
-              key={cat.text}
+              key={cat.key}
               className={clsx(style.MenuButton, {
-                [style.menuButtonActive]: activeSubmenuItem === cat.text,
+                [style.menuButtonActive]: activeSubmenuItem === cat.key,
               })}
               onClick={async () => {
-                setActiveSubmenuItem(cat.text)
+                setActiveSubmenuItem(cat.key)
               }}
             >
               <span

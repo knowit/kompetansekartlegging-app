@@ -1,16 +1,15 @@
-import React from 'react'
-
+import FormControl from '@material-ui/core/FormControl'
+import InputBase from '@material-ui/core/InputBase'
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
 import {
+  Theme,
   createStyles,
   makeStyles,
   withStyles,
-  Theme,
 } from '@material-ui/core/styles'
-import InputBase from '@material-ui/core/InputBase'
-import MenuItem from '@material-ui/core/MenuItem'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
 
+import { useTranslation } from 'react-i18next'
 import { KnowitColors } from '../../styles'
 
 const BootstrapInput = withStyles((theme: Theme) =>
@@ -78,6 +77,7 @@ const useNavStyles = makeStyles((theme) => ({
 }))
 
 const Nav = ({ categories, category, setCategory, name }: any) => {
+  const { t } = useTranslation()
   const classes = useNavStyles()
 
   return (
@@ -89,7 +89,7 @@ const Nav = ({ categories, category, setCategory, name }: any) => {
           onChange={(e: any) => setCategory(e.target.value)}
           input={<BootstrapInput />}
         >
-          <MenuItem value="Oversikt">Oversikt</MenuItem>
+          <MenuItem value="Oversikt">{t('menu.overview')}</MenuItem>
           {categories.map((c: any) => (
             <MenuItem key={c} value={c}>
               {c}

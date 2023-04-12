@@ -1,18 +1,20 @@
 import {
   AppBar,
-  Toolbar,
   IconButton,
-  Typography,
   List,
   ListItem,
+  Toolbar,
+  Typography,
 } from '@material-ui/core'
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import { makeStyles } from '@material-ui/core/styles'
+import MenuIcon from '@material-ui/icons/Menu'
 import React from 'react'
+import { isIOS } from 'react-device-detect'
+import { useTranslation } from 'react-i18next'
 import { KnowitColors } from '../styles'
 import { NavBarPropsMobile } from '../types'
-import MenuIcon from '@material-ui/icons/Menu'
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
-import { isIOS } from 'react-device-detect'
+import { LanguageSelect } from './LanguageSelect'
 
 const navbarStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
@@ -89,6 +91,7 @@ const navbarStyles = makeStyles((theme) => ({
 }))
 
 const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
+  const { t } = useTranslation()
   const style = navbarStyles()
   // const [mobileOpen, setMobileOpen] = React.useState(false);
   const [drawerOpen, setDrawerOpen] = React.useState(false)
@@ -99,9 +102,9 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
   const navbarHeader = () => {
     switch (props.activePanel) {
       case 0:
-        return 'OVERSIKT'
+        return t('menu.overview').toUpperCase()
       case 1:
-        return 'MINE SVAR'
+        return t('menu.myAnswers').toUpperCase()
       default:
         return ''
     }
@@ -128,11 +131,12 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
+      <LanguageSelect color={KnowitColors.beige} marginLeft={15} />
       <List className={style.list}>
         {props.menuButtons}
         <ListItem className={style.logout} onClick={props.signout}>
-          {/* <Avatar className={style.userPicture} src={props.userPicture} alt="Profile Picture"/> */}
-          Logg ut
+          {/* <Avatar className={style.userPicture} src={props.userPicture} alt={t('navbar.profilePicture') as string} /> */}
+          {t('navbar.signOut')}
         </ListItem>
       </List>
     </div>
@@ -146,7 +150,7 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
             edge="start"
             className={style.menuButton}
             color="inherit"
-            aria-label="menu"
+            aria-label={t('aria.menu') as string}
             onClick={toggleDrawer(true)}
           >
             <MenuIcon fontSize="large" />

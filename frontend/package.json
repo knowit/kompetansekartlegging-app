@@ -15,20 +15,20 @@
     "react": "^16.14.0",
     "react-device-detect": "^2.2.2",
     "react-dom": "^16.14.0",
+    "i18next": "^22.4.10",
+    "react-i18next": "^12.2.0",
     "react-markdown": "^8.0.5",
     "react-redux": "^8.0.5",
     "react-router": "^5.3.4",
     "react-router-dom": "^5.3.4",
-    "react-scripts": "^4.0.3",
     "react-swipeable": "^7.0.0",
     "recharts": "^2.3.2",
     "uuid": "^9.0.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "ESLINT_NO_DEV_ERRORS='true' vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview",
     "lint": "eslint . --ext ts,tsx --max-warnings 0 --no-fix",
     "lint-fix": "eslint . --ext ts,tsx --fix",
     "prettier-check": "prettier --check .",
@@ -36,12 +36,12 @@
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
       "eslint:recommended",
       "plugin:@typescript-eslint/recommended"
     ],
     "plugins": [
-      "prettier"
+      "prettier",
+      "react-hooks"
     ],
     "rules": {
       "prettier/prettier": "warn",
@@ -61,7 +61,8 @@
     },
     "ignorePatterns": [
       "API.ts",
-      "exports.js"
+      "exports.js",
+      "src/i18n/locales/*.ts"
     ]
   },
   "browserslist": {
@@ -87,7 +88,13 @@
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "@vitejs/plugin-react": "^3.1.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "^2.8.3",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.4",
+    "vite": "^4.2.1",
+    "vite-plugin-node-polyfills": "^0.7.0",
+    "vite-plugin-svgr": "^2.4.0",
+    "vite-tsconfig-paths": "^4.0.7"
   }
 }

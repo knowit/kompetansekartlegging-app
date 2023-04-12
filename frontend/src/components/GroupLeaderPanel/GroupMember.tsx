@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import CircularProgress from '@material-ui/core/CircularProgress'
 
+import { t } from 'i18next'
+import { Panel, QuestionAnswer, UserAnswer } from '../../types'
+import { getAttribute } from '../AdminPanel/helpers'
+import AnswerDiagram from '../AnswerDiagram'
 import {
-  fetchLastFormDefinition,
   createQuestionAnswers,
+  fetchLastFormDefinition,
   getUserAnswers,
   setFirstAnswers,
 } from '../answersApi'
-import { getAttribute } from '../AdminPanel/helpers'
-import { Panel, UserAnswer, QuestionAnswer } from '../../types'
 import { Overview } from '../cards/Overview'
-import AnswerDiagram from '../AnswerDiagram'
 import Nav from './Nav'
 
 const voidFn = () => 1
@@ -73,7 +74,7 @@ const GroupMember = ({ members, userId, isMobile = false }: any) => {
 
   return (
     <>
-      {isError && <p>An error occured: {isError}</p>}
+      {isError && <p>{t('errorOccured') + isError}</p>}
       {isLoading && <CircularProgress />}
       {!isError && !isLoading && questionAnswers && (
         <>

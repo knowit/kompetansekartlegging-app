@@ -1,10 +1,11 @@
 import { Button, ListItem, makeStyles } from '@material-ui/core'
 import clsx from 'clsx'
+import { TFunction } from 'i18next'
 import React, { Fragment, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { CreateQuestionAnswerInput, QuestionType } from '../API'
 import * as customQueries from '../graphql/custom-queries'
 import * as helper from '../helperFunctions'
-import { useAppSelector } from '../redux/hooks'
 import {
   selectAdminCognitoGroupName,
   selectGroupLeaderCognitoGroupName,
@@ -13,6 +14,7 @@ import {
   selectIsSuperAdmin,
   selectUserState,
 } from '../redux/User'
+import { useAppSelector } from '../redux/hooks'
 import { KnowitColors } from '../styles'
 import {
   Alert,
@@ -34,6 +36,10 @@ import {
   staleAnswersLimit,
 } from './AlertNotification'
 import { AnswerHistory } from './AnswerHistory'
+import { GroupLeaderMenu, GroupLeaderPanel } from './GroupLeaderPanel/'
+import NavBarMobile from './NavBarMobile'
+import { SuperAdminMenu } from './SuperAdminPanel/SuperAdminMenu'
+import { SuperAdminPanel } from './SuperAdminPanel/SuperAdminPanel'
 import {
   createQuestionAnswers,
   fetchLastFormDefinition,
@@ -42,10 +48,6 @@ import {
 } from './answersApi'
 import { Overview } from './cards/Overview'
 import { YourAnswers } from './cards/YourAnswers'
-import { GroupLeaderMenu, GroupLeaderPanel } from './GroupLeaderPanel/'
-import NavBarMobile from './NavBarMobile'
-import { SuperAdminMenu } from './SuperAdminPanel/SuperAdminMenu'
-import { SuperAdminPanel } from './SuperAdminPanel/SuperAdminPanel'
 
 const cardCornerRadius = 40
 
@@ -141,7 +143,8 @@ const contentStyle = makeStyles({
 
 const updateCategoryAlerts = (
   questionAnswers: Map<string, QuestionAnswer[]>,
-  setAlerts: React.Dispatch<React.SetStateAction<AlertState | undefined>>
+  setAlerts: React.Dispatch<React.SetStateAction<AlertState | undefined>>,
+  t: TFunction<'translation', undefined, 'translation'>
 ) => {
   const msNow = Date.now()
   const alerts = new Map<string, Alert>()
@@ -156,7 +159,7 @@ const updateCategoryAlerts = (
       ) {
         alerts.set(quAns.question.id, {
           type: AlertType.Incomplete,
-          message: 'Ubesvart!',
+          message: t('content.unAnswered'),
         })
         const numAlerts = catAlerts.get(quAns.question.category.text)
         if (numAlerts)
@@ -165,9 +168,9 @@ const updateCategoryAlerts = (
       } else if (msNow - quAns.updatedAt > staleAnswersLimit) {
         alerts.set(quAns.question.id, {
           type: AlertType.Outdated,
-          message: `Bør oppdateres! Sist besvart: ${
-            new Date(quAns.updatedAt) //.toLocaleDateString('no-NO')
-          }`,
+          message: t('content.shouldBeUpdatedLastAnswered', {
+            date: new Date(quAns.updatedAt),
+          }),
         })
         const numAlerts = catAlerts.get(quAns.question.category.text)
         if (numAlerts)
@@ -180,6 +183,8 @@ const updateCategoryAlerts = (
 }
 
 const Content = ({ ...props }: ContentProps) => {
+  const { t } = useTranslation()
+
   const userState = useAppSelector(selectUserState)
   const adminCognitoGroupName = useAppSelector(selectAdminCognitoGroupName)
   const groupLeaderCognitoGroupName = useAppSelector(
@@ -278,8 +283,7 @@ const Content = ({ ...props }: ContentProps) => {
     const result = (
       await helper.callBatchGraphQL<CreateQuestionAnswerResult>(
         customQueries.batchCreateQuestionAnswer2,
-        { input: quAnsInput, organizationID: userState.organizationID },
-        'QuestionAnswer'
+        { input: quAnsInput, organizationID: userState.organizationID }
       )
     ).map((result) => result.data?.batchCreateQuestionAnswer)
     // console.log("Result: ", result);
@@ -313,8 +317,8 @@ const Content = ({ ...props }: ContentProps) => {
   }, [categories])
 
   useEffect(() => {
-    updateCategoryAlerts(questionAnswers, setAlerts)
-  }, [questionAnswers])
+    updateCategoryAlerts(questionAnswers, setAlerts, t)
+  }, [questionAnswers, t])
 
   useEffect(() => {
     // console.log('fetchLastFormDefitniio');
@@ -456,7 +460,7 @@ const Content = ({ ...props }: ContentProps) => {
       return (
         <AlertNotification
           type={AlertType.Multiple}
-          message="Besvarelsen er utdatert eller ikke komplett!"
+          message={t('content.answerOutdatedOrIncomplete')}
           size={0}
         />
       )
@@ -465,7 +469,7 @@ const Content = ({ ...props }: ContentProps) => {
 
   ;<AlertNotification
     type={AlertType.Multiple}
-    message="Besvarelsen er utdatert eller ikke komplett!"
+    message={t('content.answerOutdatedOrIncomplete')}
     size={0}
   />
 
@@ -486,9 +490,13 @@ const Content = ({ ...props }: ContentProps) => {
   const isGroupLeader = useAppSelector(selectIsGroupLeader)
 
   const buttonSetup = [
-    { text: 'OVERSIKT', buttonType: MenuButton.Overview, show: true },
     {
-      text: 'MINE SVAR',
+      text: t('menu.overview').toUpperCase(),
+      buttonType: MenuButton.Overview,
+      show: true,
+    },
+    {
+      text: t('menu.myAnswers').toUpperCase(),
       buttonType: MenuButton.MyAnswers,
       subButtons: categories.map((cat) => {
         return {
@@ -551,7 +559,9 @@ const Content = ({ ...props }: ContentProps) => {
                   {alerts?.categoryMap.has(butt.text) ? (
                     <AlertNotification
                       type={AlertType.Multiple}
-                      message="Ikke besvart eller utdaterte spørsmål i kategori"
+                      message={t(
+                        'content.unansweredOrOutdatedQuestionsInCategory'
+                      )}
                       size={alerts.categoryMap.get(butt.text)}
                     />
                   ) : (

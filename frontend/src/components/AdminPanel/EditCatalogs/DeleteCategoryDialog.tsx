@@ -6,6 +6,7 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import ErrorIcon from '@material-ui/icons/Error'
 
+import { useTranslation } from 'react-i18next'
 import { dialogStyles } from '../../../styles'
 
 const DeleteCategoryDialog = ({
@@ -16,6 +17,7 @@ const DeleteCategoryDialog = ({
   onExited,
   open,
 }: any) => {
+  const { t } = useTranslation()
   const style = dialogStyles()
 
   return (
@@ -30,14 +32,18 @@ const DeleteCategoryDialog = ({
       <DialogTitle className={style.dialogTitle}>
         <ErrorIcon fontSize="large" className={style.errorIcon}></ErrorIcon>
         <span className={style.dialogTitleText}>
-          Fjern kategorien '{category.text}'?
+          {t('admin.editCatalogs.removeTheCategoryQuestion', {
+            categoryName: category.text,
+          })}
         </span>
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
           {!categoryContainsQuestions
-            ? 'Er du sikker på at du vil fjerne denne kategorien?'
-            : 'Kan ikke fjerne kategorien fordi den fortsatt inneholder spørsmål.'}
+            ? t('admin.editCatalogs.areYouSureYouWantToRemoveThisCategory')
+            : t(
+                'admin.editCatalogs.cantRemoveCategoryAsItStillContainsQuestions'
+              )}
         </DialogContentText>
       </DialogContent>
       <DialogActions className={style.alertButtons}>
@@ -46,10 +52,10 @@ const DeleteCategoryDialog = ({
           className={style.cancelButton}
           disabled={categoryContainsQuestions}
         >
-          <span className={style.buttonText}>Fjern</span>
+          <span className={style.buttonText}>{t('remove')}</span>
         </Button>
         <Button onClick={onCancel} className={style.confirmButton}>
-          <span className={style.buttonText}>Avbryt</span>
+          <span className={style.buttonText}>{t('abort')}</span>
         </Button>
       </DialogActions>
     </Dialog>

@@ -1,20 +1,21 @@
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useSwipeable } from 'react-swipeable'
 import {
-  BarChart,
   Bar,
+  BarChart,
   CartesianGrid,
+  Label,
+  ReferenceLine,
+  ResponsiveContainer,
   XAxis,
   YAxis,
-  Label,
-  ResponsiveContainer,
-  ReferenceLine,
 } from 'recharts'
+import { wrapString } from '../helperFunctions'
 import { GetIcon } from '../icons/iconController'
 import { KnowitColors } from '../styles'
 import { ChartData, CombinedChartProps } from '../types'
-import { wrapString } from '../helperFunctions'
-import { useSwipeable } from 'react-swipeable'
 import { OverviewType } from './TypedOverviewChart'
 
 const numTicks = 5
@@ -127,11 +128,12 @@ const createPagedData = (
 export const CombinedChartMobile = ({
   ...props
 }: CombinedChartProps): JSX.Element => {
+  const { t } = useTranslation()
+  const classes = useStyles()
+
   const [chartPages, setChartPages] = useState<ChartData[][]>([])
   const [currentPage, setCurrentPage] = useState(0)
   const [currentType, setCurrentType] = useState<OverviewType>()
-
-  const classes = useStyles()
 
   const maxColumnsPerPage = getMaxColumnsForWidth()
 
@@ -205,8 +207,8 @@ export const CombinedChartMobile = ({
   }
 
   const swipeHandlers = useSwipeable({
-    onSwipedLeft: (_eventData) => changePageLeft(),
-    onSwipedRight: (_eventData) => changePageRight(),
+    onSwipedLeft: () => changePageLeft(),
+    onSwipedRight: () => changePageRight(),
     ...swipeConfig,
   })
 
@@ -261,7 +263,7 @@ export const CombinedChartMobile = ({
               fontWeight="bold"
               fill={KnowitColors.darkBrown}
             >
-              MOTIVASJON
+              {t('motivation').toUpperCase()}
             </Label>
           </ReferenceLine>
           <ReferenceLine
@@ -281,7 +283,7 @@ export const CombinedChartMobile = ({
               fontWeight="bold"
               fill={KnowitColors.darkBrown}
             >
-              KOMPETANSE
+              {t('competence').toUpperCase()}
             </Label>
           </ReferenceLine>
           <ReferenceLine

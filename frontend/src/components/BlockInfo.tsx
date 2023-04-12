@@ -1,10 +1,11 @@
 import { makeStyles } from '@material-ui/core'
-import { KnowitColors } from '../styles'
-import { QuestionAnswer } from '../types'
-import React from 'react'
 import CheckCircleOutlineRoundedIcon from '@material-ui/icons/CheckCircleOutlineRounded'
 import ErrorOutlineRoundedIcon from '@material-ui/icons/ErrorOutlineRounded'
 import UpdateIcon from '@material-ui/icons/Update'
+import { useTranslation } from 'react-i18next'
+import { i18nDateToLocaleDateString } from '../i18n/i18n'
+import { KnowitColors } from '../styles'
+import { QuestionAnswer } from '../types'
 import { staleAnswersLimit } from './AlertNotification'
 
 const useStyles = makeStyles({
@@ -42,6 +43,7 @@ export enum AlertType {
 export const BlockInfo = (props: {
   questions: QuestionAnswer[] | undefined
 }) => {
+  const { t } = useTranslation()
   const classes = useStyles()
 
   enum TimeType {
@@ -56,9 +58,14 @@ export const BlockInfo = (props: {
   ): string => {
     switch (type) {
       case TimeType.MINUTES:
-        return Math.round((now - then) / (1000 * 60)) + ' minutter'
+        return (
+          Math.round((now - then) / (1000 * 60)) + ` ${t('myAnswers.minutes')}`
+        )
       case TimeType.DAYS:
-        return Math.round((now - then) / (1000 * 60 * 60 * 24)) + ' dager'
+        return (
+          Math.round((now - then) / (1000 * 60 * 60 * 24)) +
+          ` ${t('myAnswers.days')}`
+        )
     }
   }
 
@@ -75,9 +82,9 @@ export const BlockInfo = (props: {
       <div className={classes.root}>
         <div className={classes.blockAlert}>
           <ErrorOutlineRoundedIcon />
-          <div
-            className={classes.warningText}
-          >{`Blokken er ikke ferdig utfylt!`}</div>
+          <div className={classes.warningText}>
+            {t('myAnswers.blockHasNotBeenCompleted')}
+          </div>
         </div>
       </div>
     )
@@ -94,13 +101,11 @@ export const BlockInfo = (props: {
       <div className={classes.root}>
         <div className={classes.blockAlert}>
           <UpdateIcon />
-          <div
-            className={classes.warningText}
-          >{`Det har gått ${timeBetweenString(
-            timeOfOldestQuestion,
-            now,
-            TimeType.DAYS
-          )} siden blokken ble oppdatert!`}</div>
+          <div className={classes.warningText}>
+            {t('myAnswers.itHasBeenTimeSinceTheBlockWasUpdated', {
+              time: timeBetweenString(timeOfOldestQuestion, now, TimeType.DAYS),
+            })}
+          </div>
         </div>
       </div>
     )
@@ -109,11 +114,12 @@ export const BlockInfo = (props: {
       <div className={classes.root}>
         <div className={classes.blockOK}>
           <CheckCircleOutlineRoundedIcon />
-          <div
-            className={classes.warningText}
-          >{`Blokken ble sist oppdatert ${new Date(
-            timeOfOldestQuestion
-          ).toLocaleDateString('no-NO')}`}</div>
+          <div className={classes.warningText}>
+            {t('myAnswers.theBlockWasLastUpdatedDate', {
+              date: i18nDateToLocaleDateString(new Date(timeOfOldestQuestion)),
+              interpolation: { escapeValue: false },
+            })}
+          </div>
         </div>
       </div>
     )

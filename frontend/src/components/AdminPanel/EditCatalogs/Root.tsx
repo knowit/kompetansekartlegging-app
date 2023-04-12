@@ -1,45 +1,56 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
-import Container from '@material-ui/core/Container'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import Container from '@material-ui/core/Container'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import DeleteIcon from '@material-ui/icons/Delete'
-import BookmarkIcon from '@material-ui/icons/Bookmark'
-import EditIcon from '@material-ui/icons/Edit'
-import AddIcon from '@material-ui/icons/Add'
 import Typography from '@material-ui/core/Typography'
+import AddIcon from '@material-ui/icons/Add'
+import BookmarkIcon from '@material-ui/icons/Bookmark'
+import DeleteIcon from '@material-ui/icons/Delete'
+import EditIcon from '@material-ui/icons/Edit'
 
-import commonStyles from '../common.module.css'
-import useApiGet from '../useApiGet'
-import { compareByCreatedAt } from '../helpers'
-import {
-  listAllFormDefinitionsForLoggedInUser,
-  updateFormDefinitionCreatedAt,
-  deleteFormDefinition,
-  createFormDefinition,
-} from '../catalogApi'
+import { useTranslation } from 'react-i18next'
+import { i18nDateToLocaleString } from '../../../i18n/i18n'
 import Button from '../../mui/Button'
 import Table from '../../mui/Table'
 import TableRow from '../../mui/TableRow'
+import {
+  copyFormDefinition,
+  createFormDefinition,
+  deleteFormDefinition,
+  listAllFormDefinitionsForLoggedInUser,
+  updateFormDefinitionCreatedAt,
+} from '../catalogApi'
+import commonStyles from '../common.module.css'
+import { compareByCreatedAt } from '../helpers'
+import useApiGet from '../useApiGet'
 import ActivateCatalogDialog from './ActivateCatalogDialog'
-import DeleteCatalogDialog from './DeleteCatalogDialog'
 import AddCatalogDialog from './AddCatalogDialog'
+import CopyCatalogDialog from './CopyCatalogDialog'
+import DeleteCatalogDialog from './DeleteCatalogDialog'
 
-const Catalog = ({ catalog, deleteCatalog, active, activateCatalog }: any) => {
-  const name = catalog.label || 'Ikke satt'
+const Catalog = ({
+  catalog,
+  deleteCatalog,
+  active,
+  activateCatalog,
+  copyCatalog,
+}: any) => {
+  const { t } = useTranslation()
+  const name = catalog.label || t('admin.editCatalogs.notSet')
 
   return (
     <>
       <TableRow selected={active}>
         <TableCell>{name}</TableCell>
         <TableCell>
-          {new Date(catalog.updatedAt).toLocaleString('nb-NO')}
+          {i18nDateToLocaleString(new Date(catalog.updatedAt))}
         </TableCell>
         <TableCell align="right">
           <Button
@@ -47,7 +58,7 @@ const Catalog = ({ catalog, deleteCatalog, active, activateCatalog }: any) => {
             endIcon={<BookmarkIcon />}
             onClick={() => activateCatalog(catalog)}
           >
-            Bruk katalog
+            {t('admin.editCatalogs.activateCatalog')}
           </Button>
         </TableCell>
         <TableCell align="right">
@@ -56,16 +67,24 @@ const Catalog = ({ catalog, deleteCatalog, active, activateCatalog }: any) => {
               pathname: `/edit/${catalog.id}`,
               search: `?label=${name}`,
             }}
+            style={{ textDecoration: 'none' }}
           >
-            <Button endIcon={<EditIcon />}>Endre katalog</Button>
+            <Button endIcon={<EditIcon />}>
+              {t('admin.editCatalogs.modifyCatalog')}
+            </Button>
           </Link>
+        </TableCell>
+        <TableCell align="right">
+          <Button endIcon={<AddIcon />} onClick={() => copyCatalog(catalog)}>
+            {t('admin.editCatalogs.copyCatalog')}
+          </Button>
         </TableCell>
         <TableCell align="right">
           <Button
             endIcon={<DeleteIcon />}
             onClick={() => deleteCatalog(catalog)}
           >
-            Fjern katalog
+            {t('admin.editCatalogs.removeCatalog')}
           </Button>
         </TableCell>
       </TableRow>
@@ -73,14 +92,22 @@ const Catalog = ({ catalog, deleteCatalog, active, activateCatalog }: any) => {
   )
 }
 
-const CatalogTable = ({ catalogs, deleteCatalog, activateCatalog }: any) => {
+const CatalogTable = ({
+  catalogs,
+  deleteCatalog,
+  activateCatalog,
+  copyCatalog,
+}: any) => {
+  const { t } = useTranslation()
+
   return (
     <TableContainer className={commonStyles.tableContainer}>
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell>Navn</TableCell>
-            <TableCell>Sist oppdatert</TableCell>
+            <TableCell>{t('name')}</TableCell>
+            <TableCell>{t('admin.editCatalogs.lastUpdated')}</TableCell>
+            <TableCell />
             <TableCell />
             <TableCell />
             <TableCell />
@@ -93,6 +120,7 @@ const CatalogTable = ({ catalogs, deleteCatalog, activateCatalog }: any) => {
               catalog={c}
               deleteCatalog={deleteCatalog}
               activateCatalog={activateCatalog}
+              copyCatalog={copyCatalog}
               active={ind === 0}
             />
           ))}
@@ -103,6 +131,7 @@ const CatalogTable = ({ catalogs, deleteCatalog, activateCatalog }: any) => {
 }
 
 const Root = () => {
+  const { t } = useTranslation()
   const {
     result: catalogs,
     error,
@@ -142,6 +171,19 @@ const Root = () => {
     refresh()
   }
 
+  const [showCopyCatalogDialog, setShowCopyCatalogDialog] =
+    useState<boolean>(false)
+  const [catalogToCopy, setCatalogToCopy] = useState<any>()
+  const copyCatalog = (catalog: any) => {
+    setShowCopyCatalogDialog(true)
+    setCatalogToCopy(catalog)
+  }
+  const copyCatalogConfirm = async (newCatalogName: string) => {
+    await copyFormDefinition(catalogToCopy.id, newCatalogName)
+    setShowCopyCatalogDialog(false)
+    refresh()
+  }
+
   const [showAddCatalogDialog, setShowAddCatalogDialog] =
     useState<boolean>(false)
   const addCatalogConfirm = async (name: string) => {
@@ -152,23 +194,23 @@ const Root = () => {
 
   return (
     <Container maxWidth="md" className={commonStyles.container}>
-      {error && <p>An error occured: {error}</p>}
+      {error && <p>{t('errorOccured') + error}</p>}
       {loading && <CircularProgress />}
       {!error && !loading && catalogs && (
         <>
           <Card style={{ marginBottom: '24px' }} variant="outlined">
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
-                Rediger kataloger
+                {t('menu.submenu.editCatalogs')}
               </Typography>
-              På denne siden kan du lage nye kataloger, endre på eksisterende
-              kataloger, kategorier og spørsmål og fjerne kataloger.
+              {t('admin.editCatalogs.description')}
             </CardContent>
           </Card>
           <CatalogTable
             catalogs={catalogs}
             deleteCatalog={deleteCatalog}
             activateCatalog={activateCatalog}
+            copyCatalog={copyCatalog}
           />
           <Button
             variant="contained"
@@ -177,7 +219,7 @@ const Root = () => {
             style={{ marginTop: '24px' }}
             onClick={() => setShowAddCatalogDialog(true)}
           >
-            Lag ny katalog
+            {t('admin.editCatalogs.createNewCatalog')}
           </Button>
         </>
       )}
@@ -200,6 +242,14 @@ const Root = () => {
         onExited={() => setCatalogToDelete(null)}
         onConfirm={deleteCatalogConfirm}
       />
+      {showCopyCatalogDialog && (
+        <CopyCatalogDialog
+          open={showCopyCatalogDialog}
+          onCancel={() => setShowCopyCatalogDialog(false)}
+          onExited={() => setCatalogToCopy(null)}
+          onConfirm={copyCatalogConfirm}
+        />
+      )}
     </Container>
   )
 }

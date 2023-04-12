@@ -3,10 +3,11 @@ import {
   ADMIN_COGNITOGROUP_SUFFIX,
   GROUPLEADER_COGNITOGROUP_SUFFIX,
 } from '../constants'
+import { getOrganizationNameByID } from '../helperFunctions'
 import { RootState } from './store'
 
+import i18n from '../i18n/i18n'
 import { UserRole } from '../types'
-import { getOrganizationByID } from '../api/organizations'
 
 const initialState = {
   userState: {
@@ -23,11 +24,10 @@ const initialState = {
 
 export const fetchOrganizationNameByID = createAsyncThunk(
   'user/fetchOrganizationNameByID',
-  async (cognitoUser: any, thunkAPI) => {
+  async (cognitoUser: any) => {
     const id = cognitoUser.attributes['custom:OrganizationID']
-    const organizationName = (await getOrganizationByID(id)).data?.orgname
-    // [TODO] What to do if organization is not found?
-    return organizationName || 'Could not find organization'
+    const organizationName = await getOrganizationNameByID(id)
+    return organizationName
   }
 )
 
@@ -104,16 +104,14 @@ export const userSlice = createSlice({
         }
       },
     },
-    setUserInfoLogOut: (state) => {
-      state = initialState
-    },
+    setUserInfoLogOut: () => initialState,
   },
   extraReducers: (builder) => {
     builder.addCase(fetchOrganizationNameByID.fulfilled, (state, action) => {
       state.userState.organizationName = action.payload
     })
-    builder.addCase(fetchOrganizationNameByID.rejected, (state, action) => {
-      state.userState.organizationName = 'no organization name found'
+    builder.addCase(fetchOrganizationNameByID.rejected, (state) => {
+      state.userState.organizationName = i18n.t('noOrganizationNameFound')
     })
   },
 })

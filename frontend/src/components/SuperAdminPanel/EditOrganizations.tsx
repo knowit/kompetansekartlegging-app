@@ -12,13 +12,13 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Typography from '@material-ui/core/Typography'
 import DeleteIcon from '@material-ui/icons/Delete'
+import { useTranslation } from 'react-i18next'
 import commonStyles from '../AdminPanel/common.module.css'
 import Button from '../mui/Button'
 import Table from '../mui/Table'
 
 import AddIcon from '@material-ui/icons/Add'
-import AddOrganizationDialog from './AddOrganizationDialog'
-import DeleteOrganizationDialog from './DeleteOrganizationDialog'
+import { useQuery } from '@tanstack/react-query'
 import {
   createOrganization,
   deleteOrganization,
@@ -28,7 +28,8 @@ import {
   Organization as Org,
   OrganizationInput,
 } from '../../api/organizations/types'
-import { useQuery } from '@tanstack/react-query'
+import AddOrganizationDialog from './AddOrganizationDialog'
+import DeleteOrganizationDialog from './DeleteOrganizationDialog'
 
 interface OrganizationProps {
   organization: Org
@@ -67,15 +68,17 @@ const OrganizationTable: React.FC<OrganizationTableProps> = ({
   organizations,
   deleteOrganization,
 }) => {
+  const { t } = useTranslation()
+
   return (
     <TableContainer className={commonStyles.tableContainer}>
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell>Navn</TableCell>
-            <TableCell>ID</TableCell>
-            <TableCell>Identifier Attribute</TableCell>
-            <TableCell>Slett</TableCell>
+            <TableCell>{t('name')}</TableCell>
+            <TableCell>{t('superAdmin.editOrganizations.id')}</TableCell>
+            <TableCell>{t('superAdmin.identifierAttribute')}</TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -101,6 +104,7 @@ const EditOrganizations = () => {
     queryKey: ['edit_organizations'],
     queryFn: getAllOrganizations,
   })
+  const { t } = useTranslation()
 
   const [mutationError, setMutationError] = useState<string>('')
 
@@ -140,40 +144,41 @@ const EditOrganizations = () => {
 
   return (
     <Container maxWidth="md" className={commonStyles.container}>
-      {error && <p>An error occured: {error}</p>}
+      {error && <p>{t('errorOccured') + error}</p>}
       {mutationError && (
         <>
-          <p>An error occured: {mutationError}</p>
+          <p>{t('errorOccured') + mutationError}</p>
         </>
       )}
       {isLoading && <CircularProgress />}
-      {!error && !isLoading && (
-        <>
-          <Card style={{ marginBottom: '24px' }} variant="outlined">
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                Rediger organisasjoner.
-              </Typography>
-              Her man man legge til, fjerne eller oppdatere organizasjoner.
-            </CardContent>
-          </Card>
-          {organizations?.data && (
+      {!error &&
+        !isLoading &&
+        organizations !== undefined &&
+        organizations.data !== null && (
+          <>
+            <Card style={{ marginBottom: '24px' }} variant="outlined">
+              <CardContent>
+                <Typography color="textSecondary" gutterBottom>
+                  {t('menu.submenu.editOrganizations')}
+                </Typography>
+                {t('superAdmin.editOrganizations.description')}
+              </CardContent>
+            </Card>
             <OrganizationTable
               organizations={organizations.data}
               deleteOrganization={openDeleteOrganizationDialog}
             />
-          )}
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddIcon />}
-            style={{ marginTop: '24px' }}
-            onClick={() => setShowAddOrganization(true)}
-          >
-            Legg til organisasjon
-          </Button>
-        </>
-      )}
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddIcon />}
+              style={{ marginTop: '24px' }}
+              onClick={() => setShowAddOrganization(true)}
+            >
+              {t('superAdmin.editOrganizations.addOrganization')}
+            </Button>
+          </>
+        )}
       {showAddOrganization && (
         <AddOrganizationDialog
           open={showAddOrganization}

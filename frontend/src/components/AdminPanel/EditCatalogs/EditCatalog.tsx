@@ -1,22 +1,23 @@
-import React, { useState, useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { makeStyles, createStyles } from '@material-ui/core/styles'
+import Box from '@material-ui/core/Box'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from '@material-ui/core/Container'
-import Box from '@material-ui/core/Box'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import AddIcon from '@material-ui/icons/Add'
 
-import { listCategoriesByFormDefinitionID, createCategory } from '../catalogApi'
-import useApiGet from '../useApiGet'
-import { compareByIndex } from '../helpers'
-import CategoryList from './CategoryList'
-import RouterBreadcrumbs from './Breadcrumbs'
-import useQuery from './useQuery'
-import AddCategoryDialog from './AddCategoryDialog'
-import Button from '../../mui/Button'
-import { ORGANIZATION_ID_ATTRIBUTE } from '../../../constants'
 import { Auth } from 'aws-amplify'
+import { useTranslation } from 'react-i18next'
+import { ORGANIZATION_ID_ATTRIBUTE } from '../../../constants'
+import Button from '../../mui/Button'
+import { createCategory, listCategoriesByFormDefinitionID } from '../catalogApi'
+import { compareByIndex } from '../helpers'
+import useApiGet from '../useApiGet'
+import AddCategoryDialog from './AddCategoryDialog'
+import RouterBreadcrumbs from './Breadcrumbs'
+import CategoryList from './CategoryList'
+import useQuery from './useQuery'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -42,6 +43,7 @@ const useStyles = makeStyles(() =>
 )
 
 const EditCatalog = () => {
+  const { t } = useTranslation()
   const [user, setUser] = useState<any | null>(null)
 
   if (!user) {
@@ -90,7 +92,7 @@ const EditCatalog = () => {
   return (
     <>
       <Container maxWidth="lg" className={classes.container}>
-        {error && <p>An error occured: {error}</p>}
+        {error && <p>{t('errorOccured') + error}</p>}
         {loading && <CircularProgress />}
         {!error && !loading && categories && (
           <>
@@ -116,7 +118,7 @@ const EditCatalog = () => {
                 className={classes.addCategoryButton}
                 onClick={() => setShowAddCategoryDialog(true)}
               >
-                Legg til ny kategori
+                {t('admin.editCatalogs.addNewCategory')}
               </Button>
             </div>
             {showAddCategoryDialog && (

@@ -1,20 +1,21 @@
-import React from 'react'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
+import { makeStyles } from '@material-ui/core/styles'
+import ChevronRightIcon from '@material-ui/icons/ChevronRight'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import TreeItem from '@material-ui/lab/TreeItem'
 import TreeView from '@material-ui/lab/TreeView'
+import { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import {
   AnswerHistoryProps,
   HistoryTreeViewProps,
   UserAnswer,
   UserFormWithAnswers,
 } from '../types'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import ChevronRightIcon from '@material-ui/icons/ChevronRight'
-import TreeItem from '@material-ui/lab/TreeItem'
-import { makeStyles } from '@material-ui/core/styles'
 
 const answerHistoryStyles = makeStyles({
   historyView: {
@@ -38,11 +39,15 @@ const formatDate = (dateString: string) => {
   return temp[0] + '  ' + temp[1].slice(0, 5)
 }
 
-const parseScore = (score: number) => {
-  return score < 0 ? 'Ikke svart' : score
+const parseScore = (
+  score: number,
+  t: TFunction<'translation', undefined, 'translation'>
+) => {
+  return score < 0 ? t('content.notAnswered') : score
 }
 
 export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
+  const { t } = useTranslation()
   const style = answerHistoryStyles()
 
   const handleClose = () => {
@@ -71,11 +76,11 @@ export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
         >
           <TreeItem
             nodeId={String(g.next().value)}
-            label={'Kunnskap: ' + parseScore(answer.knowledge)}
+            label={t('competence') + ': ' + parseScore(answer.knowledge, t)}
           />
           <TreeItem
             nodeId={String(g.next().value)}
-            label={'Motivasjon: ' + parseScore(answer.motivation)}
+            label={t('motivation') + ': ' + parseScore(answer.motivation, t)}
           />
         </TreeItem>
       )
@@ -103,7 +108,7 @@ export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
     )
     return question
       ? question?.category.text + ': ' + question?.topic
-      : 'Not defined'
+      : t('content.notDefined')
   }
 
   return (
@@ -115,13 +120,15 @@ export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
       >
-        <DialogTitle id="scroll-dialog-title">Svarhistorikk</DialogTitle>
+        <DialogTitle id="scroll-dialog-title">
+          {t('content.answerHistory')}
+        </DialogTitle>
         <DialogContent dividers={true} className={style.content}>
           <HistoryTreeView data={props.history} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Close
+            {t('close')}
           </Button>
         </DialogActions>
       </Dialog>

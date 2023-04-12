@@ -1,16 +1,16 @@
-import React from 'react'
-import {
-  createStyles,
-  withStyles,
-  makeStyles,
-  Theme,
-} from '@material-ui/core/styles'
-import InputLabel from '@material-ui/core/InputLabel'
-import InputBase from '@material-ui/core/InputBase'
-import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
+import InputBase from '@material-ui/core/InputBase'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
+import {
+  Theme,
+  createStyles,
+  makeStyles,
+  withStyles,
+} from '@material-ui/core/styles'
 
+import { useTranslation } from 'react-i18next'
 import { KnowitColors } from '../../../styles'
 
 const BootstrapInput = withStyles((theme: Theme) =>
@@ -66,12 +66,15 @@ const useStyles = makeStyles(() =>
 )
 
 const CategoriesSelect = ({ categories, categoryID, setCategoryID }: any) => {
+  const { t } = useTranslation()
   const classes = useStyles()
   // const category = categories.find((c: any) => c.id === categoryID);
 
   return (
     <FormControl variant="outlined" className={classes.formControl}>
-      <InputLabel className={classes.label}>Kategori</InputLabel>
+      <InputLabel className={classes.label}>
+        {t('admin.editCatalogs.category')}
+      </InputLabel>
       <Select
         value={categoryID}
         onChange={(e) => setCategoryID(e.target.value)}

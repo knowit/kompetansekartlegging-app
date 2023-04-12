@@ -4,78 +4,26 @@ import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from '@material-ui/core/Container'
-import IconButton from '@material-ui/core/IconButton'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
 import Typography from '@material-ui/core/Typography'
-import DeleteIcon from '@material-ui/icons/Delete'
 import PersonAddIcon from '@material-ui/icons/PersonAdd'
 
-import { useAppSelector } from '../../redux/hooks'
+import { useTranslation } from 'react-i18next'
 import { selectAdminCognitoGroupName } from '../../redux/User'
+import { useAppSelector } from '../../redux/hooks'
 import Button from '../mui/Button'
-import Table from '../mui/Table'
 import AddUserToGroupDialog from './AddUserToGroupDialog'
+import AdminTable from './AdminTable'
+import DeleteUserFromGroupDialog from './DeleteUserFromGroupDialog'
 import {
   addUserToGroup,
   listAllUsersInOrganization,
   removeUserFromGroup,
 } from './adminApi'
 import commonStyles from './common.module.css'
-import DeleteUserFromGroupDialog from './DeleteUserFromGroupDialog'
-import { getAttribute } from './helpers'
-import PictureAndNameCell from './PictureAndNameCell'
 import useApiGet from './useApiGet'
 
-const Admin = (props: any) => {
-  const { admin, deleteAdmin } = props
-  const username = admin.Username
-  const name = getAttribute(admin, 'name')
-  const email = getAttribute(admin, 'email')
-  const picture = getAttribute(admin, 'picture')
-
-  return (
-    <TableRow>
-      <TableCell>
-        <PictureAndNameCell name={name} picture={picture} />
-      </TableCell>
-      <TableCell>{email}</TableCell>
-      <TableCell>{username}</TableCell>
-      <TableCell>
-        <IconButton edge="end" onClick={() => deleteAdmin(admin)}>
-          <DeleteIcon />
-        </IconButton>
-      </TableCell>
-    </TableRow>
-  )
-}
-
-const AdminTable = ({ admins, deleteAdmin }: any) => {
-  return (
-    <TableContainer className={commonStyles.tableContainer}>
-      <Table stickyHeader>
-        <TableHead>
-          <TableRow>
-            <TableCell>Ansatt</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Brukernavn</TableCell>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {admins.map((gl: any) => (
-            <Admin key={gl.Username} admin={gl} deleteAdmin={deleteAdmin} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  )
-}
-
 const EditAdmins = () => {
+  const { t } = useTranslation()
   const adminCognitoGroupName = useAppSelector(selectAdminCognitoGroupName)
 
   const {
@@ -112,18 +60,16 @@ const EditAdmins = () => {
 
   return (
     <Container maxWidth="md" className={commonStyles.container}>
-      {error && <p>An error occured: {error}</p>}
+      {error && <p>{t('errorOccured') + error}</p>}
       {loading && <CircularProgress />}
       {!error && !loading && admins && (
         <>
           <Card style={{ marginBottom: '24px' }} variant="outlined">
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
-                Rediger administratorer
+                {t('admin.editAdmins.editAdministrators')}
               </Typography>
-              Administratorer har tilgang til alles svar. De kan også velge hvem
-              som er gruppeledere og administratorer og kan lage og fjerne
-              grupper. På denne siden kan du legge til og fjerne gruppeledere.
+              {t('admin.editAdmins.description')}
             </CardContent>
           </Card>
           <AdminTable admins={admins} deleteAdmin={deleteAdmin} />
@@ -134,7 +80,7 @@ const EditAdmins = () => {
             style={{ marginTop: '24px' }}
             onClick={() => setShowAddAdmin(true)}
           >
-            Legg til administrator
+            {t('addAdministrator')}
           </Button>
         </>
       )}
@@ -144,7 +90,7 @@ const EditAdmins = () => {
         onExited={clearSelectedAdmin}
         onConfirm={deleteAdminConfirm}
         user={adminToDelete}
-        roleName="administrator"
+        roleName={t('administrator').toLowerCase()}
       />
       {showAddAdmin && (
         <AddUserToGroupDialog
@@ -153,7 +99,7 @@ const EditAdmins = () => {
           userGetFn={listAllUsersInOrganization}
           onCancel={hideShowAddAdmin}
           onConfirm={addAdminConfirm}
-          roleName="administrator"
+          roleName={t('administrator').toLowerCase()}
         />
       )}
     </Container>

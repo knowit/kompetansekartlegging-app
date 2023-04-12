@@ -1,6 +1,7 @@
 import { Button, makeStyles } from '@material-ui/core'
 import clsx from 'clsx'
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { KnowitColors } from '../styles'
 import { Panel, YourAnswerProps } from '../types'
 import { AlertNotification, AlertType } from './AlertNotification'
@@ -157,6 +158,7 @@ const yourAnswersStyleMobile = makeStyles({
 })
 
 export const YourAnswersMobile = ({ ...props }: YourAnswerProps) => {
+  const { t } = useTranslation()
   const style = yourAnswersStyleMobile()
 
   const getCategoryButtons = () => {
@@ -191,7 +193,7 @@ export const YourAnswersMobile = ({ ...props }: YourAnswerProps) => {
           {props.alerts?.categoryMap.has(category.text) ? (
             <AlertNotification
               type={AlertType.Multiple}
-              message="Ikke besvart eller utdaterte spørsmål i kategori"
+              message={t('content.unansweredOrOutdatedQuestionsInCategory')}
               size={props.alerts.categoryMap.get(category.text)}
             />
           ) : (
@@ -239,7 +241,7 @@ export const YourAnswersMobile = ({ ...props }: YourAnswerProps) => {
             {props.alerts?.categoryMap.has(category.text) ? (
               <AlertNotification
                 type={AlertType.Multiple}
-                message="Ikke besvart eller utdaterte spørsmål i kategori"
+                message={t('content.unansweredOrOutdatedQuestionsInCategory')}
                 size={props.alerts.categoryMap.get(category.text)}
               />
             ) : (
@@ -338,7 +340,7 @@ export const YourAnswersMobile = ({ ...props }: YourAnswerProps) => {
               className={style.editButton}
               onClick={() => props.enableAnswerEditMode()}
             >
-              Endre svar
+              {t('myAnswers.changeAnswers')}
             </Button>
             {/* <div className={style.catText} >{props.activeCategory}</div> */}
           </div>
