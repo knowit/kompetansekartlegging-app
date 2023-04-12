@@ -124,6 +124,7 @@ const yourAnswersStyleMobile = makeStyles({
     justifyContent: 'left',
     fontSize: '14px',
     lineHeight: '16px',
+    color: KnowitColors.black,
   },
   yourAnswersMobileContainer: {
     minHeight: '100vh',
