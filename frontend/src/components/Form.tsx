@@ -25,9 +25,7 @@ export const Form = ({ ...props }: FormProps) => {
     props.updateAnswer(props.activeCategory, sliderValues.current)
   }
 
-  const getQuestionsForCategory = (
-    _items: QuestionType[] | undefined
-  ): JSX.Element[] => {
+  const getQuestionsForCategory = (): JSX.Element[] => {
     //console.log("Props to make questions from: ", props.questionAnswers);
     const questionAnswers =
       props.questionAnswers
@@ -80,7 +78,7 @@ export const Form = ({ ...props }: FormProps) => {
     if (!props.formDefinition) return <Fragment />
     return (
       <Fragment>
-        {getQuestionsForCategory(undefined)}
+        {getQuestionsForCategory()}
         <div>
           {props.categories.length > 0 ? (
             <Button onClick={handleClickSubmit}>

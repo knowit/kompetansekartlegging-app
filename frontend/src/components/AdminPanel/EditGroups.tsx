@@ -119,7 +119,6 @@ const Group = ({
 
 const GroupsTable = ({
   groups,
-  users,
   allAvailableUsersAnnotated,
   groupLeaders,
   deleteGroup,

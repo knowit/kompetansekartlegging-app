@@ -82,7 +82,6 @@ export type LanguageSchema = {
         downloadCatalogs: string
         editOrganizations: string
         editSuperAdministrators: string
-        editOrganizationAdministrators: string
       }
     }
     navbar: {
@@ -245,15 +244,19 @@ export type LanguageSchema = {
       editOrganizations: {
         description: string
         id: string
+        adminEmail: string
         addOrganization: string
         removeOrganization: string
         areYouSureYouWantToRemoveTheOrganization: string
         addNewOrganization: string
-        idCantBeEmpty: string
+        idCantBeEmptyOrContainZero: string
         identifierAttributeCantBeEmpty: string
+        adminEmailIsInvalid: string
       }
       editSuperAdministrators: {
         description: string
+        superAdministrator: string
+        addSuperAdministrator: string
       }
       editOrganizationAdministrators: {
         description: string
@@ -301,6 +304,7 @@ export type LanguageSchema = {
       couldNotGetAListOfOrganizations: string
       couldNotAddTheOrganization: string
       couldNotDeleteTheOrganization: string
+      theNewOrganizationWasNotProperlyConfigured: string
     }
     aria: {
       selectLanguageLanguageIsSelected: string

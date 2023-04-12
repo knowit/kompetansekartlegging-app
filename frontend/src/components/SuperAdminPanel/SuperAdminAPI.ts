@@ -1,3 +1,4 @@
+import { API, Auth } from 'aws-amplify'
 import {
   Mutation,
   // ListOrganizationsQuery,
@@ -38,17 +39,40 @@ export const getOrganizations = async (): Promise<
   }
 }
 
-export const addOrganization = async (organization: OrganizationInfo) =>
+export const addOrganization = async (
+  organization: OrganizationInfo,
+  adminEmail: string
+) =>
   new Promise(async (resolve, reject) => {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const res = await callGraphQL<Mutation>(createOrganization, {
+      await callGraphQL<Mutation>(createOrganization, {
         input: {
           id: organization.id,
           orgname: organization.name,
           identifierAttribute: organization.identifierAttribute,
         },
       })
+      try {
+        await API.get('configureNewOrganizationAPI', '', {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `${(await Auth.currentSession())
+              .getAccessToken()
+              .getJwtToken()}`,
+          },
+          queryStringParameters: {
+            organization_id: `${organization.id}`,
+            admin_email: `${adminEmail}`,
+          },
+        })
+      } catch (e) {
+        reject(
+          i18n.t('superAdminApi.theNewOrganizationWasNotProperlyConfigured', {
+            organizationName: organization.name,
+          })
+        )
+      }
+
       resolve(null)
     } catch (e) {
       reject(

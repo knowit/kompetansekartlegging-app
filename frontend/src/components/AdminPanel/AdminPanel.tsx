@@ -1,4 +1,3 @@
-import style from './AdminPanel.module.css'
 import DownloadExcel from './DownloadExcel'
 import EditAdmins from './EditAdmins'
 import EditCatalogsRouter from './EditCatalogsRouter'

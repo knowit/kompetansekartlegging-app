@@ -16,7 +16,6 @@ const adminItems = [
   {
     key: SubmenuCategory.EDIT_CATALOGS,
     text: 'menu.submenu.editCatalogs',
-    hasInternalRouting: true,
   },
   {
     key: SubmenuCategory.DOWNLOAD_CATALOGS,

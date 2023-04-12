@@ -14,7 +14,7 @@ import { i18nDateToLocaleDateString } from '../../i18n/i18n'
 import AddMemberToGroupDialog from './AddMemberToGroupDialog'
 import { getAttribute } from './helpers'
 import PictureAndNameCell from './PictureAndNameCell'
-
+import { Delete as DeleteIcon } from '@mui/icons-material'
 const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
   const { t } = useTranslation()
 
@@ -38,7 +38,11 @@ const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
       <TableCell onClick={onClick}>{email}</TableCell>
       {showLastAnsweredAt && <TableCell>{formLastAnsweredAt}</TableCell>}
       <TableCell>
-        <Button onClick={() => deleteMember(user)}>
+        <Button
+          endIcon={<DeleteIcon />}
+          onClick={() => deleteMember(user)}
+          style={{ fontStyle: 'italic' }}
+        >
           {t('myGroup.removeFromGroup')}
         </Button>
       </TableCell>

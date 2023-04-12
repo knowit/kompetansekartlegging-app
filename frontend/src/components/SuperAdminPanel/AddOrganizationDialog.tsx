@@ -12,10 +12,11 @@ import TextField from '@mui/material/TextField'
 import { CloseIcon } from '../DescriptionTable'
 import { OrganizationInfo } from './SuperAdminTypes'
 import { useTranslation } from 'react-i18next'
+import { CircularProgress } from '@mui/material'
 
 interface AddOrganizationDialogProps {
   onCancel: () => void
-  onConfirm: (arg: OrganizationInfo) => void
+  onConfirm: (organization: OrganizationInfo, adminEmail: string) => void
   open: boolean
 }
 
@@ -30,6 +31,13 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
   const [organizationID, setOrganizationID] = useState('')
   const [organizationIdentifierAttribute, setOrganizationIdentifierAttribute] =
     useState('')
+  const [organizationAdminEmail, setOrganizationAdminEmail] = useState('')
+  const [isAddingOrganization, setIsAddingOrganization] = useState(false)
+
+  const emailRegex = /^[^\s@]+@[^\s@]+$/
+  const isOrganizationAdminEmailValid =
+    organizationAdminEmail.length === 0 ||
+    emailRegex.test(organizationAdminEmail)
 
   return (
     <Dialog
@@ -53,6 +61,7 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
           </IconButton>
         </Box>
         <TextField
+          required
           autoFocus
           fullWidth
           label={t('name')}
@@ -63,20 +72,20 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
           onChange={(e: any) => setOrganizationName(e.target.value)}
         />
         <TextField
-          autoFocus
+          required
           fullWidth
           label={t('superAdmin.editOrganizations.id')}
           variant="outlined"
-          error={organizationID === ''}
+          error={organizationID === '' || organizationID.includes('0')}
           helperText={
-            organizationID === '' &&
-            t('superAdmin.editOrganizations.idCantBeEmpty')
+            (organizationID === '' || organizationID.includes('0')) &&
+            t('superAdmin.editOrganizations.idCantBeEmptyOrContainZero')
           }
           value={organizationID}
           onChange={(e: any) => setOrganizationID(e.target.value)}
         />
         <TextField
-          autoFocus
+          required
           fullWidth
           label={t('superAdmin.identifierAttribute')}
           variant="outlined"
@@ -90,24 +99,52 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
             setOrganizationIdentifierAttribute(e.target.value)
           }
         />
-      </DialogTitle>
-      <DialogActions>
-        <Button onClick={onCancel}>
-          <span>{t('abort')}</span>
-        </Button>
-        <Button
-          disabled={organizationName === ''}
-          onClick={() =>
-            onConfirm({
-              id: organizationID,
-              name: organizationName,
-              identifierAttribute: organizationIdentifierAttribute,
-            })
+        <TextField
+          fullWidth
+          label={t('superAdmin.editOrganizations.adminEmail')}
+          variant="outlined"
+          error={!isOrganizationAdminEmailValid}
+          helperText={
+            !isOrganizationAdminEmailValid &&
+            t('superAdmin.editOrganizations.adminEmailIsInvalid')
           }
-        >
-          <span>{t('add')}</span>
-        </Button>
-      </DialogActions>
+          value={organizationAdminEmail}
+          onChange={(e: any) => setOrganizationAdminEmail(e.target.value)}
+        />
+      </DialogTitle>
+      {isAddingOrganization ? (
+        <div style={{ height: 65, display: 'flex', justifyContent: 'center' }}>
+          <CircularProgress />
+        </div>
+      ) : (
+        <DialogActions>
+          <Button onClick={onCancel}>
+            <span>{t('abort')}</span>
+          </Button>
+          <Button
+            disabled={
+              organizationName === '' ||
+              organizationID === '' ||
+              organizationID.includes('0') ||
+              organizationIdentifierAttribute === '' ||
+              !isOrganizationAdminEmailValid
+            }
+            onClick={() => {
+              setIsAddingOrganization(true)
+              onConfirm(
+                {
+                  id: organizationID,
+                  name: organizationName,
+                  identifierAttribute: organizationIdentifierAttribute,
+                },
+                organizationAdminEmail
+              )
+            }}
+          >
+            <span>{t('add')}</span>
+          </Button>
+        </DialogActions>
+      )}
     </Dialog>
   )
 }

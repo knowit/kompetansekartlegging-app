@@ -11,7 +11,7 @@ const superAdminItems = [
   },
   {
     key: SubmenuCategory.EDIT_ORGANIZATION_ADMINS,
-    text: 'menu.submenu.editOrganizationAdministrators',
+    text: 'menu.submenu.editAdministrators',
   },
 ]
 
