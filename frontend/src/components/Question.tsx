@@ -5,6 +5,18 @@ import Slider from './Slider'
 import * as Icon from '../icons/iconController'
 import { AlertNotification } from './AlertNotification'
 import { useTranslation } from 'react-i18next'
+import styled from '@emotion/styled'
+
+const StyledQuestionContainer = styled.div`
+  .iconContainer {
+    > div {
+      width: 16%;
+    }
+    svg {
+      max-width: 10%;
+    }
+  }
+`
 
 const Question = ({ ...props }: QuestionProps) => {
   const question = props.questionAnswer.question
@@ -72,7 +84,6 @@ const Question = ({ ...props }: QuestionProps) => {
 }
 
 const KnowledgeMotivationSliders = ({
-  style,
   sliderValues,
   sliderChanged,
   isMobile,
@@ -80,10 +91,10 @@ const KnowledgeMotivationSliders = ({
   const { t } = useTranslation()
 
   return (
-    <div>
-      <div>{t('competence')}</div>
+    <StyledQuestionContainer>
+      <h2>{t('competence')}</h2>
       <div>
-        <div>{Icon.GetIcons(true)}</div>
+        <div className="iconContainer">{Icon.GetIcons(true)}</div>
         <div>
           <Slider
             value={sliderValues?.knowledge || -2}
@@ -93,9 +104,9 @@ const KnowledgeMotivationSliders = ({
           />
         </div>
       </div>
-      <div>{t('motivation')}</div>
+      <h2>{t('motivation')}</h2>
       <div>
-        <div>{Icon.GetIcons(false)}</div>
+        <div className="iconContainer">{Icon.GetIcons(false)}</div>
         <div>
           <Slider
             value={sliderValues?.motivation || -2}
@@ -105,7 +116,7 @@ const KnowledgeMotivationSliders = ({
           />
         </div>
       </div>
-    </div>
+    </StyledQuestionContainer>
   )
 }
 
