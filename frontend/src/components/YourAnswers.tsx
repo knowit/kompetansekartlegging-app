@@ -37,8 +37,9 @@ export const YourAnswers = ({ ...props }: YourAnswerProps) => {
 
   return (
     <>
+      <h1>{props.activeCategory}</h1>
+      <div>{getCategoryDescription()}</div>
       <Hideable hidden={!props.answerEditMode}>
-        <h1>{props.activeCategory}</h1>
         <BlockInfo
           questions={props.questionAnswers.get(props.activeCategory)}
         />
@@ -48,7 +49,7 @@ export const YourAnswers = ({ ...props }: YourAnswerProps) => {
         >
           {t('myAnswers.fillOut')}
         </Button>
-        <div>{getCategoryDescription()}</div>
+
         <AnswerDiagram
           questionAnswers={props.questionAnswers}
           activeCategory={props.activeCategory}
@@ -61,9 +62,6 @@ export const YourAnswers = ({ ...props }: YourAnswerProps) => {
           alerts={props.alerts}
           totalQuestions={props.formDefinition?.questions.items.length ?? 0}
         />
-
-        <div>{getCategoryDescription()}</div>
-
         <Form
           {...props}
           scrollToTop={scrollToTop}
