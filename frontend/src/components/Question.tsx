@@ -9,11 +9,13 @@ import styled from '@emotion/styled'
 
 const StyledQuestionContainer = styled.div`
   .iconContainer {
-    > div {
-      width: 16%;
-    }
+    width: 100%;
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     svg {
-      max-width: 10%;
+      height: 100%;
     }
   }
 `
