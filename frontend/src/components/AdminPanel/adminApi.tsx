@@ -147,7 +147,8 @@ const listGroupLeadersInOrganization = async (organizationID: string) =>
 const listGroupLeaders = async () => await listUsersInGroup('groupLeader')
 const listAdminsInOrganization = async (organizationID: string) =>
   await listUsersInGroup(`${organizationID}${ADMIN_COGNITOGROUP_SUFFIX}`)
-const listAdmins = async () => await listUsersInGroup(SUPER_ADMIN_COGNITO_GROUP)
+const listSuperAdmins = async () =>
+  await listUsersInGroup(SUPER_ADMIN_COGNITO_GROUP)
 
 const listAllUsers = async (limit = 60): Promise<ApiResponse<any[]>> => {
   let nextToken = ''
@@ -184,6 +185,6 @@ export {
   listAllUsersInOrganization,
   listGroupLeaders,
   listGroupLeadersInOrganization,
-  listAdmins,
+  listSuperAdmins,
   listAdminsInOrganization,
 }
