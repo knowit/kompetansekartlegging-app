@@ -493,7 +493,7 @@ const Content = ({ ...props }: ContentProps) => {
         </List>
       </Drawer>
 
-      <Container className="panel">{setupPanel()}</Container>
+      <div className="panel">{setupPanel()}</div>
 
       <AlertDialog
         setAlertDialogOpen={setAlertDialogOpen}

@@ -109,7 +109,7 @@ export const DescriptionTable = ({
 
   const ScaleContainer = ({ ...props }: ScaleContainerProps) => (
     <div>
-      <div style={{ maxWidth: '20px' }}>{props.icon}</div>
+      <div>{props.icon}</div>
       <div>
         <div>{props.heading}</div>
         <div>{props.text}</div>

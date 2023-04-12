@@ -7,20 +7,37 @@ import styled from '@emotion/styled'
 
 const StyledHighlights = styled.article`
   #focusAreas {
+    width: 100%;
     display: flex;
     flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-wrap: wrap;
   }
-  #strengths {
-    display: flex;
-    flex-direction: column;
-  }
+  #strengths,
   #ambitions {
+    width: 50%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
   .highlightList {
+    width: 100%;
     display: flex;
     flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+
+    > div {
+      width: 25%;
+      h3 {
+        overflow-wrap: break-word;
+      }
+      svg {
+        max-width: 50px;
+      }
+    }
   }
 `
 
@@ -93,14 +110,14 @@ export default function Highlights({ ...props }: HighlightsProps) {
     isKnowledge: boolean
   ): JSX.Element => {
     if (aboveCutoff.length === 0) {
-      return <div>{t(text)}</div>
+      return <h3>{t(text)}</h3>
     }
     return (
       <div className="highlightList">
         {aboveCutoff.map((el: any, i) => (
           <div key={i}>
-            <div>{GetIcon(isKnowledge, el.icon)}</div>
-            <div>{wrapString(el.topic, maxTopicStringLength).join('\n')}</div>
+            {GetIcon(isKnowledge, el.icon)}
+            <h3>{wrapString(el.topic, maxTopicStringLength).join('\n')}</h3>
           </div>
         ))}
       </div>
