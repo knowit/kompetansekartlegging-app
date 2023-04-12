@@ -33,7 +33,7 @@ const getQuestionAnswer = async ({ id }: GetQuestionAnswerInput) => {
 }
 
 const createQuestionAnswer = async ({
-  user_id,
+  user_username,
   question_id,
   knowledge,
   motivation,
@@ -51,9 +51,9 @@ const createQuestionAnswer = async ({
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'userid',
+      name: 'user_username',
       value: {
-        stringValue: user_id,
+        stringValue: user_username,
       },
       typeHint: TypeHint.UUID,
     },
@@ -94,8 +94,8 @@ const createQuestionAnswer = async ({
     },
   ]
 
-  const query = `INSERT INTO question_answer (id, user_id, question_id, knowledge, motivation, custom_scale_value, text_value)
-    VALUES(:id, :userid, :questionid, :knowledge, :motivation, :customscalevalue, :textvalue)
+  const query = `INSERT INTO question_answer (id, user_username, question_id, knowledge, motivation, custom_scale_value, text_value)
+    VALUES(:id, :user_username, :questionid, :knowledge, :motivation, :customscalevalue, :textvalue)
     RETURNING *`
 
   return await sqlQuery({
@@ -108,7 +108,7 @@ const createQuestionAnswer = async ({
 const updateQuestionAnswer = async (
   { id }: GetQuestionAnswerInput,
   {
-    user_id,
+    user_username,
     question_id,
     knowledge,
     motivation,
@@ -125,9 +125,9 @@ const updateQuestionAnswer = async (
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'userid',
+      name: 'user_username',
       value: {
-        stringValue: user_id,
+        stringValue: user_username,
       },
       typeHint: TypeHint.UUID,
     },
@@ -170,7 +170,7 @@ const updateQuestionAnswer = async (
 
   // TODO: Se kommentar fra @Lekesoldat
   const query = `UPDATE question_answer
-        SET user_id=:userid, question_id=:questionid, knowledge=:knowledge, motivation=:motivation,
+        SET user_username=:user_username, question_id=:questionid, knowledge=:knowledge, motivation=:motivation,
         custom_scale_value=:customscalevalue, text_value=:textvalue
         WHERE id=:id
         RETURNING *`
@@ -203,7 +203,7 @@ const deleteQuestionAnswer = async ({ id }: DeleteQuestionAnswerInput) => {
 }
 
 const createQuestionAnswerFromBatch = async ({
-  user_id,
+  user_username,
   question_id,
   knowledge,
   motivation,
@@ -221,9 +221,9 @@ const createQuestionAnswerFromBatch = async ({
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'userid',
+      name: 'user_username',
       value: {
-        stringValue: user_id,
+        stringValue: user_username,
       },
       typeHint: TypeHint.UUID,
     },
@@ -264,8 +264,8 @@ const createQuestionAnswerFromBatch = async ({
     },
   ]
 
-  const query = `INSERT INTO question_answer (id, user_id, question_id knowledge, motivation, custom_scale_value, text_value)
-  VALUES(:id, :userid, :questionid, :knowledge, :motivation, :customscalevalue, :textvalue)
+  const query = `INSERT INTO question_answer (id, user_username, question_id knowledge, motivation, custom_scale_value, text_value)
+  VALUES(:id, :user_username, :questionid, :knowledge, :motivation, :customscalevalue, :textvalue)
   RETURNING *`
 
   return await sqlQuery({
