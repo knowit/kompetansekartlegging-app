@@ -31,8 +31,12 @@ const DeleteGroupDialog = ({ onCancel, onConfirm, open }: any) => {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onConfirm}>{t('remove')}</Button>
-        <Button onClick={onCancel}>{t('abort')}</Button>
+        <Button onClick={onConfirm}>
+          <span>{t('remove')}</span>
+        </Button>
+        <Button onClick={onCancel}>
+          <span>{t('abort')}</span>
+        </Button>
       </DialogActions>
     </Dialog>
   )

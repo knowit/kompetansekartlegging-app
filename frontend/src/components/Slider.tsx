@@ -1,7 +1,142 @@
 import React, { useEffect, useState } from 'react'
 import { SliderProps } from '../types'
 import * as helper from '../helperFunctions'
+<<<<<<< HEAD
 import { Slider as CoreSlider } from '@mui/material'
+=======
+import { KnowitColors } from '../styles'
+import { Slider as CoreSlider, Theme } from '@mui/material'
+import { withStyles, makeStyles } from '@mui/styles'
+
+const ValueSlider = withStyles(
+  {
+    thumb: {
+      height: 28,
+      width: 28,
+      backgroundColor: KnowitColors.beige,
+      marginTop: -14,
+      marginLeft: -14,
+      opacity: 0,
+    },
+    track: {
+      visibility: 'hidden',
+      backgroundColor: KnowitColors.white,
+      height: 15,
+    },
+    rail: {
+      opacity: 0,
+      height: 15,
+    },
+    mark: {
+      backgroundColor: KnowitColors.white,
+      height: 15,
+      width: 4,
+      borderWidth: 1,
+      borderStyle: 'solid',
+      borderColor: KnowitColors.black,
+      borderRadius: 10,
+      marginTop: -3,
+      marginLeft: -2,
+      alignSelf: 'center',
+    },
+    markActive: {},
+    '@global': {
+      'span:nth-child(3)': {
+        height: 30,
+      },
+      'span:nth-child(13)': {
+        height: 30,
+      },
+      'span:nth-child(23)': {
+        height: 30,
+      },
+      'span:nth-child(33)': {
+        height: 30,
+      },
+      'span:nth-child(43)': {
+        height: 30,
+      },
+      'span:nth-child(53)': {
+        height: 30,
+      },
+    },
+    root: {
+      display: 'flex',
+    },
+  },
+  { name: 'MuiSlider' }
+)(CoreSlider)
+
+const ValueSliderMobile = withStyles(
+  {
+    thumb: {
+      height: 28,
+      width: 28,
+      backgroundColor: KnowitColors.beige,
+      marginTop: -14,
+      marginLeft: -14,
+      opacity: 0,
+    },
+    track: {
+      visibility: 'hidden',
+      backgroundColor: KnowitColors.white,
+      height: 15,
+    },
+    rail: {
+      opacity: 0,
+      height: 15,
+    },
+    mark: {
+      backgroundColor: KnowitColors.white,
+      height: 10,
+      width: 4,
+      borderWidth: 1,
+      borderStyle: 'solid',
+      borderColor: KnowitColors.darkGreen,
+      borderRadius: 10,
+      marginTop: -3,
+      marginLeft: -2,
+      alignSelf: 'center',
+    },
+    markActive: {},
+    '@global': {
+      'span:nth-child(3)': {
+        height: 20,
+      },
+      'span:nth-child(13)': {
+        height: 20,
+      },
+      'span:nth-child(23)': {
+        height: 20,
+      },
+      'span:nth-child(33)': {
+        height: 20,
+      },
+      'span:nth-child(43)': {
+        height: 20,
+      },
+      'span:nth-child(53)': {
+        height: 20,
+      },
+    },
+    root: {
+      display: 'flex',
+    },
+  },
+  { name: 'MuiSlider' }
+)(CoreSlider)
+
+interface StyleProps {
+  markColor: string
+}
+
+const useStyles = makeStyles<Theme, StyleProps>(() => ({
+  markActive: (props) => ({
+    opacity: 1,
+    backgroundColor: props.markColor,
+  }),
+}))
+>>>>>>> 4c2b487 (Fixes Slider, EditActionButtons and aligns dialog title with icon)
 
 const marks = new Array(51).fill(undefined).map((_v, i) => {
   return { value: i / 10 || 0 }
