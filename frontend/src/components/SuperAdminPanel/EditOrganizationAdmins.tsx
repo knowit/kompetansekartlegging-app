@@ -58,7 +58,7 @@ const EditOrganizationAdmins = () => {
       {!error && !loading && admins && (
         <>
           <InfoCard
-            title="menu.submenu.editOrganizationAdministrators"
+            title="menu.submenu.editAdministrators"
             description="superAdmin.editOrganizationAdministrators.description"
           />
           <AdminTable admins={admins} deleteAdmin={deleteAdmin} />
