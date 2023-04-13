@@ -56,8 +56,8 @@ export default function AnswerDiagram({ ...props }: AnswerDiagramProps) {
     (quAns) => quAns.question.type === QuestionType.CustomScaleLabels
   )
 
-  const knowledgeStart = props.isMobile ? 7 : 0
-  const motivationStart = props.isMobile ? 0 : 7
+  const knowledgeStart = props.isSmall ? 7 : 0
+  const motivationStart = props.isSmall ? 0 : 7
   const knowledgeMotivationChartData: ChartData[] =
     knowledgeMotivationQuAns?.map((quAns) => {
       return {
@@ -77,7 +77,7 @@ export default function AnswerDiagram({ ...props }: AnswerDiagramProps) {
       }
     }) || []
 
-  return props.isMobile ? (
+  return props.isSmall ? (
     <CombinedChartMobile chartData={knowledgeMotivationChartData} />
   ) : (
     <div>

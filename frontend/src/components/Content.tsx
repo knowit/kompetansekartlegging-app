@@ -381,6 +381,7 @@ const Content = ({ ...props }: ContentProps) => {
       }
       setAlertDialogOpen(true)
     } else {
+      isSmall && toggleMenuOpen(!open)
       setActivePanel(panelSource)
       if (isInAnswer) {
         setActiveCategory(itemSource)
@@ -413,7 +414,7 @@ const Content = ({ ...props }: ContentProps) => {
             activePanel={activePanel}
             questionAnswers={questionAnswers}
             categories={categories}
-            isMobile={props.isMobile}
+            isSmall={isSmall}
             userAnswersLoaded={userAnswersLoaded}
           />
         )

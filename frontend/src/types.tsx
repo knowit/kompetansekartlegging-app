@@ -331,7 +331,7 @@ export type OverviewProps = {
   activePanel: Panel
   questionAnswers: Map<string, QuestionAnswer[]>
   categories: string[]
-  isMobile: boolean
+  isSmall: boolean
   userAnswersLoaded: boolean
 }
 
@@ -373,19 +373,19 @@ export interface Alert {
 
 export type HighlightsProps = {
   questionAnswers: Map<string, QuestionAnswer[]>
-  isMobile: boolean
+  isSmall: boolean
 }
 
 export type ResultDiagramProps = {
   questionAnswers: Map<string, QuestionAnswer[]>
   categories: string[]
-  isMobile: boolean
+  isSmall: boolean
 }
 
 export type AnswerDiagramProps = {
   questionAnswers: Map<string, QuestionAnswer[]>
   activeCategory: string
-  isMobile: boolean
+  isSmall: boolean
 }
 
 export type NavBarProps = {

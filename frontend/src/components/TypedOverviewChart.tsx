@@ -19,7 +19,7 @@ const recalculate = (
   createMedianData: () => ResultData[],
   createHighestData: () => ResultData[],
   setChartData: React.Dispatch<React.SetStateAction<ChartData[]>>,
-  isMobile: boolean
+  isSmall: boolean
 ) => {
   let answerData: ResultData[] = []
   switch (currentType) {
@@ -32,8 +32,8 @@ const recalculate = (
     case OverviewType.HIGHEST:
       answerData = createHighestData()
   }
-  const knowledgeStart = isMobile ? 7 : 0
-  const motivationStart = isMobile ? 0 : 7
+  const knowledgeStart = isSmall ? 7 : 0
+  const motivationStart = isSmall ? 0 : 7
   const data: ChartData[] = answerData.map((answer) => {
     if (answer.aggCustomScale > 0) {
       return {
@@ -235,9 +235,9 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
       createMedianData,
       createHighestData,
       setChartData,
-      props.isMobile
+      props.isSmall
     )
-  }, [props.isMobile, props.questionAnswers, currentType, setChartData])
+  }, [props.isSmall, props.questionAnswers, currentType, setChartData])
 
   const cycleChartType = () => {
     switch (currentType) {
@@ -279,7 +279,7 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
     )
   }
 
-  return props.isMobile ? (
+  return props.isSmall ? (
     <div>
       <Button
         onClick={() => {

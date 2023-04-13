@@ -6,12 +6,12 @@ export const Overview = ({ ...props }: OverviewProps) => {
   return props.userAnswersLoaded ? (
     <div>
       <TypedOverviewChart
-        isMobile={props.isMobile}
+        isSmall={props.isSmall}
         questionAnswers={props.questionAnswers}
         categories={props.categories}
       />
       <Highlights
-        isMobile={props.isMobile}
+        isSmall={props.isSmall}
         questionAnswers={props.questionAnswers}
       />
     </div>

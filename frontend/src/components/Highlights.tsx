@@ -61,7 +61,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
     )
     let factor = 27 //Scaling factor
     let desktopPanelWidth = 0
-    if (!props.isMobile) {
+    if (!props.isSmall) {
       factor = 60 //Scaling factor for desktop
       desktopPanelWidth = 0.2 * width //Menu panel is 20% of width (Content.tsx)
     }

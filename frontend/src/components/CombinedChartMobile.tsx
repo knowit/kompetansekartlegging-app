@@ -15,17 +15,14 @@ import { ChartData, CombinedChartProps } from '../types'
 import { wrapString } from '../helperFunctions'
 import { OverviewType } from './TypedOverviewChart'
 import { useTranslation } from 'react-i18next'
+import { useWindowDimensions } from '../helperFunctions'
 
 const numTicks = 5
 const chartSplitAt = numTicks + 2
 const iconSize = 18
 
-const getMaxColumnsForWidth = () => {
+const getMaxColumnsForWidth = (width: number) => {
   const scalingFactor = 50
-  const width = Math.max(
-    document.documentElement.clientWidth || 0,
-    window.innerWidth || 0
-  )
   return Math.floor(width / scalingFactor)
 }
 
@@ -60,7 +57,8 @@ export const CombinedChartMobile = ({
   const [currentPage, setCurrentPage] = useState(0)
   const [currentType, setCurrentType] = useState<OverviewType>()
 
-  const maxColumnsPerPage = getMaxColumnsForWidth()
+  const { width } = useWindowDimensions()
+  const maxColumnsPerPage = getMaxColumnsForWidth(width)
 
   useEffect(() => {
     if (currentType !== props.type) {
@@ -110,8 +108,9 @@ export const CombinedChartMobile = ({
       setCurrentPage(currentPage + 1)
     }
   }
+
   return (
-    <div>
+    <div style={{ width: '100%', height: '100vh' }}>
       <ResponsiveContainer>
         <BarChart
           barGap={-10}
