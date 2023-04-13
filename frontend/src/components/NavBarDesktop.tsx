@@ -29,9 +29,14 @@ import { selectUserState } from '../redux/User'
 import { LanguageSelect } from './LanguageSelect'
 import { useTranslation } from 'react-i18next'
 import { NavBarPropsDesktop, UserRole } from '../types'
+import MenuIcon from '@mui/icons-material/Menu'
 import styled from '@emotion/styled'
+import { KnowitColors } from '../styles'
 
 const ToolbarContainer = styled.div`
+  svg {
+    color: ${KnowitColors.white};
+  }
   .toolbar {
     display: flex;
     justify-content: space-between;
@@ -44,7 +49,12 @@ const ToolbarContainer = styled.div`
   }
 `
 
-const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
+const NavBarDesktop = ({
+  toggleMenuOpen,
+  isSmall,
+  isOpen,
+  signout,
+}: NavBarPropsDesktop) => {
   const { t, i18n } = useTranslation()
   const userState = useAppSelector(selectUserState)
 
@@ -84,8 +94,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
     ) {
       return
     }
-
-    props.signout()
+    signout()
   }
 
   const handleCloseAlert = () => {
@@ -121,10 +130,17 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
     <AppBar className="header">
       <ToolbarContainer>
         <Toolbar className="toolbar">
+          {isSmall && (
+            <IconButton onClick={() => toggleMenuOpen(!isOpen)}>
+              <MenuIcon />
+            </IconButton>
+          )}
           <KnowitLogo />
-          <h1>
-            {t('navbar.competenceMappingFor')} {userState.organizationName}
-          </h1>
+          {!isSmall && (
+            <h1>
+              {t('navbar.competenceMappingFor')} {userState.organizationName}
+            </h1>
+          )}
 
           <div id="toolbarButtons">
             {userState.roles.includes(UserRole.Admin) ? (

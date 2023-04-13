@@ -396,8 +396,10 @@ export type NavBarProps = {
 }
 
 export type NavBarPropsDesktop = {
-  displayAnswers: () => void
   signout: () => void
+  toggleMenuOpen: any
+  isOpen: boolean
+  isSmall: boolean
 }
 
 export type NavBarPropsMobile = {

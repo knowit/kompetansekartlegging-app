@@ -56,27 +56,43 @@ import { DropdownMenuItem } from './DropdownMenuItem'
 import getGroupMenuitems from './GroupLeaderPanel/GroupLeaderMenu'
 import NavBarDesktop from './NavBarDesktop'
 import styled from '@emotion/styled'
+import { useWindowDimensions } from '../helperFunctions'
+import { ArrowBack } from '@mui/icons-material'
+import { IconButton } from '@mui/material'
 
 const navbarHeight = 100
 const menuWidth = 250
 
+type StylingProps = {
+  isSmall: boolean
+}
+
 const ContentContainer = styled.div`
   .header {
     max-height: ${navbarHeight}px;
-    width: calc(100% - ${menuWidth}px);
+  }
+
+  .panel {
+    padding-top: ${navbarHeight}px;
   }
 
   .menu {
     .MuiPaper-root {
       width: ${menuWidth}px;
-    },
+    }
   }
 
-  .panel {
-    padding-top: ${navbarHeight}px;
-    margin-left:${menuWidth}px;
-    width: calc(100% - ${menuWidth}px);
-  }
+  ${(props: StylingProps) =>
+    !props.isSmall &&
+    `
+      .panel {
+        margin-left:${menuWidth}px;
+        width: calc(100% - ${menuWidth}px);
+      }
+      .header {
+        width: calc(100% - ${menuWidth}px)
+      }
+    `}
 `
 
 export enum MenuButton {
@@ -439,9 +455,23 @@ const Content = ({ ...props }: ContentProps) => {
     return <div>Not implemented</div>
   }
 
+  const { width } = useWindowDimensions()
+  const isSmall = width < 700
+  const [menuOpen, toggleMenuOpen] = useState(false)
+
   return (
-    <ContentContainer>
-      <Drawer className="menu" variant="permanent" anchor="left">
+    <ContentContainer isSmall={isSmall}>
+      <Drawer
+        className="menu"
+        variant={isSmall ? 'persistent' : 'permanent'}
+        open={isSmall ? menuOpen : false}
+        anchor="left"
+      >
+        {isSmall && (
+          <IconButton onClick={() => toggleMenuOpen(!open)}>
+            <ArrowBack />
+          </IconButton>
+        )}
         <List>
           <ListItemButton
             selected={activePanel === Panel.Overview}
@@ -492,8 +522,10 @@ const Content = ({ ...props }: ContentProps) => {
       </Drawer>
 
       <NavBarDesktop
-        displayAnswers={props.displayAnswers}
+        toggleMenuOpen={toggleMenuOpen}
+        isSmall={isSmall}
         signout={props.signout}
+        isOpen={menuOpen}
       />
 
       <Container className="panel">{setupPanel()}</Container>
