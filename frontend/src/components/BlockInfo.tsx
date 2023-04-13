@@ -59,10 +59,13 @@ export const BlockInfo = (props: {
   ): string => {
     switch (type) {
       case TimeType.MINUTES:
-        return Math.round((now - then) / (1000 * 60)) + t('myAnswers.minutes')
+        return (
+          Math.round((now - then) / (1000 * 60)) + ` ${t('myAnswers.minutes')}`
+        )
       case TimeType.DAYS:
         return (
-          Math.round((now - then) / (1000 * 60 * 60 * 24)) + t('myAnswers.days')
+          Math.round((now - then) / (1000 * 60 * 60 * 24)) +
+          ` ${t('myAnswers.days')}`
         )
     }
   }

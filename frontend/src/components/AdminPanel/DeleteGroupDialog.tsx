@@ -11,13 +11,7 @@ import ErrorIcon from '@mui/icons-material/Error'
 import { dialogStyles } from '../../styles'
 import { useTranslation } from 'react-i18next'
 
-const DeleteGroupDialog = ({
-  onCancel,
-  onConfirm,
-  group,
-  groupLeaders,
-  open,
-}: any) => {
+const DeleteGroupDialog = ({ onCancel, onConfirm, open }: any) => {
   const { t } = useTranslation()
   const style = dialogStyles()
 

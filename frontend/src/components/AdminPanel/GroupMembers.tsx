@@ -5,6 +5,7 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 import Button from '../mui/Button'
 import Table from '../mui/Table'
@@ -40,6 +41,7 @@ const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
       {showLastAnsweredAt && <TableCell>{formLastAnsweredAt}</TableCell>}
       <TableCell>
         <Button
+          endIcon={<DeleteIcon />}
           onClick={() => deleteMember(user)}
           style={{ fontStyle: 'italic', color: KnowitColors.black }}
         >

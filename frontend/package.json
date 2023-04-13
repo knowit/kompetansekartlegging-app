@@ -30,7 +30,7 @@
   },
   "scripts": {
     "start": "ESLINT_NO_DEV_ERRORS='true' vite",
-    "build": "vite build",
+    "build": "tsc && vite build",
     "serve": "vite preview",
     "lint": "eslint . --ext ts,tsx --max-warnings 0 --no-fix",
     "lint-fix": "eslint . --ext ts,tsx --fix",
@@ -56,8 +56,7 @@
         }
       ],
       "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/explicit-module-boundary-types": "off",
-      "@typescript-eslint/no-unused-vars": "off"
+      "@typescript-eslint/explicit-module-boundary-types": "off"
     },
     "globals": {
       "React": "readonly",

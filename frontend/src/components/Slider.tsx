@@ -125,7 +125,7 @@ interface StyleProps {
   markColor: string
 }
 
-const useStyles = makeStyles<Theme, StyleProps>((_theme: Theme) => ({
+const useStyles = makeStyles<Theme, StyleProps>(() => ({
   markActive: (props) => ({
     opacity: 1,
     backgroundColor: props.markColor,

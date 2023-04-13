@@ -137,13 +137,10 @@ const App = () => {
       .then((res) => {
         if (cognitoUserContainsAttributes(res)) {
           Auth.currentSession().then((currentSession) => {
-            res.refreshSession(
-              currentSession.getRefreshToken(),
-              (err: any, session: any) => {
-                dispatch(setUserInfo(res))
-                dispatch(fetchOrganizationNameByID(res))
-              }
-            )
+            res.refreshSession(currentSession.getRefreshToken(), () => {
+              dispatch(setUserInfo(res))
+              dispatch(fetchOrganizationNameByID(res))
+            })
           })
         }
       })

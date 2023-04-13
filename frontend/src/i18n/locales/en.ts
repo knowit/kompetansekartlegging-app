@@ -84,7 +84,6 @@ export const English: LanguageSchema = {
         downloadCatalogs: 'Download catalogs',
         editOrganizations: 'Edit organizations',
         editSuperAdministrators: 'Edit super-administrators',
-        editOrganizationAdministrators: 'Edit organization-administrators',
       },
     },
     navbar: {
@@ -247,18 +246,22 @@ export const English: LanguageSchema = {
       editOrganizations: {
         description: 'On this page you can add, remove and update organizations.',
         id: 'ID',
+        adminEmail: 'Admin Email',
         addOrganization: 'Add organization',
         removeOrganization: "Remove organization '{{organization}}'?",
         areYouSureYouWantToRemoveTheOrganization: "Are you sure you want to remove the organization '{{organization}}'?",
         addNewOrganization: 'Add new organization',
-        idCantBeEmpty: "ID can't be empty.",
-        identifierAttributeCantBeEmpty: "Identifier attribute can't be empty."
+        idCantBeEmptyOrContainZero: "ID can't be empty or contain '0'.",
+        identifierAttributeCantBeEmpty: "Identifier attribute can't be empty.",
+        adminEmailIsInvalid: 'Admin email is invalid.'
       },
       editSuperAdministrators: {
-        description: 'On this page you can add and remove super-administrators.'
+        description: 'On this page you can add and remove super-administrators.',
+        superAdministrator: 'Super-administrator',
+        addSuperAdministrator: 'Add super-administrator',
       },
       editOrganizationAdministrators: {
-        description: 'On this page you can add and remove organization-administrators.'
+        description: 'On this page you can add and remove administrators for specific organizations.',
       }
     },
     adminApi: {
@@ -302,7 +305,8 @@ export const English: LanguageSchema = {
     superAdminApi: {
         couldNotGetAListOfOrganizations: 'Could not get a list of organizations.',
         couldNotAddTheOrganization: "Could not add the organization '{{organizationName}}'.",
-        couldNotDeleteTheOrganization: "Could not delete the organization '{{organizationName}}'."
+        couldNotDeleteTheOrganization: "Could not delete the organization '{{organizationName}}'.",
+        theNewOrganizationWasNotProperlyConfigured: "The new organization '{{organizationName}}' was not properly configured.",
     },
     aria: {
       selectLanguageLanguageIsSelected: 'select language, {{language}} is selected',

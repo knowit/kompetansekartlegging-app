@@ -12,7 +12,7 @@ import * as backup from 'aws-cdk-lib/aws-backup'
 import * as cam from 'aws-cdk-lib/aws-certificatemanager'
 import {
   ComparisonOperator,
-  Statistic,
+  Stats,
   TreatMissingData,
   Unit,
 } from 'aws-cdk-lib/aws-cloudwatch'
@@ -655,9 +655,9 @@ export class KompetanseStack extends Stack {
       createUserFormPolicy.attachToRole(batchCreateUser.role)
 
     const batchCreateUserMetric = batchCreateUser.metricDuration({
-      statistic: Statistic.MAXIMUM,
+      statistic: Stats.MAXIMUM,
       period: Duration.minutes(5),
-      unit: Unit.SECONDS,
+      unit: Unit.MILLISECONDS,
     })
 
     const batchCreateUserAlarm = new aws_cloudwatch.Alarm(
@@ -666,12 +666,12 @@ export class KompetanseStack extends Stack {
       {
         alarmName: `${ENV}-lambda-createUserFormBatch-timeout-alarm`,
         metric: batchCreateUserMetric,
-        threshold: batchCreateUserTimeoutSeconds,
+        threshold: Duration.seconds(batchCreateUserTimeoutSeconds).toMilliseconds(),
         comparisonOperator:
           ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
         treatMissingData: TreatMissingData.NOT_BREACHING,
         evaluationPeriods: 1,
-        alarmDescription: `Alarm when lambda createUserFormBatch times out (${batchCreateUserTimeoutSeconds} ${batchCreateUserMetric.unit!.toLowerCase()})`,
+        alarmDescription: `Alarm when lambda createUserFormBatch times out (${batchCreateUserTimeoutSeconds} seconds)`,
       }
     )
 
@@ -684,11 +684,19 @@ export class KompetanseStack extends Stack {
     batchCreateUserAlarm.addOkAction(new SnsAction(systemAdminTopic))
 
     // SlackAlarmForwarder setup
+    const slackWebhookSecret = new aws_secretsmanager.Secret(this, 'slack_webhook_url', {
+      secretName: 'slack_webhook_url',
+      generateSecretString: {
+        secretStringTemplate:
+          '{"url": "value must be set using AWS Console or CLI"}',
+        generateStringKey: 'url',
+      },
+    })
 
     const slackAlarmForwarderPermissions = new iam.PolicyStatement({
       actions: ['secretsmanager:GetSecretValue'],
       resources: [
-        'arn:aws:secretsmanager:eu-central-1:*:secret:slack_webhook_url-*',
+        slackWebhookSecret.secretArn,
       ],
     })
 
@@ -702,15 +710,6 @@ export class KompetanseStack extends Stack {
         timeout: Duration.seconds(10),
       }
     )
-
-    new aws_secretsmanager.Secret(this, 'slack_webhook_url', {
-      secretName: 'slack_webhook_url',
-      generateSecretString: {
-        secretStringTemplate:
-          '{"url": "value must be set using AWS Console or CLI"}',
-        generateStringKey: 'url',
-      },
-    })
 
     systemAdminTopic.addSubscription(
       new aws_sns_subscriptions.LambdaSubscription(slackAlarmForwarder)
@@ -878,6 +877,110 @@ export class KompetanseStack extends Stack {
       endpoint: externalApi.url,
       region: this.region,
     }
+
+    // configureNewOrganization setup
+
+    const configureNewOrganizationStatement = new iam.PolicyStatement({
+      actions: [
+        'cognito-idp:CreateGroup',
+        'cognito-idp:AdminCreateUser',
+        'cognito-idp:AdminSetUserPassword',
+        'cognito-idp:AdminAddUserToGroup',
+        'cognito-idp:AdminGetUser',
+        'dynamodb:Scan',
+        'dynamodb:Query',
+        'dynamodb:PutItem'
+      ],
+      effect: iam.Effect.ALLOW,
+      resources: [
+        pool.userPoolArn,
+        tableArns['FormDefinitionTable'],
+        `${tableArns['FormDefinitionTable']}/index/*`,
+        tableArns['CategoryTable'],
+        `${tableArns['CategoryTable']}/index/*`,
+        tableArns['QuestionTable'],
+        `${tableArns['QuestionTable']}/index/*`
+      ],
+    })
+
+    const configureNewOrganizationLambda = new python.PythonFunction(
+      this,
+      'configureNewOrganizationLambda',
+      {
+        entry: path.join(__dirname, '/../backend/function/configureNewOrganization'),
+        runtime: lambda.Runtime.PYTHON_3_9,
+        environment: {
+          GROUP: 'admin',
+          ENV: ENV,
+          SOURCE_NAME: 'KompetanseStack',
+          USER_POOL_ID: pool.userPoolId,
+        },
+        initialPolicy: [configureNewOrganizationStatement],
+        timeout: Duration.seconds(25),
+        memorySize: 2048,
+      }
+    )
+
+    // configureNewOrganization API Setup
+
+    const configureNewOrganizationApi = new gateway.RestApi(this, "kompetanseConfigureNewOrganizationRestApi", {
+      restApiName: "configureNewOrganizationAPI",
+      deployOptions: {
+        stageName: "dev"
+      },
+    })
+
+    const configureNewOrganizationProxy = configureNewOrganizationApi.root.addProxy({
+      anyMethod: false,
+    })
+    configureNewOrganizationProxy.addMethod(
+      'ANY',
+      new gateway.LambdaIntegration(configureNewOrganizationLambda),
+      {
+        authorizer: new gateway.CognitoUserPoolsAuthorizer(
+          this,
+          'configureNewOrganizationAPI',
+          {
+            authorizerName: 'COGNITO',
+            cognitoUserPools: [pool],
+          }
+        ),
+        authorizationScopes: ['aws.cognito.signin.user.admin'],
+      }
+    )
+
+    configureNewOrganizationProxy.addMethod("OPTIONS", new gateway.MockIntegration({
+      passthroughBehavior: gateway.PassthroughBehavior.WHEN_NO_MATCH,
+      requestTemplates: {
+        "application/json" : JSON.stringify({statusCode: 200})
+      },
+      integrationResponses: [{
+        statusCode: "200",
+        responseParameters:{
+          "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT'",
+          "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+          "method.response.header.Access-Control-Allow-Origin": "'*'"
+        }
+      }],
+    }), {
+      methodResponses: [{
+        statusCode: "200",
+        responseParameters: {
+          'method.response.header.Content-Type': true,
+          "method.response.header.Access-Control-Allow-Headers": true,
+          'method.response.header.Access-Control-Allow-Origin': true,
+          'method.response.header.Access-Control-Allow-Credentials': true,
+          'method.response.header.Access-Control-Allow-Methods': true
+        },
+        responseModels: {"application/json": gateway.Model.EMPTY_MODEL}
+      }],
+    })
+    ApiMap["configureNewOrganizationApi"] = {
+      name: configureNewOrganizationApi.restApiName,
+      endpoint: configureNewOrganizationApi.url,
+      region: this.region
+    }
+
 
     // ExternalAPI Usage plan setup
 

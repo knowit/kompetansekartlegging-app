@@ -15,7 +15,7 @@ import RadioGroup from '@mui/material/RadioGroup'
 import TextField from '@mui/material/TextField'
 
 import { QuestionType } from '../../../API'
-import { dialogStyles, KnowitColors } from '../../../styles'
+import { dialogStyles } from '../../../styles'
 import { CloseIcon } from '../../DescriptionTable'
 import { useTranslation } from 'react-i18next'
 
@@ -88,6 +88,7 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
           </IconButton>
         </Box>
         <TextField
+          autoFocus
           fullWidth
           label={t('admin.editCatalogs.subjectOfTheNewQuestion')}
           variant="outlined"

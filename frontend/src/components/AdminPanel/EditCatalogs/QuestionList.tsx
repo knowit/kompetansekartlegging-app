@@ -22,11 +22,8 @@ type QuestionListProps = {
 }
 
 const QuestionList = ({
-  id,
   categories,
   questions,
-  formDefinitionID,
-  formDefinitionLabel,
   refreshQuestions,
 }: QuestionListProps) => {
   const { t } = useTranslation()

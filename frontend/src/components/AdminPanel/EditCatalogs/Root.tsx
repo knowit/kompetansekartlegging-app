@@ -69,6 +69,7 @@ const Catalog = ({
               pathname: `/edit/${catalog.id}`,
               search: `?label=${name}`,
             }}
+            style={{ textDecoration: 'none' }}
           >
             <Button endIcon={<EditIcon />} sx={{ color: KnowitColors.black }}>
               {t('admin.editCatalogs.modifyCatalog')}
@@ -113,6 +114,7 @@ const CatalogTable = ({
           <TableRow>
             <TableCell>{t('name')}</TableCell>
             <TableCell>{t('admin.editCatalogs.lastUpdated')}</TableCell>
+            <TableCell />
             <TableCell />
             <TableCell />
             <TableCell />

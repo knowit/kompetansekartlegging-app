@@ -205,7 +205,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
     const generateShortlist = () => {
       const shortlistMotivation: TopicScoreWithIcon[] = []
       const shortlistKnowledge: TopicScoreWithIcon[] = []
-      props.questionAnswers.forEach((quAns, _cat) => {
+      props.questionAnswers.forEach((quAns) => {
         quAns.forEach((answer) => {
           if (answer.knowledge >= shortlistCutoff) {
             shortlistKnowledge.push({
