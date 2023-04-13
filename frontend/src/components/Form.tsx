@@ -1,20 +1,10 @@
 import { Button } from '@mui/material'
-
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import { Fragment, useRef } from 'react'
 import { QuestionType as QuestionTypeT } from '../API'
 import { FormProps, SliderValues } from '../types'
 import Question from './Question'
 import { useTranslation } from 'react-i18next'
-
-type QuestionType = {
-  id: string
-  text: string
-  topic: string
-  category: {
-    text: string
-  }
-}
 
 export const Form = ({ ...props }: FormProps) => {
   const { t } = useTranslation()

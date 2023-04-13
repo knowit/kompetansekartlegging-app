@@ -13,7 +13,6 @@ import { GetIcon } from '../icons/iconController'
 import { KnowitColors } from '../styles'
 import { ChartData, CombinedChartProps } from '../types'
 import { wrapString } from '../helperFunctions'
-import { useSwipeable } from 'react-swipeable'
 import { OverviewType } from './TypedOverviewChart'
 import { useTranslation } from 'react-i18next'
 
@@ -104,14 +103,6 @@ export const CombinedChartMobile = ({
     changePageRight()
   }
 
-  const changePageLeft = () => {
-    if (currentPage === 0) {
-      setCurrentPage(chartPages.length - 1)
-    } else {
-      setCurrentPage(currentPage - 1)
-    }
-  }
-
   const changePageRight = () => {
     if (currentPage === chartPages.length - 1) {
       setCurrentPage(0)
@@ -119,21 +110,6 @@ export const CombinedChartMobile = ({
       setCurrentPage(currentPage + 1)
     }
   }
-
-  const swipeConfig = {
-    delta: 10,
-    preventDefaultTouchmoveEvent: false,
-    trackTouch: true,
-    trackMouse: false,
-    rotationAngle: 0,
-  }
-
-  const swipeHandlers = useSwipeable({
-    onSwipedLeft: () => changePageLeft(),
-    onSwipedRight: () => changePageRight(),
-    ...swipeConfig,
-  })
-
   return (
     <div>
       <ResponsiveContainer>

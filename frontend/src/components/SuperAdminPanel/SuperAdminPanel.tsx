@@ -1,4 +1,3 @@
-import style from '../AdminPanel/AdminPanel.module.css'
 import EditOrganizationAdmins from './EditOrganizationAdmins'
 import EditOrganizations from './EditOrganizations'
 import EditSuperAdmins from './EditSuperAdmins'

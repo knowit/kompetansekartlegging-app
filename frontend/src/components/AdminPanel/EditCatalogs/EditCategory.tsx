@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom'
 
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
-import Container from '@mui/material/Container'
 
 import { Auth } from 'aws-amplify'
 import { useTranslation } from 'react-i18next'

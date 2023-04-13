@@ -1,5 +1,4 @@
 import { useState } from 'react'
-
 import Button from '@mui/material/Button'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import IconButton from '@mui/material/IconButton'
@@ -13,7 +12,6 @@ import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
 } from '@mui/icons-material'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { KnowitColors } from '../../../styles'
 import EditActionButtons from './EditActionButtons'
 import { useTranslation } from 'react-i18next'
 

@@ -1,15 +1,11 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './App.css'
 import { API, Auth, Hub } from 'aws-amplify'
 // import awsconfig from "./aws-exports";
 import awsconfig from './exports'
 import Content from './components/Content'
 import Login from './components/Login'
-import {
-  ThemeProvider,
-  Theme,
-  StyledEngineProvider,
-} from '@mui/material/styles'
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { Button, debounce, Snackbar, Alert } from '@mui/material'
 import { isMobile } from 'react-device-detect'
 import FloatingScaleDescButton from './components/FloatingScaleDescButton'

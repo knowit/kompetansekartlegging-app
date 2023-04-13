@@ -26,7 +26,7 @@ export const CustomScaleChart = ({ ...props }: CustomScaleChartProps) => {
 
   if (props.chartData.length === 0) return null
 
-  const RenderCustomTooltip = (classes: any) => {
+  const RenderCustomTooltip = () => {
     return ({ ...props }: TooltipProps<ValueType, NameType>) => {
       if (props.active && props.payload) {
         const value = props.payload[0]?.payload.value.toFixed(1)
@@ -104,6 +104,7 @@ export const CustomScaleChart = ({ ...props }: CustomScaleChartProps) => {
           />
           <Tooltip
             wrapperStyle={{ outline: 'none' }}
+            content={RenderCustomTooltip()}
             cursor={{ fill: KnowitColors.ecaluptus, opacity: 0.3 }}
           />
           <Bar

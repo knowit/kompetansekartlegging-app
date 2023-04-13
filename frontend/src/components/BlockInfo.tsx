@@ -1,6 +1,5 @@
-import { KnowitColors } from '../styles'
-import { QuestionAnswer } from '../types'
 import React from 'react'
+import { QuestionAnswer } from '../types'
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded'
 import ErrorOutlineRoundedIcon from '@mui/icons-material/ErrorOutlineRounded'
 import UpdateIcon from '@mui/icons-material/Update'

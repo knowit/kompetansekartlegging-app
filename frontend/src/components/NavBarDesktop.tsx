@@ -28,7 +28,6 @@ import { useAppSelector } from '../redux/hooks'
 import { selectUserState } from '../redux/User'
 import { LanguageSelect } from './LanguageSelect'
 import { useTranslation } from 'react-i18next'
-import { KnowitColors } from '../styles'
 import { NavBarPropsDesktop, UserRole } from '../types'
 import { styled } from '@mui/material/styles'
 
@@ -173,7 +172,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
           transition
           disablePortal
         >
-          {({ TransitionProps, placement }) => (
+          {({ TransitionProps }) => (
             <Grow {...TransitionProps}>
               <Paper>
                 <ClickAwayListener onClickAway={handleClose}>

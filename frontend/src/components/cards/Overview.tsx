@@ -1,4 +1,4 @@
-import { OverviewProps, Panel } from '../../types'
+import { OverviewProps } from '../../types'
 import Highlights from '../Highlights'
 import TypedOverviewChart from '../TypedOverviewChart'
 

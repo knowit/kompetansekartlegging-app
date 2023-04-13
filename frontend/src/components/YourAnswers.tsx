@@ -1,6 +1,6 @@
 import { Button } from '@mui/material'
 import React from 'react'
-import { Panel, YourAnswerProps } from '../types'
+import { YourAnswerProps } from '../types'
 import AnswerDiagram from './AnswerDiagram'
 import { BlockInfo } from './BlockInfo'
 import { Form } from './Form'

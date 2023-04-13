@@ -1,7 +1,3 @@
-import { Theme } from '@mui/material'
-
-export const cardCornerRadius = 40
-
 export const KnowitColors = {
   black: '#000000',
   white: '#FFFFFF',

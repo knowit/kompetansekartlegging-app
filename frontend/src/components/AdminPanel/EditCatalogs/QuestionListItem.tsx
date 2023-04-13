@@ -11,7 +11,6 @@ import {
   KeyboardArrowUp as KeyboardArrowUpIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
 } from '@mui/icons-material'
-import { KnowitColors } from '../../../styles'
 import QuestionListItemEdit from './QuestionListItemEdit'
 
 const QuestionListItem = ({

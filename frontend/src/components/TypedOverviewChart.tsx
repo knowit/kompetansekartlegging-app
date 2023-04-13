@@ -2,7 +2,6 @@ import Button from '@mui/material/Button'
 
 import React, { useEffect, useState } from 'react'
 import { roundDecimals } from '../helperFunctions'
-import { KnowitColors } from '../styles'
 import { ChartData, ResultData, ResultDiagramProps } from '../types'
 import { CombinedChart } from './CombinedChart'
 import { CombinedChartMobile } from './CombinedChartMobile'

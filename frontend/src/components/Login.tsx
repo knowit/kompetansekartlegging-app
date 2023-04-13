@@ -1,7 +1,6 @@
 import { Authenticator } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css'
 import { Button } from '@mui/material'
-
 import { Auth } from 'aws-amplify'
 import { useState } from 'react'
 import { ReactComponent as KnowitLogo } from '../Logotype-Knowit-Digital-white 1.svg'
@@ -32,15 +31,14 @@ const formFields = {
 
 const userBranch = import.meta.env.VITE_USER_BRANCH
 const isNotProd = userBranch !== 'master'
-const Login = (props: { isMobile: boolean }) => {
-  // console.log("/tree/", userBranch, isNotProd);
+const Login = () => {
   const { t } = useTranslation()
   const [showDevLogin, setShowDevLogin] = useState<boolean>(false)
 
   return showDevLogin ? (
     <>
       <div>
-        <LanguageSelect color={KnowitColors.darkBrown} />
+        <LanguageSelect iconColor={KnowitColors.darkBrown} />
       </div>
       <Authenticator
         formFields={formFields}
@@ -62,7 +60,7 @@ const Login = (props: { isMobile: boolean }) => {
       </div>
       <div>
         <div>
-          <LanguageSelect color={KnowitColors.darkBrown} />
+          <LanguageSelect iconColor={KnowitColors.darkBrown} />
         </div>
         <div>
           <h1>

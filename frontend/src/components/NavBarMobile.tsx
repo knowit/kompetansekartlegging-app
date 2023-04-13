@@ -1,11 +1,4 @@
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  List,
-  ListItem,
-} from '@mui/material'
+import { AppBar, Toolbar, IconButton, List, ListItem } from '@mui/material'
 
 import React from 'react'
 import { KnowitColors } from '../styles'

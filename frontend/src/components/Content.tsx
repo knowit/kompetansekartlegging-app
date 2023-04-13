@@ -1,10 +1,4 @@
-import {
-  Container,
-  Drawer,
-  List,
-  ListItemButton,
-  ListItemText,
-} from '@mui/material'
+import { Drawer, List, ListItemButton, ListItemText } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { CreateQuestionAnswerInput, QuestionType } from '../API'
 import * as customQueries from '../graphql/custom-queries'
@@ -48,14 +42,12 @@ import {
 import { Overview } from './cards/Overview'
 import { YourAnswers } from './YourAnswers'
 import { GroupLeaderPanel } from './GroupLeaderPanel/'
-import NavBarMobile from './NavBarMobile'
 import { superAdminItems } from './SuperAdminPanel/SuperAdminMenu'
 import { SuperAdminPanel } from './SuperAdminPanel/SuperAdminPanel'
 import { useTranslation } from 'react-i18next'
 import { TFunction } from 'i18next'
 import { DropdownMenuItem } from './DropdownMenuItem'
 import getGroupMenuitems from './GroupLeaderPanel/GroupLeaderMenu'
-import { getCategory } from '../graphql/queries'
 import styled from '@emotion/styled'
 
 const navbarHeight = 100
@@ -335,7 +327,7 @@ const Content = ({ ...props }: ContentProps) => {
   const isAdmin = useAppSelector(selectIsAdmin)
   const isGroupLeader = useAppSelector(selectIsGroupLeader)
 
-  const myAnswers = categories.map((cat, index) => {
+  const myAnswers = categories.map((cat) => {
     return {
       key: cat,
       text: cat,
