@@ -94,7 +94,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
     setAvatarMenuOpen((avatarMenuPrevOpen) => !avatarMenuPrevOpen)
   }
 
-  const handleClose = (event: React.MouseEvent<EventTarget>) => {
+  const handleClose = (event: MouseEvent | TouchEvent) => {
     if (
       anchorRef.current &&
       anchorRef.current.contains(event.target as HTMLElement)

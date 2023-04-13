@@ -119,7 +119,7 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
           onChange={(e: any) => setDescription(e.target.value)}
         />
         <FormControl component="fieldset">
-          <FormLabel component="legend">
+          <FormLabel component="legend" style={{ color: '#0000008A' }}>
             {t('admin.editCatalogs.typeOfQuestion')}
           </FormLabel>
           <RadioGroup row value={questionType} onChange={onQuestionTypeChange}>

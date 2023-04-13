@@ -97,12 +97,6 @@ export const dialogStyles = makeStyles(
       fontWeight: 'bold',
       marginTop: '4px',
     },
-    radio: {
-      radio: {},
-      '&$checked': {
-        color: KnowitColors.black,
-      },
-    },
   },
   { index: 1 }
 )

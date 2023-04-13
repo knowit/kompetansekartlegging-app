@@ -28,7 +28,7 @@ const Admin = (props: any) => {
       <TableCell>{email}</TableCell>
       <TableCell>{username}</TableCell>
       <TableCell>
-        <IconButton edge="end" onClick={() => deleteAdmin(admin)}>
+        <IconButton edge="end" onClick={() => deleteAdmin(admin)} size="large">
           <DeleteIcon />
         </IconButton>
       </TableCell>
