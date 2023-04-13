@@ -297,7 +297,6 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
   ) : (
     <div>
       <div>
-        {t('menu.overview')}
         <div>
           {getButton(OverviewType.HIGHEST)}
           {getButton(OverviewType.AVERAGE)}

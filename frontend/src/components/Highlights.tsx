@@ -4,10 +4,14 @@ import { wrapString } from '../helperFunctions'
 import { GetIcon } from '../icons/iconController'
 import { HighlightsProps, TopicScoreWithIcon } from '../types'
 import styled from '@emotion/styled'
+import { KnowitColors } from '../styles'
+
+type StylingProps = {
+  isSmall: boolean
+}
 
 const StyledHighlights = styled.article`
   #focusAreas {
-    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -16,11 +20,10 @@ const StyledHighlights = styled.article`
   }
   #strengths,
   #ambitions {
-    width: 50%;
+    width: ${(props: StylingProps) => (props.isSmall ? '100%' : '50%')};
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
   }
   .highlightList {
     width: 100%;
@@ -32,10 +35,16 @@ const StyledHighlights = styled.article`
     > div {
       width: 25%;
       h3 {
+        text-align: center;
         overflow-wrap: break-word;
       }
       svg {
+        background: ${KnowitColors.lightGreen};
+        padding: 10px;
+        border-radius: 50%;
         max-width: 50px;
+        max-height: 50px;
+        overflow: visible;
       }
     }
   }
@@ -116,7 +125,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
       <div className="highlightList">
         {aboveCutoff.map((el: any, i) => (
           <div key={i}>
-            {GetIcon(isKnowledge, el.icon)}
+            <div className="iconWrapper">{GetIcon(isKnowledge, el.icon)}</div>
             <h3>{wrapString(el.topic, maxTopicStringLength).join('\n')}</h3>
           </div>
         ))}
@@ -139,7 +148,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
   if (props.questionAnswers.size === 0) return <Fragment />
   else
     return (
-      <StyledHighlights>
+      <StyledHighlights isSmall={props.isSmall}>
         <h1>{t('overview.focusAreas')}</h1>
         <article id="focusAreas">
           <section id={'strengths'}>

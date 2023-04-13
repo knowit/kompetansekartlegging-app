@@ -106,7 +106,7 @@ const CreateHover = (
       key={key ? key : null}
       title={getIconDescription(knowledge, level)}
     >
-      <div> {element} </div>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>{element}</div>
     </Tooltip>
   )
 }
