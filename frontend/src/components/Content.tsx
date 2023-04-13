@@ -381,7 +381,6 @@ const Content = ({ ...props }: ContentProps) => {
       }
       setAlertDialogOpen(true)
     } else {
-      isSmall && toggleMenuOpen(!open)
       setActivePanel(panelSource)
       if (isInAnswer) {
         setActiveCategory(itemSource)
@@ -390,6 +389,9 @@ const Content = ({ ...props }: ContentProps) => {
         setActiveCategory('NONE')
         setActiveSubmenuItem(itemSource)
       }
+    }
+    if (panelSource === Panel.Overview || itemSource !== 'MAIN') {
+      isSmall && toggleMenuOpen(!open)
     }
   }
 
