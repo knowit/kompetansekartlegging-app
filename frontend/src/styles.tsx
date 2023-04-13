@@ -89,9 +89,7 @@ export const dialogStyles = makeStyles(
       marginBottom: '10px',
     },
     dialogTitle: {
-      '& h2': {
-        display: 'flex',
-      },
+      display: 'flex',
     },
     dialogTitleText: {
       fontWeight: 'bold',

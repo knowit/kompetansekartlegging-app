@@ -16,13 +16,14 @@ const useStyles = makeStyles(() =>
       width: '162px',
       height: '38px',
       border: '3px solid',
-      backgroundColor: KnowitColors.lightGreen,
+      //backgroundColor: KnowitColors.lightGreen,
       borderRadius: '19px',
       borderColor: KnowitColors.lightGreen,
       marginLeft: '32px',
       transition: '250ms',
       '&:hover': {
-        color: KnowitColors.lightGreen,
+        color: KnowitColors.black,
+        backgroundColor: KnowitColors.lightGreen,
       },
     },
     cancelButton: {

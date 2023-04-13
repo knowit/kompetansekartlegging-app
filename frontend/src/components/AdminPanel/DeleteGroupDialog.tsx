@@ -36,10 +36,10 @@ const DeleteGroupDialog = ({ onCancel, onConfirm, open }: any) => {
       </DialogContent>
       <DialogActions className={style.alertButtons}>
         <Button onClick={onConfirm} className={style.cancelButton}>
-          {t('remove').toUpperCase()}
+          <span className={style.buttonText}>{t('remove')}</span>
         </Button>
         <Button onClick={onCancel} className={style.confirmButton}>
-          {t('abort').toUpperCase()}
+          <span className={style.buttonText}>{t('abort')}</span>
         </Button>
       </DialogActions>
     </Dialog>
