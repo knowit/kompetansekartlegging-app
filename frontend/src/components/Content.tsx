@@ -57,7 +57,7 @@ import getGroupMenuitems from './GroupLeaderPanel/GroupLeaderMenu'
 import NavBarDesktop from './NavBarDesktop'
 import styled from '@emotion/styled'
 import { useWindowDimensions } from '../helperFunctions'
-import { ArrowBack } from '@mui/icons-material'
+import { Close } from '@mui/icons-material'
 import { IconButton } from '@mui/material'
 
 const navbarHeight = 100
@@ -78,7 +78,8 @@ const ContentContainer = styled.div`
 
   .menu {
     .MuiPaper-root {
-      width: ${menuWidth}px;
+      width: ${(props: StylingProps) =>
+        props.isSmall ? '100vw' : `${menuWidth}px`};
     }
   }
 
@@ -92,6 +93,7 @@ const ContentContainer = styled.div`
       .header {
         width: calc(100% - ${menuWidth}px)
       }
+
     `}
 `
 
@@ -469,7 +471,7 @@ const Content = ({ ...props }: ContentProps) => {
       >
         {isSmall && (
           <IconButton onClick={() => toggleMenuOpen(!open)}>
-            <ArrowBack />
+            <Close />
           </IconButton>
         )}
         <List>
