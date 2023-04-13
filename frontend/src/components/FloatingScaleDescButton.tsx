@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import styled from '@emotion/styled'
 
 const FabContainer = styled.div`
-  position: absolute;
+  position: fixed;
   bottom: 16px;
   right: 16px;
 `
