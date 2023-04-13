@@ -9,7 +9,6 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { Button, debounce, Snackbar, Alert } from '@mui/material'
 import { isMobile } from 'react-device-detect'
 import FloatingScaleDescButton from './components/FloatingScaleDescButton'
-import NavBarDesktop from './components/NavBarDesktop'
 import theme from './theme'
 import {
   setUserInfo,
@@ -195,17 +194,12 @@ const App = () => {
 
         {userState.isSignedIn ? (
           <>
-            {isMobile ? null : (
-              <NavBarDesktop
-                displayAnswers={displayAnswers}
-                signout={signout}
-              />
-            )}
             <Content
+              signout={signout}
+              displayAnswers={displayAnswers}
               setAnswerHistoryOpen={setAnswerHistoryOpen}
               answerHistoryOpen={answerHistoryOpen}
               isMobile={isMobile}
-              signout={signout}
               collapseMobileCategories={collapseMobileCategories}
               categoryNavRef={categoryNavRef}
               mobileNavRef={mobileNavRef}

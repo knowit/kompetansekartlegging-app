@@ -1,4 +1,10 @@
-import { Drawer, List, ListItemButton, ListItemText } from '@mui/material'
+import {
+  Container,
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemText,
+} from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { CreateQuestionAnswerInput, QuestionType } from '../API'
 import * as customQueries from '../graphql/custom-queries'
@@ -48,6 +54,7 @@ import { useTranslation } from 'react-i18next'
 import { TFunction } from 'i18next'
 import { DropdownMenuItem } from './DropdownMenuItem'
 import getGroupMenuitems from './GroupLeaderPanel/GroupLeaderMenu'
+import NavBarDesktop from './NavBarDesktop'
 import styled from '@emotion/styled'
 
 const navbarHeight = 100
@@ -56,20 +63,19 @@ const menuWidth = 250
 const ContentContainer = styled.div`
   .header {
     max-height: ${navbarHeight}px;
+    width: calc(100% - ${menuWidth}px);
   }
 
   .menu {
     .MuiPaper-root {
-      padding-top: ${navbarHeight}px;
-      z-index: 0;
       width: ${menuWidth}px;
-      box-sizing: border-box;
     },
-
   }
+
   .panel {
     padding-top: ${navbarHeight}px;
-    margin-left: ${menuWidth}px;
+    margin-left:${menuWidth}px;
+    width: calc(100% - ${menuWidth}px);
   }
 `
 
@@ -485,7 +491,12 @@ const Content = ({ ...props }: ContentProps) => {
         </List>
       </Drawer>
 
-      <div className="panel">{setupPanel()}</div>
+      <NavBarDesktop
+        displayAnswers={props.displayAnswers}
+        signout={props.signout}
+      />
+
+      <Container className="panel">{setupPanel()}</Container>
 
       <AlertDialog
         setAlertDialogOpen={setAlertDialogOpen}

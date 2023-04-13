@@ -432,6 +432,7 @@ export enum UserRole {
 }
 
 export type ContentProps = {
+  displayAnswers: () => void
   setAnswerHistoryOpen: (historyViewOpen: boolean) => void
   answerHistoryOpen: boolean
   isMobile: boolean

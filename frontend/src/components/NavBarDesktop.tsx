@@ -29,19 +29,20 @@ import { selectUserState } from '../redux/User'
 import { LanguageSelect } from './LanguageSelect'
 import { useTranslation } from 'react-i18next'
 import { NavBarPropsDesktop, UserRole } from '../types'
-import { styled } from '@mui/material/styles'
+import styled from '@emotion/styled'
 
-const StyledToolbar = styled(Toolbar)({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-})
-
-const StyledButtonBox = styled(Box)({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-})
+const ToolbarContainer = styled.div`
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    h1 {
+      font-size: 2vw;
+    }
+    #toolbarButtons {
+      display: flex;
+    }
+  }
+`
 
 const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
   const { t, i18n } = useTranslation()
@@ -118,104 +119,105 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
 
   return (
     <AppBar className="header">
-      <StyledToolbar>
-        <KnowitLogo />
+      <ToolbarContainer>
+        <Toolbar className="toolbar">
+          <KnowitLogo />
+          <h1>
+            {t('navbar.competenceMappingFor')} {userState.organizationName}
+          </h1>
 
-        <h1>
-          {t('navbar.competenceMappingFor')} {userState.organizationName}
-        </h1>
-
-        <StyledButtonBox id="buttons">
-          {userState.roles.includes(UserRole.Admin) ? (
-            <Modal
-              open={isHelpModalOpen}
-              onClose={() => setHelpModalOpen(false)}
-            >
-              <div className="modalContent">
-                <ReactMarkdown>{helpMarkdown}</ReactMarkdown>
-              </div>
-            </Modal>
-          ) : null}
-          {userState.roles.includes(UserRole.Admin) ? (
-            <Tooltip title={t('navbar.help')}>
-              <IconButton
-                onClick={() => setHelpModalOpen(true)}
-                ref={anchorRef}
-                aria-controls={avatarMenuOpen ? 'menu-list-grow' : undefined}
-                aria-label={t('aria.helpButton') as string}
+          <div id="toolbarButtons">
+            {userState.roles.includes(UserRole.Admin) ? (
+              <Modal
+                open={isHelpModalOpen}
+                onClose={() => setHelpModalOpen(false)}
               >
-                <HelpIcon />
-              </IconButton>
-            </Tooltip>
-          ) : null}
-          <LanguageSelect />
-          <Button
-            ref={anchorRef}
-            aria-controls={avatarMenuOpen ? 'menu-list-grow' : undefined}
-            aria-haspopup="true"
-            onClick={handleToggle}
-            aria-label={t('aria.toggleDropdownMenu') as string}
-          >
-            <div>{userState.name}</div>
-            <Avatar
-              src={userState.picture}
-              alt={t('navbar.profilePicture') as string}
-            />
-          </Button>
-        </StyledButtonBox>
+                <div className="modalContent">
+                  <ReactMarkdown>{helpMarkdown}</ReactMarkdown>
+                </div>
+              </Modal>
+            ) : null}
+            {userState.roles.includes(UserRole.Admin) ? (
+              <Tooltip title={t('navbar.help')}>
+                <IconButton
+                  onClick={() => setHelpModalOpen(true)}
+                  ref={anchorRef}
+                  aria-controls={avatarMenuOpen ? 'menu-list-grow' : undefined}
+                  aria-label={t('aria.helpButton') as string}
+                >
+                  <HelpIcon />
+                </IconButton>
+              </Tooltip>
+            ) : null}
+            <LanguageSelect />
+            <Button
+              ref={anchorRef}
+              aria-controls={avatarMenuOpen ? 'menu-list-grow' : undefined}
+              aria-haspopup="true"
+              onClick={handleToggle}
+              aria-label={t('aria.toggleDropdownMenu') as string}
+            >
+              <div>{userState.name}</div>
+              <Avatar
+                src={userState.picture}
+                alt={t('navbar.profilePicture') as string}
+              />
+            </Button>
+          </div>
 
-        <Popper
-          open={avatarMenuOpen}
-          anchorEl={anchorRef.current}
-          placement={'bottom-end'}
-          role={undefined}
-          transition
-          disablePortal
-        >
-          {({ TransitionProps }) => (
-            <Grow {...TransitionProps}>
-              <Paper>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList
-                    autoFocusItem={avatarMenuOpen}
-                    id="menu-list-grow"
-                    onKeyDown={handleListKeyDown}
-                  >
-                    {/* Removed for user testing, i18n if uncommenting
+          <Popper
+            open={avatarMenuOpen}
+            anchorEl={anchorRef.current}
+            placement={'bottom-end'}
+            role={undefined}
+            transition
+            disablePortal
+          >
+            {({ TransitionProps }) => (
+              <Grow {...TransitionProps}>
+                <Paper>
+                  <ClickAwayListener onClickAway={handleClose}>
+                    <MenuList
+                      autoFocusItem={avatarMenuOpen}
+                      id="menu-list-grow"
+                      onKeyDown={handleListKeyDown}
+                    >
+                      {/* Removed for user testing, i18n if uncommenting
                                         <MenuItem onClick={handleDisplayAnswers}>Vis alle lagrede svar</MenuItem>
                                         <MenuItem onClick={handleDeleteAnswers}>Slett alle svar</MenuItem> */}
-                    <MenuItem onClick={handleCloseSignout}>
-                      {t('navbar.signOut')}
-                    </MenuItem>
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
+                      <MenuItem onClick={handleCloseSignout}>
+                        {t('navbar.signOut')}
+                      </MenuItem>
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper>
 
-        <Dialog
-          open={deleteAlertOpen}
-          onClose={handleCloseAlert}
-          aria-labelledby="dialogtitle"
-          aria-describedby="dialogdescription"
-        >
-          <DialogTitle id="dialogtitle">
-            {t('navbar.doYouWantToDeleteYourAnswers')}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="dialogdescription">
-              {t('navbar.thisWillDeleteAllAnswers')}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => 1}>{t('confirm')}</Button>
-            <Button onClick={handleCloseAlert} autoFocus>
-              {t('abort')}
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </StyledToolbar>
+          <Dialog
+            open={deleteAlertOpen}
+            onClose={handleCloseAlert}
+            aria-labelledby="dialogtitle"
+            aria-describedby="dialogdescription"
+          >
+            <DialogTitle id="dialogtitle">
+              {t('navbar.doYouWantToDeleteYourAnswers')}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="dialogdescription">
+                {t('navbar.thisWillDeleteAllAnswers')}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => 1}>{t('confirm')}</Button>
+              <Button onClick={handleCloseAlert} autoFocus>
+                {t('abort')}
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Toolbar>
+      </ToolbarContainer>
     </AppBar>
   )
 }
