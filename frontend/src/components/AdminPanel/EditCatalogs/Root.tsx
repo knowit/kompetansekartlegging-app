@@ -34,6 +34,7 @@ import AddCatalogDialog from './AddCatalogDialog'
 import { useTranslation } from 'react-i18next'
 import { i18nDateToLocaleString } from '../../../i18n/i18n'
 import CopyCatalogDialog from './CopyCatalogDialog'
+import { KnowitColors } from '../../../styles'
 
 const Catalog = ({
   catalog,
@@ -54,6 +55,7 @@ const Catalog = ({
         </TableCell>
         <TableCell align="right">
           <Button
+            sx={{ color: KnowitColors.black }}
             disabled={active}
             endIcon={<BookmarkIcon />}
             onClick={() => activateCatalog(catalog)}
@@ -68,13 +70,17 @@ const Catalog = ({
               search: `?label=${name}`,
             }}
           >
-            <Button endIcon={<EditIcon />}>
+            <Button endIcon={<EditIcon />} sx={{ color: KnowitColors.black }}>
               {t('admin.editCatalogs.modifyCatalog')}
             </Button>
           </Link>
         </TableCell>
         <TableCell align="right">
-          <Button endIcon={<AddIcon />} onClick={() => copyCatalog(catalog)}>
+          <Button
+            endIcon={<AddIcon />}
+            onClick={() => copyCatalog(catalog)}
+            sx={{ color: KnowitColors.black }}
+          >
             {t('admin.editCatalogs.copyCatalog')}
           </Button>
         </TableCell>
@@ -82,6 +88,7 @@ const Catalog = ({
           <Button
             endIcon={<DeleteIcon />}
             onClick={() => deleteCatalog(catalog)}
+            sx={{ color: KnowitColors.black }}
           >
             {t('admin.editCatalogs.removeCatalog')}
           </Button>

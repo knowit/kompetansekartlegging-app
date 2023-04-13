@@ -8,6 +8,7 @@ import { KnowitColors } from '../styles'
 
 type LanguageSelectProps = {
   color: string
+  marginTop?: number
   marginLeft?: number
 }
 
@@ -16,15 +17,11 @@ export const LanguageSelect = (props: LanguageSelectProps) => {
 
   const classes = makeStyles({
     select: {
-      '&:before': {
-        borderColor: props.color,
-      },
-      '&:after': {
-        borderColor: props.color,
-      },
-      '&:not(.Mui-disabled):hover::before': {
-        borderColor: props.color,
-      },
+      '& .MuiOutlinedInput-notchedOutline': { border: 0 },
+      '& .MuiSelect-outlined': { padding: 0 },
+      borderColor: props.color,
+      borderRadius: 0,
+      borderWidth: 1.5,
     },
     arrowIcon: {
       fill: props.color,
@@ -39,6 +36,7 @@ export const LanguageSelect = (props: LanguageSelectProps) => {
 
   return (
     <Select
+      sx={{ borderBottom: 2 }}
       className={classes.select}
       value={i18n.language}
       inputProps={{
@@ -48,7 +46,7 @@ export const LanguageSelect = (props: LanguageSelectProps) => {
       }}
       onChange={(event) => changeLanguage(event.target.value as string)}
       renderValue={() => <LanguageIcon style={{ color: props.color }} />}
-      style={{ marginLeft: props.marginLeft }}
+      style={{ marginTop: props.marginTop, marginLeft: props.marginLeft }}
       aria-label={
         i18n.t('aria.selectLanguageLanguageIsSelected', {
           language: availableLanguages[i18n.language],
@@ -56,7 +54,15 @@ export const LanguageSelect = (props: LanguageSelectProps) => {
       }
     >
       {Object.keys(availableLanguages).map((language) => (
-        <MenuItem key={language} value={language}>
+        <MenuItem
+          key={language}
+          value={language}
+          style={
+            i18n.language == language
+              ? { backgroundColor: '#e4e0dc' }
+              : { backgroundColor: 'transparent' }
+          }
+        >
           <div
             style={{
               fontSize: 14,

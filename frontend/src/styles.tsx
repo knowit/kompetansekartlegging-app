@@ -59,6 +59,7 @@ export const dialogStyles = makeStyles(
       background: KnowitColors.lightGreen,
       borderRadius: '19px',
       borderColor: KnowitColors.lightGreen,
+      color: KnowitColors.black,
     },
     cancelButton: {
       width: '162px',
@@ -67,6 +68,7 @@ export const dialogStyles = makeStyles(
       borderColor: KnowitColors.flamingo,
       boxsizing: 'border-box',
       borderRadius: '19px',
+      color: KnowitColors.black,
     },
     buttonText: {
       fontWeight: 'bold',
@@ -94,6 +96,12 @@ export const dialogStyles = makeStyles(
     dialogTitleText: {
       fontWeight: 'bold',
       marginTop: '4px',
+    },
+    radio: {
+      radio: {},
+      '&$checked': {
+        color: KnowitColors.black,
+      },
     },
   },
   { index: 1 }

@@ -49,6 +49,7 @@ import { compareByCreatedAt, compareByName, getAttribute } from './helpers'
 import PictureAndNameEditCell from './PictureAndNameEditCell'
 import { useTranslation } from 'react-i18next'
 import useApiGet from './useApiGet'
+import { KnowitColors } from '../../styles'
 
 const useRowStyles = makeStyles({
   root: {
@@ -98,7 +99,11 @@ const Group = ({
         </TableCell>
         <TableCell>{group.members.length}</TableCell>
         <TableCell align="right">
-          <Button endIcon={<DeleteIcon />} onClick={() => deleteGroup(group)}>
+          <Button
+            endIcon={<DeleteIcon />}
+            onClick={() => deleteGroup(group)}
+            style={{ color: KnowitColors.black }}
+          >
             {t('admin.editGroups.removeGroup')}
           </Button>
         </TableCell>

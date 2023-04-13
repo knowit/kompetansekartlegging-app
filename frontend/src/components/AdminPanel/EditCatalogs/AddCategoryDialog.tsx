@@ -69,6 +69,7 @@ const AddCategoryDialog = ({ onCancel, onConfirm, open }: any) => {
           variant="outlined"
           value={description}
           className={style.textField}
+          style={{ marginRight: 0 }}
           onChange={(e: any) => setDescription(e.target.value)}
         />
       </DialogContent>

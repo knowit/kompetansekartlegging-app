@@ -25,6 +25,7 @@ import {
 import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth'
 import { useAppSelector, useAppDispatch } from './redux/hooks'
 import { useTranslation } from 'react-i18next'
+import { KnowitColors } from './styles'
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -223,7 +224,10 @@ const App = () => {
                 }}
               >
                 {t('thisIsATestEnvironment') + ' '}
-                <Button onClick={() => setBannerOpen(false)}>
+                <Button
+                  onClick={() => setBannerOpen(false)}
+                  style={{ color: KnowitColors.black }}
+                >
                   {t('close').toUpperCase()}
                 </Button>
               </div>
