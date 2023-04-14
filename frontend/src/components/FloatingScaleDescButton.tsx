@@ -7,6 +7,7 @@ import i18n from '../i18n/i18n'
 import { useTranslation } from 'react-i18next'
 import CloseIcon from '@mui/icons-material/Close'
 import styled from '@emotion/styled'
+import { TipsAndUpdates } from '@mui/icons-material'
 
 const FabContainer = styled.div`
   position: fixed;
@@ -225,7 +226,9 @@ const FloatingScaleDescButton = ({
             setScaleDescOpen((scaleDescOpen) => !scaleDescOpen)
             setShowTooltip(false)
           }}
-        ></Fab>
+        >
+          <TipsAndUpdates />
+        </Fab>
       </Tooltip>
     </FabContainer>
   )
