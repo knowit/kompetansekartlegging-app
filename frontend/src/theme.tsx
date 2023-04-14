@@ -38,7 +38,6 @@ const theme = createTheme({
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            minWidth: '50vw',
             backgroundColor: KnowitColors.white,
             border: '2px solid #000',
             maxHeight: '80%',

@@ -31,7 +31,7 @@ const formFields = {
 
 const userBranch = import.meta.env.VITE_USER_BRANCH
 const isNotProd = userBranch !== 'master'
-const Login = () => {
+const Login = ({ ...props }) => {
   const { t } = useTranslation()
   const [showDevLogin, setShowDevLogin] = useState<boolean>(false)
 

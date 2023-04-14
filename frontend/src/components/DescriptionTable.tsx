@@ -4,6 +4,7 @@ import IconButton from '@mui/material/IconButton'
 import i18n from '../i18n/i18n'
 import { useTranslation } from 'react-i18next'
 import CloseIcon from '@mui/icons-material/Close'
+import styled from '@emotion/styled'
 
 type ScaleContainerProps = {
   icon: JSX.Element
@@ -91,52 +92,56 @@ type DescriptionTableProps = {
   isSmall: boolean
 }
 
+type StylingProps = {
+  isSmall: boolean
+}
+
+const StyledDescription = styled.div`
+  min-width: ${(props: StylingProps) => (props.isSmall ? '90%' : '80vw')};
+`
+
+const StyledScaleContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .scaleIcon {
+    min-width: 25px;
+  }
+`
+
 export const DescriptionTable = ({
   onClose,
   isSmall,
 }: DescriptionTableProps) => {
+  console.log(isSmall)
   const { t } = useTranslation()
 
   const ScaleContainer = ({ ...props }: ScaleContainerProps) => (
-    <div>
-      <div>{props.icon}</div>
+    <StyledScaleContainer>
+      <div className="scaleIcon">{props.icon}</div>
       <div>
         <h3>{props.heading}</h3>
         <div>{props.text}</div>
       </div>
-    </div>
+    </StyledScaleContainer>
   )
 
   return (
-    <div>
-      {isSmall && (
-        <div>
-          <header>
-            <h1>{t('scaleDescription')}</h1>
-            <IconButton
-              aria-label={t('close') as string}
-              onClick={onClose}
-              size="large"
-            >
-              <CloseIcon />
-            </IconButton>
-          </header>
-        </div>
-      )}
+    <StyledDescription isSmall={isSmall}>
+      <IconButton
+        aria-label={t('close') as string}
+        onClick={onClose}
+        size="large"
+      >
+        <CloseIcon />
+      </IconButton>
+      <h1>{t('scaleDescription')}</h1>
 
       <div>
-        <div>
+        <section>
           <header>
             <h2>{t('competenceScale.competenceScale')}</h2>
-            {!isSmall && (
-              <IconButton
-                aria-label={t('close') as string}
-                onClick={onClose}
-                size="large"
-              >
-                <CloseIcon />
-              </IconButton>
-            )}
           </header>
           {getCompetence().map((obj, i) => {
             const Icon = obj.icon
@@ -149,9 +154,9 @@ export const DescriptionTable = ({
               />
             )
           })}
-        </div>
+        </section>
 
-        <div>
+        <section>
           <header>
             <h2>{i18n.t('motivationScale.motivationScale')}</h2>
           </header>
@@ -166,9 +171,9 @@ export const DescriptionTable = ({
               />
             )
           })}
-        </div>
+        </section>
       </div>
-    </div>
+    </StyledDescription>
   )
 }
 

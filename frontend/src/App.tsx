@@ -7,7 +7,7 @@ import Content from './components/Content'
 import Login from './components/Login'
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { Button, debounce, Snackbar, Alert } from '@mui/material'
-import { isSmall } from 'react-device-detect'
+import { useWindowDimensions } from './helperFunctions'
 import FloatingScaleDescButton from './components/FloatingScaleDescButton'
 import theme from './theme'
 import {
@@ -177,6 +177,9 @@ const App = () => {
   }
   const [bannerOpen, setBannerOpen] = useState(true)
 
+  const { width } = useWindowDimensions()
+  const isSmall = width < 700
+
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
@@ -219,7 +222,7 @@ const App = () => {
             )}
           </>
         ) : (
-          <Login isSmall={isSmall} />
+          <Login isMobile={isMob} />
         )}
       </ThemeProvider>
     </StyledEngineProvider>

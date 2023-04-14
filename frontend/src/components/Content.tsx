@@ -56,7 +56,6 @@ import { DropdownMenuItem } from './DropdownMenuItem'
 import getGroupMenuitems from './GroupLeaderPanel/GroupLeaderMenu'
 import NavBarDesktop from './NavBarDesktop'
 import styled from '@emotion/styled'
-import { useWindowDimensions } from '../helperFunctions'
 import { Close } from '@mui/icons-material'
 import { IconButton } from '@mui/material'
 
@@ -391,7 +390,7 @@ const Content = ({ ...props }: ContentProps) => {
       }
     }
     if (panelSource === Panel.Overview || itemSource !== 'MAIN') {
-      isSmall && toggleMenuOpen(!open)
+      props.isSmall && toggleMenuOpen(!open)
     }
   }
 
@@ -416,7 +415,7 @@ const Content = ({ ...props }: ContentProps) => {
             activePanel={activePanel}
             questionAnswers={questionAnswers}
             categories={categories}
-            isSmall={isSmall}
+            isSmall={props.isSmall}
             userAnswersLoaded={userAnswersLoaded}
           />
         )
@@ -460,19 +459,17 @@ const Content = ({ ...props }: ContentProps) => {
     return <div>Not implemented</div>
   }
 
-  const { width } = useWindowDimensions()
-  const isSmall = width < 700
   const [menuOpen, toggleMenuOpen] = useState(false)
 
   return (
-    <ContentContainer isSmall={isSmall}>
+    <ContentContainer isSmall={props.isSmall}>
       <Drawer
         className="menu"
-        variant={isSmall ? 'persistent' : 'permanent'}
-        open={isSmall ? menuOpen : false}
+        variant={props.isSmall ? 'persistent' : 'permanent'}
+        open={props.isSmall ? menuOpen : false}
         anchor="left"
       >
-        {isSmall && (
+        {props.isSmall && (
           <IconButton onClick={() => toggleMenuOpen(!open)}>
             <Close />
           </IconButton>
@@ -528,7 +525,7 @@ const Content = ({ ...props }: ContentProps) => {
 
       <NavBarDesktop
         toggleMenuOpen={toggleMenuOpen}
-        isSmall={isSmall}
+        isSmall={props.isSmall}
         signout={props.signout}
         isOpen={menuOpen}
       />

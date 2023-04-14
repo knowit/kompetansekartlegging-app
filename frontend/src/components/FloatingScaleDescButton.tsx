@@ -18,15 +18,6 @@ type FloatingScaleDescButtonProps = {
   firstTimeLogin: boolean
 }
 
-type ConditionalWrapProps = {
-  condition: boolean
-  wrap: (children: JSX.Element) => JSX.Element
-  children: JSX.Element
-}
-
-const ConditionalWrap = ({ condition, wrap, children }: ConditionalWrapProps) =>
-  condition ? wrap(children) : children
-
 const FloatingScaleDescButton = ({
   isSmall,
   scaleDescOpen,
@@ -35,7 +26,7 @@ const FloatingScaleDescButton = ({
 }: FloatingScaleDescButtonProps) => {
   const { t } = useTranslation()
 
-  const [showTooltip, setShowTooltip] = useState(firstTimeLogin)
+  const [showTooltip, setShowTooltip] = useState(isSmall)
   useEffect(() => {
     if (firstTimeLogin) {
       setTimeout(() => setShowTooltip(false), 5000)
@@ -46,6 +37,8 @@ const FloatingScaleDescButton = ({
     setShowTooltip(false)
     setScaleDescOpen((scaleDescOpen) => !scaleDescOpen)
   }
+
+  console.log(isSmall)
 
   return (
     <FabContainer>
@@ -62,31 +55,14 @@ const FloatingScaleDescButton = ({
           </div>
         </Modal>
       )}
-      {isSmall ? (
-        <ConditionalWrap
-          condition={firstTimeLogin}
-          wrap={(children) => (
-            <Tooltip
-              title={t('pressHereToSeeWhatTheIconsMean') as string}
-              open={showTooltip}
-              arrow
-            >
-              {children}
-            </Tooltip>
-          )}
-        >
-          <Fab size="medium" variant="circular" onClick={handleMobileFabClick}>
-            ?
-          </Fab>
-        </ConditionalWrap>
-      ) : (
+      <Tooltip title={'?'} open={showTooltip}>
         <Fab
           variant="extended"
           onClick={() => setScaleDescOpen((scaleDescOpen) => !scaleDescOpen)}
         >
-          {t('scaleDescription')}
+          {isSmall ? '?' : t('scaleDescription')}
         </Fab>
-      )}
+      </Tooltip>
     </FabContainer>
   )
 }
