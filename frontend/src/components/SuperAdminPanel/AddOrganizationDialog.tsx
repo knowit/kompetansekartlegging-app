@@ -9,7 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 
-import { CloseIcon } from '../DescriptionTable'
+import CloseIcon from '@mui/icons-material/Close'
 import { OrganizationInfo } from './SuperAdminTypes'
 import { useTranslation } from 'react-i18next'
 import { CircularProgress } from '@mui/material'

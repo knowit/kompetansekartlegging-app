@@ -9,7 +9,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
-import { CloseIcon } from '../../DescriptionTable'
+import CloseIcon from '@mui/icons-material/Close'
 import { useTranslation } from 'react-i18next'
 
 const AddCategoryDialog = ({ onCancel, onConfirm, open }: any) => {

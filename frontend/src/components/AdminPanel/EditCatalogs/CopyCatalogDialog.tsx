@@ -8,7 +8,7 @@ import TextField from '@mui/material/TextField'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 
-import { CloseIcon } from '../../DescriptionTable'
+import CloseIcon from '@mui/icons-material/Close'
 import { useTranslation } from 'react-i18next'
 
 const CopyCatalogDialog = ({ onCancel, onConfirm, onExited, open }: any) => {

@@ -1,19 +1,9 @@
 import React from 'react'
 import * as Icon from '../icons/iconController'
 import IconButton from '@mui/material/IconButton'
-import SvgIcon from '@mui/material/SvgIcon'
 import i18n from '../i18n/i18n'
 import { useTranslation } from 'react-i18next'
-
-export const CloseIcon = () => (
-  <SvgIcon>
-    <svg viewBox="0 0 32 32">
-      <path d="M21,18.5L18.5,21l11,10.9l2.5-2.5L21,18.5z" />
-      <path d="M2.5,0L0,2.5l11,10.9l2.5-2.5L2.5,0z" />
-      <path d="M29.5,0.1L0,29.5L2.5,32L32,2.6L29.5,0.1z" />
-    </svg>
-  </SvgIcon>
-)
+import CloseIcon from '@mui/icons-material/Close'
 
 type ScaleContainerProps = {
   icon: JSX.Element
@@ -111,7 +101,7 @@ export const DescriptionTable = ({
     <div>
       <div>{props.icon}</div>
       <div>
-        <div>{props.heading}</div>
+        <h3>{props.heading}</h3>
         <div>{props.text}</div>
       </div>
     </div>
@@ -122,7 +112,7 @@ export const DescriptionTable = ({
       {isSmall && (
         <div>
           <header>
-            <h2>{t('scaleDescription')}</h2>
+            <h1>{t('scaleDescription')}</h1>
             <IconButton
               aria-label={t('close') as string}
               onClick={onClose}

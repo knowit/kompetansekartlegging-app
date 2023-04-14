@@ -25,7 +25,7 @@ import { useAppSelector } from '../../redux/hooks'
 import { selectUserState } from '../../redux/User'
 import { useTranslation } from 'react-i18next'
 
-import { CloseIcon } from '../DescriptionTable'
+import CloseIcon from '@mui/icons-material/Close'
 import { Table } from '@mui/material'
 
 import { getAttribute, not } from './helpers'

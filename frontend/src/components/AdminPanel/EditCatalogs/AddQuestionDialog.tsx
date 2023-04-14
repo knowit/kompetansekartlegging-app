@@ -16,7 +16,7 @@ import TextField from '@mui/material/TextField'
 
 import { QuestionType } from '../../../API'
 
-import { CloseIcon } from '../../DescriptionTable'
+import CloseIcon from '@mui/icons-material/Close'
 import { useTranslation } from 'react-i18next'
 
 const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
