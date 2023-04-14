@@ -254,6 +254,7 @@ export const Norwegian: LanguageSchema = {
         idCantBeEmptyOrContainZero: "ID kan ikke være tom eller inneholde '0'.",
         identifierAttributeCantBeEmpty: 'Identifier attribute kan ikke være tom.',
         adminEmailIsInvalid: 'Admin e-post er ugyldig.',
+        adminEmailTooltip: 'Tom: Opprett organisasjon uten administrator.\nEksisterende e-post: Tildel bruker admin-rollen.\nIkke-eksisterende e-post: Lag ny admin-bruker.',
       },
       editSuperAdministrators: {
         description: 'På denne siden kan du legge til og fjerne super-administratorer.',

@@ -252,6 +252,7 @@ export type LanguageSchema = {
         idCantBeEmptyOrContainZero: string
         identifierAttributeCantBeEmpty: string
         adminEmailIsInvalid: string
+        adminEmailTooltip: string
       }
       editSuperAdministrators: {
         description: string
