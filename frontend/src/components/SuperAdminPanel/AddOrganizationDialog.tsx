@@ -9,11 +9,12 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import IconButton from '@material-ui/core/IconButton'
 import TextField from '@material-ui/core/TextField'
 
-import { dialogStyles } from '../../styles'
+import { dialogStyles, KnowitColors } from '../../styles'
 import { CloseIcon } from '../DescriptionTable'
 import { OrganizationInfo } from './SuperAdminTypes'
 import { useTranslation } from 'react-i18next'
-import { CircularProgress } from '@material-ui/core'
+import { CircularProgress, Tooltip } from '@material-ui/core'
+import HelpIcon from '@material-ui/icons/Help'
 
 interface AddOrganizationDialogProps {
   onCancel: () => void
@@ -118,6 +119,21 @@ const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
           value={organizationAdminEmail}
           className={style.textField}
           onChange={(e: any) => setOrganizationAdminEmail(e.target.value)}
+          InputProps={{
+            endAdornment: (
+              <Tooltip
+                arrow
+                placement="left"
+                title={
+                  <div style={{ fontSize: '1.3em' }}>
+                    {t('superAdmin.editOrganizations.adminEmailTooltip')}
+                  </div>
+                }
+              >
+                <HelpIcon htmlColor={KnowitColors.darkBrown} />
+              </Tooltip>
+            ),
+          }}
         />
       </DialogTitle>
       {isAddingOrganization ? (

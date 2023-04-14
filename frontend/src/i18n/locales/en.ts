@@ -166,7 +166,7 @@ export const English: LanguageSchema = {
       noGroupLeader: 'No group leader',
     },
     admin: {
-      areYouSureYouWantToDeleteNameFromRole: 'Are you sure you want to delete {{name}} from the {{role}}?',
+      areYouSureYouWantToRemoveNameFromRole: 'Are you sure you want to remove {{name}} from the {{role}}?',
       removeNameFromRole: 'Remove {{name}} from the {{role}}?',
       editGroupLeaders: {
         description: "Group leaders can access their group members' answers. They can also choose their group members. On this page you can add and remove group leaders.",
@@ -253,7 +253,8 @@ export const English: LanguageSchema = {
         addNewOrganization: 'Add new organization',
         idCantBeEmptyOrContainZero: "ID can't be empty or contain '0'.",
         identifierAttributeCantBeEmpty: "Identifier attribute can't be empty.",
-        adminEmailIsInvalid: 'Admin email is invalid.'
+        adminEmailIsInvalid: 'Admin email is invalid.',
+        adminEmailTooltip: 'Empty: Create organization without administrator.\nExisting email: Assign user to the admin role.\nNon-existing email: Create new admin user.',
       },
       editSuperAdministrators: {
         description: 'On this page you can add and remove super-administrators.',

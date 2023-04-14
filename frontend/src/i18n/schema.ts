@@ -164,7 +164,7 @@ export type LanguageSchema = {
       noGroupLeader: string
     }
     admin: {
-      areYouSureYouWantToDeleteNameFromRole: string
+      areYouSureYouWantToRemoveNameFromRole: string
       removeNameFromRole: string
       editGroupLeaders: {
         description: string
@@ -252,6 +252,7 @@ export type LanguageSchema = {
         idCantBeEmptyOrContainZero: string
         identifierAttributeCantBeEmpty: string
         adminEmailIsInvalid: string
+        adminEmailTooltip: string
       }
       editSuperAdministrators: {
         description: string
