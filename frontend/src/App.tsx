@@ -7,7 +7,7 @@ import Content from './components/Content'
 import Login from './components/Login'
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { Button, debounce, Snackbar, Alert } from '@mui/material'
-import { isMobile } from 'react-device-detect'
+import { isSmall } from 'react-device-detect'
 import FloatingScaleDescButton from './components/FloatingScaleDescButton'
 import theme from './theme'
 import {
@@ -125,7 +125,7 @@ const App = () => {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (isMobile) {
+    if (isSmall) {
       // hide body overflow to avoid doublescroll
       if (scaleDescOpen) {
         document.body.style.overflow = 'hidden'
@@ -199,7 +199,7 @@ const App = () => {
               displayAnswers={displayAnswers}
               setAnswerHistoryOpen={setAnswerHistoryOpen}
               answerHistoryOpen={answerHistoryOpen}
-              isMobile={isMobile}
+              isSmall={isSmall}
               collapseMobileCategories={collapseMobileCategories}
               categoryNavRef={categoryNavRef}
               mobileNavRef={mobileNavRef}
@@ -214,12 +214,12 @@ const App = () => {
                 scaleDescOpen={scaleDescOpen}
                 setScaleDescOpen={setScaleDescOpen}
                 firstTimeLogin={firstTimeLogin}
-                isMobile={isMobile}
+                isSmall={isSmall}
               />
             )}
           </>
         ) : (
-          <Login isMobile={isMobile} />
+          <Login isSmall={isSmall} />
         )}
       </ThemeProvider>
     </StyledEngineProvider>

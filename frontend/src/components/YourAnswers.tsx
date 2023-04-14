@@ -53,7 +53,7 @@ export const YourAnswers = ({ ...props }: YourAnswerProps) => {
         <AnswerDiagram
           questionAnswers={props.questionAnswers}
           activeCategory={props.activeCategory}
-          isMobile={false}
+          isSmall={false}
         />
       </Hideable>
 
@@ -65,7 +65,7 @@ export const YourAnswers = ({ ...props }: YourAnswerProps) => {
         <Form
           {...props}
           scrollToTop={scrollToTop}
-          isMobile={false}
+          isSmall={false}
           alerts={props.alerts}
         />
       </Hideable>

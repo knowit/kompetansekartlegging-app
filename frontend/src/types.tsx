@@ -266,7 +266,7 @@ export type FormProps = {
   categories: string[]
   activeCategory: string
   setIsCategorySubmitted: (categorySubmitted: boolean) => void
-  isMobile: boolean
+  isSmall: boolean
   alerts: AlertState | undefined
   scrollToTop: () => void
 }
@@ -274,7 +274,7 @@ export type FormProps = {
 export type CategoryProps = {
   name: string
   children: JSX.Element[]
-  isMobile: boolean
+  isSmall: boolean
 }
 
 export type UserProps = {
@@ -296,7 +296,7 @@ export type SliderProps = {
   sliderChanged: (newValue: number, motivation: boolean) => void
   motivation: boolean
   value: number
-  isMobile: boolean
+  isSmall: boolean
 }
 
 export type QuestionProps = {
@@ -305,7 +305,7 @@ export type QuestionProps = {
   knowledgeDefaultValue: number
   motivationDefaultValue: number
   setIsCategorySubmitted: (categorySubmitted: boolean) => void
-  isMobile: boolean
+  isSmall: boolean
   alerts: AlertState | undefined
   sliderValues: Map<string, SliderValues>
   setSliderValues: (questionId: string, values: SliderValues) => void
@@ -337,7 +337,7 @@ export type OverviewProps = {
 
 export type ScaleDescriptionProps = {
   activePanel: Panel
-  isMobile: boolean
+  isSmall: boolean
 }
 
 export type YourAnswerProps = {
@@ -353,7 +353,7 @@ export type YourAnswerProps = {
   activeCategory: string
   enableAnswerEditMode: () => void
   answerEditMode: boolean
-  isMobile: boolean
+  isSmall: boolean
   alerts: AlertState | undefined
   collapseMobileCategories: boolean
   categoryNavRef: React.MutableRefObject<HTMLInputElement | null>
@@ -392,7 +392,7 @@ export type NavBarProps = {
   user: any
   callbackDelete: () => void
   setAnswerHistoryOpen: (answerHistoryOpen: boolean) => void
-  isMobile: boolean
+  isSmall: boolean
 }
 
 export type NavBarPropsDesktop = {
@@ -419,7 +419,7 @@ export type AnswerHistoryProps = {
   historyViewOpen: boolean
   history: UserFormWithAnswers[]
   formDefinition?: FormDefinition
-  isMobile: boolean
+  isSmall: boolean
 }
 
 export type HistoryTreeViewProps = {
@@ -437,7 +437,7 @@ export type ContentProps = {
   displayAnswers: () => void
   setAnswerHistoryOpen: (historyViewOpen: boolean) => void
   answerHistoryOpen: boolean
-  isMobile: boolean
+  isSmall: boolean
   signout: () => void
   collapseMobileCategories: boolean
   categoryNavRef: React.MutableRefObject<HTMLInputElement | null>

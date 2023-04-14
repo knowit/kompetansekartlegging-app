@@ -139,7 +139,7 @@ const getUserAnswers = async (
   setAnswerEditMode: React.Dispatch<React.SetStateAction<boolean>>,
   setFirstTimeLogin: React.Dispatch<React.SetStateAction<boolean>>,
   setScaleDescOpen: React.Dispatch<React.SetStateAction<boolean>>,
-  isMobile: boolean
+  isSmall: boolean
 ) => {
   let nextToken: string | null = null
   let nextUserFormToken: string | null = null
@@ -197,7 +197,7 @@ const getUserAnswers = async (
     setAnswerEditMode(false)
     setUserAnswersLoaded(true)
     setFirstTimeLogin(true)
-    if (!isMobile) {
+    if (!isSmall) {
       setScaleDescOpen(true)
     }
   }

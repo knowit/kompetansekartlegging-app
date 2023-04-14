@@ -17,7 +17,7 @@ import { t } from 'i18next'
 
 const voidFn = () => 1
 
-const GroupMember = ({ members, userId, isMobile = false }: any) => {
+const GroupMember = ({ members, userId, isSmall = false }: any) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
   const [categories, setCategories] = useState<string[]>([])
@@ -51,7 +51,7 @@ const GroupMember = ({ members, userId, isMobile = false }: any) => {
               voidFn,
               voidFn,
               voidFn,
-              isMobile
+              isSmall
             ),
           (quAns, newUserAnswers) =>
             setFirstAnswers(
@@ -67,7 +67,7 @@ const GroupMember = ({ members, userId, isMobile = false }: any) => {
       setLoading(false)
     }
     fn()
-  }, [userId, isMobile, member])
+  }, [userId, isSmall, member])
 
   const isLoading = loading
   const isError = error
@@ -89,13 +89,13 @@ const GroupMember = ({ members, userId, isMobile = false }: any) => {
               activePanel={Panel.Overview}
               questionAnswers={questionAnswers}
               categories={categories}
-              isMobile={isMobile}
+              isSmall={isSmall}
               userAnswersLoaded={userAnswersLoaded}
             />
           ) : (
             <AnswerDiagram
               activeCategory={category}
-              isMobile={isMobile}
+              isSmall={isSmall}
               questionAnswers={questionAnswers}
             />
           )}

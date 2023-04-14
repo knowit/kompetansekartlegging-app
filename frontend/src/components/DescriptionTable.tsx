@@ -98,12 +98,12 @@ const getMotivation = (): ScaleContainerObject[] => [
 
 type DescriptionTableProps = {
   onClose: React.MouseEventHandler<HTMLButtonElement>
-  isMobile: boolean
+  isSmall: boolean
 }
 
 export const DescriptionTable = ({
   onClose,
-  isMobile,
+  isSmall,
 }: DescriptionTableProps) => {
   const { t } = useTranslation()
 
@@ -119,7 +119,7 @@ export const DescriptionTable = ({
 
   return (
     <div>
-      {isMobile && (
+      {isSmall && (
         <div>
           <header>
             <h2>{t('scaleDescription')}</h2>
@@ -138,7 +138,7 @@ export const DescriptionTable = ({
         <div>
           <header>
             <h2>{t('competenceScale.competenceScale')}</h2>
-            {!isMobile && (
+            {!isSmall && (
               <IconButton
                 aria-label={t('close') as string}
                 onClick={onClose}

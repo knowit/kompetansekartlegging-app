@@ -12,7 +12,7 @@ const FabContainer = styled.div`
 `
 
 type FloatingScaleDescButtonProps = {
-  isMobile: boolean
+  isSmall: boolean
   scaleDescOpen: boolean
   setScaleDescOpen: Dispatch<SetStateAction<boolean>>
   firstTimeLogin: boolean
@@ -28,7 +28,7 @@ const ConditionalWrap = ({ condition, wrap, children }: ConditionalWrapProps) =>
   condition ? wrap(children) : children
 
 const FloatingScaleDescButton = ({
-  isMobile,
+  isSmall,
   scaleDescOpen,
   setScaleDescOpen,
   firstTimeLogin,
@@ -57,12 +57,12 @@ const FloatingScaleDescButton = ({
           <div className="modalContent">
             <DescriptionTable
               onClose={() => setScaleDescOpen(false)}
-              isMobile={isMobile}
+              isSmall={isSmall}
             />
           </div>
         </Modal>
       )}
-      {isMobile ? (
+      {isSmall ? (
         <ConditionalWrap
           condition={firstTimeLogin}
           wrap={(children) => (

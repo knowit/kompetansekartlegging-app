@@ -296,7 +296,7 @@ const Content = ({ ...props }: ContentProps) => {
           setAnswerEditMode,
           props.setFirstTimeLogin,
           props.setScaleDescOpen,
-          props.isMobile
+          props.isSmall
         ),
       (quAns, newUserAnswers) =>
         setFirstAnswers(
@@ -310,7 +310,7 @@ const Content = ({ ...props }: ContentProps) => {
     userState,
     props.setFirstTimeLogin,
     props.setScaleDescOpen,
-    props.isMobile,
+    props.isSmall,
   ])
 
   useEffect(() => {
@@ -435,7 +435,7 @@ const Content = ({ ...props }: ContentProps) => {
             activeCategory={activeCategory}
             enableAnswerEditMode={enableAnswerEditMode}
             answerEditMode={answerEditMode}
-            isMobile={props.isMobile}
+            isSmall={props.isSmall}
             alerts={alerts}
             collapseMobileCategories={props.collapseMobileCategories}
             categoryNavRef={props.categoryNavRef}
@@ -544,7 +544,7 @@ const Content = ({ ...props }: ContentProps) => {
         history={answerLog}
         historyViewOpen={props.answerHistoryOpen}
         setHistoryViewOpen={props.setAnswerHistoryOpen}
-        isMobile={props.isMobile}
+        isSmall={props.isSmall}
       />
     </ContentContainer>
   )

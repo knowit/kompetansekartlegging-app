@@ -41,7 +41,7 @@ export const Form = ({ ...props }: FormProps) => {
               knowledgeDefaultValue={questionAnswer.knowledge}
               motivationDefaultValue={questionAnswer.motivation}
               setIsCategorySubmitted={props.setIsCategorySubmitted}
-              isMobile={props.isMobile}
+              isSmall={props.isSmall}
               alerts={props.alerts}
               sliderValues={sliderValues.current}
               setSliderValues={setSliderValues}

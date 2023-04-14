@@ -69,7 +69,7 @@ const Question = ({ ...props }: QuestionProps) => {
         <KnowledgeMotivationSliders
           sliderValues={sliderValues}
           sliderChanged={sliderChanged}
-          isMobile={props.isMobile}
+          isSmall={props.isSmall}
         />
       )}
       {questionType === QuestionType.CustomScaleLabels && (
@@ -77,7 +77,7 @@ const Question = ({ ...props }: QuestionProps) => {
           question={question}
           sliderValues={sliderValues}
           sliderChanged={sliderChanged}
-          isMobile={props.isMobile}
+          isSmall={props.isSmall}
         />
       )}
       <div>{questionText}</div>
@@ -88,7 +88,7 @@ const Question = ({ ...props }: QuestionProps) => {
 const KnowledgeMotivationSliders = ({
   sliderValues,
   sliderChanged,
-  isMobile,
+  isSmall,
 }: any) => {
   const { t } = useTranslation()
 
@@ -102,7 +102,7 @@ const KnowledgeMotivationSliders = ({
             value={sliderValues?.knowledge || -2}
             motivation={false}
             sliderChanged={sliderChanged}
-            isMobile={isMobile}
+            isSmall={isSmall}
           />
         </div>
       </div>
@@ -114,7 +114,7 @@ const KnowledgeMotivationSliders = ({
             value={sliderValues?.motivation || -2}
             motivation={true}
             sliderChanged={sliderChanged}
-            isMobile={isMobile}
+            isSmall={isSmall}
           />
         </div>
       </div>
@@ -126,7 +126,7 @@ const CustomLabelSlider = ({
   sliderValues,
   sliderChanged,
   question,
-  isMobile,
+  isSmall,
 }: any) => {
   const { t } = useTranslation()
   const labels = [question.scaleStart, question.scaleEnd].filter((l) => !!l)
@@ -145,7 +145,7 @@ const CustomLabelSlider = ({
               value={sliderValues.customScaleValue || -2}
               motivation={false}
               sliderChanged={sliderChanged}
-              isMobile={isMobile}
+              isSmall={isSmall}
             />
           </div>
         </div>
