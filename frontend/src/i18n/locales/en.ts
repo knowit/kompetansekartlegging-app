@@ -167,7 +167,7 @@ export const English: LanguageSchema = {
       noGroupLeader: 'No group leader',
     },
     admin: {
-      areYouSureYouWantToDeleteNameFromRole: 'Are you sure you want to delete {{name}} from the {{role}}?',
+      areYouSureYouWantToRemoveNameFromRole: 'Are you sure you want to remove {{name}} from the {{role}}?',
       removeNameFromRole: 'Remove {{name}} from the {{role}}?',
       editGroupLeaders: {
         description: "Group leaders can access their group members' answers. They can also choose their group members. On this page you can add and remove group leaders.",

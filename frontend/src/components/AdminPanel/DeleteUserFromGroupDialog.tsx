@@ -45,7 +45,7 @@ const DeleteUserFromGroupDialog = ({
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          {t('admin.areYouSureYouWantToDeleteNameFromRole', {
+          {t('admin.areYouSureYouWantToRemoveNameFromRole', {
             name: name,
             role: role,
           }) + ' '}
