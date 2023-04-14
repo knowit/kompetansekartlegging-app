@@ -54,7 +54,7 @@ import { useTranslation } from 'react-i18next'
 import { TFunction } from 'i18next'
 import { DropdownMenuItem } from './DropdownMenuItem'
 import getGroupMenuitems from './GroupLeaderPanel/GroupLeaderMenu'
-import NavBarDesktop from './NavBarDesktop'
+import NavBar from './NavBar'
 import styled from '@emotion/styled'
 import { Close } from '@mui/icons-material'
 import { IconButton } from '@mui/material'
@@ -523,7 +523,7 @@ const Content = ({ ...props }: ContentProps) => {
         </List>
       </Drawer>
 
-      <NavBarDesktop
+      <NavBar
         toggleMenuOpen={toggleMenuOpen}
         isSmall={props.isSmall}
         signout={props.signout}

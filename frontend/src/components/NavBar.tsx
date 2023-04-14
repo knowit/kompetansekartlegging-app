@@ -49,7 +49,7 @@ const ToolbarContainer = styled.div`
   }
 `
 
-const NavBarDesktop = ({
+const NavBar = ({
   toggleMenuOpen,
   isSmall,
   isOpen,
@@ -238,4 +238,4 @@ const NavBarDesktop = ({
   )
 }
 
-export default NavBarDesktop
+export default NavBar
