@@ -222,7 +222,7 @@ const App = () => {
             )}
           </>
         ) : (
-          <Login isMobile={isMob} />
+          <Login isSmall={isSmall} />
         )}
       </ThemeProvider>
     </StyledEngineProvider>
