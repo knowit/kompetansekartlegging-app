@@ -6,6 +6,16 @@ import { ChartData, ResultData, ResultDiagramProps } from '../types'
 import { CombinedChart } from './CombinedChart'
 import { CombinedChartMobile } from './CombinedChartMobile'
 import { useTranslation } from 'react-i18next'
+import styled from '@emotion/styled'
+import { ToggleButton, ToggleButtonGroup } from '@mui/material'
+
+const StyledOverviewContainer = styled.div`
+  #buttonContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+`
 
 export enum OverviewType {
   AVERAGE,
@@ -252,8 +262,14 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
     }
   }
 
-  const selectChartType = (type: OverviewType) => {
-    setOverviewType(type)
+  const selectChartType = (
+    event: React.MouseEvent<HTMLElement>,
+    type: OverviewType
+  ) => {
+    // returns null if same clicked twice
+    if (type !== null) {
+      setOverviewType(type)
+    }
   }
 
   const translateOverviewType = (type: OverviewType) => {
@@ -269,45 +285,44 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
 
   const getButton = (type: OverviewType): JSX.Element => {
     return (
-      <Button
-        onClick={() => {
-          selectChartType(type)
-        }}
-      >
-        {translateOverviewType(type)}
-      </Button>
+      <ToggleButton value={type}>{translateOverviewType(type)}</ToggleButton>
     )
   }
 
-  return props.isSmall ? (
-    <div>
-      <Button
-        onClick={() => {
-          cycleChartType()
-        }}
-      >
-        {translateOverviewType(currentType)}
-      </Button>
-      <CombinedChartMobile
-        chartData={chartData}
-        type={currentType}
-        topSubjects={topSubjects}
-      />
-    </div>
-  ) : (
-    <div>
-      <div>
-        <div>
-          {getButton(OverviewType.HIGHEST)}
-          {getButton(OverviewType.AVERAGE)}
-          {getButton(OverviewType.MEDIAN)}
-        </div>
+  return (
+    <StyledOverviewContainer>
+      <div id="buttonContainer">
+        {props.isSmall ? (
+          <Button variant="contained" onClick={() => cycleChartType()}>
+            {translateOverviewType(currentType)}
+          </Button>
+        ) : (
+          <ToggleButtonGroup
+            value={currentType}
+            exclusive={true}
+            onChange={selectChartType}
+          >
+            {getButton(OverviewType.HIGHEST)}
+            {getButton(OverviewType.AVERAGE)}
+            {getButton(OverviewType.MEDIAN)}
+          </ToggleButtonGroup>
+        )}
       </div>
-      <CombinedChart
-        chartData={chartData}
-        type={currentType}
-        topSubjects={topSubjects}
-      />
-    </div>
+      <div>
+        {props.isSmall ? (
+          <CombinedChartMobile
+            chartData={chartData}
+            type={currentType}
+            topSubjects={topSubjects}
+          />
+        ) : (
+          <CombinedChart
+            chartData={chartData}
+            type={currentType}
+            topSubjects={topSubjects}
+          />
+        )}
+      </div>
+    </StyledOverviewContainer>
   )
 }
