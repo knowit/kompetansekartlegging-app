@@ -10,7 +10,7 @@ import {
 } from '../answersApi'
 import { getAttribute } from '../AdminPanel/helpers'
 import { Panel, UserAnswer, QuestionAnswer } from '../../types'
-import { Overview } from '../cards/Overview'
+import { Overview } from '../Overview'
 import AnswerDiagram from '../AnswerDiagram'
 import Nav from './Nav'
 import { t } from 'i18next'

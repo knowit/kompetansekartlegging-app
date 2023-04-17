@@ -1,6 +1,6 @@
-import { OverviewProps } from '../../types'
-import Highlights from '../Highlights'
-import TypedOverviewChart from '../TypedOverviewChart'
+import { OverviewProps } from '../types'
+import Highlights from './Highlights'
+import TypedOverviewChart from './TypedOverviewChart'
 import { useTranslation } from 'react-i18next'
 
 export const Overview = ({ ...props }: OverviewProps) => {
