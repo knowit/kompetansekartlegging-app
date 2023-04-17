@@ -17,7 +17,7 @@ import { t } from 'i18next'
 
 const voidFn = () => 1
 
-const GroupMember = ({ members, userId, isSmall = false }: any) => {
+const GroupMember = ({ members, userId, isSmall }: any) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
   const [categories, setCategories] = useState<string[]>([])

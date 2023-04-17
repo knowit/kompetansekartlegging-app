@@ -21,12 +21,21 @@ import { compareByCreatedAt } from '../AdminPanel/helpers'
 import GroupMember from './GroupMember'
 import Main from './Main'
 
+export type GroupLeaderProps = {
+  members: any
+  setMembers: any
+  activeSubmenuItem: any
+  setActiveSubmenuItem: any
+  isSmall: boolean
+}
+
 const GroupLeaderPanel = ({
   members,
   setMembers,
   activeSubmenuItem,
   setActiveSubmenuItem,
-}: any) => {
+  isSmall,
+}: GroupLeaderProps) => {
   const userState = useAppSelector(selectUserState)
 
   const {
@@ -202,7 +211,11 @@ const GroupLeaderPanel = ({
           viewMember={(id: string) => setActiveSubmenuItem(id)}
         />
       ) : (
-        <GroupMember members={members} userId={activeSubmenuItem} />
+        <GroupMember
+          isSmall={isSmall}
+          members={members}
+          userId={activeSubmenuItem}
+        />
       )}
     </div>
   )
