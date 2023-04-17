@@ -83,6 +83,10 @@ export const CombinedChart = ({ ...props }: CombinedChartProps) => {
     }
   }
 
+  const words = props.chartData.map((cat) => cat.name.split(' ')).flat(1)
+  const longest_word_length = Math.max(...words.map((el) => el.length))
+  const labelwidth = longest_word_length * 8.5
+
   return (
     <ResponsiveContainer
       width="100%"
@@ -94,7 +98,7 @@ export const CombinedChart = ({ ...props }: CombinedChartProps) => {
         maxBarSize={15}
         layout="vertical"
         data={props.chartData}
-        margin={{ top: 50 }}
+        margin={{ top: 50, right: 10 }}
       >
         <CartesianGrid
           horizontal={true}
@@ -115,6 +119,7 @@ export const CombinedChart = ({ ...props }: CombinedChartProps) => {
           type="category"
           interval={0}
           tick={{ fill: KnowitColors.darkBrown }}
+          width={labelwidth}
         />
         <Tooltip
           wrapperStyle={{ outline: 'none' }}
