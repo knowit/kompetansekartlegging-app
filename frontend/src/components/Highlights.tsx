@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
 import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
 import { Fragment, useEffect, useState } from 'react'

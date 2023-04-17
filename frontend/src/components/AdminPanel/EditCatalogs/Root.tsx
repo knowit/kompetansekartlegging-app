@@ -1,19 +1,19 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
-import Container from '@material-ui/core/Container'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import DeleteIcon from '@material-ui/icons/Delete'
-import BookmarkIcon from '@material-ui/icons/Bookmark'
-import EditIcon from '@material-ui/icons/Edit'
-import AddIcon from '@material-ui/icons/Add'
-import Typography from '@material-ui/core/Typography'
+import Container from '@mui/material/Container'
+import CircularProgress from '@mui/material/CircularProgress'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import DeleteIcon from '@mui/icons-material/Delete'
+import BookmarkIcon from '@mui/icons-material/Bookmark'
+import EditIcon from '@mui/icons-material/Edit'
+import AddIcon from '@mui/icons-material/Add'
+import Typography from '@mui/material/Typography'
 
 import commonStyles from '../common.module.css'
 import useApiGet from '../useApiGet'
@@ -34,6 +34,7 @@ import AddCatalogDialog from './AddCatalogDialog'
 import { useTranslation } from 'react-i18next'
 import { i18nDateToLocaleString } from '../../../i18n/i18n'
 import CopyCatalogDialog from './CopyCatalogDialog'
+import { KnowitColors } from '../../../styles'
 
 const Catalog = ({
   catalog,
@@ -54,6 +55,7 @@ const Catalog = ({
         </TableCell>
         <TableCell align="right">
           <Button
+            sx={{ color: KnowitColors.black }}
             disabled={active}
             endIcon={<BookmarkIcon />}
             onClick={() => activateCatalog(catalog)}
@@ -69,13 +71,17 @@ const Catalog = ({
             }}
             style={{ textDecoration: 'none' }}
           >
-            <Button endIcon={<EditIcon />}>
+            <Button endIcon={<EditIcon />} sx={{ color: KnowitColors.black }}>
               {t('admin.editCatalogs.modifyCatalog')}
             </Button>
           </Link>
         </TableCell>
         <TableCell align="right">
-          <Button endIcon={<AddIcon />} onClick={() => copyCatalog(catalog)}>
+          <Button
+            endIcon={<AddIcon />}
+            onClick={() => copyCatalog(catalog)}
+            sx={{ color: KnowitColors.black }}
+          >
             {t('admin.editCatalogs.copyCatalog')}
           </Button>
         </TableCell>
@@ -83,6 +89,7 @@ const Catalog = ({
           <Button
             endIcon={<DeleteIcon />}
             onClick={() => deleteCatalog(catalog)}
+            sx={{ color: KnowitColors.black }}
           >
             {t('admin.editCatalogs.removeCatalog')}
           </Button>

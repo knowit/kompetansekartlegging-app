@@ -16,9 +16,9 @@ import {
   Paper,
   Popper,
   Toolbar,
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import HelpIcon from '@material-ui/icons/Help'
+} from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import HelpIcon from '@mui/icons-material/Help'
 import React, { useEffect, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { ReactComponent as KnowitLogo } from '../Logotype-Knowit-Digital-white 1.svg'
@@ -94,7 +94,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
     setAvatarMenuOpen((avatarMenuPrevOpen) => !avatarMenuPrevOpen)
   }
 
-  const handleClose = (event: React.MouseEvent<EventTarget>) => {
+  const handleClose = (event: MouseEvent | TouchEvent) => {
     if (
       anchorRef.current &&
       anchorRef.current.contains(event.target as HTMLElement)
@@ -170,7 +170,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
     maxHeight: '80%',
     overflowY: 'auto',
     p: 4,
-    borderRadius: 10,
+    //borderRadius: 10,
   }
 
   const [helpMarkdown, setHelpMarkdown] = useState<any>()

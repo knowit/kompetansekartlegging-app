@@ -5,13 +5,13 @@ import {
   Typography,
   List,
   ListItem,
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+} from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import React from 'react'
 import { KnowitColors } from '../styles'
 import { NavBarPropsMobile } from '../types'
-import MenuIcon from '@material-ui/icons/Menu'
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
+import MenuIcon from '@mui/icons-material/Menu'
+import SwipeableDrawer from '@mui/material/SwipeableDrawer'
 import { isIOS } from 'react-device-detect'
 import { LanguageSelect } from './LanguageSelect'
 import { useTranslation } from 'react-i18next'
@@ -131,7 +131,11 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
-      <LanguageSelect color={KnowitColors.beige} marginLeft={15} />
+      <LanguageSelect
+        color={KnowitColors.beige}
+        marginTop={12}
+        marginLeft={15}
+      />
       <List className={style.list}>
         {props.menuButtons}
         <ListItem className={style.logout} onClick={props.signout}>
@@ -152,6 +156,7 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
             color="inherit"
             aria-label={t('aria.menu') as string}
             onClick={toggleDrawer(true)}
+            size="large"
           >
             <MenuIcon fontSize="large" />
           </IconButton>

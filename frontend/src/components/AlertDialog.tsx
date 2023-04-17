@@ -6,9 +6,9 @@ import {
   DialogContent,
   DialogActions,
   DialogContentText,
-} from '@material-ui/core'
+} from '@mui/material'
 import { AlertDialogProps } from '../types'
-import ErrorIcon from '@material-ui/icons/Error'
+import ErrorIcon from '@mui/icons-material/Error'
 import { dialogStyles } from '../styles'
 import { useTranslation } from 'react-i18next'
 

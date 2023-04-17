@@ -1,10 +1,10 @@
 import React from 'react'
 import * as Icon from '../icons/iconController'
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
 import clsx from 'clsx'
 import { KnowitColors } from '../styles'
-import IconButton from '@material-ui/core/IconButton'
-import SvgIcon from '@material-ui/core/SvgIcon'
+import IconButton from '@mui/material/IconButton'
+import SvgIcon from '@mui/material/SvgIcon'
 import i18n from '../i18n/i18n'
 import { useTranslation } from 'react-i18next'
 
@@ -202,6 +202,7 @@ export const DescriptionTable = ({
               aria-label={t('close') as string}
               className={style.closeButton}
               onClick={onClose}
+              size="large"
             >
               <CloseIcon />
             </IconButton>
@@ -220,6 +221,7 @@ export const DescriptionTable = ({
                 aria-label={t('close') as string}
                 className={style.closeButton}
                 onClick={onClose}
+                size="large"
               >
                 <CloseIcon />
               </IconButton>

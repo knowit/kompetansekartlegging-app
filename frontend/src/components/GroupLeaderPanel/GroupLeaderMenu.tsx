@@ -1,7 +1,7 @@
 import React from 'react'
 import clsx from 'clsx'
 
-import { Button } from '@material-ui/core'
+import { Button } from '@mui/material'
 
 import { getAttribute } from '../AdminPanel/helpers'
 import { Panel } from '../../types'

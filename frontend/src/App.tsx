@@ -5,8 +5,13 @@ import { API, Auth, Hub } from 'aws-amplify'
 import awsconfig from './exports'
 import Content from './components/Content'
 import Login from './components/Login'
-import { ThemeProvider } from '@material-ui/core/styles'
-import { Button, debounce, makeStyles, Snackbar } from '@material-ui/core'
+import {
+  ThemeProvider,
+  Theme,
+  StyledEngineProvider,
+} from '@mui/material/styles'
+import { Button, debounce, Snackbar } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import { isMobile } from 'react-device-detect'
 import FloatingScaleDescButton from './components/FloatingScaleDescButton'
 import NavBarDesktop from './components/NavBarDesktop'
@@ -20,6 +25,12 @@ import {
 import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth'
 import { useAppSelector, useAppDispatch } from './redux/hooks'
 import { useTranslation } from 'react-i18next'
+import { KnowitColors } from './styles'
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
 
 const userBranch = import.meta.env.VITE_USER_BRANCH
 
@@ -193,65 +204,70 @@ const App = () => {
   const [bannerOpen, setBannerOpen] = useState(true)
 
   return (
-    <ThemeProvider theme={theme}>
-      <div className={style.root}>
-        {userBranch !== 'master' ? (
-          <Snackbar
-            open={bannerOpen}
-            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          >
-            <div
-              style={{
-                background: 'rgba(0,255,0, 255)',
-                borderRadius: 5,
-                padding: 4,
-                textAlign: 'center',
-              }}
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <div className={style.root}>
+          {userBranch !== 'master' ? (
+            <Snackbar
+              open={bannerOpen}
+              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
-              {t('thisIsATestEnvironment') + ' '}
-              <Button onClick={() => setBannerOpen(false)}>
-                {t('close').toUpperCase()}
-              </Button>
-            </div>
-          </Snackbar>
-        ) : null}
-        {userState.isSignedIn ? (
-          <Fragment>
-            {isMobile ? null : (
-              <NavBarDesktop
-                displayAnswers={displayAnswers}
-                signout={signout}
-              />
-            )}
+              <div
+                style={{
+                  background: 'rgba(0,255,0, 255)',
+                  borderRadius: 5,
+                  padding: 4,
+                  textAlign: 'center',
+                }}
+              >
+                {t('thisIsATestEnvironment') + ' '}
+                <Button
+                  onClick={() => setBannerOpen(false)}
+                  style={{ color: KnowitColors.black }}
+                >
+                  {t('close').toUpperCase()}
+                </Button>
+              </div>
+            </Snackbar>
+          ) : null}
+          {userState.isSignedIn ? (
+            <Fragment>
+              {isMobile ? null : (
+                <NavBarDesktop
+                  displayAnswers={displayAnswers}
+                  signout={signout}
+                />
+              )}
 
-            <Content
-              setAnswerHistoryOpen={setAnswerHistoryOpen}
-              answerHistoryOpen={answerHistoryOpen}
-              isMobile={isMobile}
-              signout={signout}
-              collapseMobileCategories={collapseMobileCategories}
-              categoryNavRef={categoryNavRef}
-              mobileNavRef={mobileNavRef}
-              scrollToTop={scrollToTopMobile}
-              setCollapseMobileCategories={setCollapseMobileCategories}
-              setScaleDescOpen={setScaleDescOpen}
-              setFirstTimeLogin={setFirstTimeLogin}
-              setShowFab={setShowFab}
-            />
-            {showFab && (
-              <FloatingScaleDescButton
-                scaleDescOpen={scaleDescOpen}
-                setScaleDescOpen={setScaleDescOpen}
-                firstTimeLogin={firstTimeLogin}
+              <Content
+                setAnswerHistoryOpen={setAnswerHistoryOpen}
+                answerHistoryOpen={answerHistoryOpen}
                 isMobile={isMobile}
+                signout={signout}
+                collapseMobileCategories={collapseMobileCategories}
+                categoryNavRef={categoryNavRef}
+                mobileNavRef={mobileNavRef}
+                scrollToTop={scrollToTopMobile}
+                setCollapseMobileCategories={setCollapseMobileCategories}
+                setScaleDescOpen={setScaleDescOpen}
+                setFirstTimeLogin={setFirstTimeLogin}
+                setShowFab={setShowFab}
               />
-            )}
-          </Fragment>
-        ) : (
-          <Login isMobile={isMobile} />
-        )}
-      </div>
-    </ThemeProvider>
+              {showFab && (
+                <FloatingScaleDescButton
+                  scaleDescOpen={scaleDescOpen}
+                  setScaleDescOpen={setScaleDescOpen}
+                  firstTimeLogin={firstTimeLogin}
+                  isMobile={isMobile}
+                />
+              )}
+            </Fragment>
+          ) : (
+            <Login isMobile={isMobile} />
+          )}
+        </div>
+      </ThemeProvider>
+    </StyledEngineProvider>
   )
 }
 

@@ -1,15 +1,17 @@
-import IconButton from '@material-ui/core/IconButton'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
-import DeleteIcon from '@material-ui/icons/Delete'
+import {
+  IconButton,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import Table from '../mui/Table'
 import commonStyles from './common.module.css'
 import { getAttribute } from './helpers'
 import PictureAndNameCell from './PictureAndNameCell'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 const Admin = (props: any) => {
   const { admin, deleteAdmin } = props
@@ -26,7 +28,7 @@ const Admin = (props: any) => {
       <TableCell>{email}</TableCell>
       <TableCell>{username}</TableCell>
       <TableCell>
-        <IconButton edge="end" onClick={() => deleteAdmin(admin)}>
+        <IconButton edge="end" onClick={() => deleteAdmin(admin)} size="large">
           <DeleteIcon />
         </IconButton>
       </TableCell>

@@ -1,7 +1,7 @@
-import { createStyles, makeStyles, withStyles } from '@material-ui/core'
+import { createStyles, makeStyles, withStyles } from '@mui/styles'
 import LinearProgress, {
   LinearProgressProps,
-} from '@material-ui/core/LinearProgress'
+} from '@mui/material/LinearProgress'
 import { useEffect, useState } from 'react'
 import { KnowitColors } from '../styles'
 import { ProgressProps } from '../types'

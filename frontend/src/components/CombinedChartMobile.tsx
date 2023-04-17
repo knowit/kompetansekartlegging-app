@@ -1,4 +1,4 @@
-import makeStyles from '@material-ui/core/styles/makeStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import { useEffect, useState } from 'react'
 import {
   BarChart,

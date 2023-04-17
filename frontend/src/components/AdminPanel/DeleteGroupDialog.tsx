@@ -1,12 +1,12 @@
 import React from 'react'
 
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import Button from '@material-ui/core/Button'
-import ErrorIcon from '@material-ui/icons/Error'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
+import Button from '@mui/material/Button'
+import ErrorIcon from '@mui/icons-material/Error'
 
 import { dialogStyles } from '../../styles'
 import { useTranslation } from 'react-i18next'
@@ -36,10 +36,10 @@ const DeleteGroupDialog = ({ onCancel, onConfirm, open }: any) => {
       </DialogContent>
       <DialogActions className={style.alertButtons}>
         <Button onClick={onConfirm} className={style.cancelButton}>
-          {t('remove').toUpperCase()}
+          <span className={style.buttonText}>{t('remove')}</span>
         </Button>
         <Button onClick={onCancel} className={style.confirmButton}>
-          {t('abort').toUpperCase()}
+          <span className={style.buttonText}>{t('abort')}</span>
         </Button>
       </DialogActions>
     </Dialog>

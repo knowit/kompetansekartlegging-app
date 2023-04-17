@@ -1,6 +1,6 @@
 import React from 'react'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
+import { makeStyles, createStyles } from '@mui/styles'
+import Button from '@mui/material/Button'
 import { KnowitColors } from '../../../styles'
 import { useTranslation } from 'react-i18next'
 
@@ -16,13 +16,13 @@ const useStyles = makeStyles(() =>
       width: '162px',
       height: '38px',
       border: '3px solid',
-      backgroundColor: KnowitColors.lightGreen,
       borderRadius: '19px',
       borderColor: KnowitColors.lightGreen,
       marginLeft: '32px',
       transition: '250ms',
       '&:hover': {
-        color: KnowitColors.lightGreen,
+        color: KnowitColors.black,
+        backgroundColor: KnowitColors.lightGreen,
       },
     },
     cancelButton: {
