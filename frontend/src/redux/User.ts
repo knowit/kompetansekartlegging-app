@@ -25,7 +25,7 @@ const initialState = {
 
 export const fetchOrganizationNameByID = createAsyncThunk(
   'user/fetchOrganizationNameByID',
-  async (cognitoUser: any, thunkAPI) => {
+  async (cognitoUser: any) => {
     const id = cognitoUser.attributes['custom:OrganizationID']
     const organizationName = await getOrganizationNameByID(id)
     return organizationName
@@ -105,15 +105,13 @@ export const userSlice = createSlice({
         }
       },
     },
-    setUserInfoLogOut: (state) => {
-      state = initialState
-    },
+    setUserInfoLogOut: () => initialState,
   },
   extraReducers: (builder) => {
     builder.addCase(fetchOrganizationNameByID.fulfilled, (state, action) => {
       state.userState.organizationName = action.payload
     })
-    builder.addCase(fetchOrganizationNameByID.rejected, (state, action) => {
+    builder.addCase(fetchOrganizationNameByID.rejected, (state) => {
       state.userState.organizationName = i18n.t('noOrganizationNameFound')
     })
   },

@@ -120,7 +120,7 @@ type ZProps = {
   zIndex: number
 }
 
-export const CardStyle = makeStyles<Theme, ZProps>((theme: Theme) => ({
+export const CardStyle = makeStyles<Theme, ZProps>(() => ({
   cardButton: {
     fontWeight: 'bold',
     fontSize: 18,

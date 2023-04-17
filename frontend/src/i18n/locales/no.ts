@@ -168,7 +168,7 @@ export const Norwegian: LanguageSchema = {
       noGroupLeader: 'Mangler gruppeleder',
     },
     admin: {
-      areYouSureYouWantToDeleteNameFromRole: "Er du sikker på at du har lyst til å fjerne {{name}} fra {{role}}?",
+      areYouSureYouWantToRemoveNameFromRole: 'Er du sikker på at du har lyst til å fjerne {{name}} fra {{role}}?',
       removeNameFromRole: 'Fjern {{name}} fra {{role}}?',
       editGroupLeaders: {
         description: 'Gruppeledere har tilgang til sine egne gruppebarns svar. De kan også velge sine gruppebarn. På denne siden kan du legge til og fjerne gruppeledere.',

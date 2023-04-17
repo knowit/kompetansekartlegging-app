@@ -671,7 +671,7 @@ export class KompetanseStack extends Stack {
           ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
         treatMissingData: TreatMissingData.NOT_BREACHING,
         evaluationPeriods: 1,
-        alarmDescription: `Alarm when lambda createUserFormBatch times out (${batchCreateUserTimeoutSeconds} seconds})`,
+        alarmDescription: `Alarm when lambda createUserFormBatch times out (${batchCreateUserTimeoutSeconds} seconds)`,
       }
     )
 
