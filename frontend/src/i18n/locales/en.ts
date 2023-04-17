@@ -264,6 +264,7 @@ export const English: LanguageSchema = {
       },
       editOrganizationAdministrators: {
         description: 'On this page you can add and remove administrators for specific organizations.',
+        couldNotGetAListOfAllAdministrators: 'Could not get a list of all administrators.',
       }
     },
     adminApi: {

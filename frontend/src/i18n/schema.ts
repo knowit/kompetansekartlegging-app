@@ -262,6 +262,7 @@ export type LanguageSchema = {
       }
       editOrganizationAdministrators: {
         description: string
+        couldNotGetAListOfAllAdministrators: string
       }
     }
     adminApi: {

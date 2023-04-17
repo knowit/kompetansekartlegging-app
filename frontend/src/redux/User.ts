@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import {
   ADMIN_COGNITOGROUP_SUFFIX,
   GROUPLEADER_COGNITOGROUP_SUFFIX,
+  ORGANIZATION_ID_ATTRIBUTE,
   SUPER_ADMIN_COGNITO_GROUP,
 } from '../constants'
 import { getOrganizationNameByID } from '../helperFunctions'
@@ -9,6 +10,7 @@ import { RootState } from './store'
 
 import { UserRole } from '../types'
 import i18n from '../i18n/i18n'
+import { getAttribute } from '../components/AdminPanel/helpers'
 
 const initialState = {
   userState: {
@@ -146,3 +148,6 @@ export const selectAdminCognitoGroupName = (state: RootState) => {
 export const selectGroupLeaderCognitoGroupName = (state: RootState) => {
   return state.user.userState.organizationID + GROUPLEADER_COGNITOGROUP_SUFFIX
 }
+
+export const getOrganizationAdminGroupNameFromUser = (user: any): string =>
+  getAttribute(user, ORGANIZATION_ID_ATTRIBUTE) + ADMIN_COGNITOGROUP_SUFFIX

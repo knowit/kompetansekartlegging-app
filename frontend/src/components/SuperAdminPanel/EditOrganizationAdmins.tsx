@@ -7,13 +7,13 @@ import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
-import { useAppSelector } from '../../redux/hooks'
-import { selectAdminCognitoGroupName, selectUserState } from '../../redux/User'
+import { getOrganizationAdminGroupNameFromUser } from '../../redux/User'
 import { useTranslation } from 'react-i18next'
 import AddUserToGroupDialog from '../AdminPanel/AddUserToGroupDialog'
 import {
   addUserToGroup,
-  listAllUsersInOrganization,
+  listAllOrganizationAdministrators,
+  listAllUsers,
   removeUserFromGroup,
 } from '../AdminPanel/adminApi'
 import commonStyles from '../AdminPanel/common.module.css'
@@ -24,8 +24,6 @@ import AdminTable from '../AdminPanel/AdminTable'
 
 const EditOrganizationAdmins = () => {
   const { t } = useTranslation()
-  const adminCognitoGroupName = useAppSelector(selectAdminCognitoGroupName)
-  const userState = useAppSelector(selectUserState)
 
   const {
     result: admins,
@@ -33,8 +31,7 @@ const EditOrganizationAdmins = () => {
     loading,
     refresh,
   } = useApiGet({
-    getFn: listAllUsersInOrganization,
-    params: adminCognitoGroupName,
+    getFn: listAllOrganizationAdministrators,
   })
   const [showAddAdmin, setShowAddAdmin] = useState<boolean>(false)
   const [showDeleteUserFromGroupDialog, setShowDeleteUserFromGroupDialog] =
@@ -46,14 +43,20 @@ const EditOrganizationAdmins = () => {
     setAdminToDelete(user)
   }
   const deleteAdminConfirm = async () => {
-    await removeUserFromGroup(adminCognitoGroupName, adminToDelete.Username)
+    await removeUserFromGroup(
+      getOrganizationAdminGroupNameFromUser(adminToDelete),
+      adminToDelete.Username
+    )
     setShowDeleteUserFromGroupDialog(false)
     refresh()
   }
   const clearSelectedAdmin = () => setAdminToDelete(null)
   const hideShowAddAdmin = () => setShowAddAdmin(false)
   const addAdminConfirm = async (newAdminUser: any) => {
-    await addUserToGroup(adminCognitoGroupName, newAdminUser.Username)
+    await addUserToGroup(
+      getOrganizationAdminGroupNameFromUser(newAdminUser),
+      newAdminUser.Username
+    )
     setShowAddAdmin(false)
     refresh()
   }
@@ -72,7 +75,7 @@ const EditOrganizationAdmins = () => {
               {t('superAdmin.editOrganizationAdministrators.description')}
             </CardContent>
           </Card>
-          <AdminTable admins={admins} deleteAdmin={deleteAdmin} />
+          <AdminTable admins={admins} deleteAdmin={deleteAdmin} showOrgId />
           <Button
             variant="contained"
             color="primary"
@@ -96,10 +99,7 @@ const EditOrganizationAdmins = () => {
         <AddUserToGroupDialog
           open={showAddAdmin}
           currentUsersInGroup={admins}
-          userGetFn={listAllUsersInOrganization}
-          userGetFnParams={
-            userState.isSignedIn ? userState.organizationID : null
-          }
+          userGetFn={listAllUsers}
           onCancel={hideShowAddAdmin}
           onConfirm={addAdminConfirm}
           roleName={t('administrator').toLowerCase()}

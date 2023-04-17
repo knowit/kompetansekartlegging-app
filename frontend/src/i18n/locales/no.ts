@@ -264,6 +264,7 @@ export const Norwegian: LanguageSchema = {
       },
       editOrganizationAdministrators: {
         description: 'På denne siden kan du legge til og fjerne administratorer for spesifikke organisasjoner.',
+        couldNotGetAListOfAllAdministrators: 'Kunne ikke hente liste over alle administratorer.',
       }
     },
     adminApi: {
