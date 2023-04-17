@@ -164,7 +164,7 @@ export type LanguageSchema = {
       noGroupLeader: string
     }
     admin: {
-      areYouSureYouWantToDeleteNameFromRole: string
+      areYouSureYouWantToRemoveNameFromRole: string
       removeNameFromRole: string
       editGroupLeaders: {
         description: string
