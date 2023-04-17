@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
 import { useAppSelector } from '../../redux/hooks'
-import { selectAdminCognitoGroupName } from '../../redux/User'
+import { selectAdminCognitoGroupName, selectUserState } from '../../redux/User'
 import { useTranslation } from 'react-i18next'
 import Button from '../mui/Button'
 import AddUserToGroupDialog from './AddUserToGroupDialog'
@@ -25,6 +25,7 @@ import AdminTable from './AdminTable'
 const EditAdmins = () => {
   const { t } = useTranslation()
   const adminCognitoGroupName = useAppSelector(selectAdminCognitoGroupName)
+  const userState = useAppSelector(selectUserState)
 
   const {
     result: admins,
@@ -97,9 +98,15 @@ const EditAdmins = () => {
           open={showAddAdmin}
           currentUsersInGroup={admins}
           userGetFn={listAllUsersInOrganization}
+          userGetFnParams={
+            userState.isSignedIn ? userState.organizationID : null
+          }
           onCancel={hideShowAddAdmin}
           onConfirm={addAdminConfirm}
           roleName={t('administrator').toLowerCase()}
+          searchFieldPlaceholder={t('searchForEmployeeInOrganization', {
+            organization: userState.organizationName,
+          })}
         />
       )}
     </Container>

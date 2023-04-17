@@ -20,9 +20,11 @@ export type LanguageSchema = {
     username: string
     name: string
     description: string
+    organizationID: string
     groupDefiniteForm: string
     roleDefiniteForm: string
     searchForEmployeeInOrganization: string
+    searchForEmployeeAcrossOrganizations: string
     nameCantBeEmpty: string
     addAdministrator: string
     pressHereToSeeWhatTheIconsMean: string

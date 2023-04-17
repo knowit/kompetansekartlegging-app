@@ -177,7 +177,13 @@ const EditGroupLeaders = () => {
       {showAddGroupLeader && (
         <AddUserToGroupDialog
           userGetFn={listAllUsersInOrganization}
+          userGetFnParams={
+            userState.isSignedIn ? userState.organizationID : null
+          }
           roleName={t('groupLeader').toLowerCase()}
+          searchFieldPlaceholder={t('searchForEmployeeInOrganization', {
+            organization: userState.organizationName,
+          })}
           open={showAddGroupLeader}
           currentUsersInGroup={groupLeaders}
           onCancel={hideShowAddGroupLeader}

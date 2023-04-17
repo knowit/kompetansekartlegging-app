@@ -438,6 +438,9 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
         <AddUserToGroupDialog
           usersConstant={groupLeaders}
           title={t('admin.editGroups.chooseNewGroupLeader')}
+          searchFieldPlaceholder={t('searchForEmployeeInOrganization', {
+            organization: userState.organizationName,
+          })}
           confirmButtonText={t('admin.editGroups.choose')}
           open={!!groupToEdit}
           currentUsersInGroup={
@@ -451,6 +454,9 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
         <AddUserToGroupDialog
           usersConstant={groupLeaders}
           title={t('admin.editGroups.chooseGroupLeaderForTheNewGroup')}
+          searchFieldPlaceholder={t('searchForEmployeeInOrganization', {
+            organization: userState.organizationName,
+          })}
           confirmButtonText={t('admin.editGroups.createGroup')}
           open={showAddGroup}
           currentUsersInGroup={[]}
