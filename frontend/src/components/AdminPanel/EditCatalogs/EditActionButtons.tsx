@@ -16,7 +16,6 @@ const useStyles = makeStyles(() =>
       width: '162px',
       height: '38px',
       border: '3px solid',
-      //backgroundColor: KnowitColors.lightGreen,
       borderRadius: '19px',
       borderColor: KnowitColors.lightGreen,
       marginLeft: '32px',
