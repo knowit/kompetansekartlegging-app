@@ -245,6 +245,7 @@ export const English: LanguageSchema = {
     },
     superAdmin: {
       identifierAttribute: 'Identifier Attribute',
+      areYouSureYouWantToRemoveNameFromRoleAtOrganization: 'Are you sure you want to remove {{name}} from the {{role}} at {{organization}}?',
       editOrganizations: {
         description: 'On this page you can add, remove and update organizations.',
         id: 'ID',

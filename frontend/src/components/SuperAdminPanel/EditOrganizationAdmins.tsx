@@ -7,7 +7,6 @@ import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
-import { getOrganizationAdminGroupNameFromUser } from '../../redux/User'
 import { useTranslation } from 'react-i18next'
 import AddUserToGroupDialog from '../AdminPanel/AddUserToGroupDialog'
 import {
@@ -21,6 +20,7 @@ import DeleteUserFromGroupDialog from '../AdminPanel/DeleteUserFromGroupDialog'
 import useApiGet from '../AdminPanel/useApiGet'
 import Button from '../mui/Button'
 import AdminTable from '../AdminPanel/AdminTable'
+import { getOrganizationAdminGroupNameFromUser } from '../AdminPanel/helpers'
 
 const EditOrganizationAdmins = () => {
   const { t } = useTranslation()
@@ -94,6 +94,7 @@ const EditOrganizationAdmins = () => {
         onConfirm={deleteAdminConfirm}
         user={adminToDelete}
         roleName={t('administrator').toLowerCase()}
+        showOrgId
       />
       {showAddAdmin && (
         <AddUserToGroupDialog
@@ -104,6 +105,7 @@ const EditOrganizationAdmins = () => {
           onConfirm={addAdminConfirm}
           roleName={t('administrator').toLowerCase()}
           searchFieldPlaceholder={t('searchForEmployeeAcrossOrganizations')}
+          showOrgId
         />
       )}
     </Container>

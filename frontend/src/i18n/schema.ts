@@ -243,6 +243,7 @@ export type LanguageSchema = {
     }
     superAdmin: {
       identifierAttribute: string
+      areYouSureYouWantToRemoveNameFromRoleAtOrganization: string
       editOrganizations: {
         description: string
         id: string

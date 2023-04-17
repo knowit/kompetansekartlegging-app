@@ -11,6 +11,7 @@ import ErrorIcon from '@mui/icons-material/Error'
 import { dialogStyles } from '../../styles'
 import { getAttribute } from './helpers'
 import { useTranslation } from 'react-i18next'
+import { ORGANIZATION_ID_ATTRIBUTE } from '../../constants'
 
 const DeleteUserFromGroupDialog = ({
   onCancel,
@@ -21,6 +22,7 @@ const DeleteUserFromGroupDialog = ({
   roleName,
   disableRoleSuffix,
   children,
+  showOrgId,
 }: any) => {
   const { t } = useTranslation()
   const style = dialogStyles()
@@ -48,10 +50,19 @@ const DeleteUserFromGroupDialog = ({
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          {t('admin.areYouSureYouWantToRemoveNameFromRole', {
-            name: name,
-            role: role,
-          }) + ' '}
+          {showOrgId === true
+            ? t(
+                'superAdmin.areYouSureYouWantToRemoveNameFromRoleAtOrganization',
+                {
+                  name: name,
+                  role: role,
+                  organization: getAttribute(user, ORGANIZATION_ID_ATTRIBUTE),
+                }
+              ) + ' '
+            : t('admin.areYouSureYouWantToRemoveNameFromRole', {
+                name: name,
+                role: role,
+              }) + ' '}
           {children}
         </DialogContentText>
       </DialogContent>
