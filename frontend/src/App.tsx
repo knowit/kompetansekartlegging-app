@@ -124,6 +124,8 @@ const App = () => {
       })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const { width } = useWindowDimensions()
+  const isSmall = width < 700
   useEffect(() => {
     if (isSmall) {
       // hide body overflow to avoid doublescroll
@@ -176,9 +178,6 @@ const App = () => {
     }
   }
   const [bannerOpen, setBannerOpen] = useState(true)
-
-  const { width } = useWindowDimensions()
-  const isSmall = width < 700
 
   return (
     <StyledEngineProvider injectFirst>
