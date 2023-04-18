@@ -264,7 +264,7 @@ export const English: LanguageSchema = {
         addSuperAdministrator: 'Add super-administrator',
       },
       editOrganizationAdministrators: {
-        description: 'On this page you can add and remove administrators for specific organizations.',
+        description: 'On this page you can add and remove users to and from the administrator role for their organization.',
         couldNotGetAListOfAllAdministrators: 'Could not get a list of all administrators.',
       }
     },

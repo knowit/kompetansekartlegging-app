@@ -264,7 +264,7 @@ export const Norwegian: LanguageSchema = {
         addSuperAdministrator: 'Legg til super-administrator',
       },
       editOrganizationAdministrators: {
-        description: 'På denne siden kan du legge til og fjerne administratorer for spesifikke organisasjoner.',
+        description: 'På denne siden kan brukere legges til, og fjernes fra, administrator-rollen for organisasjonen de er en del av.',
         couldNotGetAListOfAllAdministrators: 'Kunne ikke hente liste over alle administratorer.',
       }
     },
