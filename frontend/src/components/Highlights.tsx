@@ -11,6 +11,7 @@ type StylingProps = {
 }
 
 const StyledHighlights = styled.article`
+  margin-top: 5vh;
   #focusAreas {
     display: flex;
     flex-direction: row;
@@ -25,6 +26,19 @@ const StyledHighlights = styled.article`
     flex-direction: column;
     justify-content: center;
   }
+
+  #strengths {
+    svg {
+      background: ${KnowitColors.darkGreen};
+      fill: ${KnowitColors.white};
+    }
+  }
+
+  #ambitions {
+      svg {
+        background: ${KnowitColors.lightGreen};
+    }
+  }
   .highlightList {
     width: 100%;
     display: flex;
@@ -34,16 +48,16 @@ const StyledHighlights = styled.article`
 
     > div {
       width: 25%;
-      h3 {
+      h4 {
         text-align: center;
         overflow-wrap: break-word;
       }
-      svg {
-        background: ${KnowitColors.lightGreen};
+    }
+      svg { 
         padding: 10px;
         border-radius: 50%;
-        max-width: 50px;
-        max-height: 50px;
+        max-width: 40px;
+        max-height: 40px;
         overflow: visible;
       }
     }
@@ -119,14 +133,14 @@ export default function Highlights({ ...props }: HighlightsProps) {
     isKnowledge: boolean
   ): JSX.Element => {
     if (aboveCutoff.length === 0) {
-      return <h3>{t(text)}</h3>
+      return <h4>{t(text)}</h4>
     }
     return (
       <div className="highlightList">
         {aboveCutoff.map((el: any, i) => (
           <div key={i}>
             <div className="iconWrapper">{GetIcon(isKnowledge, el.icon)}</div>
-            <h3>{wrapString(el.topic, maxTopicStringLength).join('\n')}</h3>
+            <h4>{wrapString(el.topic, maxTopicStringLength).join('\n')}</h4>
           </div>
         ))}
       </div>
@@ -149,14 +163,14 @@ export default function Highlights({ ...props }: HighlightsProps) {
   else
     return (
       <StyledHighlights isSmall={props.isSmall}>
-        <h1>{t('overview.focusAreas')}</h1>
+        <h2>{t('overview.focusAreas')}</h2>
         <article id="focusAreas">
-          <section id={'strengths'}>
-            <h2>{t('overview.topStrengths')}</h2>
+          <section id="strengths">
+            <h3>{t('overview.topStrengths')}</h3>
             {knowledgeHighlights}
           </section>
           <section id="ambitions">
-            <h2>{t('overview.topAmbitions')}</h2>
+            <h3>{t('overview.topAmbitions')}</h3>
             {motivationHighlights}
           </section>
         </article>
