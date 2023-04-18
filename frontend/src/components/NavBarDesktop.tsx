@@ -19,7 +19,14 @@ import {
 } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import HelpIcon from '@mui/icons-material/Help'
-import { useEffect, useRef, useState } from 'react'
+import {
+  KeyboardEvent,
+  MouseEvent,
+  TouchEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import ReactMarkdown from 'react-markdown'
 import { ReactComponent as KnowitLogo } from '../Logotype-Knowit-Digital-white 1.svg'
 import { useAppSelector } from '../redux/hooks'
@@ -105,14 +112,14 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
     setAvatarMenuOpen(false)
   }
 
-  function handleListKeyDown(event: React.KeyboardEvent) {
+  function handleListKeyDown(event: KeyboardEvent) {
     if (event.key === 'Tab') {
       event.preventDefault()
       setAvatarMenuOpen(false)
     }
   }
 
-  const handleCloseSignout = (event: React.MouseEvent<EventTarget>) => {
+  const handleCloseSignout = (event: MouseEvent<EventTarget>) => {
     if (
       anchorRef.current &&
       anchorRef.current.contains(event.target as HTMLElement)
@@ -123,7 +130,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
     props.signout()
   }
 
-  // const handleDeleteAnswers = (event: React.MouseEvent<EventTarget>) => {
+  // const handleDeleteAnswers = (event: MouseEvent<EventTarget>) => {
   //     if (
   //         anchorRef.current &&
   //         anchorRef.current.contains(event.target as HTMLElement)
@@ -137,7 +144,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
     setDeleteAlertOpen(false)
   }
 
-  // const handleDisplayAnswers = (event: React.MouseEvent<EventTarget>) => {
+  // const handleDisplayAnswers = (event: MouseEvent<EventTarget>) => {
   //     if (
   //         anchorRef.current &&
   //         anchorRef.current.contains(event.target as HTMLElement)

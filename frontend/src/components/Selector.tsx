@@ -1,3 +1,5 @@
+import { ChangeEvent } from 'react'
+
 type Props = {
   radiobuttonChanged: (value: number, motivation: boolean) => void
   questionId: string
@@ -6,7 +8,7 @@ type Props = {
 }
 
 const Selector = ({ ...props }: Props) => {
-  const radiobuttonChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const radiobuttonChanged = (event: ChangeEvent<HTMLInputElement>) => {
     props.radiobuttonChanged(parseInt(event.target.value), props.motivation)
   }
 

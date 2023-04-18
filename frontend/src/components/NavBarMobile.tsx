@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { KeyboardEvent, MouseEvent, useState } from 'react'
 import {
   AppBar,
   Toolbar,
@@ -93,7 +93,7 @@ const navbarStyles = makeStyles((theme) => ({
 const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
   const { t } = useTranslation()
   const style = navbarStyles()
-  // const [mobileOpen, setMobileOpen] = React.useState(false);
+  // const [mobileOpen, setMobileOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false)
 
   // const handleDrawerToggle = () => {
@@ -111,12 +111,12 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
   }
 
   const toggleDrawer =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+    (open: boolean) => (event: KeyboardEvent | MouseEvent) => {
       if (
         event &&
         event.type === 'keydown' &&
-        ((event as React.KeyboardEvent).key === 'Tab' ||
-          (event as React.KeyboardEvent).key === 'Shift')
+        ((event as KeyboardEvent).key === 'Tab' ||
+          (event as KeyboardEvent).key === 'Shift')
       ) {
         return
       }
