@@ -51,7 +51,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           '.submenuItem': {
-            paddingLeft: '20px',
+            paddingLeft: '25px',
           },
         },
       },
