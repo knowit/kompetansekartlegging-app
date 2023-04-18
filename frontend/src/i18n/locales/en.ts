@@ -147,6 +147,7 @@ export const English: LanguageSchema = {
       no: 'No. I do not want to work on this.',
     },
     myAnswers: {
+      chooseCategory: 'Choose a category to view your answers',
       fillOut: 'Fill out',
       blockHasNotBeenCompleted: 'The block has not been completed!',
       minutes: 'minutes',

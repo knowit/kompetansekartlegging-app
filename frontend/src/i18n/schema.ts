@@ -145,6 +145,7 @@ export type LanguageSchema = {
       no: string
     }
     myAnswers: {
+      chooseCategory: string
       fillOut: string
       blockHasNotBeenCompleted: string
       minutes: string

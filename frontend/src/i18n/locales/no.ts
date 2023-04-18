@@ -147,6 +147,7 @@ export const Norwegian: LanguageSchema = {
       no: 'Nei. Dette vil jeg ikke jobbe med.',
     },
     myAnswers: {
+      chooseCategory: 'Velg en kategori for å se dine svar',
       fillOut: 'Fyll ut',
       blockHasNotBeenCompleted: 'Blokken er ikke ferdig utfylt!',
       minutes: 'minutter',
