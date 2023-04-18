@@ -3,20 +3,35 @@ import { QuestionType } from '../API'
 import { QuestionProps, SliderKnowledgeMotivationValues } from '../types'
 import Slider from './Slider'
 import * as Icon from '../icons/iconController'
-import { AlertNotification } from './AlertNotification'
 import { useTranslation } from 'react-i18next'
 import styled from '@emotion/styled'
+import { Tooltip } from '@mui/material'
+import {
+  NotificationsActiveOutlined,
+  PriorityHigh,
+  Update,
+} from '@mui/icons-material'
+import { Millisecs } from '../helperFunctions'
 
-const StyledQuestionContainer = styled.div`
-  .iconContainer {
-    width: 100%;
-    height: 30px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    svg {
-      height: 100%;
-    }
+// Time passed before answers are flagged a's stale and alerts are displayed
+export const staleAnswersLimit: number = Millisecs.THREEMONTHS
+
+export enum AlertType {
+  Incomplete,
+  Outdated,
+  Multiple,
+}
+
+const StyledQuestion = styled.div`
+  margin-top: 5vh;
+  .questionTopic {
+    display: inline;
+  }
+
+  .sliderContainer {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    align-items: center;
   }
 `
 
@@ -52,18 +67,42 @@ const Question = ({ ...props }: QuestionProps) => {
     }
   }
 
-  return (
-    <div>
-      <div>
-        <div>{questionTopic}</div>
-        {props.alerts?.qidMap.has(questionId) && (
-          <AlertNotification
-            /* eslint-disable @typescript-eslint/no-non-null-assertion */
-            type={props.alerts?.qidMap.get(questionId)!.type}
-            message={props.alerts?.qidMap.get(questionId)!.message}
-            /* eslint-enable @typescript-eslint/no-non-null-assertion */
+  const hasAlerts = props.alerts?.qidMap.has(questionId)
+  let alertType = props.alerts?.qidMap.get(questionId)?.type
+  let alertMessage = props.alerts?.qidMap.get(questionId)?.message
+  let badgeContent = <></>
+  if (hasAlerts) {
+    alertType = props.alerts?.qidMap.get(questionId)?.type
+    alertMessage = props.alerts?.qidMap.get(questionId)?.message
+    switch (alertType) {
+      case AlertType.Incomplete:
+        badgeContent = (
+          <PriorityHigh
+            color="warning"
+            aria-label={alertMessage}
+            fontSize="small"
           />
-        )}
+        )
+        break
+      case AlertType.Outdated:
+        badgeContent = (
+          <Update color="warning" aria-label={alertMessage} fontSize="small" />
+        )
+        break
+      case AlertType.Multiple:
+        badgeContent = (
+          <NotificationsActiveOutlined color="warning" fontSize="small" />
+        )
+        break
+    }
+  }
+
+  return (
+    <StyledQuestion>
+      <div>
+        <h2 className="questionTopic">{questionTopic}</h2>
+        {hasAlerts && <Tooltip title={alertMessage}>{badgeContent}</Tooltip>}
+        <div>{questionText}</div>
       </div>
       {questionType === QuestionType.KnowledgeMotivation && (
         <KnowledgeMotivationSliders
@@ -80,10 +119,22 @@ const Question = ({ ...props }: QuestionProps) => {
           isSmall={props.isSmall}
         />
       )}
-      <div>{questionText}</div>
-    </div>
+    </StyledQuestion>
   )
 }
+
+const StyledQuestionContainer = styled.div`
+  .iconContainer {
+    width: 100%;
+    height: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    svg {
+      height: 100%;
+    }
+  }
+`
 
 const KnowledgeMotivationSliders = ({
   sliderValues,
@@ -94,10 +145,10 @@ const KnowledgeMotivationSliders = ({
 
   return (
     <StyledQuestionContainer>
-      <h2>{t('competence')}</h2>
-      <div>
-        <div className="iconContainer">{Icon.GetIcons(true)}</div>
+      <div className="sliderContainer">
+        <h3>{t('competence')}</h3>
         <div>
+          <div className="iconContainer">{Icon.GetIcons(true)}</div>
           <Slider
             value={sliderValues?.knowledge || -2}
             motivation={false}
@@ -106,10 +157,10 @@ const KnowledgeMotivationSliders = ({
           />
         </div>
       </div>
-      <h2>{t('motivation')}</h2>
-      <div>
-        <div className="iconContainer">{Icon.GetIcons(false)}</div>
+      <div className="sliderContainer">
+        <h3>{t('motivation')}</h3>
         <div>
+          <div className="iconContainer">{Icon.GetIcons(false)}</div>
           <Slider
             value={sliderValues?.motivation || -2}
             motivation={true}

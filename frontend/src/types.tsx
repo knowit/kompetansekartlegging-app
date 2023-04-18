@@ -1,5 +1,5 @@
 import { QuestionType } from './API'
-import { AlertType } from './components/AlertNotification'
+import { AlertType } from './components/Question'
 import { Dispatch, SetStateAction } from 'react'
 import { OverviewType } from './components/TypedOverviewChart'
 

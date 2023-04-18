@@ -10,24 +10,9 @@ import { QuestionAnswer } from '../types'
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded'
 import ErrorOutlineRoundedIcon from '@mui/icons-material/ErrorOutlineRounded'
 import UpdateIcon from '@mui/icons-material/Update'
-import { staleAnswersLimit } from './AlertNotification'
+import { staleAnswersLimit } from './Question'
 import { i18nDateToLocaleDateString } from '../i18n/i18n'
 import styled from '@emotion/styled'
-
-const Info = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: 10px;
-`
-
-interface HideableProps {
-  hidden: boolean
-}
-
-const Hideable = styled.div<HideableProps>`
-  display: ${(props) => (props.hidden ? 'block' : 'none')};
-`
 
 const StyledBlockInfo = styled.div`
   display: flex;
@@ -109,6 +94,21 @@ const BlockInfo = (props: { questions: QuestionAnswer[] | undefined }) => {
     </StyledBlockInfo>
   )
 }
+
+const Info = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 10px;
+`
+
+interface HideableProps {
+  hidden: boolean
+}
+
+const Hideable = styled.div<HideableProps>`
+  display: ${(props) => (props.hidden ? 'block' : 'none')};
+`
 
 export const YourAnswers = ({ ...props }: YourAnswerProps) => {
   const { t } = useTranslation()

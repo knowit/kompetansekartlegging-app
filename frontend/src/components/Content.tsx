@@ -27,11 +27,7 @@ import {
 import { AdminPanel } from './AdminPanel/'
 import adminItems from './AdminPanel/AdminMenu'
 import { AlertDialog } from './AlertDialog'
-import {
-  AlertNotification,
-  AlertType,
-  staleAnswersLimit,
-} from './AlertNotification'
+import { AlertType, staleAnswersLimit } from './Question'
 import { AnswerHistory } from './AnswerHistory'
 import {
   createQuestionAnswers,
@@ -55,7 +51,7 @@ import { IconButton } from '@mui/material'
 
 const navbarHeight = 100
 const menuWidth = 250
-const maxPanelWidth = 1200
+const maxPanelWidth = 800
 const minPanelWidth = 200
 
 type StylingProps = {
@@ -340,11 +336,6 @@ const Content = ({ ...props }: ContentProps) => {
       }
     }
   }, [isCategorySubmitted])
-  ;<AlertNotification
-    type={AlertType.Multiple}
-    message={t('content.answerOutdatedOrIncomplete')}
-    size={0}
-  />
 
   const isSuperAdmin = useAppSelector(selectIsSuperAdmin)
   const isAdmin = useAppSelector(selectIsAdmin)

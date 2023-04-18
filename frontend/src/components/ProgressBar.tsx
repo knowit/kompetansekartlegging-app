@@ -5,6 +5,9 @@ import { LinearProgressProps, LinearProgress } from '@mui/material'
 export default function ProgressBar({ ...props }: ProgressProps) {
   const [progress, setProgress] = useState<number>(0)
 
+  console.log(props.alerts)
+  console.log(props.totalQuestions)
+
   useEffect(() => {
     const updateProgress = () => {
       const unfilledQuestions = props.alerts?.qidMap.size ?? 0
