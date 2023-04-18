@@ -11,10 +11,11 @@ import {
 } from '../types'
 import * as helper from '../helperFunctions'
 import * as customQueries from '../graphql/custom-queries'
+import { Dispatch, SetStateAction } from 'react'
 
 const createQuestionAnswers = (
   formDef: FormDefinition,
-  setCategories: React.Dispatch<React.SetStateAction<string[]>>
+  setCategories: Dispatch<SetStateAction<string[]>>
 ) => {
   // console.log("Creating questionAnswers with ", formDef);
   if (!formDef) return new Map()
@@ -61,9 +62,7 @@ const createQuestionAnswers = (
 }
 
 const fetchLastFormDefinition = async (
-  setFormDefinition: React.Dispatch<
-    React.SetStateAction<FormDefinition | null>
-  >,
+  setFormDefinition: Dispatch<SetStateAction<FormDefinition | null>>,
   createQuestionAnswers: (arg0: FormDefinition) => Map<any, any>,
   getUserAnswers: (arg0: FormDefinition) => Promise<void | UserAnswer[]>,
   setFirstAnswers: (arg0: any, arg1: any) => void
@@ -133,12 +132,12 @@ const fetchLastFormDefinition = async (
 const getUserAnswers = async (
   formDef: FormDefinition,
   userName: string,
-  setUserAnswers: React.Dispatch<React.SetStateAction<UserAnswer[]>>,
-  setActivePanel: React.Dispatch<React.SetStateAction<Panel>>,
-  setUserAnswersLoaded: React.Dispatch<React.SetStateAction<boolean>>,
-  setAnswerEditMode: React.Dispatch<React.SetStateAction<boolean>>,
-  setFirstTimeLogin: React.Dispatch<React.SetStateAction<boolean>>,
-  setScaleDescOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  setUserAnswers: Dispatch<SetStateAction<UserAnswer[]>>,
+  setActivePanel: Dispatch<SetStateAction<Panel>>,
+  setUserAnswersLoaded: Dispatch<SetStateAction<boolean>>,
+  setAnswerEditMode: Dispatch<SetStateAction<boolean>>,
+  setFirstTimeLogin: Dispatch<SetStateAction<boolean>>,
+  setScaleDescOpen: Dispatch<SetStateAction<boolean>>,
   isSmall: boolean
 ) => {
   let nextToken: string | null = null
@@ -208,11 +207,9 @@ const getUserAnswers = async (
 const setFirstAnswers = (
   quAns: Map<string, QuestionAnswer[]>,
   newUserAnswers: UserAnswer[] | void,
-  setQuestionAnswers: React.Dispatch<
-    React.SetStateAction<Map<string, QuestionAnswer[]>>
-  >,
-  setAnswersBeforeSubmitted: React.Dispatch<
-    React.SetStateAction<Map<string, QuestionAnswer[]>>
+  setQuestionAnswers: Dispatch<SetStateAction<Map<string, QuestionAnswer[]>>>,
+  setAnswersBeforeSubmitted: Dispatch<
+    SetStateAction<Map<string, QuestionAnswer[]>>
   >
 ) => {
   // console.log(quAns, newUserAnswers);

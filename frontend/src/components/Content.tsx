@@ -1,5 +1,5 @@
 import { Drawer, List, ListItemButton, ListItemText } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { CreateQuestionAnswerInput, QuestionType } from '../API'
 import * as customQueries from '../graphql/custom-queries'
 import * as helper from '../helperFunctions'
@@ -104,7 +104,7 @@ export enum MenuButton {
 
 const updateCategoryAlerts = (
   questionAnswers: Map<string, QuestionAnswer[]>,
-  setAlerts: React.Dispatch<React.SetStateAction<AlertState | undefined>>,
+  setAlerts: Dispatch<SetStateAction<AlertState | undefined>>,
   t: TFunction<'translation', undefined, 'translation'>
 ) => {
   const msNow = Date.now()

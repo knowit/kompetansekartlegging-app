@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FC, useState } from 'react'
 
 import Button from '@mui/material/Button'
 
@@ -20,7 +20,7 @@ interface AddOrganizationDialogProps {
   open: boolean
 }
 
-const AddOrganizationDialog: React.FC<AddOrganizationDialogProps> = ({
+const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
   onCancel,
   onConfirm,
   open,

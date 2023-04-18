@@ -1,6 +1,6 @@
 import { QuestionType } from './API'
 import { AlertType } from './components/Question'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, MutableRefObject, SetStateAction } from 'react'
 import { OverviewType } from './components/TypedOverviewChart'
 
 export interface UserState {
@@ -356,7 +356,7 @@ export type YourAnswerProps = {
   isSmall: boolean
   alerts: AlertState | undefined
   collapseMobileCategories: boolean
-  categoryNavRef: React.MutableRefObject<HTMLInputElement | null>
+  categoryNavRef: MutableRefObject<HTMLInputElement | null>
   scrollToTop: () => void
   setCollapseMobileCategories: (collapseMobileCategories: boolean) => void
 }
@@ -440,9 +440,9 @@ export type ContentProps = {
   isSmall: boolean
   signout: () => void
   collapseMobileCategories: boolean
-  categoryNavRef: React.MutableRefObject<HTMLInputElement | null>
+  categoryNavRef: MutableRefObject<HTMLInputElement | null>
   scrollToTop: () => void
-  mobileNavRef: React.MutableRefObject<HTMLInputElement | null>
+  mobileNavRef: MutableRefObject<HTMLInputElement | null>
   setCollapseMobileCategories: (collapseMobileCategories: boolean) => void
   setScaleDescOpen: Dispatch<SetStateAction<boolean>>
   setFirstTimeLogin: Dispatch<SetStateAction<boolean>>

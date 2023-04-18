@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button'
-import { useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { roundDecimals } from '../helperFunctions'
 import { ChartData, ResultData, ResultDiagramProps } from '../types'
 import { CombinedChart } from './CombinedChart'
@@ -27,7 +27,7 @@ const recalculate = (
   createAverageData: () => ResultData[],
   createMedianData: () => ResultData[],
   createHighestData: () => ResultData[],
-  setChartData: React.Dispatch<React.SetStateAction<ChartData[]>>,
+  setChartData: Dispatch<SetStateAction<ChartData[]>>,
   isSmall: boolean
 ) => {
   let answerData: ResultData[] = []

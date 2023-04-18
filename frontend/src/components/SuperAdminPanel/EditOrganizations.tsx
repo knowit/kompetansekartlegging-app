@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FC, useState } from 'react'
 import CircularProgress from '@mui/material/CircularProgress'
 import IconButton from '@mui/material/IconButton'
 import TableBody from '@mui/material/TableBody'
@@ -30,7 +30,7 @@ interface OrganizationProps {
   deleteOrganization: (id: OrganizationInfo) => void
 }
 
-const Organization: React.FC<OrganizationProps> = ({
+const Organization: FC<OrganizationProps> = ({
   organization,
   deleteOrganization,
 }) => {
@@ -59,7 +59,7 @@ interface OrganizationTableProps {
   deleteOrganization: (id: OrganizationInfo) => void
 }
 
-const OrganizationTable: React.FC<OrganizationTableProps> = ({
+const OrganizationTable: FC<OrganizationTableProps> = ({
   organizations,
   deleteOrganization,
 }) => {
