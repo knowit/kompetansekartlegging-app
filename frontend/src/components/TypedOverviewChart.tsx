@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button'
 import { makeStyles } from '@mui/styles'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { roundDecimals } from '../helperFunctions'
 import { KnowitColors } from '../styles'
 import { ChartData, ResultData, ResultDiagramProps } from '../types'

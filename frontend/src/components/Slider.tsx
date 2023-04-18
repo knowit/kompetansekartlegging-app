@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { SliderProps } from '../types'
 import * as helper from '../helperFunctions'
 import { KnowitColors } from '../styles'

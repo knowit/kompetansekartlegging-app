@@ -1,7 +1,7 @@
 import { Button, ListItem } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import clsx from 'clsx'
-import React, { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { CreateQuestionAnswerInput, QuestionType } from '../API'
 import * as customQueries from '../graphql/custom-queries'
 import * as helper from '../helperFunctions'

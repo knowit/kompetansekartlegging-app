@@ -1,5 +1,3 @@
-import React from 'react'
-
 import commonStyles from './common.module.css'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'

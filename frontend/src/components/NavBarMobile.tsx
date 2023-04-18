@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   AppBar,
   Toolbar,
@@ -7,7 +8,6 @@ import {
   ListItem,
 } from '@mui/material'
 import { makeStyles } from '@mui/styles'
-import React from 'react'
 import { KnowitColors } from '../styles'
 import { NavBarPropsMobile } from '../types'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -94,7 +94,7 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
   const { t } = useTranslation()
   const style = navbarStyles()
   // const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [drawerOpen, setDrawerOpen] = React.useState(false)
+  const [drawerOpen, setDrawerOpen] = useState(false)
 
   // const handleDrawerToggle = () => {
   //   setMobileOpen(!mobileOpen);
