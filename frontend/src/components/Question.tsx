@@ -1,4 +1,3 @@
-import React from 'react'
 import { QuestionType } from '../API'
 import { QuestionProps, SliderKnowledgeMotivationValues } from '../types'
 import Slider from './Slider'

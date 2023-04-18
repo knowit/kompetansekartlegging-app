@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import { API, Auth, Hub } from 'aws-amplify'
 // import awsconfig from "./aws-exports";

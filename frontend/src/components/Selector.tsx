@@ -1,5 +1,3 @@
-import React from 'react'
-
 type Props = {
   radiobuttonChanged: (value: number, motivation: boolean) => void
   questionId: string
