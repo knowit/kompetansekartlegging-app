@@ -1,10 +1,4 @@
-import {
-  Container,
-  Drawer,
-  List,
-  ListItemButton,
-  ListItemText,
-} from '@mui/material'
+import { Drawer, List, ListItemButton, ListItemText } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { CreateQuestionAnswerInput, QuestionType } from '../API'
 import * as customQueries from '../graphql/custom-queries'
@@ -61,21 +55,33 @@ import { IconButton } from '@mui/material'
 
 const navbarHeight = 100
 const menuWidth = 250
+const maxPanelWidth = 1200
+const minPanelWidth = 200
 
 type StylingProps = {
   isSmall: boolean
 }
 
 const ContentContainer = styled.div`
-  .header {
+  #header {
     max-height: ${navbarHeight}px;
   }
 
-  .panel {
+  #panelContainer {
     padding-top: ${navbarHeight}px;
+    display: grid;
+    grid-template-columns:
+      minmax(10px, auto) minmax(${minPanelWidth}px, ${maxPanelWidth}px)
+      minmax(10px, auto);
+    margin-left: ${(props: StylingProps) =>
+      props.isSmall ? '0px' : `${menuWidth}px`};
   }
 
-  .menu {
+  #panel {
+    grid-column: 2;
+  }
+
+  #menu {
     .MuiPaper-root {
       width: ${(props: StylingProps) =>
         props.isSmall ? '100vw' : `${menuWidth}px`};
@@ -84,15 +90,9 @@ const ContentContainer = styled.div`
 
   ${(props: StylingProps) =>
     !props.isSmall &&
-    `
-      .panel {
-        margin-left:${menuWidth}px;
-        width: calc(100% - ${menuWidth}px);
-      }
-      .header {
+    `#header {
         width: calc(100% - ${menuWidth}px)
       }
-
     `}
 `
 
@@ -465,7 +465,7 @@ const Content = ({ ...props }: ContentProps) => {
   return (
     <ContentContainer isSmall={props.isSmall}>
       <Drawer
-        className="menu"
+        id="menu"
         variant={props.isSmall ? 'persistent' : 'permanent'}
         open={props.isSmall ? menuOpen : false}
         anchor="left"
@@ -531,7 +531,9 @@ const Content = ({ ...props }: ContentProps) => {
         isOpen={menuOpen}
       />
 
-      <Container className="panel">{setupPanel()}</Container>
+      <div id="panelContainer">
+        <div id="panel">{setupPanel()}</div>
+      </div>
 
       <AlertDialog
         setAlertDialogOpen={setAlertDialogOpen}

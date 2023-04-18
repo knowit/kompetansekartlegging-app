@@ -1,7 +1,6 @@
 import {
   AppBar,
   Avatar,
-  Box,
   Button,
   ClickAwayListener,
   Dialog,
@@ -37,7 +36,7 @@ const ToolbarContainer = styled.div`
   svg {
     color: ${KnowitColors.white};
   }
-  .toolbar {
+  #toolbar {
     display: flex;
     justify-content: space-between;
     h1 {
@@ -127,9 +126,9 @@ const NavBar = ({
   }, [i18n.language])
 
   return (
-    <AppBar className="header">
+    <AppBar id="header">
       <ToolbarContainer>
-        <Toolbar className="toolbar">
+        <Toolbar id="toolbar">
           {isSmall && (
             <IconButton onClick={() => toggleMenuOpen(!isOpen)}>
               <MenuIcon />
@@ -148,7 +147,7 @@ const NavBar = ({
                 open={isHelpModalOpen}
                 onClose={() => setHelpModalOpen(false)}
               >
-                <div className="modalContent">
+                <div id="modalContent">
                   <ReactMarkdown>{helpMarkdown}</ReactMarkdown>
                 </div>
               </Modal>
