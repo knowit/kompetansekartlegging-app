@@ -48,11 +48,12 @@ import NavBar from './NavBar'
 import styled from '@emotion/styled'
 import { Close } from '@mui/icons-material'
 import { IconButton } from '@mui/material'
-
-const navbarHeight = 100
-const menuWidth = 250
-const maxPanelWidth = 800
-const minPanelWidth = 200
+import {
+  navbarHeight,
+  minPanelWidth,
+  maxPanelWidth,
+  menuWidth,
+} from '../styles'
 
 type StylingProps = {
   isSmall: boolean

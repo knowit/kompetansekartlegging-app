@@ -14,3 +14,8 @@ export const KnowitColors = {
   flamingo: '#F3C8BA',
   lightPink: '#F7E1DD',
 }
+
+export const navbarHeight = 100
+export const menuWidth = 250
+export const maxPanelWidth = 800
+export const minPanelWidth = 200
