@@ -1,9 +1,6 @@
 import {
   Panel,
-  FormDefinition,
   UserAnswer,
-  Question,
-  QuestionAnswer,
   FormDefinitionByCreatedAtPaginated,
   FormDefinitionPaginated,
   UserFormPaginated,
@@ -11,14 +8,21 @@ import {
 } from '../types'
 import * as helper from '../helperFunctions'
 import * as customQueries from '../graphql/custom-queries'
+import { Question } from '../api/questions/types'
+import { QuestionAnswer } from '../api/questionAnswers/types'
+import { Catalog } from '../api/catalogs/types'
+import { getAllCatalogs } from '../api/catalogs'
+import { useAppSelector } from '../redux/hooks'
+import { selectUserState } from '../redux/User'
 
 const createQuestionAnswers = (
-  formDef: FormDefinition,
+  catalog: Catalog,
   setCategories: React.Dispatch<React.SetStateAction<string[]>>
 ) => {
   // console.log("Creating questionAnswers with ", formDef);
-  if (!formDef) return new Map()
-  const categories = formDef.questions.items
+  if (!catalog) return new Map()
+  const categories = catalog.questions.items
+    // TODO
     .map((item) => item.category)
     .filter(
       (category, index, array) =>
@@ -35,7 +39,7 @@ const createQuestionAnswers = (
   setCategories(categories.map((cat) => cat.text))
   const quAnsMap = new Map<string, QuestionAnswer[]>()
   categories.forEach((cat) => {
-    const quAns: QuestionAnswer[] = formDef.questions.items
+    const quAns: QuestionAnswer[] = catalog.questions.items
       .filter((question) => question.category.id === cat.id)
       .sort((a, b) => {
         if (a.index && b.index == null) return -1
@@ -60,13 +64,12 @@ const createQuestionAnswers = (
   return quAnsMap
 }
 
-const fetchLastFormDefinition = async (
-  setFormDefinition: React.Dispatch<
-    React.SetStateAction<FormDefinition | null>
-  >,
-  createQuestionAnswers: (arg0: FormDefinition) => Map<any, any>,
-  getUserAnswers: (arg0: FormDefinition) => Promise<void | UserAnswer[]>,
-  setFirstAnswers: (arg0: any, arg1: any) => void
+const fetchLastCatalog = async (
+  setCatalog: React.Dispatch<React.SetStateAction<Catalog | null>>,
+  createQuestionAnswers: (arg0: Catalog) => Map<any, any>,
+  getUserAnswers: (arg0: Catalog) => Promise<void | UserAnswer[]>,
+  setFirstAnswers: (arg0: any, arg1: any) => void,
+  organization_id: string
 ) => {
   let nextToken: string | null = null
   let nextFormToken: string | null = null // For some reason, the custom query returns empty response if the first item is from a different organization
@@ -107,7 +110,7 @@ const fetchLastFormDefinition = async (
     } while (nextToken || (nextFormToken && !foundOrganizationForm))
 
     if (formDefPaginated) {
-      const formDef: FormDefinition = {
+      const catalog: Catalog = {
         id: formDefPaginated.id,
         createdAt: formDefPaginated.createdAt,
         questions: {
@@ -115,7 +118,7 @@ const fetchLastFormDefinition = async (
         },
       }
       // console.log("FormDef:", formDef);
-      setFormDefinition(formDef)
+      setCatalog(catalog)
       const quAns = createQuestionAnswers(formDef)
       const userAnswers = await getUserAnswers(formDef)
       setFirstAnswers(quAns, userAnswers)
@@ -224,7 +227,7 @@ const setFirstAnswers = (
         if (newUserAnswers) {
           const userAnswer = newUserAnswers.filter(
             (userAnswer) =>
-              userAnswer.question.id === questionAnswer.question.id
+              userAnswer.question.id === questionAnswer.question_id
           )
           if (userAnswer.length === 0) return questionAnswer
           return {
@@ -237,7 +240,7 @@ const setFirstAnswers = (
               : questionAnswer.motivation,
             customScaleValue: userAnswer[0]
               ? userAnswer[0].customScaleValue
-              : questionAnswer.customScaleValue,
+              : questionAnswer.custom_scale_value,
             updatedAt: Date.parse(userAnswer[0].updatedAt) || 0,
           }
         }
@@ -252,7 +255,7 @@ const setFirstAnswers = (
 
 export {
   getUserAnswers,
-  fetchLastFormDefinition,
+  fetchLastCatalog,
   createQuestionAnswers,
   setFirstAnswers,
 }

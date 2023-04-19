@@ -3,7 +3,7 @@ export interface Question {
   text: string | null
   topic: string
   index: number
-  type: 'custom_scale_value' | 'knowledge_motivation' | 'text' | null
+  type: QuestionType
   scale_start: string | null
   scale_middle: string | null
   scale_end: string | null
@@ -13,6 +13,13 @@ export interface Question {
 export interface GetQuestionReqQuery {
   id: string | undefined
   category_id: string | undefined
+}
+
+export enum QuestionType {
+  'custom_scale_labels',
+  'knowledge_motivation',
+  'text',
+  null,
 }
 
 export type QuestionInput = Omit<Question, 'id'>

@@ -1,15 +1,16 @@
 import { makeStyles } from '@material-ui/core'
 import React from 'react'
-import { QuestionType } from '../API'
 import {
   AnswerDiagramProps,
   CustomScaleLabelsChartData,
   ChartData,
-  QuestionAnswer,
 } from '../types'
 import { CustomScaleChart } from './CustomScaleChart'
 import { CombinedChart } from './CombinedChart'
 import { CombinedChartMobile } from './CombinedChartMobile'
+import { QuestionAnswer } from '../api/questionAnswers/types'
+import { QuestionType } from '../api/questions/types'
+import { getQuestionById, getQuestionsByCategory } from '../api/questions'
 
 const answerDiagramStyle = makeStyles({
   answerDiagramContainer: {
@@ -30,11 +31,11 @@ const scores = (
   return {
     valueKnowledge: [
       knowledgeStart,
-      knowledgeStart + (quAns.knowledge === -1 ? 0 : quAns.knowledge),
+      knowledgeStart + (quAns.knowledge == null ? 0 : quAns.knowledge),
     ],
     valueMotivation: [
       motivationStart,
-      motivationStart + (quAns.motivation === -1 ? 0 : quAns.motivation),
+      motivationStart + (quAns.motivation == null ? 0 : quAns.motivation),
     ],
   }
 }
@@ -47,7 +48,7 @@ const scoresCustomScaleLabels = (
   quAns: QuestionAnswer
 ): CustomScaleLabelsScores => {
   return {
-    value: quAns.customScaleValue === -1 ? 0 : quAns.customScaleValue,
+    value: quAns.custom_scale_value == null ? 0 : quAns.custom_scale_value,
   }
 }
 
@@ -56,13 +57,21 @@ export default function AnswerDiagram({ ...props }: AnswerDiagramProps) {
 
   const activeCategory = props.activeCategory
   const questionAnswers = props.questionAnswers.get(activeCategory)
-  const knowledgeMotivationQuAns = questionAnswers?.filter(
-    (quAns) =>
-      quAns.question.type === null ||
-      quAns.question.type === QuestionType.KnowledgeMotivation
-  )
+  getQuestionsByCategory(activeCategory)
+  const knowledgeMotivationQuAns = questionAnswers?.filter(async (quAns) => {
+    const question = await getQuestionById(quAns.question_id).then(
+      (a) => a.data
+    )
+    if (!question) {
+      return null
+    }
+    return (
+      question.type === null ||
+      question.type === QuestionType.knowledge_motivation
+    )
+  })
   const customScaleLabelsQuAns = questionAnswers?.filter(
-    (quAns) => quAns.question.type === QuestionType.CustomScaleLabels
+    (quAns) => quAns.question.type === QuestionType.custom_scale_label
   )
 
   const knowledgeStart = props.isMobile ? 7 : 0

@@ -9,20 +9,19 @@ import AddIcon from '@material-ui/icons/Add'
 
 import { Auth } from 'aws-amplify'
 import { useTranslation } from 'react-i18next'
-import { QuestionType } from '../../../API'
 import { ORGANIZATION_ID_ATTRIBUTE } from '../../../constants'
+import { QuestionInput, QuestionType } from '../../../api/questions/types'
 import Button from '../../mui/Button'
+import { listCategoriesByFormDefinitionID } from '../catalogApi'
 import {
   createQuestion,
-  listCategoriesByFormDefinitionID,
-  listQuestionsByCategoryID,
-} from '../catalogApi'
-import { compareByIndex } from '../helpers'
-import useApiGet from '../useApiGet'
+  getQuestionsByCategory,
+} from '../../../api/questions/index'
 import AddQuestionDialog from './AddQuestionDialog'
 import RouterBreadcrumbs from './Breadcrumbs'
 import QuestionList from './QuestionList'
-import useQuery from './useQuery'
+import { useQuery } from '@tanstack/react-query'
+import { default as useQ } from './useQuery'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -58,31 +57,34 @@ const EditCategory = () => {
   const classes = useStyles()
   const { id, formDefinitionID } = useParams<Record<string, string>>()
 
-  const memoizedCallback = useCallback(
+  const memoizedCategoriesCallback = useCallback(
     () => listCategoriesByFormDefinitionID(formDefinitionID),
+    // [TODO] add sorting by index of categories and change to SQL api
     [formDefinitionID]
   )
   const {
-    result: categories,
+    data: categories,
     error: errorCategories,
-    loading: loadingCategories,
-  } = useApiGet({
-    getFn: memoizedCallback,
-    cmpFn: compareByIndex,
+    isLoading: loadingCategories,
+  } = useQuery({
+    queryKey: ['memoizedCategoriesCallback'],
+    queryFn: memoizedCategoriesCallback,
   })
 
   const memoizedQuestionsCallback = useCallback(
-    () => listQuestionsByCategoryID(id),
+    () =>
+      getQuestionsByCategory(id).then((response) =>
+        response.data?.sort((qA, qB) => qB.index - qA.index)
+      ),
     [id]
   )
   const {
-    result: questions,
+    data: questions,
     error: errorQuestions,
-    loading: loadingQuestions,
-    refresh: refreshQuestions,
-  } = useApiGet({
-    getFn: memoizedQuestionsCallback,
-    cmpFn: compareByIndex,
+    isLoading: loadingQuestions,
+  } = useQuery({
+    queryKey: ['memoizedQuestionsCallback'],
+    queryFn: memoizedQuestionsCallback,
   })
 
   const [showAddQuestionDialog, setShowAddQuestionDialog] =
@@ -95,21 +97,22 @@ const EditCategory = () => {
   ) => {
     // the dialog makes sure questionConfig contains the correct data
     // might be a good idea to double check here
-    await createQuestion(
-      topic,
-      description,
-      questionType,
-      questions.length + 1,
-      formDefinitionID,
-      id,
-      questionConfig,
-      user ? user.attributes[ORGANIZATION_ID_ATTRIBUTE] : ''
-    )
+    const questionInfo: QuestionInput = {
+      text: description,
+      topic: topic,
+      index: questions ? questions.length + 1 : 0,
+      type: questionType,
+      scale_start: null, // [TODO] add scale
+      scale_middle: null,
+      scale_end: null,
+      category_id: id,
+    }
+    await createQuestion(questionInfo)
     setShowAddQuestionDialog(false)
-    refreshQuestions()
   }
 
-  const query = useQuery()
+  // [TODO]
+  const query = useQ()
   const formDefinitionLabel = query.get('formDefinitionLabel')
   const label = query.get('label')
   const breadCrumbs = {
@@ -141,10 +144,9 @@ const EditCategory = () => {
               <QuestionList
                 id={id}
                 categories={categories}
-                questions={questions}
+                questions={questions ? questions : []}
                 formDefinitionID={formDefinitionID}
                 formDefinitionLabel={formDefinitionLabel}
-                refreshQuestions={refreshQuestions}
               />
             </Container>
             <div className={classes.floatingMenu}>

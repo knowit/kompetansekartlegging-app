@@ -3,19 +3,18 @@ import { useState } from 'react'
 import List from '@material-ui/core/List'
 
 import { useTranslation } from 'react-i18next'
-import { Question } from '../../../API'
+import { Question, QuestionInput } from '../../../api/questions/types'
 import {
   deleteQuestion as deleteQuestionApi,
-  updateQuestionIndex,
-  updateQuestionTextTopicAndCategory,
-} from '../catalogApi'
+  updateQuestion,
+} from '../../../api/questions/index'
 import DeleteQuestionDialog from './DeleteQuestionDialog'
 import QuestionListItem from './QuestionListItem'
 
 type QuestionListProps = {
   id: string
   categories: any[]
-  questions: any[]
+  questions: Question[]
   formDefinitionID: string
   formDefinitionLabel: string | null
   refreshQuestions: any
@@ -31,18 +30,19 @@ const QuestionList = ({
 
   const [showDeleteQuestionDialog, setShowDeleteQuestionDialog] =
     useState<boolean>(false)
-  const [questionToDelete, setQuestionToDelete] = useState<any>()
-  const deleteQuestion = (question: any) => {
+  const [questionToDelete, setQuestionToDelete] = useState<Question | null>()
+  const deleteQuestion = (question: Question) => {
     setShowDeleteQuestionDialog(true)
     setQuestionToDelete(question)
   }
   const deleteQuestionConfirm = async () => {
-    await deleteQuestionApi(questionToDelete.id)
+    if (questionToDelete) {
+      await deleteQuestionApi(questionToDelete.id)
+    }
     setShowDeleteQuestionDialog(false)
-    refreshQuestions()
   }
 
-  const moveQuestion = async (question: any, direction: number) => {
+  const moveQuestion = async (question: Question, direction: number) => {
     setEnableUpdates(false)
 
     const me = question
@@ -53,28 +53,30 @@ const QuestionList = ({
       questionsCopy[
         questionsCopy.findIndex((q) => q.index === question.index) + direction
       ]
-    await updateQuestionIndex(me, swapWith.index)
-    await updateQuestionIndex(swapWith, me.index)
+
+    const questionInput: QuestionInput = me
+    questionInput.index = swapWith.index
+    const swapWithInput: QuestionInput = swapWith
+    swapWithInput.index = me.index
+
+    await updateQuestion(me.id, questionInput)
+    await updateQuestion(swapWith.id, swapWith)
 
     setEnableUpdates(true)
-    refreshQuestions()
   }
 
   const saveQuestion = async (
-    question: any,
+    question: Question,
     topic: string,
     text: string,
     categoryID: string,
     questionConfig: any
   ) => {
-    await updateQuestionTextTopicAndCategory(
-      question,
-      topic,
-      text,
-      categoryID,
-      questionConfig
-    )
-    refreshQuestions()
+    const questionInput: QuestionInput = question
+    questionInput.topic = topic
+    questionInput.text = text
+    questionInput.category_id = categoryID
+    await updateQuestion(question.id, questionInput)
   }
 
   return (
@@ -83,11 +85,11 @@ const QuestionList = ({
         <p>{t('admin.editCatalogs.noQuestionsInThisCategoryYet')}</p>
       )}
       <List>
-        {questions.map((q: Question, ind: number) => (
+        {questions.map((q: Question, index: number) => (
           <QuestionListItem
             key={q.id}
             question={q}
-            index={ind}
+            index={index}
             moveQuestion={moveQuestion}
             saveQuestion={saveQuestion}
             deleteQuestion={deleteQuestion}
