@@ -1,10 +1,11 @@
-import boto3
-from os import environ
-import pandas as pd
-from io import StringIO
 import math
-import uuid
 import re
+import uuid
+from io import StringIO
+from os import environ
+
+import boto3
+import pandas as pd
 
 s3Resource = boto3.resource("s3")
 s3BucketFrom = environ.get("TRANSFORMED_DATA_BUCKET")
@@ -113,9 +114,9 @@ def create_dummy_data():
     organization_id = str(uuid.uuid4())
     sqlInsertStatement = f"INSERT INTO organization (id, organization_name, identifier_attribute, temp_org_id)\nVALUES " \
         f"({getValueOnSqlFormat(organization_id)}, 'dummy', 'dummy', 'dummy') ON CONFLICT (organization_name) DO NOTHING;\n"
-    sqlInsertStatement += "INSERT INTO \"user\" (id, mail, group_id, organization_id)\nVALUES " \
-        f"({getValueOnSqlFormat(str(uuid.uuid4()))}, 'dummyUser@dummy', NULL, {getValueOnSqlFormat(organization_id)}) " \
-        "ON CONFLICT (mail) DO NOTHING;"
+    sqlInsertStatement += "INSERT INTO \"user\" (username, group_id, organization_id)\nVALUES " \
+        f"('dummyUser@dummy', NULL, {getValueOnSqlFormat(organization_id)}) " \
+        "ON CONFLICT (username) DO NOTHING;"
     return sqlInsertStatement
 
 
@@ -184,35 +185,35 @@ def questionSQL(file, start, end):
 
 
 def questionAnswerSQL(file, start, end):
-    sqlInsertStatment = "INSERT INTO question_answer (id, question_id, knowledge, motivation, custom_scale_value, text_value, user_id)\nSELECT * FROM (\nVALUES"
+    sqlInsertStatment = "INSERT INTO question_answer (id, question_id, knowledge, motivation, custom_scale_value, text_value, user_username)\nSELECT * FROM (\nVALUES"
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += f"\n({getValueOnSqlFormat(row.id, isUUID=True)}," \
             f"{getValueOnSqlFormat(row.questionID, isUUID=True)}," \
             f"{getValueOnSqlFormat(row.knowledge, isNumber=True)},{getValueOnSqlFormat(row.motivation, isNumber=True)}," \
             f"{getValueOnSqlFormat(row.customScaleValue, isNumber=True)},{getValueOnSqlFormat(row.textValue)}," \
-            f"(SELECT COALESCE ((SELECT u.id FROM \"user\" u WHERE u.mail = {getValueOnSqlFormat(row.owner)}),(SELECT du.id FROM \"user\" du WHERE du.mail = {getValueOnSqlFormat('dummyUser@dummy')})))),"
+            f"{getValueOnSqlFormat(row.owner)},"
     sqlInsertStatment = sqlInsertStatment.rstrip(sqlInsertStatment[-1])
-    sqlInsertStatment += ") as x (id, question_id, knowledge, motivation, custom_scale_value, text_value, user_id) WHERE EXISTS (SELECT 1 FROM question q WHERE q.id = x.question_id) ON CONFLICT DO NOTHING;"
+    sqlInsertStatment += ") as x (id, question_id, knowledge, motivation, custom_scale_value, text_value, user_username) WHERE EXISTS (SELECT 1 FROM question q WHERE q.id = x.question_id) ON CONFLICT DO NOTHING;"
     print(sqlInsertStatment)
     return sqlInsertStatment
 
 
 def userSQL(file, start, end):
-    sqlInsertStatment = "INSERT INTO \"user\" (id, mail, group_id, organization_id)\nVALUES"
+    sqlInsertStatment = "INSERT INTO \"user\" (username, group_id, organization_id)\nVALUES"
     for row in file.loc[start:end].itertuples():
-        sqlInsertStatment += f"\n({getValueOnSqlFormat(str(uuid.uuid4()), isUUID=True)},{getValueOnSqlFormat(row.id)}," \
+        sqlInsertStatment += f"\n({getValueOnSqlFormat(row.id)}," \
             f"NULL,(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)})),"
     sqlInsertStatment = sqlInsertStatment.rstrip(
-        sqlInsertStatment[-1]) + " ON CONFLICT (mail) DO NOTHING;"
+        sqlInsertStatment[-1]) + " ON CONFLICT (username) DO NOTHING;"
     print(sqlInsertStatment)
     return sqlInsertStatment
 
 
 def groupSQL(file, start, end):
-    sqlInsertStatment = "INSERT INTO \"group\" (id, organization_id, group_leader_id)\nVALUES"
+    sqlInsertStatment = "INSERT INTO \"group\" (id, organization_id, group_leader_username)\nVALUES"
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += f"\n({getValueOnSqlFormat(row.id, isUUID=True)}," \
-            f"(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)}), (SELECT COALESCE((SELECT u.id FROM \"user\" u WHERE u.mail = {getValueOnSqlFormat(row.groupLeaderUsername)}), (SELECT du.id FROM \"user\" du WHERE du.mail = {getValueOnSqlFormat('dummyUser@dummy')})))),"
+            f"(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)}), {getValueOnSqlFormat(row.groupLeaderUsername)},"
     sqlInsertStatment = sqlInsertStatment.rstrip(
         sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
     print(sqlInsertStatment)
@@ -222,7 +223,7 @@ def groupSQL(file, start, end):
 def add_group_id_to_user(file, start, end):
     sqlUpdateStatement = ""
     for row in file.loc[start:end].itertuples():
-        sqlUpdateStatement += f"UPDATE \"user\"\n SET group_id = {getValueOnSqlFormat(row.groupID)}\nWHERE mail = {getValueOnSqlFormat(row.id)};"
+        sqlUpdateStatement += f"UPDATE \"user\"\n SET group_id = {getValueOnSqlFormat(row.groupID)}\nWHERE username = {getValueOnSqlFormat(row.id)};"
     print(sqlUpdateStatement)
     return sqlUpdateStatement
 

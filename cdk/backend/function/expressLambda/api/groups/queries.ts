@@ -37,19 +37,12 @@ const listUsersInGroup = async ({ group_id }: GetUsersInput) => {
   })
 }
 
-const upsert = async ({ id, mail, group_id, organization_id }: UserInput) => {
+const upsert = async ({ username, group_id, organization_id }: UserInput) => {
   const parameters: SqlParameter[] = [
     {
-      name: 'id',
+      name: 'username',
       value: {
-        stringValue: id,
-      },
-      typeHint: TypeHint.UUID,
-    },
-    {
-      name: 'mail',
-      value: {
-        stringValue: mail,
+        stringValue: username,
       },
     },
     {
@@ -68,41 +61,41 @@ const upsert = async ({ id, mail, group_id, organization_id }: UserInput) => {
     },
   ]
 
-  const query = `INSERT INTO "user" (id, mail, group_id, organization_id) 
-        VALUES (:id, :mail, :group_id, :organization_id) 
-        ON CONFLICT (id) 
+  const query = `INSERT INTO "user" (username, group_id, organization_id) 
+        VALUES (:username, :group_id, :organization_id) 
+        ON CONFLICT (username) 
         DO UPDATE SET mail = :mail, group_id = :group_id, organization_id = :organization_id 
-        WHERE excluded.id=:id 
+        WHERE excluded.username=:username 
         RETURNING *`
 
   return await sqlQuery({
-    message: `🚀 ~ > User with id '${id}' is now in group with id '${group_id}'.`,
+    message: `🚀 ~ > User with username '${username}' is now in group with id '${group_id}'.`,
     query,
     parameters,
   })
 }
 
-const deleteUser = async ({ id }: DeleteUserInput) => {
+const deleteUser = async ({ username }: DeleteUserInput) => {
   const parameters: SqlParameter[] = [
     {
-      name: 'id',
+      name: 'username',
       value: {
-        stringValue: id,
+        stringValue: username,
       },
       typeHint: TypeHint.UUID,
     },
   ]
-  const query = 'DELETE FROM "user" WHERE id = :id RETURNING *'
+  const query = 'DELETE FROM "user" WHERE username = :username RETURNING *'
 
   return await sqlQuery({
-    message: `🚀 ~ > User with id '${id}' deleted.`,
+    message: `🚀 ~ > User with username '${username}' deleted.`,
     query,
     parameters,
   })
 }
 
 const createGroup = async ({
-  group_leader_id,
+  group_leader_username,
   organization_id,
 }: GroupInput) => {
   const generatedgroup_id = uuidv4()
@@ -123,20 +116,20 @@ const createGroup = async ({
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'group_leader_id',
+      name: 'group_leader_username',
       value: {
-        stringValue: group_leader_id,
+        stringValue: group_leader_username,
       },
       typeHint: TypeHint.UUID,
     },
   ]
 
-  const query = `INSERT INTO "group" (id, organization_id, group_leader_id)
-  VALUES (:id, :organization_id, :group_leader_id)
+  const query = `INSERT INTO "group" (id, organization_id, group_leader_username)
+  VALUES (:id, :organization_id, :group_leader_username)
   RETURNING *`
 
   return await sqlQuery({
-    message: `🚀 ~ > Created group with id '${generatedgroup_id}' and group leader '${group_leader_id}'.`,
+    message: `🚀 ~ > Created group with id '${generatedgroup_id}' and group leader '${group_leader_username}'.`,
     query,
     parameters,
   })
@@ -163,7 +156,7 @@ const deleteGroup = async ({ id }: DeleteGroupInput) => {
 
 const updateGroupLeader = async (
   { id }: GetGroupInput,
-  { group_leader_id }: UpdateGroupLeaderInput
+  { group_leader_username }: UpdateGroupLeaderInput
 ) => {
   const parameters: SqlParameter[] = [
     {
@@ -174,21 +167,21 @@ const updateGroupLeader = async (
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'group_leader_id',
+      name: 'group_leader_username',
       value: {
-        stringValue: group_leader_id,
+        stringValue: group_leader_username,
       },
       typeHint: TypeHint.UUID,
     },
   ]
 
   const query = `UPDATE "group"
-  SET group_leader_id = :group_leader_id
+  SET group_leader_username = :group_leader_username
   WHERE id = :id 
   RETURNING *`
 
   return await sqlQuery({
-    message: `🚀 ~ > '${group_leader_id}' is now leader for group with id '${id}'.`,
+    message: `🚀 ~ > '${group_leader_username}' is now leader for group with id '${id}'.`,
     query,
     parameters,
   })

@@ -47,8 +47,7 @@ CREATE TABLE IF NOT EXISTS question(
     category_id UUID NOT NULL references category(id)
 );
 CREATE TABLE IF NOT EXISTS "user"(
-    id UUID PRIMARY KEY NOT NULL,
-    mail VARCHAR(255) NOT NULL UNIQUE,
+    username VARCHAR(255) PRIMARY KEY NOT NULL,
     organization_id UUID NOT NULL references organization(id)
 );
 CREATE TABLE IF NOT EXISTS question_answer(
@@ -58,7 +57,7 @@ CREATE TABLE IF NOT EXISTS question_answer(
     custom_scale_value REAL,
     text_value TEXT,
     question_id UUID NOT NULL references question(id),
-    user_id UUID NOT NULL references "user"(id)
+    user_username VARCHAR(255) NOT NULL references "user"(username)
 );
 CREATE TABLE IF NOT EXISTS "group"(
     id UUID PRIMARY KEY NOT NULL,
@@ -67,4 +66,4 @@ CREATE TABLE IF NOT EXISTS "group"(
 ALTER TABLE "user"
 ADD IF NOT EXISTS group_id UUID references "group"(id);
 ALTER TABLE "group"
-ADD IF NOT EXISTS group_leader_id UUID NOT NULL references "user"(id);
+ADD IF NOT EXISTS group_leader_username VARCHAR(255) NOT NULL references "user"(username);

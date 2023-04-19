@@ -45,11 +45,10 @@ router.post<unknown, unknown, AddUserInput, GetGroupInput>(
   async (req, res, next) => {
     try {
       const { id: group_id } = req.query
-      const { id, mail, organization_id } = req.body
+      const { username, organization_id } = req.body
       const upsertResponse = await Group.upsert({
         group_id,
-        mail,
-        id,
+        username,
         organization_id,
       })
 
