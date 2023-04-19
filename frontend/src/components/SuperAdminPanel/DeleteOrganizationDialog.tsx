@@ -26,6 +26,7 @@ const DeleteOrganizationDialog: FC<DeleteOrganiationDialogProps> = ({
   return (
     <Dialog
       open={open}
+      onClose={onCancel}
       PaperProps={{
         style: { borderRadius: 30 },
       }}
