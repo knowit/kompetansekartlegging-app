@@ -1,5 +1,4 @@
 import makeStyles from '@mui/styles/makeStyles'
-import React from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   BarChart,

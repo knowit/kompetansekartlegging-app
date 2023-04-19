@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import { CardContent, Typography } from '@mui/material'
 import { listAllFormDefinitionsForLoggedInUser } from './catalogApi'

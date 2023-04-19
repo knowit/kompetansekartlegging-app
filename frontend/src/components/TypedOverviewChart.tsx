@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button'
 import { makeStyles } from '@mui/styles'
-import React, { useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { roundDecimals } from '../helperFunctions'
 import { KnowitColors } from '../styles'
 import { ChartData, ResultData, ResultDiagramProps } from '../types'
@@ -86,7 +86,7 @@ const recalculate = (
   createAverageData: () => ResultData[],
   createMedianData: () => ResultData[],
   createHighestData: () => ResultData[],
-  setChartData: React.Dispatch<React.SetStateAction<ChartData[]>>,
+  setChartData: Dispatch<SetStateAction<ChartData[]>>,
   isMobile: boolean
 ) => {
   let answerData: ResultData[] = []

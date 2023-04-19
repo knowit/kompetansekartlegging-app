@@ -1,4 +1,4 @@
-import React from 'react'
+import { FunctionComponent, MouseEventHandler, SVGProps } from 'react'
 import * as Icon from '../icons/iconController'
 import { makeStyles } from '@mui/styles'
 import clsx from 'clsx'
@@ -94,7 +94,7 @@ type ScaleContainerProps = {
 }
 
 type ScaleContainerObject = {
-  icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>
+  icon: FunctionComponent<SVGProps<SVGSVGElement>>
   heading: string
   text: string
 }
@@ -169,7 +169,7 @@ const getMotivation = (): ScaleContainerObject[] => [
 ]
 
 type DescriptionTableProps = {
-  onClose: React.MouseEventHandler<HTMLButtonElement>
+  onClose: MouseEventHandler<HTMLButtonElement>
   isMobile: boolean
 }
 

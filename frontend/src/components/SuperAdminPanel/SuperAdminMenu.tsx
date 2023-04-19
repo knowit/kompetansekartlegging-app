@@ -1,14 +1,14 @@
+import { Dispatch, SetStateAction } from 'react'
 import { Button } from '@mui/material'
 import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
 import { SubmenuCategory } from './SuperAdminPanel'
-import React from 'react'
 import { Panel } from '../../types'
 
 type SuperAdminMenuProps = {
   show: boolean
   selected: boolean
-  setShowFab: React.Dispatch<React.SetStateAction<boolean>>
+  setShowFab: Dispatch<SetStateAction<boolean>>
   style: any
   activeSubmenuItem: any
   setActiveSubmenuItem: any

@@ -1,4 +1,3 @@
-import React from 'react'
 import { makeStyles, createStyles } from '@mui/styles'
 import Button from '@mui/material/Button'
 import { KnowitColors } from '../../../styles'
