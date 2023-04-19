@@ -37,6 +37,26 @@ const listUsersInGroup = async ({ group_id }: GetUsersInput) => {
   })
 }
 
+const getGroup = async ({ id }: GetGroupInput) => {
+  const parameters: SqlParameter[] = [
+    {
+      name: 'id',
+      value: {
+        stringValue: id,
+      },
+      typeHint: TypeHint.UUID,
+    },
+  ]
+
+  const query = 'SELECT * FROM "group" WHERE id=:id'
+
+  return await sqlQuery({
+    message: `🚀 ~ > Group with id: ${id}`,
+    query,
+    parameters,
+  })
+}
+
 const upsert = async ({ username, group_id, organization_id }: UserInput) => {
   const parameters: SqlParameter[] = [
     {
@@ -192,6 +212,7 @@ export default {
   deleteUser,
   listGroups,
   listUsersInGroup,
+  getGroup,
   createGroup,
   deleteGroup,
   updateGroupLeader,
