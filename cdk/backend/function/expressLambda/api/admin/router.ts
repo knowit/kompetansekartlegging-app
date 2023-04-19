@@ -14,23 +14,27 @@ router.get<unknown, unknown, unknown, GetGroupQuery>(
       const members: AdminGetUserResponse[] = []
       const { id } = req.query
       const group = await Group.getGroup({ id })
-      console.log(group.data)
       const groupLeader = await getUser(group.data.group_leader_username)
       const groupMembers = await Group.listUsersInGroup({ group_id: id })
       console.log(groupMembers.data)
-      groupMembers.data.forEach(async (user: User) => {
-        const cognitoUser = await getUser(user.username)
-        members.push(cognitoUser)
-      })
-
-      const result = {
-        message: `🚀 ~ > Admin info on group with id ${id}`,
-        data: {
-          leader: groupLeader,
-          members: members,
-        },
-      }
-      res.status(200).json(result)
+      await Promise.all(
+        groupMembers.data.map(async (user: User) => {
+          return getUser(user.username).then((member: AdminGetUserResponse) => {
+            members.push(member)
+          })
+        })
+      )
+        .then(() => {
+          const result = {
+            message: `🚀 ~ > Admin info on group with id ${id}`,
+            data: {
+              leader: groupLeader,
+              members: members,
+            },
+          }
+          return result
+        })
+        .then(result => res.status(200).json(result))
     } catch (err) {
       console.error(err)
       next(err)
