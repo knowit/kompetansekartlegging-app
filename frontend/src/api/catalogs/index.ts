@@ -1,4 +1,5 @@
 import { apiDELETE, apiGET, apiPATCH, apiPOST } from '../client'
+import { GetOrganizationInput } from '../organizations/types'
 import {
   DeleteCatalogInput,
   Catalog,
@@ -8,6 +9,13 @@ import {
 } from './types'
 
 export const getAllCatalogs = async () => apiGET<Catalog>('/catalogs')
+
+export const getActiveCatalogByOrganization = async (
+  id: GetOrganizationInput
+) =>
+  apiGET<Catalog>('/catalogs/org/:id', {
+    queryStringParameters: id,
+  })
 
 export const createCatalog = async (data: CatalogInput) =>
   apiPOST<Catalog>('/catalogs', { body: data })

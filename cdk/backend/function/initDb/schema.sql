@@ -68,3 +68,5 @@ ALTER TABLE "user"
 ADD IF NOT EXISTS group_id UUID references "group"(id);
 ALTER TABLE "group"
 ADD IF NOT EXISTS group_leader_id UUID NOT NULL references "user"(id);
+ALTER TABLE organization
+ADD IF NOT EXISTS active_catalog_id UUID references "catalog"(id)
