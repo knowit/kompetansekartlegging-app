@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material'
-import { KnowitColors } from './styles'
+import { KnowitColors } from './styleconstants'
 
 // See: https://mui.com/material-ui/customization/palette/
 

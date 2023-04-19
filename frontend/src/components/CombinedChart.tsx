@@ -17,7 +17,7 @@ import {
   ValueType,
 } from 'recharts/types/component/DefaultTooltipContent'
 import { GetIcon } from '../icons/iconController'
-import { KnowitColors } from '../styles'
+import { KnowitColors } from '../styleconstants'
 import { CombinedChartProps } from '../types'
 import { OverviewType } from './TypedOverviewChart'
 

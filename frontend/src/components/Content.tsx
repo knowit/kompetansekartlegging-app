@@ -53,7 +53,7 @@ import {
   minPanelWidth,
   maxPanelWidth,
   menuWidth,
-} from '../styles'
+} from '../styleconstants'
 
 type StylingProps = {
   isSmall: boolean

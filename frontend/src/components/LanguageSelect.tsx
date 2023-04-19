@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { availableLanguages } from '../i18n/i18n'
 import { I18n as amplifyI18n } from 'aws-amplify'
 import LanguageIcon from '@mui/icons-material/Language'
-import { KnowitColors } from '../styles'
+import { KnowitColors } from '../styleconstants'
 
 type LanguageSelectProps = {
   iconColor: string

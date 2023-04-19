@@ -30,7 +30,7 @@ import { useTranslation } from 'react-i18next'
 import { NavBarPropsDesktop, UserRole } from '../types'
 import MenuIcon from '@mui/icons-material/Menu'
 import styled from '@emotion/styled'
-import { KnowitColors } from '../styles'
+import { KnowitColors } from '../styleconstants'
 
 const ToolbarContainer = styled.div`
   svg {

@@ -14,7 +14,7 @@ import {
   ValueType,
 } from 'recharts/types/component/DefaultTooltipContent'
 
-import { KnowitColors } from '../styles'
+import { KnowitColors } from '../styleconstants'
 import { CustomScaleChartProps } from '../types'
 import { useTranslation } from 'react-i18next'
 

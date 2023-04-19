@@ -4,7 +4,7 @@ import { wrapString } from '../helperFunctions'
 import { GetIcon } from '../icons/iconController'
 import { HighlightsProps, TopicScoreWithIcon } from '../types'
 import styled from '@emotion/styled'
-import { KnowitColors } from '../styles'
+import { KnowitColors } from '../styleconstants'
 
 type StylingProps = {
   isSmall: boolean

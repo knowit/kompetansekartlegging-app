@@ -10,7 +10,7 @@ import {
   ReferenceLine,
 } from 'recharts'
 import { GetIcon } from '../icons/iconController'
-import { KnowitColors } from '../styles'
+import { KnowitColors } from '../styleconstants'
 import { ChartData, CombinedChartProps } from '../types'
 import { wrapString } from '../helperFunctions'
 import { OverviewType } from './TypedOverviewChart'
