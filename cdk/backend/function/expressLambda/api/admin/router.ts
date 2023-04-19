@@ -30,10 +30,12 @@ router.get<unknown, unknown, unknown, GetGroupQuery>(
           members: members,
         },
       }
-      res.status(200).json()
+      res.status(200).json(result)
     } catch (err) {
       console.error(err)
       next(err)
     }
   }
 )
+
+export { router as adminRouter }
