@@ -6,7 +6,47 @@ import { useState } from 'react'
 import { ReactComponent as KnowitLogo } from '../Logotype-Knowit-Digital-white 1.svg'
 import { useTranslation } from 'react-i18next'
 import { LanguageSelect } from './LanguageSelect'
-import { KnowitColors } from '../styles'
+import { KnowitColors } from '../styleconstants'
+import { minPanelWidth, maxPanelWidth } from '../styleconstants'
+import styled from '@emotion/styled'
+
+interface IsSmallProp {
+  isSmall: boolean
+}
+
+const StyledLoginContainer = styled.div`
+  display: grid;
+  grid-template-columns:
+    minmax(10px, auto) minmax(${minPanelWidth}px, ${maxPanelWidth}px)
+    minmax(10px, auto);
+
+  grid-template-rows: 1fr 5fr 1fr;
+
+  main {
+    grid-column: 2;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    #heading {
+      grid-column: 1;
+      align-self: center;
+      svg {
+        path {
+          fill: black;
+        }
+      }
+    }
+
+    #devLogin {
+      grid-column: ${(props: IsSmallProp) => (props.isSmall ? '1' : '2')};
+    }
+  }
+
+  #languageSelect {
+    grid-column: ${(props: IsSmallProp) => (props.isSmall ? '2' : '1')};
+  }
+`
 
 const formFields = {
   signUp: {
@@ -31,61 +71,53 @@ const formFields = {
 
 const userBranch = import.meta.env.VITE_USER_BRANCH
 const isNotProd = userBranch !== 'master'
-const Login = ({ ...props }) => {
+
+const Login = ({ isSmall }: IsSmallProp) => {
   const { t } = useTranslation()
   const [showDevLogin, setShowDevLogin] = useState<boolean>(false)
 
-  return showDevLogin ? (
-    <>
-      <div>
+  return (
+    <StyledLoginContainer isSmall={isSmall}>
+      <header id="languageSelect">
         <LanguageSelect iconColor={KnowitColors.darkBrown} />
-      </div>
-      <Authenticator
-        formFields={formFields}
-        signUpAttributes={['name']}
-        variation="default"
-        loginMechanisms={['email']}
+      </header>
 
-        /*socialProviders={["amazon"]}*/
-      />
-    </>
-  ) : (
-    <div>
-      <div />
-      <div />
-      <div>
-        <div>
+      <main>
+        <aside id="heading">
           <KnowitLogo />
-        </div>
-      </div>
-      <div>
-        <div>
-          <LanguageSelect iconColor={KnowitColors.darkBrown} />
-        </div>
-        <div>
-          <h1>
-            <div />
-            {t('login.competenceMapping')}
-          </h1>
-        </div>
-        <div>
-          <Button
-            onClick={() =>
-              Auth.federatedSignIn({
-                customProvider: 'AzureAD',
-              })
-            }
-          >
-            {t('login.signIn')}
-          </Button>
-          {isNotProd && (
-            <Button onClick={() => setShowDevLogin(true)}>
-              {t('login.devSignIn')}
+          <h1>{t('login.competenceMapping')}</h1>
+
+          <section id="loginButtons">
+            <Button
+              onClick={() =>
+                Auth.federatedSignIn({
+                  customProvider: 'AzureAD',
+                })
+              }
+            >
+              {t('login.signIn')}
             </Button>
+
+            {isNotProd && (
+              <Button onClick={() => setShowDevLogin(true)}>
+                {t('login.devSignIn')}
+              </Button>
+            )}
+          </section>
+        </aside>
+
+        <section id="devLogin">
+          {showDevLogin && (
+            <Authenticator
+              formFields={formFields}
+              signUpAttributes={['name']}
+              variation="default"
+              loginMechanisms={['email']}
+            />
           )}
-        </div>
-      </div>
-    </div>
+        </section>
+      </main>
+    </StyledLoginContainer>
   )
 }
 
