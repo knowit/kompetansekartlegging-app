@@ -1,69 +1,26 @@
-import { API, Auth, Hub } from 'aws-amplify'
+import { Auth, Hub } from 'aws-amplify'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import './App.css'
 // import awsconfig from "./aws-exports";
-import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth'
-import { Button, Snackbar, debounce, makeStyles } from '@material-ui/core'
+import { Button, debounce, makeStyles, Snackbar } from '@material-ui/core'
 import { ThemeProvider } from '@material-ui/core/styles'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { isMobile } from 'react-device-detect'
 import { useTranslation } from 'react-i18next'
 import Content from './components/Content'
 import FloatingScaleDescButton from './components/FloatingScaleDescButton'
 import Login from './components/Login'
 import NavBarDesktop from './components/NavBarDesktop'
-import awsconfig from './exports'
+import './config/aws-config'
+import { queryClient } from './config/tanstack-config'
+import { useAppDispatch, useAppSelector } from './redux/hooks'
 import {
   fetchOrganizationNameByID,
   selectUserState,
   setUserInfo,
   setUserInfoLogOut,
 } from './redux/User'
-import { useAppDispatch, useAppSelector } from './redux/hooks'
 import theme from './theme'
-
-const userBranch = import.meta.env.VITE_USER_BRANCH
-
-// console.log("Hosted branch: ", userBranch);
-
-switch (userBranch) {
-  case 'master':
-    awsconfig.oauth.domain = 'auth.kompetanse.knowit.no'
-    break
-  case 'dev':
-    awsconfig.oauth.domain = 'auth.dev.kompetanse.knowit.no'
-    break
-  default:
-    break
-}
-
-awsconfig.oauth.redirectSignIn = `${window.location.origin}/`
-awsconfig.oauth.redirectSignOut = `${window.location.origin}/`
-
-// let config = Amplify.configure(awsconfig);
-API.configure(awsconfig)
-Auth.configure(awsconfig)
-
-Hub.listen(/.*/, (data) => {
-  console.log('Hub listening to all messages: ', data)
-  if (data.payload.event === 'signIn_failure') {
-    const message = data.payload.data.message
-    if (message.includes('Google') && !message.includes('organization')) {
-      Auth.federatedSignIn({
-        customProvider: CognitoHostedUIIdentityProvider.Google,
-      })
-    } else if (
-      message.includes('AzureAD') &&
-      !message.includes('organization')
-    ) {
-      // console.log("Failure in the membrane");
-      Auth.federatedSignIn({
-        customProvider: 'AzureAD',
-      })
-    }
-    // Auth.federatedSignIn();
-  }
-})
 
 const appStyle = makeStyles({
   root: {
@@ -82,8 +39,6 @@ const appStyle = makeStyles({
 const cognitoUserContainsAttributes = (data: any): boolean => {
   return 'attributes' in data
 }
-
-const queryClient = new QueryClient()
 
 const App = () => {
   const dispatch = useAppDispatch()
@@ -199,7 +154,7 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
         <div className={style.root}>
-          {userBranch !== 'master' ? (
+          {import.meta.env.VITE_USER_BRANCH !== 'master' ? (
             <Snackbar
               open={bannerOpen}
               anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
