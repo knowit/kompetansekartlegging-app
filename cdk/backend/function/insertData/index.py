@@ -35,7 +35,7 @@ def handler(event, context):
     excuteInsert(questionAnswerSQL, getFileName("QuestionAnswer"))
 
     excuteInsert(add_group_id_to_user, getFileName("User"))
-    executeInsert(add_active_category_to_organization)
+    executeInsert(add_active_catalog_to_organization)
 
     executeInsert(remove_temp_column)
 
@@ -260,10 +260,9 @@ def add_group_id_to_user(file, start, end):
     return sqlUpdateStatement
 
 
-def add_active_category_to_organization():
+def add_active_catalog_to_organization():
     sqlUpdateStatement = ""
-    for ## TODO loop gjennom organizations og oppdater active_catalog_id for hver av dem til den nyligste catalogen knyttet til organisasjonen.
-        sqlUpdateStatement += "UPDATE organization\n SET active_catalog_id = (SELECT id, max(created_at) FROM catalog \nWHERE organization.id = catalog.organization_id);"
+    sqlUpdateStatement += "UPDATE organization SET active_catalog_id = (SELECT id FROM catalog WHERE organization_id = organization.id ORDER BY created_at DESC LIMIT 1)"
     print(sqlUpdateStatement)
     return sqlUpdateStatement
 
