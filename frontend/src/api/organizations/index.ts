@@ -6,20 +6,21 @@ import {
   OrganizationInput,
 } from './types'
 
-export const getAllOrganizations = async () =>
-  apiGET<Organization[]>('/organizations')
+const path = '/organizations'
+
+export const getAllOrganizations = async () => apiGET<Organization[]>(path)
 
 export const getOrganizationByID = async (id: GetOrganizationInput) =>
-  apiGET<Organization>('/organizations/:id', {
+  apiGET<Organization>(`${path}/:id`, {
     queryStringParameters: id,
   })
 
 export const createOrganization = async (organizationInfo: OrganizationInput) =>
-  apiPOST<Organization>('/organizations', {
+  apiPOST<Organization>(path, {
     body: organizationInfo,
   })
 
 export const deleteOrganization = async (id: DeleteOrganizationInput) =>
-  apiDELETE<Organization>('/organizations', {
+  apiDELETE<Organization>(path, {
     body: id,
   })
