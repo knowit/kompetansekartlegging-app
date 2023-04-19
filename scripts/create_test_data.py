@@ -63,6 +63,7 @@ categories = [
     {
         "id": {"S": str(uuid.uuid4())},
         "text": {"S": "Category 1"},
+        "description": {"S": "Kategori med noen spørmsål"},
         "createdAt": {"S": "2022-10-10T12:00:00.000Z"},
         "updatedAt": {"S": "2022-10-10T12:00:00.000Z"},
         "description": {"S": "Some description"},
@@ -74,6 +75,7 @@ categories = [
     {
         "id": {"S": str(uuid.uuid4())},
         "text": {"S": "Category 2"},
+        "description": {"S": "Kategori med noen spørmsål"},
         "createdAt": {"S": "2022-10-10T12:00:00.000Z"},
         "updatedAt": {"S": "2022-10-10T12:00:00.000Z"},
         "description": {"S": "Some description"},
@@ -85,6 +87,7 @@ categories = [
     {
         "id": {"S": str(uuid.uuid4())},
         "text": {"S": "Category 3"},
+        "description": {"S": "Kategori med noen spørmsål"},
         "createdAt": {"S": "2022-10-10T12:00:00.000Z"},
         "updatedAt": {"S": "2022-10-10T12:00:00.000Z"},
         "description": {"S": "Some description"},
@@ -164,26 +167,35 @@ try:
         GroupName=f"{orgid}0groupLeader",
         UserPoolId=userpoolId
     )
+    cognitoclient.create_group(
+        GroupName="admin",
+        UserPoolId=userpoolId
+    )
 except:
     print("Could not create cognito groups, either due to missing permissions or they already exists")
 
+
+groupID = str(uuid.uuid4())
+
 testUsers = ["tester1@test", "tester2@test", "tester3@test"]
 
-groupId = str(uuid.uuid4())
-group = {
-    "id": {"S": groupId},
-    "groupLeaderUsername": {"S": "tester1@test"},
-    "organizationID": {"S": orgid},
-    "orgAdmins": {"S": f"{orgid}0admin"},
-    "orgGroupLeaders": {"S": f"{orgid}0groupLeader"},
-}
-
-dynamoclient.put_item(
-    TableName=f"Group-KompetanseStack-{env}",
-    Item=group
-)
-
 for user in testUsers:
+
+    dynamoUser = {
+        "id": {"S": user},
+        "createdAt": {"S": "2022-10-10T12:00:00.000Z"},
+        "updatedAt": {"S": "2022-10-10T12:00:00.000Z"},
+        "groupID": {"S": groupID},
+        "organizationID": {"S": orgid},
+        "orgAdmins": {"S": f"{orgid}0admin"},
+        "orgGroupLeaders": {"S": f"{orgid}0groupLeader"}
+    }
+
+    dynamoclient.put_item(
+        TableName=f"User-KompetanseStack-{env}",
+        Item=dynamoUser
+    )
+
     try:
         cognitoclient.admin_create_user(
             UserPoolId=userpoolId,
@@ -212,17 +224,6 @@ for user in testUsers:
         Username=user,
         Password="tester123",
         Permanent=True
-    )
-    userInput = {
-        "id": {"S": user},
-        "groupID": {"S": groupId},
-        "organizationID": {"S": orgid},
-        "orgAdmins": {"S": f"{orgid}0admin"},
-        "orgGroupLeaders": {"S": f"{orgid}0groupLeader"},
-    }
-    dynamoclient.put_item(
-        TableName=f"User-KompetanseStack-{env}",
-        Item=userInput
     )
 
     userformId = str(uuid.uuid4())
@@ -264,3 +265,16 @@ for user in testUsers:
             TableName=f"QuestionAnswer-KompetanseStack-{env}",
             Item=qa
         )
+
+dynamoclient.put_item(
+    TableName=f"Group-KompetanseStack-{env}",
+    Item={
+        "id": {"S": groupID},
+        "createdAt": {"S": "2022-10-10T12:00:00.000Z"},
+        "updatedAt": {"S": "2022-10-10T12:00:00.000Z"},
+        "groupLeaderUsername": {"S": testUsers[0]},
+        "organizationID": {"S": orgid},
+        "orgAdmins": {"S": f"{orgid}0admin"},
+        "orgGroupLeaders": {"S": f"{orgid}0groupLeader"}
+    }
+)
