@@ -6,17 +6,17 @@ import {
   QuestionAnswerInput,
 } from './types'
 
-const URL = '/question-answers'
+const path = '/question-answers'
 
-export const getAllQuestionAnswers = async () => apiGET<QuestionAnswer[]>(URL)
+export const getAllQuestionAnswers = async () => apiGET<QuestionAnswer[]>(path)
 
 export const getQuestionAnswerById = async (id: GetQuestionAnswerInput) =>
-  apiGET<QuestionAnswer>(`${URL}/:id`, {
+  apiGET<QuestionAnswer>(`${path}/:id`, {
     queryStringParameters: id,
   })
 
 export const createQuestionAnswer = async (data: QuestionAnswerInput) =>
-  apiPOST<QuestionAnswer>(`${URL}`, {
+  apiPOST<QuestionAnswer>(`${path}`, {
     body: data,
   })
 
@@ -24,17 +24,17 @@ export const updateQuestionAnswer = async (
   id: GetQuestionAnswerInput,
   data: QuestionAnswerInput
 ) =>
-  apiPATCH<QuestionAnswer>(`${URL}/:id`, {
+  apiPATCH<QuestionAnswer>(`${path}/:id`, {
     queryStringParameters: id,
     body: data,
   })
 
 export const deleteQuestionAnswer = async (id: DeleteQuestionAnswerInput) =>
-  apiDELETE<QuestionAnswer>(`${URL}`, {
+  apiDELETE<QuestionAnswer>(`${path}`, {
     body: id,
   })
 
 export const batchCreateQuestionAnswer = async (data: QuestionAnswerInput[]) =>
-  apiPOST<QuestionAnswerInput[]>(`${URL}/batch`, {
+  apiPOST<QuestionAnswerInput[]>(`${path}/batch`, {
     body: data,
   })
