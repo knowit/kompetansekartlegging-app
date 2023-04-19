@@ -4,6 +4,7 @@ import { catalogRouter } from './catalog/router'
 import { categoryRouter } from './categories/router'
 import { cognitoRouter } from './cognito/router'
 import { debugRouter } from './debug/debugRouter'
+import { groupLeaderRouter } from './group-leader/router'
 import { groupRouter } from './groups/router'
 import { organizationRouter } from './organizations/router'
 import { questionAnswersRouter } from './question-answers/router'
@@ -20,6 +21,6 @@ router.use('/question-answers', questionAnswersRouter)
 router.use('/questions', questionsRouter)
 router.use('/catalogs', catalogRouter)
 router.use('/cognito', cognitoRouter)
-router.use('/group-leader', cognitoRouter)
+router.use('/group-leader', groupLeaderRouter)
 
 export { router as apiRouter }
