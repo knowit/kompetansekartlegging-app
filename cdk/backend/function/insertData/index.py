@@ -36,7 +36,7 @@ def handler(event, context):
     excuteInsert(questionAnswerSQL, getFileName("QuestionAnswer"))
 
     excuteInsert(add_group_id_to_user, getFileName("User"))
-    executeInsert(add_active_category_to_organization)
+    executeInsert(add_active_catalog_to_organization)
 
     executeInsert(remove_temp_column)
 
@@ -241,6 +241,13 @@ def add_group_id_to_user(file, start, end):
     sqlUpdateStatement = ""
     for row in file.loc[start:end].itertuples():
         sqlUpdateStatement += f"UPDATE \"user\"\n SET group_id = {getValueOnSqlFormat(row.groupID)}\nWHERE username = {getValueOnSqlFormat(row.id)};"
+    print(sqlUpdateStatement)
+    return sqlUpdateStatement
+
+
+def add_active_catalog_to_organization():
+    sqlUpdateStatement = ""
+    sqlUpdateStatement += "UPDATE organization SET active_catalog_id = (SELECT id FROM catalog WHERE organization_id = organization.id ORDER BY created_at DESC LIMIT 1)"
     print(sqlUpdateStatement)
     return sqlUpdateStatement
 
