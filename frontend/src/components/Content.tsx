@@ -363,7 +363,11 @@ const Content = ({ ...props }: ContentProps) => {
     } else {
       setActivePanel(panelSource)
       if (isInAnswer) {
-        setActiveCategory(itemSource)
+        if (itemSource === 'MAIN') {
+          setActiveCategory(categories[0])
+        } else {
+          setActiveCategory(itemSource)
+        }
         setActiveSubmenuItem('NONE')
       } else {
         setActiveCategory('NONE')
