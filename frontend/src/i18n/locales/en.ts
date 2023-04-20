@@ -255,7 +255,8 @@ export const English: LanguageSchema = {
         addNewOrganization: 'Add new organization',
         idCantBeEmptyOrContainZero: "ID can't be empty or contain '0'.",
         identifierAttributeCantBeEmpty: "Identifier attribute can't be empty.",
-        adminEmailIsInvalid: 'Admin email is invalid.'
+        adminEmailIsInvalid: 'Admin email is invalid.',
+        thereAlreadyExistsAUserWithTheEmail: "There already exists a user with the email '{{email}}'.",
       },
       editSuperAdministrators: {
         description: 'On this page you can add and remove super-administrators.',

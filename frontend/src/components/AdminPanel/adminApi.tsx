@@ -180,7 +180,26 @@ const listAllUsers = async (limit = 60): Promise<ApiResponse<any[]>> => {
   return { result: allUsers }
 }
 
+const getUser = async (username: string) => {
+  const apiName = 'AdminQueries'
+  const path = '/getUser'
+  const myInit = {
+    queryStringParameters: {
+      username,
+    },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `${(await Auth.currentSession())
+        .getAccessToken()
+        .getJwtToken()}`,
+    },
+  }
+
+  return await API.get(apiName, path, myInit)
+}
+
 export {
+  getUser,
   listAllUsers,
   listAllUsersInOrganization,
   listGroupLeaders,

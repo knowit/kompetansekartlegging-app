@@ -254,6 +254,7 @@ export type LanguageSchema = {
         idCantBeEmptyOrContainZero: string
         identifierAttributeCantBeEmpty: string
         adminEmailIsInvalid: string
+        thereAlreadyExistsAUserWithTheEmail: string
       }
       editSuperAdministrators: {
         description: string
