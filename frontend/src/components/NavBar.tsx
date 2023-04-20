@@ -31,11 +31,8 @@ import { NavBarPropsDesktop, UserRole } from '../types'
 import MenuIcon from '@mui/icons-material/Menu'
 import styled from '@emotion/styled'
 import { KnowitColors } from '../styleconstants'
-
-type StylingProps = {
-  isSmall: boolean
-}
-
+import { ModalWrapper } from '../styleconstants'
+import { Close } from '@mui/icons-material'
 const ToolbarContainer = styled.div`
   svg {
     color: ${KnowitColors.white};
@@ -50,11 +47,6 @@ const ToolbarContainer = styled.div`
       display: flex;
     }
   }
-`
-
-const ModalWrapper = styled.div`
-  ${(props: StylingProps) => props.isSmall && 'min-width: 100vw;'};
-  ${(props: StylingProps) => props.isSmall && 'min-height: 100vh;'};
 `
 
 const NavBar = ({
@@ -158,6 +150,13 @@ const NavBar = ({
               >
                 <div className="modalContent">
                   <ModalWrapper isSmall={isSmall}>
+                    <IconButton
+                      aria-label={t('close') as string}
+                      onClick={() => setHelpModalOpen(false)}
+                      size="large"
+                    >
+                      <Close />
+                    </IconButton>
                     <ReactMarkdown>{helpMarkdown}</ReactMarkdown>
                   </ModalWrapper>
                 </div>

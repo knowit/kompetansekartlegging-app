@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next'
 import CloseIcon from '@mui/icons-material/Close'
 import styled from '@emotion/styled'
 import { TipsAndUpdates } from '@mui/icons-material'
+import { ModalWrapper } from '../styleconstants'
 
 const FabContainer = styled.div`
   position: fixed;
@@ -101,15 +102,6 @@ type DescriptionTableProps = {
   isSmall: boolean
 }
 
-type StylingProps = {
-  isSmall: boolean
-}
-
-const StyledDescription = styled.div`
-  ${(props: StylingProps) => props.isSmall && 'min-width: 100vw;'};
-  ${(props: StylingProps) => props.isSmall && 'min-height: 100vh;'};
-`
-
 const StyledScaleContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -134,7 +126,7 @@ const DescriptionTable = ({ onClose, isSmall }: DescriptionTableProps) => {
   )
 
   return (
-    <StyledDescription isSmall={isSmall}>
+    <ModalWrapper isSmall={isSmall}>
       <IconButton
         aria-label={t('close') as string}
         onClick={onClose}
@@ -179,7 +171,7 @@ const DescriptionTable = ({ onClose, isSmall }: DescriptionTableProps) => {
           })}
         </section>
       </div>
-    </StyledDescription>
+    </ModalWrapper>
   )
 }
 

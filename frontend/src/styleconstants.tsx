@@ -1,3 +1,5 @@
+import styled from '@emotion/styled'
+
 export const KnowitColors = {
   black: '#000000',
   white: '#FFFFFF',
@@ -19,3 +21,13 @@ export const navbarHeight = 100
 export const menuWidth = 250
 export const maxPanelWidth = 800
 export const minPanelWidth = 200
+
+type StylingProps = {
+  isSmall: boolean
+}
+
+export const ModalWrapper = styled.div`
+  ${(props: StylingProps) => props.isSmall && 'min-width: 100vw;'};
+  ${(props: StylingProps) => props.isSmall && 'min-height: 100vh;'};
+  padding: 30px;
+`
