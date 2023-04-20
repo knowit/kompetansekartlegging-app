@@ -271,10 +271,6 @@ const Content = ({ ...props }: ContentProps) => {
   }
 
   useEffect(() => {
-    setActiveCategory(categories[0])
-  }, [categories])
-
-  useEffect(() => {
     updateCategoryAlerts(questionAnswers, setAlerts, t)
   }, [questionAnswers, t])
 
@@ -359,13 +355,10 @@ const Content = ({ ...props }: ContentProps) => {
 
   const handleMenuClick = (panelSource: Panel, itemSource: string) => {
     const isInAnswer = panelSource === Panel.MyAnswers
+
     if (answerEditMode) {
       setlastClickedPanel(panelSource)
-      if (isInAnswer) {
-        setLastClickedCategory(itemSource)
-      } else {
-        setLastClickedSubmenu(itemSource)
-      }
+      setLastClickedCategory(itemSource)
       setAlertDialogOpen(true)
     } else {
       setActivePanel(panelSource)
