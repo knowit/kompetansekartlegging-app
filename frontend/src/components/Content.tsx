@@ -309,10 +309,6 @@ const Content = ({ ...props }: ContentProps) => {
     props.isSmall,
   ])
 
-  useEffect(() => {
-    setAnswersBeforeSubmitted(new Map(questionAnswers))
-  }, [questionAnswers])
-
   const { answerHistoryOpen, setAnswerHistoryOpen } = props
   useEffect(() => {
     const fetchUserFormsAndOpenView = async () => {
@@ -385,10 +381,15 @@ const Content = ({ ...props }: ContentProps) => {
       props.isSmall && toggleMenuOpen(!open)
     }
   }
+  const resetAnswers = () => {
+    setQuestionAnswers(new Map(answersBeforeSubmitted))
+  }
 
   const leaveFormButtonClicked = () => {
+    resetAnswers()
     setAnswerEditMode(false)
     setActivePanel(lastClickedPanel)
+
     if (lastClickedPanel === Panel.MyAnswers) {
       setActiveCategory(lastClickedCategory)
     } else {
