@@ -133,6 +133,31 @@ const StyledQuestionContainer = styled.div`
       height: 100%;
     }
   }
+
+  .customLabels {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: end;
+
+    [class*='scale'] {
+      max-width: 200px;
+      word-wrap: break-word;
+    }
+
+    .scaleStart {
+      grid-column: 1;
+    }
+    .scaleMiddle {
+      grid-column: 2;
+      text-align: center;
+      justify-self: center;
+    }
+    .scaleEnd {
+      grid-column: 3;
+      text-align: right;
+      justify-self: end;
+    }
+  }
 `
 
 const KnowledgeMotivationSliders = ({
@@ -178,29 +203,24 @@ const CustomLabelSlider = ({
   question,
   isSmall,
 }: any) => {
-  const { t } = useTranslation()
-  const labels = [question.scaleStart, question.scaleEnd].filter((l) => !!l)
   return (
-    <div>
+    <StyledQuestionContainer>
       <div>
-        <div>{t('answer')}</div>
-        <div>
-          <div>
-            {labels?.map((l: string) => (
-              <span key={l}>{l}</span>
-            ))}
-          </div>
-          <div>
-            <Slider
-              value={sliderValues.customScaleValue || -2}
-              motivation={false}
-              sliderChanged={sliderChanged}
-              isSmall={isSmall}
-            />
-          </div>
+        <div className="customLabels">
+          <div className="scaleStart">{question.scaleStart}</div>
+          {!isSmall && (
+            <div className="scaleMiddle">{question.scaleMiddle}</div>
+          )}
+          <div className="scaleEnd">{question.scaleEnd}</div>
         </div>
+        <Slider
+          value={sliderValues.customScaleValue || -2}
+          motivation={false}
+          sliderChanged={sliderChanged}
+          isSmall={isSmall}
+        />
       </div>
-    </div>
+    </StyledQuestionContainer>
   )
 }
 
