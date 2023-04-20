@@ -32,6 +32,10 @@ import MenuIcon from '@mui/icons-material/Menu'
 import styled from '@emotion/styled'
 import { KnowitColors } from '../styleconstants'
 
+type StylingProps = {
+  isSmall: boolean
+}
+
 const ToolbarContainer = styled.div`
   svg {
     color: ${KnowitColors.white};
@@ -46,6 +50,11 @@ const ToolbarContainer = styled.div`
       display: flex;
     }
   }
+`
+
+const ModalWrapper = styled.div`
+  ${(props: StylingProps) => props.isSmall && 'min-width: 100vw;'};
+  ${(props: StylingProps) => props.isSmall && 'min-height: 100vh;'};
 `
 
 const NavBar = ({
@@ -147,8 +156,10 @@ const NavBar = ({
                 open={isHelpModalOpen}
                 onClose={() => setHelpModalOpen(false)}
               >
-                <div id="modalContent">
-                  <ReactMarkdown>{helpMarkdown}</ReactMarkdown>
+                <div className="modalContent">
+                  <ModalWrapper isSmall={isSmall}>
+                    <ReactMarkdown>{helpMarkdown}</ReactMarkdown>
+                  </ModalWrapper>
                 </div>
               </Modal>
             ) : null}
@@ -164,7 +175,7 @@ const NavBar = ({
                 </IconButton>
               </Tooltip>
             ) : null}
-            <LanguageSelect />
+            <LanguageSelect color={KnowitColors.white} />
             <Button
               ref={anchorRef}
               aria-controls={avatarMenuOpen ? 'menu-list-grow' : undefined}

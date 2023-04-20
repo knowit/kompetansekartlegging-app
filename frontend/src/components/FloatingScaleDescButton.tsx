@@ -106,7 +106,8 @@ type StylingProps = {
 }
 
 const StyledDescription = styled.div`
-  min-width: ${(props: StylingProps) => (props.isSmall ? '90%' : '80vw')};
+  ${(props: StylingProps) => props.isSmall && 'min-width: 100vw;'};
+  ${(props: StylingProps) => props.isSmall && 'min-height: 100vh;'};
 `
 
 const StyledScaleContainer = styled.div`
