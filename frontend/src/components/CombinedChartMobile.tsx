@@ -163,16 +163,6 @@ export const CombinedChartMobile = ({
               {t('motivation')}
             </Label>
           </ReferenceLine>
-          <ReferenceLine
-            y={0.1}
-            stroke={KnowitColors.darkGreen}
-            strokeWidth={1}
-          ></ReferenceLine>
-          <ReferenceLine
-            y={0}
-            stroke={KnowitColors.creme}
-            strokeWidth={3}
-          ></ReferenceLine>
           <ReferenceLine y={chartSplitAt} stroke={KnowitColors.darkGreen}>
             <Label
               position="insideTopRight"
@@ -183,11 +173,6 @@ export const CombinedChartMobile = ({
               {t('competence')}
             </Label>
           </ReferenceLine>
-          <ReferenceLine
-            y={chartSplitAt - 0.1}
-            stroke={KnowitColors.creme}
-            strokeWidth={3}
-          ></ReferenceLine>
         </BarChart>
       </ResponsiveContainer>
       {maxColumnsPerPage < props.chartData.length ? (
