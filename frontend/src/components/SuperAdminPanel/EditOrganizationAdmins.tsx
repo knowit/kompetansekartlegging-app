@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import CircularProgress from '@mui/material/CircularProgress'
+import CenteredCircularProgress from '../CenteredCircularProgress'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { useAppSelector } from '../../redux/hooks'
 import { selectAdminCognitoGroupName, selectUserState } from '../../redux/User'
@@ -55,7 +55,7 @@ const EditOrganizationAdmins = () => {
   return (
     <>
       {error && <p>{t('errorOccured') + error}</p>}
-      {loading && <CircularProgress />}
+      {loading && <CenteredCircularProgress />}
       {!error && !loading && admins && (
         <>
           <InfoCard

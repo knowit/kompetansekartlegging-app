@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import Box from '@mui/material/Box'
-import CircularProgress from '@mui/material/CircularProgress'
+import CenteredCircularProgress from '../CenteredCircularProgress'
 import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
 import TableBody from '@mui/material/TableBody'
@@ -365,7 +365,7 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
   return (
     <>
       {isError && <p>{t('errorOccured') + isError}</p>}
-      {isLoading && <CircularProgress />}
+      {isLoading && <CenteredCircularProgress />}
       {!isError && !isLoading && groups && (
         <>
           <InfoCard

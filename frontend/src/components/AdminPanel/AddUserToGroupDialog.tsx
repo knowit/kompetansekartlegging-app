@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import Button from '@mui/material/Button'
-import CircularProgress from '@mui/material/CircularProgress'
+import CenteredCircularProgress from '../CenteredCircularProgress'
 
 import Box from '@mui/material/Box'
 import Dialog from '@mui/material/Dialog'
@@ -91,7 +91,7 @@ const AddUserToGroupDialog = ({
       </DialogTitle>
       <DialogContent>
         {error && <p>{t('errorOccured') + error}</p>}
-        {loading && <CircularProgress />}
+        {loading && <CenteredCircularProgress />}
         {!error && !loading && users && (
           <UsersTable
             users={usersInList}

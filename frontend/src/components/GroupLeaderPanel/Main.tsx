@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import CircularProgress from '@mui/material/CircularProgress'
+import CenteredCircularProgress from '../CenteredCircularProgress'
 import DeleteUserFromGroupDialog from '../AdminPanel/DeleteUserFromGroupDialog'
 import GroupMembers from '../AdminPanel/GroupMembers'
 import { useTranslation } from 'react-i18next'
@@ -23,7 +23,7 @@ const Main = ({
   return (
     <>
       {isError && <p>{t('errorOccured') + isError}</p>}
-      {isLoading && <CircularProgress />}
+      {isLoading && <CenteredCircularProgress />}
       {!isError && !isLoading && allAvailableUsersAnnotated && (
         <>
           <Box margin={3} marginLeft={2}>

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import CircularProgress from '@mui/material/CircularProgress'
+import CenteredCircularProgress from '../../CenteredCircularProgress'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
@@ -189,7 +189,7 @@ const Root = () => {
   return (
     <>
       {error && <p>{t('errorOccured') + error}</p>}
-      {loading && <CircularProgress />}
+      {loading && <CenteredCircularProgress />}
       {!error && !loading && catalogs && (
         <>
           <InfoCard

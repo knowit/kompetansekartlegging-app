@@ -12,7 +12,7 @@ import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import { OrganizationInfo } from './SuperAdminTypes'
 import { useTranslation } from 'react-i18next'
-import { CircularProgress } from '@mui/material'
+import CenteredCircularProgress from '../CenteredCircularProgress'
 
 interface AddOrganizationDialogProps {
   onCancel: () => void
@@ -114,7 +114,7 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
       </DialogTitle>
       {isAddingOrganization ? (
         <div style={{ height: 65, display: 'flex', justifyContent: 'center' }}>
-          <CircularProgress />
+          <CenteredCircularProgress />
         </div>
       ) : (
         <DialogActions>

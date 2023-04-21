@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react'
-
-import CircularProgress from '@mui/material/CircularProgress'
-
+import CenteredCircularProgress from '../CenteredCircularProgress'
 import {
   fetchLastFormDefinition,
   createQuestionAnswers,
@@ -75,7 +73,7 @@ const GroupMember = ({ members, userId, isSmall }: any) => {
   return (
     <>
       {isError && <p>{t('errorOccured') + isError}</p>}
-      {isLoading && <CircularProgress />}
+      {isLoading && <CenteredCircularProgress />}
       {!isError && !isLoading && questionAnswers && (
         <>
           <Nav

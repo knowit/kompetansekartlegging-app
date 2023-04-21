@@ -3,7 +3,7 @@ import { listAllFormDefinitionsForLoggedInUser } from './catalogApi'
 import useApiGet from './useApiGet'
 import { API, Auth } from 'aws-amplify'
 import GetAppIcon from '@mui/icons-material/GetApp'
-import CircularProgress from '@mui/material/CircularProgress'
+import CenteredCircularProgress from '../CenteredCircularProgress'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
@@ -44,7 +44,7 @@ const DownloadExcel = () => {
         description="admin.downloadCatalogs.description"
       />
       {error && <p>{t('errorOccured') + error}</p>}
-      {loading && <CircularProgress />}
+      {loading && <CenteredCircularProgress />}
       {!error && !loading && formDefinitions && (
         <DownloadExcelTable formDefinitions={formDefinitions} />
       )}
@@ -124,7 +124,7 @@ const DownloadExcelTable = ({ formDefinitions }: FormDefinitions) => {
                           )}
                         </p>
                       ) : (
-                        <CircularProgress style={{ margin: '0 auto' }} />
+                        <CenteredCircularProgress />
                       )}
                     </>
                   ) : (

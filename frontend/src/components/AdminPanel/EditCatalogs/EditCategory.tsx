@@ -1,9 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
-
 import Box from '@mui/material/Box'
-import CircularProgress from '@mui/material/CircularProgress'
-
+import CenteredCircularProgress from '../../CenteredCircularProgress'
 import { Auth } from 'aws-amplify'
 import { useTranslation } from 'react-i18next'
 import { QuestionType } from '../../../API'
@@ -102,7 +100,7 @@ const EditCategory = () => {
     <>
       <>
         {error && <p>{t('errorOccured') + error}</p>}
-        {loading && <CircularProgress />}
+        {loading && <CenteredCircularProgress />}
         {!error && !loading && categories && (
           <>
             <Box flexBasis="100%">

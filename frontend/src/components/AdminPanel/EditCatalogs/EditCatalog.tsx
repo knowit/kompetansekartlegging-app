@@ -64,7 +64,7 @@ const EditCatalog = () => {
     <>
       <>
         {error && <p>{t('errorOccured') + error}</p>}
-        {loading && <CircularProgress />}
+        {loading && <CenteredCircularProgress />}
         {!error && !loading && categories && (
           <>
             <Box flexBasis="100%">

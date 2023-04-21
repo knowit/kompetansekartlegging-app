@@ -1,5 +1,5 @@
 import { FC, useState } from 'react'
-import CircularProgress from '@mui/material/CircularProgress'
+import CenteredCircularProgress from '../CenteredCircularProgress'
 import IconButton from '@mui/material/IconButton'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -151,7 +151,7 @@ const EditOrganizations = () => {
           <p>{t('errorOccured') + mutationError}</p>
         </>
       )}
-      {loading && <CircularProgress />}
+      {loading && <CenteredCircularProgress />}
       {!error && !loading && (
         <>
           <InfoCard
