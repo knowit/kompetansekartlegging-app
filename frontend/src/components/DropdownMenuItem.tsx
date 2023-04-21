@@ -12,6 +12,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 import { Panel } from '../types'
 import styled from '@emotion/styled'
+import { menuWidth } from '../styleconstants'
 
 type MenuItemProps = {
   panelId: Panel
@@ -66,7 +67,9 @@ const DropdownMenuItem = ({
         selected={item.key === activeSubmenuItem}
       >
         <Badge badgeContent={item.alert} color="warning">
-          <ListItemText>{t(item.text)}</ListItemText>
+          <ListItemText sx={{ maxWidth: menuWidth - 10 }}>
+            {t(item.text)}
+          </ListItemText>
         </Badge>
       </ListItemButton>
     ))
