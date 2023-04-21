@@ -36,7 +36,7 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
   const [organizationAdminEmail, setOrganizationAdminEmail] = useState('')
   const [emailAlreadyExists, setEmailAlreadyExists] = useState<boolean>(false)
   const [isAddingOrganization, setIsAddingOrganization] = useState(false)
-  const [userExistsValidationError, setUserExistsValidationError] =
+  const [emailExistsValidationError, setEmailExistsValidationError] =
     useState<boolean>(false)
 
   const emailRegex = /^[^\s@]+@[^\s@]+$/
@@ -57,7 +57,7 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
 
   const addOrganizationIfEmailDoesNotExist = async () => {
     setIsAddingOrganization(true)
-    setUserExistsValidationError(false)
+    setEmailExistsValidationError(false)
 
     try {
       const res = await getUserExists(organizationAdminEmail)
@@ -69,7 +69,7 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
         setIsAddingOrganization(false)
       }
     } catch (e) {
-      setUserExistsValidationError(true)
+      setEmailExistsValidationError(true)
       setIsAddingOrganization(false)
     }
   }
@@ -163,12 +163,12 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
           onChange={(e: any) => {
             setOrganizationAdminEmail(e.target.value)
             setEmailAlreadyExists(false)
-            setUserExistsValidationError(false)
+            setEmailExistsValidationError(false)
           }}
         />
       </DialogTitle>
-      {userExistsValidationError && (
-        <p style={{ display: 'flex', justifyContent: 'center' }}>
+      {emailExistsValidationError && (
+        <p style={{ textAlign: 'center' }}>
           {t('errorOccured') +
             t(
               'superAdmin.editOrganizations.couldNotValidateIfAUserWithTheEmailAlreadyExists'
