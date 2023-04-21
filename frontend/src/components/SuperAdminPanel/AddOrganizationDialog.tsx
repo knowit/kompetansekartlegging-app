@@ -14,7 +14,7 @@ import { CloseIcon } from '../DescriptionTable'
 import { OrganizationInfo } from './SuperAdminTypes'
 import { useTranslation } from 'react-i18next'
 import { CircularProgress } from '@mui/material'
-import { getUser } from '../AdminPanel/adminApi'
+import { getUserExists } from '../AdminPanel/adminApi'
 
 interface AddOrganizationDialogProps {
   onCancel: () => void
@@ -36,6 +36,8 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
   const [organizationAdminEmail, setOrganizationAdminEmail] = useState('')
   const [emailAlreadyExists, setEmailAlreadyExists] = useState<boolean>(false)
   const [isAddingOrganization, setIsAddingOrganization] = useState(false)
+  const [userExistsValidationError, setUserExistsValidationError] =
+    useState<boolean>(false)
 
   const emailRegex = /^[^\s@]+@[^\s@]+$/
   const isOrganizationAdminEmailValid =
@@ -55,15 +57,20 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
 
   const addOrganizationIfEmailDoesNotExist = async () => {
     setIsAddingOrganization(true)
+    setUserExistsValidationError(false)
 
     try {
-      await getUser(organizationAdminEmail)
-      // There already exists a user with the email, abort
-      setIsAddingOrganization(false)
-      setEmailAlreadyExists(true)
+      const res = await getUserExists(organizationAdminEmail)
+
+      if (!res.userExists) {
+        addOrganization()
+      } else {
+        setEmailAlreadyExists(true)
+        setIsAddingOrganization(false)
+      }
     } catch (e) {
-      // No user with the email exists, add organization
-      addOrganization()
+      setUserExistsValidationError(true)
+      setIsAddingOrganization(false)
     }
   }
 
@@ -156,9 +163,18 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
           onChange={(e: any) => {
             setOrganizationAdminEmail(e.target.value)
             setEmailAlreadyExists(false)
+            setUserExistsValidationError(false)
           }}
         />
       </DialogTitle>
+      {userExistsValidationError && (
+        <p style={{ display: 'flex', justifyContent: 'center' }}>
+          {t('errorOccured') +
+            t(
+              'superAdmin.editOrganizations.couldNotValidateIfAUserWithTheEmailAlreadyExists'
+            )}
+        </p>
+      )}
       {isAddingOrganization ? (
         <div style={{ height: 65, display: 'flex', justifyContent: 'center' }}>
           <CircularProgress />

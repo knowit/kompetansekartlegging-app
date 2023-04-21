@@ -180,9 +180,9 @@ const listAllUsers = async (limit = 60): Promise<ApiResponse<any[]>> => {
   return { result: allUsers }
 }
 
-const getUser = async (username: string) => {
+const getUserExists = async (username: string) => {
   const apiName = 'AdminQueries'
-  const path = '/getUser'
+  const path = '/getUserExists'
   const myInit = {
     queryStringParameters: {
       username,
@@ -199,7 +199,7 @@ const getUser = async (username: string) => {
 }
 
 export {
-  getUser,
+  getUserExists,
   listAllUsers,
   listAllUsersInOrganization,
   listGroupLeaders,

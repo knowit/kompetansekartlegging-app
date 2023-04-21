@@ -257,6 +257,7 @@ export const Norwegian: LanguageSchema = {
         identifierAttributeCantBeEmpty: 'Identifier attribute kan ikke være tom.',
         adminEmailIsInvalid: 'Admin e-post er ugyldig.',
         thereAlreadyExistsAUserWithTheEmail: "Det finnes allerede en bruker med mailen '{{email}}'.",
+        couldNotValidateIfAUserWithTheEmailAlreadyExists: 'Kunne ikke validere om en bruker med e-posten allerede finnes.',
       },
       editSuperAdministrators: {
         description: 'På denne siden kan du legge til og fjerne super-administratorer.',

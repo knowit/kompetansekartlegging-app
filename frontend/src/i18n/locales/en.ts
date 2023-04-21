@@ -257,6 +257,7 @@ export const English: LanguageSchema = {
         identifierAttributeCantBeEmpty: "Identifier attribute can't be empty.",
         adminEmailIsInvalid: 'Admin email is invalid.',
         thereAlreadyExistsAUserWithTheEmail: "There already exists a user with the email '{{email}}'.",
+        couldNotValidateIfAUserWithTheEmailAlreadyExists: 'Could not validate if a user with the email already exists.',
       },
       editSuperAdministrators: {
         description: 'On this page you can add and remove super-administrators.',
