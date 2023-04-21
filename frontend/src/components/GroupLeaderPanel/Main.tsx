@@ -26,9 +26,7 @@ const Main = ({
       {isLoading && <CenteredCircularProgress />}
       {!isError && !isLoading && allAvailableUsersAnnotated && (
         <>
-          <Box margin={3} marginLeft={2}>
-            {t('menu.myGroup')}
-          </Box>
+          <h1>{t('menu.myGroup')}</h1>
           <GroupMembers
             allUsers={allAvailableUsersAnnotated}
             members={members}
