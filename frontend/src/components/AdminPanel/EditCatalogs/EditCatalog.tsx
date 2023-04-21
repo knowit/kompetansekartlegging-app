@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
-import { CircularProgress, Box } from '@mui/material'
+import { Box } from '@mui/material'
 import { Add as AddIcon } from '@mui/icons-material'
 import { listCategoriesByFormDefinitionID, createCategory } from '../catalogApi'
 import useApiGet from '../useApiGet'
@@ -13,6 +13,7 @@ import { Button } from '@mui/material'
 import { ORGANIZATION_ID_ATTRIBUTE } from '../../../constants'
 import { Auth } from 'aws-amplify'
 import { useTranslation } from 'react-i18next'
+import CenteredCircularProgress from '../../CenteredCircularProgress'
 
 const EditCatalog = () => {
   const { t } = useTranslation()
