@@ -14,6 +14,10 @@ router.get('/myGroup', async (req, res, next) => {
 
     const membersInMyGroup = await GroupLeader.myGroupMembers({ username })
 
+    if (membersInMyGroup.status !== 'ok') {
+      throw new Error('Could not fetch group members')
+    }
+
     // Annotate the members with Cognito User Pool data
     const annotatedMembers = await Promise.all(
       membersInMyGroup.data.map(
@@ -24,12 +28,16 @@ router.get('/myGroup', async (req, res, next) => {
         }) => {
           const { username } = member
           const { UserAttributes } = await getUser(username)
-          return { ...member, attributes: UserAttributes }
+          return { ...member, cognitoAttributes: UserAttributes }
         }
       )
     )
 
-    res.status(200).json(annotatedMembers)
+    res.status(200).json({
+      status: 'ok',
+      message: `🚀 ~ > Group members with cognito info for '${username}'`,
+      data: annotatedMembers,
+    })
   } catch (err) {
     console.error(err)
     next(err)
