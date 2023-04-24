@@ -60,6 +60,7 @@ type StylingProps = {
 }
 
 const ContentContainer = styled.div`
+  padding-bottom: 20px;
   #header {
     max-height: ${navbarHeight}px;
   }
