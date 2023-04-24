@@ -21,7 +21,21 @@ export enum AlertType {
   Multiple,
 }
 
+type StylingProps = {
+  isSmall: boolean
+}
+
 const StyledQuestion = styled.div`
+  .questionInfo {
+    margin-bottom: 10px;
+  }
+
+  h2 {
+    font-size: 1em;
+  }
+  h3 {
+    font-size: 0.8em;
+  }
   margin-top: 5vh;
   .questionTopic {
     display: inline;
@@ -29,7 +43,11 @@ const StyledQuestion = styled.div`
 
   .sliderContainer {
     display: grid;
-    grid-template-columns: 1fr 4fr;
+    ${(props: StylingProps) =>
+      props.isSmall
+        ? 'grid-template-rows: 1fr 1fr'
+        : 'grid-template-columns: 1fr 4fr'};
+    flex-wrap: wrap;
     align-items: center;
   }
 `
@@ -97,8 +115,8 @@ const Question = ({ ...props }: QuestionProps) => {
   }
 
   return (
-    <StyledQuestion>
-      <div>
+    <StyledQuestion isSmall={props.isSmall}>
+      <div className="questionInfo">
         <h2 className="questionTopic">{questionTopic}</h2>
         {hasAlerts && <Tooltip title={alertMessage}>{badgeContent}</Tooltip>}
         <div>{questionText}</div>
