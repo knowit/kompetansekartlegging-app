@@ -98,46 +98,43 @@ const EditCategory = () => {
 
   return (
     <>
-      <>
-        {error && <p>{t('errorOccured') + error}</p>}
-        {loading && <CenteredCircularProgress />}
-        {!error && !loading && categories && (
+      {error && <p>{t('errorOccured') + error}</p>}
+      {loading && <CenteredCircularProgress />}
+      {!error && !loading && categories && (
+        <>
+          <RouterBreadcrumbs
+            extraCrumbsMap={breadCrumbs}
+            urlOverrides={breadCrumbsUrlOverrides}
+          />
+
           <>
-            <Box flexBasis="100%">
-              <RouterBreadcrumbs
-                extraCrumbsMap={breadCrumbs}
-                urlOverrides={breadCrumbsUrlOverrides}
-              />
-            </Box>
-            <>
-              <QuestionList
-                id={id}
-                categories={categories}
-                questions={questions}
-                formDefinitionID={formDefinitionID}
-                formDefinitionLabel={formDefinitionLabel}
-                refreshQuestions={refreshQuestions}
-              />
-            </>
-            <div>
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={() => setShowAddQuestionDialog(true)}
-              >
-                {t('admin.editCatalogs.addNewQuestion')}
-              </Button>
-            </div>
-            {showAddQuestionDialog && (
-              <AddQuestionDialog
-                open={showAddQuestionDialog}
-                onCancel={() => setShowAddQuestionDialog(false)}
-                onConfirm={addQuestionConfirm}
-              />
-            )}
+            <QuestionList
+              id={id}
+              categories={categories}
+              questions={questions}
+              formDefinitionID={formDefinitionID}
+              formDefinitionLabel={formDefinitionLabel}
+              refreshQuestions={refreshQuestions}
+            />
           </>
-        )}
-      </>
+          <div>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => setShowAddQuestionDialog(true)}
+            >
+              {t('admin.editCatalogs.addNewQuestion')}
+            </Button>
+          </div>
+          {showAddQuestionDialog && (
+            <AddQuestionDialog
+              open={showAddQuestionDialog}
+              onCancel={() => setShowAddQuestionDialog(false)}
+              onConfirm={addQuestionConfirm}
+            />
+          )}
+        </>
+      )}
     </>
   )
 }

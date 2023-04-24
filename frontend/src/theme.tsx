@@ -34,6 +34,7 @@ const theme = createTheme({
         },
       },
     },
+
     MuiCollapse: {
       styleOverrides: {
         root: {

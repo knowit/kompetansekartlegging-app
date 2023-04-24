@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
 import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
 import ListItemText from '@mui/material/ListItemText'
-import { TextField } from '@mui/material'
+import { Divider, ListItemButton, TextField } from '@mui/material'
 import {
   Edit as EditIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon,
@@ -81,38 +81,31 @@ const CategoryListItem = ({
       />
     </ListItem>
   ) : (
-    <ListItem onClick={onClick}>
+    <ListItemButton divider onClick={onClick}>
       <ListItemText primary={`${ind + 1}. ${c.text}`} />
-      <ListItemSecondaryAction>
-        <IconButton onClick={() => setEditMode(true)} size="large">
-          <EditIcon />
-        </IconButton>
-        <IconButton onClick={() => deleteCategory(c)} size="large">
-          <DeleteIcon />
-        </IconButton>
-        <ButtonGroup
-          disableElevation
-          variant="text"
+      <IconButton onClick={() => setEditMode(true)}>
+        <EditIcon />
+      </IconButton>
+      <IconButton onClick={() => deleteCategory(c)}>
+        <DeleteIcon />
+      </IconButton>
+      <ButtonGroup variant="text" orientation="vertical">
+        <Button
           size="small"
-          orientation="vertical"
+          onClick={() => moveCategory(c, 1)}
+          disabled={!enableUpdates || ind === 0}
         >
-          <Button
-            size="small"
-            onClick={() => moveCategory(c, 1)}
-            disabled={!enableUpdates || ind === 0}
-          >
-            <KeyboardArrowUpIcon fontSize="small" />
-          </Button>
-          <Button
-            size="small"
-            onClick={() => moveCategory(c, -1)}
-            disabled={!enableUpdates || ind === categories.length - 1}
-          >
-            <KeyboardArrowDownIcon fontSize="small" />
-          </Button>
-        </ButtonGroup>
-      </ListItemSecondaryAction>
-    </ListItem>
+          <KeyboardArrowUpIcon fontSize="small" />
+        </Button>
+        <Button
+          size="small"
+          onClick={() => moveCategory(c, -1)}
+          disabled={!enableUpdates || ind === categories.length - 1}
+        >
+          <KeyboardArrowDownIcon fontSize="small" />
+        </Button>
+      </ButtonGroup>
+    </ListItemButton>
   )
 }
 

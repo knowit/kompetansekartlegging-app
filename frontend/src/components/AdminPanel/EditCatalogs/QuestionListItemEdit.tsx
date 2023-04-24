@@ -5,7 +5,6 @@ import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormLabel from '@mui/material/FormLabel'
 import ListItem from '@mui/material/ListItem'
-import ListItemText from '@mui/material/ListItemText'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 
@@ -14,6 +13,31 @@ import CategoriesSelect from './CategoriesSelect'
 import { useTranslation } from 'react-i18next'
 import EditActionButtons from './EditActionButtons'
 import TextField from '@mui/material/TextField'
+import styled from '@emotion/styled'
+import { Card, CardContent } from '@mui/material'
+
+const StyledItemEdit = styled.div`
+  display: flex;
+  flex-direction: column;
+
+    .subjectCategory {
+      display: flex;
+      flex-wrap: wrap;
+
+      > * {
+        margin-bottom: 10px;
+      }
+
+      .questionSubject {
+        flex-grow: 4;
+      }
+
+      .questionCategory {
+        flex-grow: 1;
+      }
+    }
+  }
+`
 
 const initialConfig = (q: any) => {
   if (q.type === QuestionType.CustomScaleLabels) {
@@ -73,12 +97,12 @@ const QuestionListItemEdit = ({
 
   return (
     <ListItem>
-      <ListItemText
-        primary={
-          <>
-            <Box display="flex" alignItems="center">
+      <StyledItemEdit>
+        <Card>
+          <CardContent className="questionContent">
+            <div className="subjectCategory">
               <TextField
-                fullWidth
+                className="questionSubject"
                 label={t('admin.editCatalogs.subject')}
                 variant="outlined"
                 value={topic}
@@ -90,11 +114,13 @@ const QuestionListItemEdit = ({
                 }
               />
               <CategoriesSelect
+                className="questionCategory"
                 categoryID={categoryID}
                 setCategoryID={setCategoryID}
                 categories={categories}
               />
-            </Box>
+            </div>
+
             <TextField
               fullWidth
               multiline
@@ -152,14 +178,14 @@ const QuestionListItemEdit = ({
                 </Box>
               </FormControl>
             )}
-          </>
-        }
-      />
-      <EditActionButtons
-        disabled={!isCompleted}
-        onSave={onSave}
-        onCancel={onCancel}
-      />
+            <EditActionButtons
+              disabled={!isCompleted}
+              onSave={onSave}
+              onCancel={onCancel}
+            />
+          </CardContent>
+        </Card>
+      </StyledItemEdit>
     </ListItem>
   )
 }
