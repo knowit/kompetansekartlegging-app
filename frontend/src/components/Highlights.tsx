@@ -11,7 +11,15 @@ type StylingProps = {
 }
 
 const StyledHighlights = styled.article`
-  margin-top: 5vh;
+
+  h2 {font-size: 1.2em;}
+  h3 {font-size: 1em;}
+  h4 {
+    font-size: .7em; 
+    font-weight: 400;
+  }
+
+  margin-top: 50px;
   #focusAreas {
     display: flex;
     flex-direction: row;
