@@ -1,7 +1,11 @@
 import { createTheme } from '@mui/material'
 import { KnowitColors } from './styleconstants'
 
-// See: https://mui.com/material-ui/customization/palette/
+/*The theme holds styles that override all default components
+  Styles specific to specific components, 
+  like layouts, can be found in the component file.
+  See: https://mui.com/material-ui/customization/palette/
+*/
 
 const theme = createTheme({
   palette: {
@@ -26,24 +30,6 @@ const theme = createTheme({
           '&:hover': {
             color: KnowitColors.white,
             backgroundColor: KnowitColors.darkGreen,
-          },
-        },
-      },
-    },
-    MuiModal: {
-      styleOverrides: {
-        root: {
-          '.modalContent': {
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            backgroundColor: KnowitColors.white,
-            border: '2px solid #000',
-            overflowY: 'auto',
-            maxHeight: '100vh',
-            maxWidth: '100vw',
-            wordWrap: 'break-word',
           },
         },
       },

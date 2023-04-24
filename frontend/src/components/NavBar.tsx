@@ -11,7 +11,6 @@ import {
   Grow,
   MenuItem,
   MenuList,
-  Modal,
   Paper,
   Popper,
   Toolbar,
@@ -31,8 +30,7 @@ import { NavBarPropsDesktop, UserRole } from '../types'
 import MenuIcon from '@mui/icons-material/Menu'
 import styled from '@emotion/styled'
 import { KnowitColors } from '../styleconstants'
-import { ModalWrapper } from '../styleconstants'
-import { Close } from '@mui/icons-material'
+import Modal from './Modal'
 const ToolbarContainer = styled.div`
   svg {
     color: ${KnowitColors.white};
@@ -145,21 +143,11 @@ const NavBar = ({
           <div id="toolbarButtons">
             {userState.roles.includes(UserRole.Admin) ? (
               <Modal
-                open={isHelpModalOpen}
-                onClose={() => setHelpModalOpen(false)}
+                isSmall={isSmall}
+                isOpen={isHelpModalOpen}
+                setIsOpen={setHelpModalOpen}
               >
-                <div className="modalContent">
-                  <ModalWrapper isSmall={isSmall}>
-                    <IconButton
-                      aria-label={t('close') as string}
-                      onClick={() => setHelpModalOpen(false)}
-                      size="large"
-                    >
-                      <Close />
-                    </IconButton>
-                    <ReactMarkdown>{helpMarkdown}</ReactMarkdown>
-                  </ModalWrapper>
-                </div>
+                <ReactMarkdown>{helpMarkdown}</ReactMarkdown>
               </Modal>
             ) : null}
             {userState.roles.includes(UserRole.Admin) ? (

@@ -1,14 +1,12 @@
-import { Fab, Modal, Tooltip } from '@mui/material'
+import { Fab, Tooltip } from '@mui/material'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import React from 'react'
 import * as Icon from '../icons/iconController'
-import IconButton from '@mui/material/IconButton'
 import i18n from '../i18n/i18n'
 import { useTranslation } from 'react-i18next'
-import CloseIcon from '@mui/icons-material/Close'
 import styled from '@emotion/styled'
 import { TipsAndUpdates } from '@mui/icons-material'
-import { ModalWrapper } from '../styleconstants'
+import Modal from './Modal'
 
 const FabContainer = styled.div`
   position: fixed;
@@ -97,45 +95,36 @@ const getMotivation = (): ScaleContainerObject[] => [
   },
 ]
 
-type DescriptionTableProps = {
-  onClose: React.MouseEventHandler<HTMLButtonElement>
-  isSmall: boolean
-}
-
-const StyledScaleContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+const StyledDescriptiontable = styled.div`
+  .scaleItem {
+    margin-bottom: 1vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
 
   .scaleIcon {
     min-width: 25px;
+    margin-right: 10px;
   }
 `
 
-const DescriptionTable = ({ onClose, isSmall }: DescriptionTableProps) => {
+const DescriptionTable = () => {
   const { t } = useTranslation()
 
   const ScaleContainer = ({ ...props }: ScaleContainerProps) => (
-    <StyledScaleContainer>
+    <div className="scaleItem">
       <div className="scaleIcon">{props.icon}</div>
       <div>
         <h3>{props.heading}</h3>
         <div>{props.text}</div>
       </div>
-    </StyledScaleContainer>
+    </div>
   )
 
   return (
-    <ModalWrapper isSmall={isSmall}>
-      <IconButton
-        aria-label={t('close') as string}
-        onClick={onClose}
-        size="large"
-      >
-        <CloseIcon />
-      </IconButton>
+    <StyledDescriptiontable>
       <h1>{t('scaleDescription')}</h1>
-
       <div>
         <section>
           <header>
@@ -171,7 +160,7 @@ const DescriptionTable = ({ onClose, isSmall }: DescriptionTableProps) => {
           })}
         </section>
       </div>
-    </ModalWrapper>
+    </StyledDescriptiontable>
   )
 }
 
@@ -201,15 +190,11 @@ const FloatingScaleDescButton = ({
     <FabContainer>
       {scaleDescOpen && (
         <Modal
-          open={scaleDescOpen}
-          onClose={() => setScaleDescOpen((scaleDescOpen) => !scaleDescOpen)}
+          isSmall={isSmall}
+          isOpen={scaleDescOpen}
+          setIsOpen={setScaleDescOpen}
         >
-          <div className="modalContent">
-            <DescriptionTable
-              onClose={() => setScaleDescOpen(false)}
-              isSmall={isSmall}
-            />
-          </div>
+          <DescriptionTable />
         </Modal>
       )}
       <Tooltip title={t('scaleDescription')} open={showTooltip} arrow>
