@@ -35,6 +35,18 @@ const theme = createTheme({
       },
     },
 
+    MuiTable: {
+      styleOverrides: {
+        root: {
+          '.MuiTableCell-head': {
+            fontWeight: 'bold',
+          },
+          marginBottom: 15,
+          marginTop: 15,
+        },
+      },
+    },
+
     MuiCollapse: {
       styleOverrides: {
         root: {
