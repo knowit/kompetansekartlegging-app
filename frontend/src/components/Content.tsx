@@ -1,4 +1,3 @@
-import { Drawer, List, ListItemButton, ListItemText } from '@mui/material'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { CreateQuestionAnswerInput, QuestionType } from '../API'
 import * as customQueries from '../graphql/custom-queries'
@@ -7,9 +6,6 @@ import { useAppSelector } from '../redux/hooks'
 import {
   selectAdminCognitoGroupName,
   selectGroupLeaderCognitoGroupName,
-  selectIsAdmin,
-  selectIsGroupLeader,
-  selectIsSuperAdmin,
   selectUserState,
 } from '../redux/User'
 import {
@@ -25,7 +21,6 @@ import {
   UserFormWithAnswers,
 } from '../types'
 import { AdminPanel } from './AdminPanel/'
-import adminItems from './AdminPanel/AdminMenu'
 import { AlertDialog } from './AlertDialog'
 import { AlertType, staleAnswersLimit } from './Question'
 import { AnswerHistory } from './AnswerHistory'
@@ -38,22 +33,20 @@ import {
 import { Overview } from './Overview'
 import { YourAnswers } from './YourAnswers'
 import { GroupLeaderPanel } from './GroupLeaderPanel/'
-import { superAdminItems } from './SuperAdminPanel/SuperAdminMenu'
 import { SuperAdminPanel } from './SuperAdminPanel/SuperAdminPanel'
 import { useTranslation } from 'react-i18next'
 import { TFunction } from 'i18next'
-import { DropdownMenuItem } from './DropdownMenuItem'
-import getGroupMenuitems from './GroupLeaderPanel/GroupLeaderMenu'
+
 import NavBar from './NavBar'
 import styled from '@emotion/styled'
-import { Close } from '@mui/icons-material'
-import { IconButton } from '@mui/material'
+
 import {
   navbarHeight,
   minPanelWidth,
   maxPanelWidth,
   menuWidth,
 } from '../styleconstants'
+import SideMenu from './SideMenu'
 
 type StylingProps = {
   isSmall: boolean
@@ -331,18 +324,6 @@ const Content = ({ ...props }: ContentProps) => {
     }
   }, [isCategorySubmitted])
 
-  const isSuperAdmin = useAppSelector(selectIsSuperAdmin)
-  const isAdmin = useAppSelector(selectIsAdmin)
-  const isGroupLeader = useAppSelector(selectIsGroupLeader)
-
-  const myAnswers = categories.map((cat) => {
-    return {
-      key: cat,
-      text: cat,
-      alert: alerts?.categoryMap.get(cat),
-    }
-  })
-
   const enableAnswerEditMode = () => {
     setAnswersBeforeSubmitted(new Map(questionAnswers))
     setAnswerEditMode(true)
@@ -354,31 +335,6 @@ const Content = ({ ...props }: ContentProps) => {
     props.setShowFab(activePanel in showFabPanels)
   }, [activePanel])
 
-  const handleMenuClick = (panelSource: Panel, itemSource: string) => {
-    const isInAnswer = panelSource === Panel.MyAnswers
-
-    if (answerEditMode) {
-      setlastClickedPanel(panelSource)
-      setLastClickedCategory(itemSource)
-      setAlertDialogOpen(true)
-    } else {
-      setActivePanel(panelSource)
-      if (isInAnswer) {
-        if (itemSource === 'MAIN') {
-          setActiveCategory(categories[0])
-        } else {
-          setActiveCategory(itemSource)
-        }
-        setActiveSubmenuItem('NONE')
-      } else {
-        setActiveCategory('NONE')
-        setActiveSubmenuItem(itemSource)
-      }
-    }
-    if (panelSource === Panel.Overview || itemSource !== 'MAIN') {
-      props.isSmall && toggleMenuOpen(!open)
-    }
-  }
   const resetAnswers = () => {
     setQuestionAnswers(new Map(answersBeforeSubmitted))
   }
@@ -453,68 +409,44 @@ const Content = ({ ...props }: ContentProps) => {
 
   const [menuOpen, toggleMenuOpen] = useState(false)
 
+  const handleMenuClick = (panelSource: Panel, itemSource: string) => {
+    if (answerEditMode) {
+      setlastClickedPanel(panelSource)
+      setLastClickedCategory(itemSource)
+      setAlertDialogOpen(true)
+    } else {
+      setActivePanel(panelSource)
+      if (panelSource === Panel.MyAnswers) {
+        if (itemSource === 'MAIN') {
+          setActiveCategory(categories[0])
+        } else {
+          setActiveCategory(itemSource)
+        }
+        setActiveSubmenuItem('NONE')
+      } else {
+        setActiveCategory('NONE')
+        setActiveSubmenuItem(itemSource)
+      }
+    }
+    if (panelSource === Panel.Overview || itemSource !== 'MAIN') {
+      props.isSmall && toggleMenuOpen(!open)
+    }
+  }
+
   return (
     <ContentContainer isSmall={props.isSmall}>
-      <Drawer
-        id="menu"
-        variant={props.isSmall ? 'persistent' : 'permanent'}
-        open={props.isSmall ? menuOpen : false}
-        anchor="left"
-      >
-        {props.isSmall && (
-          <IconButton onClick={() => toggleMenuOpen(!open)}>
-            <Close />
-          </IconButton>
-        )}
-        <List>
-          <ListItemButton
-            selected={activePanel === Panel.Overview}
-            onClick={() => handleMenuClick(Panel.Overview, 'MAIN')}
-          >
-            <ListItemText>{t('menu.overview')}</ListItemText>
-          </ListItemButton>
-          <DropdownMenuItem
-            panelId={Panel.MyAnswers}
-            show={true}
-            items={myAnswers}
-            text={'menu.myAnswers'}
-            alert={alerts?.qidMap.size !== 0 ? '!' : 0}
-            activeSubmenuItem={activeCategory}
-            handleMenuClick={handleMenuClick}
-          />
-
-          <DropdownMenuItem
-            panelId={Panel.GroupLeader}
-            show={isGroupLeader}
-            items={getGroupMenuitems(groupMembers)}
-            text={'menu.myGroup'}
-            alert={0}
-            activeSubmenuItem={activeSubmenuItem}
-            handleMenuClick={handleMenuClick}
-          />
-
-          <DropdownMenuItem
-            panelId={Panel.Admin}
-            show={isAdmin}
-            items={adminItems}
-            text={'menu.admin'}
-            alert={0}
-            activeSubmenuItem={activeSubmenuItem}
-            handleMenuClick={handleMenuClick}
-          />
-
-          <DropdownMenuItem
-            panelId={Panel.SuperAdmin}
-            show={isSuperAdmin}
-            items={superAdminItems}
-            text={'menu.superAdmin'}
-            alert={0}
-            activeSubmenuItem={activeSubmenuItem}
-            handleMenuClick={handleMenuClick}
-          />
-        </List>
-      </Drawer>
-
+      <SideMenu
+        isSmall={props.isSmall}
+        activePanel={activePanel}
+        categories={categories}
+        menuOpen={menuOpen}
+        toggleMenuOpen={toggleMenuOpen}
+        alerts={alerts}
+        activeCategory={activeCategory}
+        activeSubmenuItem={activeSubmenuItem}
+        groupMembers={groupMembers}
+        handleMenuClick={handleMenuClick}
+      />
       <NavBar
         toggleMenuOpen={toggleMenuOpen}
         isSmall={props.isSmall}
