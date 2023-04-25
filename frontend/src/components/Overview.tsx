@@ -7,7 +7,6 @@ export const Overview = ({ ...props }: OverviewProps) => {
   const { t } = useTranslation()
   return props.userAnswersLoaded ? (
     <div>
-      <h1>{t('menu.overview')}</h1>
       <TypedOverviewChart
         isSmall={props.isSmall}
         questionAnswers={props.questionAnswers}
