@@ -8,7 +8,7 @@ const Nav = ({ categories, category, setCategory, name }: any) => {
 
   return (
     <div>
-      <h3>{name}</h3>
+      <h1>{name}</h1>
       <FormControl>
         <Select
           value={category}
