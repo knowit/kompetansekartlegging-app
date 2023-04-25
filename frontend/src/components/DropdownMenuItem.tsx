@@ -74,13 +74,24 @@ const DropdownMenuItem = ({
       </ListItemButton>
     ))
 
+  const hasMainPanel = panelId in [Panel.GroupLeader, Panel.Overview]
+
+  const handleMainItemClick = () => {
+    if (!hasMainPanel && hasChildren) {
+      handleMenuClick(panelId, items[0].key)
+    } else {
+      handleMenuClick(panelId, 'MAIN')
+    }
+
+    hasChildren && setDrawerOpen(!drawerOpen)
+    isGroupmenuAndNotLoaded && setDrawerOpen(!drawerOpen)
+  }
+
   return (
     <Fragment>
       <ListItemButton
         onClick={() => {
-          handleMenuClick(panelId, 'MAIN')
-          hasChildren && setDrawerOpen(!drawerOpen)
-          isGroupmenuAndNotLoaded && setDrawerOpen(!drawerOpen)
+          handleMainItemClick()
         }}
       >
         <Badge badgeContent={alert} color="warning">
