@@ -39,7 +39,7 @@ const ToolbarContainer = styled.div`
     display: flex;
     justify-content: space-between;
     h1 {
-      font-size: 2vw;
+      font-size: 1vw;
     }
     #toolbarButtons {
       display: flex;
