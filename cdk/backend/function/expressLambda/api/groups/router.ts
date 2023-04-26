@@ -65,7 +65,7 @@ router.delete<unknown, unknown, DeleteUserInput>(
   '/user',
   async (req, res, next) => {
     try {
-      const deleteResponse = await Group.deleteUser(req.body)
+      const deleteResponse = await Group.deleteUserFromGroup(req.body)
 
       res.status(200).json(deleteResponse)
     } catch (err) {
