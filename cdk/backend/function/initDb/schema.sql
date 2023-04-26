@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS "group"(
     organization_id UUID NOT NULL references organization(id)
 );
 ALTER TABLE "user"
-ADD IF NOT EXISTS group_id UUID references "group"(id);
+ADD IF NOT EXISTS group_id UUID references "group"(id) ON DELETE
+SET NULL;
 ALTER TABLE "group"
 ADD IF NOT EXISTS group_leader_username VARCHAR(255) NOT NULL references "user"(username);

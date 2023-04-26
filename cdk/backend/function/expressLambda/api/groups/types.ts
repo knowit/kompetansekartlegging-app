@@ -10,7 +10,7 @@ export type GetGroupInput = Pick<Group, 'id'>
 export type DeleteGroupInput = Pick<Group, 'id'>
 export type UpdateGroupLeaderInput = Pick<Group, 'group_leader_username'>
 
-interface User {
+export interface User {
   username: string
   group_id: string
   organization_id: string
