@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS api_key_permission(
 CREATE TABLE IF NOT EXISTS "catalog"(
     id UUID PRIMARY KEY NOT NULL,
     label VARCHAR(255),
+    active BOOLEAN UNIQUE,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ,
     organization_id UUID NOT NULL references organization(id)
