@@ -16,6 +16,12 @@ const getAnnotatedGroupMembersByGroupLeader = async ({
     throw new Error('Could not fetch group members')
   }
 
+  if (!membersInGroup.data) {
+    throw new Error(
+      'No group members found. Perhaps the user is not a group leader?'
+    )
+  }
+
   // Annotate the members with Cognito User Pool data
   const annotatedMembers = await Promise.all(
     membersInGroup.data.map(
