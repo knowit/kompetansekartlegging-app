@@ -1,31 +1,20 @@
 import { useEffect, useState } from 'react'
 
-import Box from '@mui/material/Box'
+import AddIcon from '@mui/icons-material/Add'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CircularProgress from '@mui/material/CircularProgress'
-import Collapse from '@mui/material/Collapse'
 import Container from '@mui/material/Container'
-import IconButton from '@mui/material/IconButton'
-import { makeStyles } from '@mui/styles'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
 import Typography from '@mui/material/Typography'
-import AddIcon from '@mui/icons-material/Add'
-import DeleteIcon from '@mui/icons-material/Delete'
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 
 import { useTranslation } from 'react-i18next'
 import { getLatestUserFormUpdatedAtForUser } from '../../helperFunctions'
-import { useAppSelector } from '../../redux/hooks'
 import { selectUserState } from '../../redux/User'
+import { useAppSelector } from '../../redux/hooks'
 import Button from '../mui/Button'
-import Table from '../mui/Table'
-import TableRow from '../mui/TableRow'
 import AddUserToGroupDialog from './AddUserToGroupDialog'
+import DeleteGroupDialog from './DeleteGroupDialog'
+import DeleteUserFromGroupDialog from './DeleteUserFromGroupDialog'
 import {
   listAllUsersInOrganization as listAllAvailableUsersInOrganization,
   // listGroupLeaders,
@@ -33,9 +22,6 @@ import {
 } from './adminApi'
 import { listAllFormDefinitionsForLoggedInUser } from './catalogApi'
 import commonStyles from './common.module.css'
-import DeleteGroupDialog from './DeleteGroupDialog'
-import DeleteUserFromGroupDialog from './DeleteUserFromGroupDialog'
-import GroupMembers from './GroupMembers'
 import {
   addGroup,
   addUserToGroup,
@@ -46,159 +32,9 @@ import {
   updateGroupLeader,
   updateUserGroup,
 } from './groupsApi'
-import { compareByCreatedAt, compareByName, getAttribute } from './helpers'
-import PictureAndNameEditCell from './PictureAndNameEditCell'
+import { compareByCreatedAt } from './helpers'
+import { GroupsOverviewTable } from './rewritten-group/groups-overview/GroupsOverviewTable'
 import useApiGet from './useApiGet'
-import { KnowitColors } from '../../styles'
-
-const useRowStyles = makeStyles({
-  root: {
-    '& > *': {
-      borderBottom: 'unset',
-    },
-  },
-  editIcon: {},
-})
-
-const Group = ({
-  addMembersToGroup,
-  deleteMember,
-  group,
-  deleteGroup,
-  editGroup,
-  users,
-  open,
-  setOpenId,
-  showLastAnsweredAt,
-}: any) => {
-  const { t } = useTranslation()
-
-  const hasGroupLeader = !!group.groupLeader
-  const name = hasGroupLeader
-    ? getAttribute(group.groupLeader, 'name')
-    : t('admin.editGroups.groupLeaderRemoved')
-  const picture = hasGroupLeader
-    ? getAttribute(group.groupLeader, 'picture')
-    : undefined
-  const classes = useRowStyles()
-
-  return (
-    <>
-      <TableRow className={classes.root} selected={open}>
-        <TableCell>
-          <IconButton size="small" onClick={() => setOpenId(group.id)}>
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell align="right">
-          <PictureAndNameEditCell
-            name={name}
-            picture={picture}
-            onEdit={() => editGroup(group)}
-          />
-        </TableCell>
-        <TableCell>{group.members.length}</TableCell>
-        <TableCell align="right">
-          <Button
-            endIcon={<DeleteIcon />}
-            onClick={() => deleteGroup(group)}
-            style={{ color: KnowitColors.black }}
-          >
-            {t('admin.editGroups.removeGroup')}
-          </Button>
-        </TableCell>
-      </TableRow>
-      <TableRow selected={open}>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={5}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <Typography variant="h6" gutterBottom>
-                {t('admin.editGroups.members')}
-              </Typography>
-              <GroupMembers
-                allUsers={users}
-                members={group.members}
-                addMembersToGroup={(users: any) =>
-                  addMembersToGroup(users, group.id)
-                }
-                deleteMember={(user: any) => deleteMember(user, group.id)}
-                showLastAnsweredAt={showLastAnsweredAt}
-              />
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </>
-  )
-}
-
-const GroupsTable = ({
-  groups,
-  allAvailableUsersAnnotated,
-  groupLeaders,
-  deleteGroup,
-  editGroup,
-  addMembersToGroup,
-  deleteMember,
-  showLastAnsweredAt,
-}: any) => {
-  const { t } = useTranslation()
-
-  const [openId, setOpenId] = useState<string>('')
-  const setOpenGroup = (groupId: string) => {
-    if (openId === groupId) {
-      setOpenId('')
-    } else {
-      setOpenId(groupId)
-    }
-  }
-
-  const groupsAnnotated = groups
-    .map((g: any) => {
-      const groupLeader = groupLeaders.find(
-        (gl: any) => gl.Username === g.groupLeaderUsername
-      )
-      const members = allAvailableUsersAnnotated.filter(
-        (u: any) => u.groupId === g.id
-      )
-      return { ...g, groupLeader, members }
-    })
-    .sort((g1: any, g2: any) => compareByName(g1?.groupLeader, g2?.groupLeader))
-
-  return (
-    <TableContainer
-      className={commonStyles.tableContainer}
-      style={{ overflowX: 'hidden' }}
-    >
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>{t('admin.editGroups.details')}</TableCell>
-            <TableCell>{t('groupLeader')}</TableCell>
-            <TableCell>{t('admin.editGroups.numberOfGroupMembers')}</TableCell>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {groupsAnnotated.map((g: any) => (
-            <Group
-              key={g.id}
-              group={g}
-              users={allAvailableUsersAnnotated}
-              deleteGroup={deleteGroup}
-              open={g.id === openId}
-              setOpenId={setOpenGroup}
-              addMembersToGroup={addMembersToGroup}
-              deleteMember={deleteMember}
-              editGroup={editGroup}
-              showLastAnsweredAt={showLastAnsweredAt}
-            />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  )
-}
 
 const EditGroups = ({ showLastAnsweredAt }: any) => {
   const { t } = useTranslation()
@@ -396,7 +232,7 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
               {t('admin.editGroups.description')}
             </CardContent>
           </Card>
-          <GroupsTable
+          <GroupsOverviewTable
             groups={groups}
             deleteGroup={deleteGroup}
             users={users}
