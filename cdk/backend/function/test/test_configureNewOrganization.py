@@ -9,8 +9,8 @@ from moto import mock_cognitoidp
 os.environ["AWS_DEFAULT_REGION"] = "eu-central-1"
 os.environ["GROUP"] = "admin"
 
-sys.path.append('../configureNewOrganization')
-from index import handler, create_groups, user_already_exists, add_user_to_groups, create_admin_user
+sys.path.append('../')
+from configureNewOrganization.index import handler, create_groups, user_already_exists, add_user_to_groups, create_admin_user
 
 new_org_id = "newOrg"
 new_email = "new@email"
@@ -162,10 +162,10 @@ class TestConfigureNewOrganizationLambda(TestCase):
     # TODO: Write tests after migrating from DynamoDB to Aurora
     # (create_default_form_definition & default_form_definition_already_exists)
 
-    @patch("index.create_groups")
-    @patch("index.user_already_exists", return_value=False)
-    @patch("index.create_admin_user")
-    @patch("index.create_default_form_definition")
+    @patch("configureNewOrganization.index.create_groups")
+    @patch("configureNewOrganization.index.user_already_exists", return_value=False)
+    @patch("configureNewOrganization.index.create_admin_user")
+    @patch("configureNewOrganization.index.create_default_form_definition")
     def test_handler_returns_200_with_admin_creation(
         self,
         patch_create_default_form_definition: MagicMock,
@@ -196,10 +196,10 @@ class TestConfigureNewOrganizationLambda(TestCase):
         patch_create_default_form_definition.assert_called_once_with(new_org_id)
 
 
-    @patch("index.create_groups")
-    @patch("index.user_already_exists")
-    @patch("index.create_admin_user")
-    @patch("index.create_default_form_definition")
+    @patch("configureNewOrganization.index.create_groups")
+    @patch("configureNewOrganization.index.user_already_exists")
+    @patch("configureNewOrganization.index.create_admin_user")
+    @patch("configureNewOrganization.index.create_default_form_definition")
     def test_handler_returns_200_without_admin_creation(
         self,
         patch_create_default_form_definition: MagicMock,
