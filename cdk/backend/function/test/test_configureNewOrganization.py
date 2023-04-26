@@ -12,6 +12,8 @@ os.environ["GROUP"] = "admin"
 sys.path.append('../configureNewOrganization')
 from index import handler, create_groups, user_already_exists, add_user_to_groups, create_admin_user
 
+new_org_id = "newOrg"
+new_email = "new@email"
 
 @mock_cognitoidp
 class TestConfigureNewOrganizationLambda(TestCase):
@@ -22,7 +24,6 @@ class TestConfigureNewOrganizationLambda(TestCase):
 
 
     def test_create_groups(self):
-        new_org_id = "newOrg"
         expected_group_names = [new_org_id, f'{new_org_id}0admin', f'{new_org_id}0groupLeader']
 
         # Create groups
@@ -41,12 +42,10 @@ class TestConfigureNewOrganizationLambda(TestCase):
 
 
     def test_user_already_exists(self):
-        email = "name@surname"
-
         # Assert user does not exist
         self.assertFalse(
             user_already_exists(
-                email=email,
+                email=new_email,
                 userpool_id=self.cognito_userpool_id,
                 cognito_client=self.cognito_client
             )
@@ -54,14 +53,14 @@ class TestConfigureNewOrganizationLambda(TestCase):
         # Create user
         self.cognito_client.admin_create_user(
             UserPoolId = self.cognito_userpool_id,
-            Username = email,
+            Username = new_email,
             MessageAction = "SUPPRESS",
-            UserAttributes = [{"Name": "email", "Value": email}]
+            UserAttributes = [{"Name": "email", "Value": new_email}]
         )
         # Assert user exists
         self.assertTrue(
             user_already_exists(
-                email=email,
+                email=new_email,
                 userpool_id=self.cognito_userpool_id,
                 cognito_client=self.cognito_client
             )
@@ -69,9 +68,7 @@ class TestConfigureNewOrganizationLambda(TestCase):
 
 
     def test_add_user_to_groups(self):
-        new_org_id = "newOrg"
         expected_group_names = [new_org_id, f'{new_org_id}0admin']
-        email = "admin@user"
 
         # Create groups
         for group_name in expected_group_names:
@@ -82,20 +79,20 @@ class TestConfigureNewOrganizationLambda(TestCase):
         # Create user
         self.cognito_client.admin_create_user(
             UserPoolId = self.cognito_userpool_id,
-            Username = email,
+            Username = new_email,
             MessageAction = "SUPPRESS",
-            UserAttributes = [{"Name": "email", "Value": email}]
+            UserAttributes = [{"Name": "email", "Value": new_email}]
         )
         # Add user to groups
         add_user_to_groups(
             org_id=new_org_id,
-            email=email,
+            email=new_email,
             userpool_id=self.cognito_userpool_id,
             cognito_client=self.cognito_client
         )
         # List groups for user
         actual_groups = self.cognito_client.admin_list_groups_for_user(
-            Username=email,
+            Username=new_email,
             UserPoolId=self.cognito_userpool_id
         )["Groups"]
         actual_group_names = [group["GroupName"] for group in actual_groups]
@@ -106,9 +103,7 @@ class TestConfigureNewOrganizationLambda(TestCase):
 
 
     def test_create_admin_user(self):
-        new_org_id = "newOrg"
         expected_group_names = [new_org_id, f'{new_org_id}0admin']
-        email = "admin@user"
 
         # Create groups
         for group_name in expected_group_names:
@@ -119,7 +114,7 @@ class TestConfigureNewOrganizationLambda(TestCase):
         # Assert user does not exist
         self.assertFalse(
             user_already_exists(
-                email=email,
+                email=new_email,
                 userpool_id=self.cognito_userpool_id,
                 cognito_client=self.cognito_client
             )
@@ -127,21 +122,21 @@ class TestConfigureNewOrganizationLambda(TestCase):
         # Create admin user
         create_admin_user(
             org_id=new_org_id,
-            email=email,
+            email=new_email,
             userpool_id=self.cognito_userpool_id,
             cognito_client=self.cognito_client
         )
         # Assert admin user exists
         self.assertTrue(
             user_already_exists(
-                email=email,
+                email=new_email,
                 userpool_id=self.cognito_userpool_id,
                 cognito_client=self.cognito_client
             )
         )
         # List groups for admin user
         actual_groups = self.cognito_client.admin_list_groups_for_user(
-            Username=email,
+            Username=new_email,
             UserPoolId=self.cognito_userpool_id
         )["Groups"]
         actual_group_names = [group["GroupName"] for group in actual_groups]
@@ -178,8 +173,6 @@ class TestConfigureNewOrganizationLambda(TestCase):
         patch_user_already_exists: MagicMock,
         patch_create_groups: MagicMock
     ):
-        new_org_id = "newOrg"
-        new_admin_email = "new@admin"
         event = {
             "requestContext": {
                 "authorizer": {
@@ -190,7 +183,7 @@ class TestConfigureNewOrganizationLambda(TestCase):
             },
             "queryStringParameters": {
                 "organization_id": new_org_id,
-                "admin_email": new_admin_email
+                "admin_email": new_email
             }
         }
         return_value = handler(event=event, context=None)
@@ -198,8 +191,8 @@ class TestConfigureNewOrganizationLambda(TestCase):
         self.assertEqual(return_value["statusCode"], 200)
 
         patch_create_groups.assert_called_once_with(new_org_id)
-        patch_user_already_exists.assert_called_once_with(new_admin_email)
-        patch_create_admin_user.assert_called_once_with(new_org_id, new_admin_email)
+        patch_user_already_exists.assert_called_once_with(new_email)
+        patch_create_admin_user.assert_called_once_with(new_org_id, new_email)
         patch_create_default_form_definition.assert_called_once_with(new_org_id)
 
 
@@ -214,8 +207,6 @@ class TestConfigureNewOrganizationLambda(TestCase):
         patch_user_already_exists: MagicMock,
         patch_create_groups: MagicMock
     ):
-        new_org_id = "newOrg"
-        new_admin_email = ""
         event = {
             "requestContext": {
                 "authorizer": {
@@ -226,7 +217,7 @@ class TestConfigureNewOrganizationLambda(TestCase):
             },
             "queryStringParameters": {
                 "organization_id": new_org_id,
-                "admin_email": new_admin_email
+                "admin_email": ""
             }
         }
         return_value = handler(event=event, context=None)
