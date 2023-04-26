@@ -1,23 +1,23 @@
-interface Group {
+export interface IGroup {
   id: string
   organizationid: string
   groupleaderusername: string
 }
 
-export type GroupInput = Omit<Group, 'id'>
+export type GroupInput = Omit<IGroup, 'id'>
 
-export type GetGroupInput = Pick<Group, 'id'>
-export type DeleteGroupInput = Pick<Group, 'id'>
-export type UpdateGroupLeaderInput = Pick<Group, 'groupleaderusername'>
+export type GetGroupInput = Pick<IGroup, 'id'>
+export type DeleteGroupInput = Pick<IGroup, 'id'>
+export type UpdateGroupLeaderInput = Pick<IGroup, 'groupleaderusername'>
 
-interface User {
-  id: string
+export interface IUser {
+  username: string
   groupid: string
   organizationid: string
 }
 
-export type UserInput = User
+export type UserInput = IUser
 
-export type AddUserInput = Omit<User, 'groupid'>
-export type GetUsersInput = Pick<User, 'groupid'>
-export type DeleteUserInput = Pick<User, 'id'>
+export type AddUserInput = Omit<IUser, 'groupid'>
+export type GetUsersInput = Pick<IUser, 'groupid'>
+export type DeleteUserInput = Pick<IUser, 'username'>
