@@ -3,18 +3,17 @@ import sys
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 from boto3 import client
-from moto import mock_cognitoidp, mock_dynamodb
+from moto import mock_cognitoidp
 
 # Set environment variables before importing lambda
 os.environ["AWS_DEFAULT_REGION"] = "eu-central-1"
 os.environ["GROUP"] = "admin"
 
 sys.path.append('../configureNewOrganization')
-from index import handler, create_groups, user_already_exists, create_admin_user 
+from index import handler, create_groups, user_already_exists, add_user_to_groups, create_admin_user
 
 
 @mock_cognitoidp
-@mock_dynamodb # TODO: replace with aurora and write tests (after migration is complete)
 class TestConfigureNewOrganizationLambda(TestCase):
 
     def setUp(self):
@@ -59,7 +58,6 @@ class TestConfigureNewOrganizationLambda(TestCase):
             MessageAction = "SUPPRESS",
             UserAttributes = [{"Name": "email", "Value": email}]
         )
-
         # Assert user exists
         self.assertTrue(
             user_already_exists(
@@ -68,6 +66,43 @@ class TestConfigureNewOrganizationLambda(TestCase):
                 cognito_client=self.cognito_client
             )
         )
+
+
+    def test_add_user_to_groups(self):
+        new_org_id = "newOrg"
+        expected_group_names = [new_org_id, f'{new_org_id}0admin']
+        email = "admin@user"
+
+        # Create groups
+        for group_name in expected_group_names:
+            self.cognito_client.create_group(
+                UserPoolId=self.cognito_userpool_id,
+                GroupName=group_name
+            )
+        # Create user
+        self.cognito_client.admin_create_user(
+            UserPoolId = self.cognito_userpool_id,
+            Username = email,
+            MessageAction = "SUPPRESS",
+            UserAttributes = [{"Name": "email", "Value": email}]
+        )
+        # Add user to groups
+        add_user_to_groups(
+            org_id=new_org_id,
+            email=email,
+            userpool_id=self.cognito_userpool_id,
+            cognito_client=self.cognito_client
+        )
+        # List groups for user
+        actual_groups = self.cognito_client.admin_list_groups_for_user(
+            Username=email,
+            UserPoolId=self.cognito_userpool_id
+        )["Groups"]
+        actual_group_names = [group["GroupName"] for group in actual_groups]
+
+        # Assert user was added to expected groups
+        self.assertEqual(2, len(actual_groups))
+        self.assertTrue(all(expected_group_name in actual_group_names for expected_group_name in expected_group_names))
 
 
     def test_create_admin_user(self):
@@ -110,7 +145,7 @@ class TestConfigureNewOrganizationLambda(TestCase):
             UserPoolId=self.cognito_userpool_id
         )["Groups"]
         actual_group_names = [group["GroupName"] for group in actual_groups]
-        
+
         # Assert user is a member of all expected groups
         self.assertEqual(2, len(actual_groups))
         self.assertTrue(all(expected_group_name in actual_group_names for expected_group_name in expected_group_names))
@@ -129,12 +164,14 @@ class TestConfigureNewOrganizationLambda(TestCase):
         return_value = handler(event=event, context=None)
         self.assertEqual(return_value["statusCode"], 401)
 
+    # TODO: Write tests after migrating from DynamoDB to Aurora
+    # (create_default_form_definition & default_form_definition_already_exists)
 
     @patch("index.create_groups")
     @patch("index.user_already_exists", return_value=False)
     @patch("index.create_admin_user")
     @patch("index.create_default_form_definition")
-    def test_handler_with_admin_creation(
+    def test_handler_returns_200_with_admin_creation(
         self,
         patch_create_default_form_definition: MagicMock,
         patch_create_admin_user: MagicMock,
@@ -170,7 +207,7 @@ class TestConfigureNewOrganizationLambda(TestCase):
     @patch("index.user_already_exists")
     @patch("index.create_admin_user")
     @patch("index.create_default_form_definition")
-    def test_handler_without_admin_creation(
+    def test_handler_returns_200_without_admin_creation(
         self,
         patch_create_default_form_definition: MagicMock,
         patch_create_admin_user: MagicMock,
