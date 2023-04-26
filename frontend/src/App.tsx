@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import { API, Auth, Hub } from 'aws-amplify'
-// import awsconfig from "./aws-exports";
 import awsconfig from './exports'
 import Content from './components/Content'
 import Login from './components/Login'
@@ -22,8 +21,6 @@ import { useTranslation } from 'react-i18next'
 
 const userBranch = import.meta.env.VITE_USER_BRANCH
 
-// console.log("Hosted branch: ", userBranch);
-
 switch (userBranch) {
   case 'master':
     awsconfig.oauth.domain = 'auth.kompetanse.knowit.no'
@@ -38,7 +35,6 @@ switch (userBranch) {
 awsconfig.oauth.redirectSignIn = `${window.location.origin}/`
 awsconfig.oauth.redirectSignOut = `${window.location.origin}/`
 
-// let config = Amplify.configure(awsconfig);
 API.configure(awsconfig)
 Auth.configure(awsconfig)
 
@@ -54,12 +50,10 @@ Hub.listen(/.*/, (data) => {
       message.includes('AzureAD') &&
       !message.includes('organization')
     ) {
-      // console.log("Failure in the membrane");
       Auth.federatedSignIn({
         customProvider: 'AzureAD',
       })
     }
-    // Auth.federatedSignIn();
   }
 })
 
