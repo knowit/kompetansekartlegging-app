@@ -2,7 +2,7 @@ import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
 import { sqlQuery } from '../../app'
 import { GetByUsername, GetByUsernameAndOrganizationId } from './types'
 
-const myGroupMembers = async ({ username }: GetByUsername) => {
+const getGroupMembersByGroupLeader = async ({ username }: GetByUsername) => {
   const parameters: SqlParameter[] = [
     {
       name: 'username',
@@ -89,7 +89,7 @@ const getLatestAnswerTimestamp = async ({ username }: GetByUsername) => {
 }
 
 export default {
-  myGroupMembers,
+  getGroupMembersByGroupLeader,
   getQuestionAnswersByActiveCatalogAndUser,
   getLatestAnswerTimestamp,
 }
