@@ -132,6 +132,12 @@ export const YourAnswers = ({ ...props }: YourAnswerProps) => {
 
   return (
     <>
+      <Hideable hidden={props.answerEditMode}>
+        <ProgressBar
+          alerts={props.alerts}
+          totalQuestions={props.formDefinition?.questions.items.length ?? 0}
+        />
+      </Hideable>
       <InfoCard
         title={props.activeCategory}
         description={getCategoryDescription()}
@@ -158,10 +164,6 @@ export const YourAnswers = ({ ...props }: YourAnswerProps) => {
       </Hideable>
 
       <Hideable hidden={props.answerEditMode}>
-        <ProgressBar
-          alerts={props.alerts}
-          totalQuestions={props.formDefinition?.questions.items.length ?? 0}
-        />
         <Form
           {...props}
           scrollToTop={scrollToTop}

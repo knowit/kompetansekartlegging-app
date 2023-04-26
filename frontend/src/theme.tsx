@@ -47,6 +47,16 @@ const theme = createTheme({
       },
     },
 
+    MuiLinearProgress: {
+      styleOverrides: {
+        root: {
+          height: 6,
+          borderRadius: 3,
+          color: KnowitColors.green,
+        },
+      },
+    },
+
     MuiCollapse: {
       styleOverrides: {
         root: {

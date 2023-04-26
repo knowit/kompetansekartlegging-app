@@ -1,6 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { ProgressProps } from '../types'
 import { LinearProgressProps, LinearProgress } from '@mui/material'
+import styled from '@emotion/styled'
+
+const StyledLinearProgress = styled.div`
+  display: grid;
+  grid-template-columns: 50px auto;
+  align-items: center;
+`
 
 export default function ProgressBar({ ...props }: ProgressProps) {
   const [progress, setProgress] = useState<number>(0)
@@ -18,7 +25,12 @@ export default function ProgressBar({ ...props }: ProgressProps) {
   const LinearProgressWithPercentage = (
     props: LinearProgressProps & { value: number }
   ) => {
-    return <LinearProgress variant="determinate" {...props} />
+    return (
+      <StyledLinearProgress>
+        {`${Math.round(progress)}%`}
+        <LinearProgress variant="determinate" {...props} />
+      </StyledLinearProgress>
+    )
   }
 
   return <LinearProgressWithPercentage value={progress} />
