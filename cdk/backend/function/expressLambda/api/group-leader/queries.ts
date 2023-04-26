@@ -65,4 +65,31 @@ const getQuestionAnswersByActiveCatalogAndUser = async ({
   })
 }
 
-export default { myGroupMembers, getQuestionAnswersByActiveCatalogAndUser }
+const getLatestAnswerTimestamp = async ({ username }: GetByUsername) => {
+  const parameters: SqlParameter[] = [
+    {
+      name: 'username',
+      value: {
+        stringValue: username,
+      },
+    },
+  ]
+
+  const query = `
+    SELECT MAX(qa.updated_at) AS latest_answer_timestamp
+    FROM question_answer qa
+    WHERE qa.user_username = :username
+  `
+
+  return await sqlQuery({
+    message: `🚀 ~ > Latest answer timestamp for '${username}'`,
+    query,
+    parameters,
+  })
+}
+
+export default {
+  myGroupMembers,
+  getQuestionAnswersByActiveCatalogAndUser,
+  getLatestAnswerTimestamp,
+}
