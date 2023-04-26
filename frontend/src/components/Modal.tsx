@@ -11,8 +11,8 @@ type StylingProps = {
 export const ModalWrapper = styled.div`
   ${(props: StylingProps) => props.isSmall && 'min-width: 100vw;'}
   ${(props: StylingProps) => props.isSmall && 'min-height: 100vh;'}
-    ${(props: StylingProps) => !props.isSmall && 'max-width: 500px;'}
-    ${(props: StylingProps) => !props.isSmall && 'max-height: 80vh;'}
+  ${(props: StylingProps) => !props.isSmall && 'max-width: 500px;'}
+  ${(props: StylingProps) => !props.isSmall && 'max-height: 80vh;'}
 
   padding: 20px;
   position: relative;

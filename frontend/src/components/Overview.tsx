@@ -1,21 +1,21 @@
 import { OverviewProps } from '../types'
 import Highlights from './Highlights'
 import TypedOverviewChart from './TypedOverviewChart'
-import { useTranslation } from 'react-i18next'
 
-export const Overview = ({ ...props }: OverviewProps) => {
-  const { t } = useTranslation()
-  return props.userAnswersLoaded ? (
+export const Overview = ({
+  questionAnswers,
+  categories,
+  isSmall,
+  userAnswersLoaded,
+}: OverviewProps) => {
+  return userAnswersLoaded ? (
     <div>
       <TypedOverviewChart
-        isSmall={props.isSmall}
-        questionAnswers={props.questionAnswers}
-        categories={props.categories}
+        isSmall={isSmall}
+        questionAnswers={questionAnswers}
+        categories={categories}
       />
-      <Highlights
-        isSmall={props.isSmall}
-        questionAnswers={props.questionAnswers}
-      />
+      <Highlights isSmall={isSmall} questionAnswers={questionAnswers} />
     </div>
   ) : null
 }

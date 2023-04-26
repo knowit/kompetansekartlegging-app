@@ -6,12 +6,10 @@ import LanguageIcon from '@mui/icons-material/Language'
 import { KnowitColors } from '../styleconstants'
 
 type LanguageSelectProps = {
-  color: string
-  marginTop?: number
-  marginLeft?: number
+  color?: string
 }
 
-export const LanguageSelect = (props: LanguageSelectProps) => {
+export const LanguageSelect = ({ color }: LanguageSelectProps) => {
   const { i18n } = useTranslation()
 
   const changeLanguage = (language: string) => {
@@ -24,7 +22,7 @@ export const LanguageSelect = (props: LanguageSelectProps) => {
     <Select
       value={i18n.language}
       onChange={(event) => changeLanguage(event.target.value as string)}
-      renderValue={() => <LanguageIcon style={{ color: props.color }} />}
+      renderValue={() => <LanguageIcon style={{ color: color }} />}
       aria-label={
         i18n.t('aria.selectLanguageLanguageIsSelected', {
           language: availableLanguages[i18n.language],

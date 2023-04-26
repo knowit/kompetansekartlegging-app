@@ -36,14 +36,19 @@ const parseScore = (
   return score < 0 ? t('content.notAnswered') : score
 }
 
-export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
+export const AnswerHistory = ({
+  setHistoryViewOpen,
+  historyViewOpen,
+  history,
+  formDefinition,
+}: AnswerHistoryProps) => {
   const { t } = useTranslation()
 
   const handleClose = () => {
-    props.setHistoryViewOpen(false)
+    setHistoryViewOpen(false)
   }
 
-  const HistoryTreeView = ({ ...props }: HistoryTreeViewProps) => {
+  const HistoryTreeView = ({ data }: HistoryTreeViewProps) => {
     const g = generator()
 
     const renderEntry = (entry: UserFormWithAnswers) => {
@@ -75,7 +80,7 @@ export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
       )
     }
 
-    const sortedData = props.data.sort(
+    const sortedData = data.sort(
       (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
     )
 
@@ -91,7 +96,7 @@ export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
   }
 
   const findQuestion = (questionId: string): string => {
-    const question = props.formDefinition?.questions.items.find(
+    const question = formDefinition?.questions.items.find(
       (q) => q.id === questionId
     )
     return question
@@ -102,7 +107,7 @@ export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
   return (
     <div>
       <Dialog
-        open={props.historyViewOpen}
+        open={historyViewOpen}
         onClose={handleClose}
         scroll={'body'}
         aria-labelledby="scroll-dialog-title"
@@ -112,7 +117,7 @@ export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
           {t('content.answerHistory')}
         </DialogTitle>
         <DialogContent dividers={true}>
-          <HistoryTreeView data={props.history} />
+          <HistoryTreeView data={history} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>{t('close')}</Button>

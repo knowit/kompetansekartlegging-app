@@ -79,7 +79,7 @@ const Login = ({ isSmall }: IsSmallProp) => {
   return (
     <StyledLoginContainer isSmall={isSmall}>
       <header id="languageSelect">
-        <LanguageSelect iconColor={KnowitColors.darkBrown} />
+        <LanguageSelect color={KnowitColors.darkBrown} />
       </header>
 
       <main>

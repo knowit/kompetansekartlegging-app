@@ -67,14 +67,7 @@ const NavBar = ({
     setAvatarMenuOpen((avatarMenuPrevOpen) => !avatarMenuPrevOpen)
   }
 
-  const handleClose = (event: React.MouseEvent<EventTarget>) => {
-    if (
-      anchorRef.current &&
-      anchorRef.current.contains(event.target as HTMLElement)
-    ) {
-      return
-    }
-
+  const handleClose = () => {
     setAvatarMenuOpen(false)
   }
 
@@ -195,9 +188,6 @@ const NavBar = ({
                       id="menu-list-grow"
                       onKeyDown={handleListKeyDown}
                     >
-                      {/* Removed for user testing, i18n if uncommenting
-                                        <MenuItem onClick={handleDisplayAnswers}>Vis alle lagrede svar</MenuItem>
-                                        <MenuItem onClick={handleDeleteAnswers}>Slett alle svar</MenuItem> */}
                       <MenuItem onClick={handleCloseSignout}>
                         {t('navbar.signOut')}
                       </MenuItem>

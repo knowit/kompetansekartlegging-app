@@ -19,7 +19,11 @@ const StyledBlockInfo = styled.div`
   flex-direction: row;
 `
 
-const BlockInfo = (props: { questions: QuestionAnswer[] | undefined }) => {
+type BlockInfoProp = {
+  questions: QuestionAnswer[] | undefined
+}
+
+const BlockInfo = ({ questions }: BlockInfoProp) => {
   const { t } = useTranslation()
 
   enum TimeType {
@@ -45,7 +49,7 @@ const BlockInfo = (props: { questions: QuestionAnswer[] | undefined }) => {
     }
   }
 
-  const questions = props.questions ?? []
+  questions = questions ?? []
 
   const answeredQuestions = questions.filter(
     (question) =>
@@ -110,7 +114,20 @@ const Hideable = styled.div<HideableProps>`
   display: ${(props) => (props.hidden ? 'block' : 'none')};
 `
 
-export const YourAnswers = ({ ...props }: YourAnswerProps) => {
+export const YourAnswers = ({
+  setIsCategorySubmitted,
+  createUserForm,
+  submitAndProceed,
+  updateAnswer,
+  formDefinition,
+  questionAnswers,
+  categories,
+  activeCategory,
+  enableAnswerEditMode,
+  answerEditMode,
+  isSmall,
+  alerts,
+}: YourAnswerProps) => {
   const { t } = useTranslation()
 
   const scrollRef = React.useRef<HTMLDivElement>(null)
@@ -120,55 +137,50 @@ export const YourAnswers = ({ ...props }: YourAnswerProps) => {
   }
 
   const getCategoryDescription = (): string => {
-    const categoryDesc = props.formDefinition?.questions.items.find(
-      (q) => q.category.text === props.activeCategory
+    const categoryDesc = formDefinition?.questions.items.find(
+      (q) => q.category.text === activeCategory
     )
     return categoryDesc?.category.description ?? ''
   }
 
-  if (props.activeCategory === 'MAIN') {
-    return <>{t('myAnswers.chooseCategory')}</>
-  }
-
   return (
     <>
-      <Hideable hidden={props.answerEditMode}>
+      <Hideable hidden={answerEditMode}>
         <ProgressBar
-          alerts={props.alerts}
-          totalQuestions={props.formDefinition?.questions.items.length ?? 0}
+          alerts={alerts}
+          totalQuestions={formDefinition?.questions.items.length ?? 0}
         />
       </Hideable>
-      <InfoCard
-        title={props.activeCategory}
-        description={getCategoryDescription()}
-      />
-      <Hideable hidden={!props.answerEditMode}>
+      <InfoCard title={activeCategory} description={getCategoryDescription()} />
+      <Hideable hidden={!answerEditMode}>
         <Info>
-          <BlockInfo
-            questions={props.questionAnswers.get(props.activeCategory)}
-          />
+          <BlockInfo questions={questionAnswers.get(activeCategory)} />
 
-          <Button
-            variant="contained"
-            onClick={() => props.enableAnswerEditMode()}
-          >
+          <Button variant="contained" onClick={() => enableAnswerEditMode()}>
             {t('myAnswers.fillOut')}
           </Button>
         </Info>
 
         <AnswerDiagram
-          questionAnswers={props.questionAnswers}
-          activeCategory={props.activeCategory}
-          isSmall={props.isSmall}
+          questionAnswers={questionAnswers}
+          activeCategory={activeCategory}
+          isSmall={isSmall}
         />
       </Hideable>
 
-      <Hideable hidden={props.answerEditMode}>
+      <Hideable hidden={answerEditMode}>
         <Form
-          {...props}
+          createUserForm={createUserForm}
+          submitAndProceed={submitAndProceed}
+          updateAnswer={updateAnswer}
+          formDefinition={formDefinition}
+          questionAnswers={questionAnswers}
+          categories={categories}
+          activeCategory={activeCategory}
+          setIsCategorySubmitted={setIsCategorySubmitted}
+          isSmall={isSmall}
+          alerts={alerts}
           scrollToTop={scrollToTop}
-          isSmall={props.isSmall}
-          alerts={props.alerts}
         />
       </Hideable>
     </>

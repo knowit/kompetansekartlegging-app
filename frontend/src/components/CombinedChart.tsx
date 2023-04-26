@@ -36,39 +36,41 @@ const getLabel = (
   return defaultValue
 }
 
-export const CombinedChart = ({ ...props }: CombinedChartProps) => {
+export const CombinedChart = ({
+  chartData,
+  type,
+  topSubjects,
+}: CombinedChartProps) => {
   const { t } = useTranslation()
 
-  if (props.chartData.length === 0) return null
+  if (chartData.length === 0) return null
 
   const RenderCustomTooltip = () => {
     const validate = (msg: string | undefined) => {
       if (msg === '') return t('notAnswered')
       else return msg
     }
-    const isTop = props.type === OverviewType.HIGHEST && props.topSubjects
-    const topSubjects = props.topSubjects
-    return ({ ...props }: TooltipProps<ValueType, NameType>) => {
-      if (props.active && props.payload) {
-        const knowledgeValue =
-          props.payload[0]?.payload.valueKnowledge[1].toFixed(1)
+    const isTop = type === OverviewType.HIGHEST && topSubjects
+    return ({ active, payload, label }: TooltipProps<ValueType, NameType>) => {
+      if (active && payload) {
+        const knowledgeValue = payload[0]?.payload.valueKnowledge[1].toFixed(1)
         const motivationValue = (
-          props.payload[1]?.payload.valueMotivation[1] - chartSplitAt
+          payload[1]?.payload.valueMotivation[1] - chartSplitAt
         ).toFixed(1)
         const knowledgeLabel = getLabel(
           isTop,
-          () => validate(topSubjects?.get(props.label)?.kTop),
+          () => validate(topSubjects?.get(label)?.kTop),
           t('competence')
         )
         const motivationLabel = getLabel(
           isTop,
-          () => validate(topSubjects?.get(props.label)?.mTop),
+          () => validate(topSubjects?.get(label)?.mTop),
           t('motivation')
         )
 
         return (
           <div>
-            <p>{props.label}</p>
+            <p>{label}</p>
             <p>
               {knowledgeLabel}: {knowledgeValue}
             </p>
@@ -82,21 +84,21 @@ export const CombinedChart = ({ ...props }: CombinedChartProps) => {
     }
   }
 
-  const words = props.chartData.map((cat) => cat.name.split(' ')).flat(1)
+  const words = chartData.map((cat) => cat.name.split(' ')).flat(1)
   const longest_word_length = Math.max(...words.map((el) => el.length))
   const labelwidth = longest_word_length * 8.5
 
   return (
     <ResponsiveContainer
       width="100%"
-      height={heightPerColumn * props.chartData.length + 90}
+      height={heightPerColumn * chartData.length + 90}
     >
       <BarChart
         barGap={-15}
         barSize={15}
         maxBarSize={15}
         layout="vertical"
-        data={props.chartData}
+        data={chartData}
         margin={{ top: 50, right: 10 }}
       >
         <CartesianGrid
@@ -151,15 +153,15 @@ export const CombinedChart = ({ ...props }: CombinedChartProps) => {
 }
 
 const renderCustomAxisTicks = () => {
-  return ({ ...props }: TickProps) => {
+  return ({ payload, x, y }: TickProps) => {
     let isKnowledge = true
-    let iconNumber = props.payload.value
-    if (props.payload.value >= chartSplitAt) {
+    let iconNumber = payload.value
+    if (payload.value >= chartSplitAt) {
       iconNumber -= chartSplitAt
       isKnowledge = false
     }
     return (
-      <foreignObject x={props.x - 12} y={props.y - 24} width={24} height={24}>
+      <foreignObject x={x - 12} y={y - 24} width={24} height={24}>
         {GetIcon(isKnowledge, Math.round(iconNumber))};
       </foreignObject>
     )

@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { roundDecimals } from '../helperFunctions'
 import { ChartData, ResultData, ResultDiagramProps } from '../types'
 import { CombinedChart } from './CombinedChart'
-import { CombinedChartMobile } from './CombinedChartMobile'
+import { CombinedChartSmall } from './CombinedChartSmall'
 import { useTranslation } from 'react-i18next'
 import styled from '@emotion/styled'
 import { ToggleButton, ToggleButtonGroup } from '@mui/material'
@@ -76,7 +76,11 @@ const recalculate = (
   setChartData(data)
 }
 
-export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
+export default function TypedOverviewChart({
+  questionAnswers,
+  categories,
+  isSmall,
+}: ResultDiagramProps) {
   const { t } = useTranslation()
 
   const [chartData, setChartData] = useState<ChartData[]>([])
@@ -103,7 +107,7 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
     const createAverageData = (): ResultData[] => {
       //data: ResultData[]
       const ansData: ResultData[] = []
-      props.questionAnswers.forEach((questionAnswers, category) => {
+      questionAnswers.forEach((questionAnswers, category) => {
         const reduced = questionAnswers.reduce<ReduceValue>(
           (acc, cur): ReduceValue => {
             if (cur.customScaleValue && cur.customScaleValue >= 0) {
@@ -156,7 +160,7 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
           ? numbers[mid]
           : (numbers[mid - 1] + numbers[mid]) / 2
       }
-      props.questionAnswers.forEach((questionAnswers, category) => {
+      questionAnswers.forEach((questionAnswers, category) => {
         if (questionAnswers.length > 0) {
           const medianKnowledge = getMedian(
             questionAnswers.map((qa) => qa.knowledge).filter((n) => n >= 0)
@@ -191,7 +195,7 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
       const ansData: ResultData[] = []
       const newTopSubjects: Map<string, { kTop: string; mTop: string }> =
         new Map()
-      props.questionAnswers.forEach((questionAnswers, category) => {
+      questionAnswers.forEach((questionAnswers, category) => {
         let kTop = ''
         let mTop = ''
         const reduced = questionAnswers.reduce<{
@@ -244,9 +248,9 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
       createMedianData,
       createHighestData,
       setChartData,
-      props.isSmall
+      isSmall
     )
-  }, [props.isSmall, props.questionAnswers, currentType, setChartData])
+  }, [isSmall, questionAnswers, currentType, setChartData])
 
   const cycleChartType = () => {
     switch (currentType) {
@@ -291,7 +295,7 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
   return (
     <StyledOverviewContainer>
       <div id="buttonContainer">
-        {props.isSmall ? (
+        {isSmall ? (
           <Button variant="contained" onClick={() => cycleChartType()}>
             {translateOverviewType(currentType)}
           </Button>
@@ -308,8 +312,8 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
         )}
       </div>
       <div>
-        {props.isSmall ? (
-          <CombinedChartMobile
+        {isSmall ? (
+          <CombinedChartSmall
             chartData={chartData}
             type={currentType}
             topSubjects={topSubjects}

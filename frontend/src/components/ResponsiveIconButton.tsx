@@ -26,7 +26,6 @@ const ResponsiveIconButton = ({
   text,
   onClick,
 }: ButtonProps) => {
-  console.log(startIcon)
   if (!startIcon && !endIcon) {
     return (
       <Button onClick={onClick} variant="contained">

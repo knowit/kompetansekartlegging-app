@@ -296,14 +296,11 @@ export type SliderProps = {
   sliderChanged: (newValue: number, motivation: boolean) => void
   motivation: boolean
   value: number
-  isSmall: boolean
 }
 
 export type QuestionProps = {
   updateAnswer: (category: string, sliderMap: Map<string, SliderValues>) => void
   questionAnswer: QuestionAnswer
-  knowledgeDefaultValue: number
-  motivationDefaultValue: number
   setIsCategorySubmitted: (categorySubmitted: boolean) => void
   isSmall: boolean
   alerts: AlertState | undefined
@@ -328,7 +325,6 @@ export type BatchCreatedQuestionAnswer = {
 }
 
 export type OverviewProps = {
-  activePanel: Panel
   questionAnswers: Map<string, QuestionAnswer[]>
   categories: string[]
   isSmall: boolean
@@ -419,7 +415,6 @@ export type AnswerHistoryProps = {
   historyViewOpen: boolean
   history: UserFormWithAnswers[]
   formDefinition?: FormDefinition
-  isSmall: boolean
 }
 
 export type HistoryTreeViewProps = {
@@ -467,7 +462,6 @@ export type CombinedChartProps = {
   chartData: ChartData[]
   type?: OverviewType
   topSubjects?: Map<string, { kTop: string; mTop: string }>
-  className?: string
 }
 
 export type CustomScaleChartProps = {

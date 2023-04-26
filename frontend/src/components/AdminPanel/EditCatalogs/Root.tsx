@@ -9,7 +9,6 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import BookmarkIcon from '@mui/icons-material/Bookmark'
 import { Edit as EditIcon } from '@mui/icons-material'
 import AddIcon from '@mui/icons-material/Add'
-import commonStyles from '../common.module.css'
 import useApiGet from '../useApiGet'
 import { compareByCreatedAt } from '../helpers'
 import {
@@ -95,7 +94,7 @@ const CatalogTable = ({
   const { t } = useTranslation()
 
   return (
-    <TableContainer className={commonStyles.tableContainer}>
+    <TableContainer>
       <Table stickyHeader>
         <TableHead>
           <TableRow>

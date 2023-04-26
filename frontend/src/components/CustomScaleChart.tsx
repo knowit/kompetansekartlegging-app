@@ -28,22 +28,22 @@ const StyledTooltip = styled.div`
 const numTicks = 5
 const heightPerColumn = 50
 
-export const CustomScaleChart = ({ ...props }: CustomScaleChartProps) => {
+export const CustomScaleChart = ({ chartData }: CustomScaleChartProps) => {
   const { t } = useTranslation()
 
-  if (props.chartData.length === 0) return null
+  if (chartData.length === 0) return null
 
-  const words = props.chartData.map((cat) => cat.name.split(' ')).flat(1)
+  const words = chartData.map((cat) => cat.name.split(' ')).flat(1)
   const longest_word_length = Math.max(...words.map((el) => el.length))
   const labelwidth = longest_word_length * 8.5
 
   const RenderCustomTooltip = () => {
-    return ({ ...props }: TooltipProps<ValueType, NameType>) => {
-      if (props.active && props.payload) {
-        const value = props.payload[0]?.payload.value.toFixed(1)
+    return ({ active, payload, label }: TooltipProps<ValueType, NameType>) => {
+      if (active && payload) {
+        const value = payload[0]?.payload.value.toFixed(1)
         return (
           <StyledTooltip>
-            <p>{props.label}</p>
+            <p>{label}</p>
             <p>{t('answer') + `: ${value}`}</p>
           </StyledTooltip>
         )
@@ -52,7 +52,7 @@ export const CustomScaleChart = ({ ...props }: CustomScaleChartProps) => {
     }
   }
 
-  const labelObj = props.chartData[0]
+  const labelObj = chartData[0]
   const tickFormatter = (value: any) => {
     switch (value) {
       case 0:
@@ -69,14 +69,14 @@ export const CustomScaleChart = ({ ...props }: CustomScaleChartProps) => {
     <div>
       <ResponsiveContainer
         width="100%"
-        height={heightPerColumn * props.chartData.length + 90}
+        height={heightPerColumn * chartData.length + 90}
       >
         <BarChart
           barGap={-15}
           barSize={15}
           maxBarSize={15}
           layout="vertical"
-          data={props.chartData}
+          data={chartData}
         >
           <CartesianGrid
             horizontal={true}

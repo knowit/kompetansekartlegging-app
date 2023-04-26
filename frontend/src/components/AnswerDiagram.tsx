@@ -7,7 +7,7 @@ import {
 } from '../types'
 import { CustomScaleChart } from './CustomScaleChart'
 import { CombinedChart } from './CombinedChart'
-import { CombinedChartMobile } from './CombinedChartMobile'
+import { CombinedChartSmall } from './CombinedChartSmall'
 
 interface Scores {
   valueKnowledge: number[]
@@ -43,20 +43,23 @@ const scoresCustomScaleLabels = (
   }
 }
 
-export default function AnswerDiagram({ ...props }: AnswerDiagramProps) {
-  const activeCategory = props.activeCategory
-  const questionAnswers = props.questionAnswers.get(activeCategory)
-  const knowledgeMotivationQuAns = questionAnswers?.filter(
+export default function AnswerDiagram({
+  questionAnswers,
+  activeCategory,
+  isSmall,
+}: AnswerDiagramProps) {
+  const questionAnswersForCat = questionAnswers.get(activeCategory)
+  const knowledgeMotivationQuAns = questionAnswersForCat?.filter(
     (quAns) =>
       quAns.question.type === null ||
       quAns.question.type === QuestionType.KnowledgeMotivation
   )
-  const customScaleLabelsQuAns = questionAnswers?.filter(
+  const customScaleLabelsQuAns = questionAnswersForCat?.filter(
     (quAns) => quAns.question.type === QuestionType.CustomScaleLabels
   )
 
-  const knowledgeStart = props.isSmall ? 7 : 0
-  const motivationStart = props.isSmall ? 0 : 7
+  const knowledgeStart = isSmall ? 7 : 0
+  const motivationStart = isSmall ? 0 : 7
   const knowledgeMotivationChartData: ChartData[] =
     knowledgeMotivationQuAns?.map((quAns) => {
       return {
@@ -76,8 +79,8 @@ export default function AnswerDiagram({ ...props }: AnswerDiagramProps) {
       }
     }) || []
 
-  return props.isSmall ? (
-    <CombinedChartMobile chartData={knowledgeMotivationChartData} />
+  return isSmall ? (
+    <CombinedChartSmall chartData={knowledgeMotivationChartData} />
   ) : (
     <div>
       <CombinedChart chartData={knowledgeMotivationChartData} />

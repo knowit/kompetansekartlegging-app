@@ -10,20 +10,24 @@ import { AlertDialogProps } from '../types'
 import ErrorIcon from '@mui/icons-material/Error'
 import { useTranslation } from 'react-i18next'
 
-export const AlertDialog = ({ ...props }: AlertDialogProps) => {
+export const AlertDialog = ({
+  setAlertDialogOpen,
+  alertDialogOpen,
+  leaveFormButtonClicked,
+}: AlertDialogProps) => {
   const { t } = useTranslation()
 
   const handleStayInForm = () => {
-    props.setAlertDialogOpen(false)
+    setAlertDialogOpen(false)
   }
 
   const handleLeave = () => {
-    if (props.leaveFormButtonClicked) props.leaveFormButtonClicked()
+    if (leaveFormButtonClicked) leaveFormButtonClicked()
   }
 
   return (
     <Dialog
-      open={props.alertDialogOpen}
+      open={alertDialogOpen}
       onClose={handleStayInForm}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"

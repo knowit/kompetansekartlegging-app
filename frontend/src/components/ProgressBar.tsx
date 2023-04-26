@@ -9,18 +9,18 @@ const StyledLinearProgress = styled.div`
   align-items: center;
 `
 
-export default function ProgressBar({ ...props }: ProgressProps) {
+export default function ProgressBar({ alerts, totalQuestions }: ProgressProps) {
   const [progress, setProgress] = useState<number>(0)
 
   useEffect(() => {
     const updateProgress = () => {
-      const unfilledQuestions = props.alerts?.qidMap.size ?? 0
-      const filledQuestions = props.totalQuestions - unfilledQuestions
-      const progressPercentage = (filledQuestions / props.totalQuestions) * 100
+      const unfilledQuestions = alerts?.qidMap.size ?? 0
+      const filledQuestions = totalQuestions - unfilledQuestions
+      const progressPercentage = (filledQuestions / totalQuestions) * 100
       setProgress(progressPercentage)
     }
     updateProgress()
-  }, [props.alerts, props.totalQuestions])
+  }, [alerts, totalQuestions])
 
   const LinearProgressWithPercentage = (
     props: LinearProgressProps & { value: number }

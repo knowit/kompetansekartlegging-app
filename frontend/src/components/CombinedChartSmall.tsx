@@ -48,8 +48,9 @@ const createPagedData = (
   return pagedData
 }
 
-export const CombinedChartMobile = ({
-  ...props
+export const CombinedChartSmall = ({
+  chartData,
+  type,
 }: CombinedChartProps): JSX.Element => {
   const { t } = useTranslation()
 
@@ -61,31 +62,31 @@ export const CombinedChartMobile = ({
   const maxColumnsPerPage = getMaxColumnsForWidth(width)
 
   useEffect(() => {
-    if (currentType !== props.type) {
+    if (currentType !== type) {
       // New data and type has changed
       if (typeof currentType === 'undefined') {
-        setCurrentType(props.type)
+        setCurrentType(type)
         setCurrentPage(0)
       } else {
-        if (typeof props.type === 'undefined') {
-          setCurrentType(props.type)
+        if (typeof type === 'undefined') {
+          setCurrentType(type)
           setCurrentPage(0)
         } else {
           // Previous type was defined, now new type: RETAIN PAGE
-          setCurrentType(props.type)
+          setCurrentType(type)
         }
       }
     } else {
       // New data and type has NOT changed
       setCurrentPage(0)
     }
-    setChartPages(createPagedData(props.chartData, maxColumnsPerPage))
-  }, [props.chartData, currentType, props.type, maxColumnsPerPage])
+    setChartPages(createPagedData(chartData, maxColumnsPerPage))
+  }, [chartData, currentType, type, maxColumnsPerPage])
 
   useEffect(() => {
-    setChartPages(createPagedData(props.chartData, maxColumnsPerPage))
+    setChartPages(createPagedData(chartData, maxColumnsPerPage))
     setCurrentPage(0)
-  }, [props.chartData, maxColumnsPerPage])
+  }, [chartData, maxColumnsPerPage])
 
   const createPager = (): JSX.Element => {
     return (
@@ -142,7 +143,6 @@ export const CombinedChartMobile = ({
             tickLine={false}
             tick={renderLabelTick}
           />
-          {/* <Tooltip wrapperStyle={{ outline: "none" }} content={renderCustomTooltip(classes)}/> */}
           <Bar
             radius={[10, 10, 0, 0]}
             dataKey="valueKnowledge"
@@ -175,7 +175,7 @@ export const CombinedChartMobile = ({
           </ReferenceLine>
         </BarChart>
       </ResponsiveContainer>
-      {maxColumnsPerPage < props.chartData.length ? (
+      {maxColumnsPerPage < chartData.length ? (
         <div onClick={handleChangePageClick}>{createPager()}</div>
       ) : (
         ''
@@ -185,17 +185,17 @@ export const CombinedChartMobile = ({
 }
 
 const renderCustomAxisTicks = () => {
-  return ({ ...props }: TickProps) => {
+  return ({ payload, x, y }: TickProps) => {
     let isKnowledge = false
-    let iconNumber = props.payload.value
-    if (props.payload.value >= chartSplitAt) {
+    let iconNumber = payload.value
+    if (payload.value >= chartSplitAt) {
       iconNumber -= chartSplitAt
       isKnowledge = true
     }
     return (
       <svg
-        x={props.x - iconSize}
-        y={props.y - iconSize / 2}
+        x={x - iconSize}
+        y={y - iconSize / 2}
         width={iconSize}
         height={iconSize}
         fill="black"
@@ -206,10 +206,10 @@ const renderCustomAxisTicks = () => {
   }
 }
 
-const renderLabelTick = ({ ...props }: TickLabelProps) => {
-  const dy = props.index % 2 ? '-1em' : '-6em'
+const renderLabelTick = ({ payload, index, x, y }: TickLabelProps) => {
+  const dy = index % 2 ? '-1em' : '-6em'
   return (
-    <g transform={`translate(${props.x},${props.y})`}>
+    <g transform={`translate(${x},${y})`}>
       <text
         x={0}
         y={dy}
@@ -218,7 +218,7 @@ const renderLabelTick = ({ ...props }: TickLabelProps) => {
         fontWeight="bold"
         fill={KnowitColors.darkGreen}
       >
-        {wrapString(props.payload.value, 15).map((s: string, index: number) => (
+        {wrapString(payload.value, 15).map((s: string, index: number) => (
           <tspan key={index} x="0" dy="1em">
             {s}
           </tspan>
@@ -227,31 +227,6 @@ const renderLabelTick = ({ ...props }: TickLabelProps) => {
     </g>
   )
 }
-
-// const renderCustomTooltip = (classes: any) => {
-//     return ({ ...props }: ToolTipProps<ValueType, NameType>) => {
-//         if (props.active && props.payload) {
-//             let knowledgeValue = props.payload[0]?.payload.valueKnowledge[1].toFixed(
-//                 1
-//             );
-//             let motivationValue = (
-//                 props.payload[1]?.payload.valueMotivation[1] - chartSplitAt
-//             ).toFixed(1);
-//             return (
-//                 <div>
-//                     <p >{props.label}</p>
-//                     <p >
-//                         {`Kompetanse: ${knowledgeValue}`}
-//                     </p>
-//                     <p >
-//                         {`Motivasjon: ${motivationValue}`}
-//                     </p>
-//                 </div>
-//             );
-//         }
-//         return null;
-//     };
-// };
 
 type TickProps = {
   knowledge: boolean

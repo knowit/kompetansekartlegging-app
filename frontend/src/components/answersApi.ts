@@ -17,7 +17,6 @@ const createQuestionAnswers = (
   formDef: FormDefinition,
   setCategories: Dispatch<SetStateAction<string[]>>
 ) => {
-  // console.log("Creating questionAnswers with ", formDef);
   if (!formDef) return new Map()
   const categories = formDef.questions.items
     .map((item) => item.category)
@@ -57,7 +56,6 @@ const createQuestionAnswers = (
       })
     quAnsMap.set(cat.text, quAns)
   })
-  // console.log(`Sorted questionAnswerMap: `, quAnsMap);
   return quAnsMap
 }
 
@@ -181,17 +179,12 @@ const getUserAnswers = async (
     }
   } while (nextToken || (nextUserFormToken && !foundLatestUserForm))
 
-  if (
-    paginatedUserform
-    // && paginatedUserform.formDefinitionID === formDef?.id
-  ) {
-    // console.log("Found user form!", paginatedUserform);
+  if (paginatedUserform) {
     const removedQuestionsFiltered = questionAnswers.filter((q) => q.question)
     setUserAnswers(removedQuestionsFiltered)
     setUserAnswersLoaded(true)
     return removedQuestionsFiltered
   } else {
-    // console.log("Found no user form!", paginatedUserform);
     setActivePanel(Panel.MyAnswers)
     setAnswerEditMode(false)
     setUserAnswersLoaded(true)
@@ -212,7 +205,6 @@ const setFirstAnswers = (
     SetStateAction<Map<string, QuestionAnswer[]>>
   >
 ) => {
-  // console.log(quAns, newUserAnswers);
   const newMap = new Map<string, QuestionAnswer[]>()
   quAns.forEach((quAns, category) => {
     newMap.set(
@@ -242,7 +234,6 @@ const setFirstAnswers = (
       })
     )
   })
-  // console.log(quAns, newMap);
   setQuestionAnswers(newMap)
   setAnswersBeforeSubmitted(new Map(newMap))
 }

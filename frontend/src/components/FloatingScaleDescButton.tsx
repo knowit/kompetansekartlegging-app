@@ -112,12 +112,12 @@ const StyledDescriptiontable = styled.div`
 const DescriptionTable = () => {
   const { t } = useTranslation()
 
-  const ScaleContainer = ({ ...props }: ScaleContainerProps) => (
+  const ScaleContainer = ({ icon, heading, text }: ScaleContainerProps) => (
     <div className="scaleItem">
-      <div className="scaleIcon">{props.icon}</div>
+      <div className="scaleIcon">{icon}</div>
       <div>
-        <h3>{props.heading}</h3>
-        <div>{props.text}</div>
+        <h3>{heading}</h3>
+        <div>{text}</div>
       </div>
     </div>
   )

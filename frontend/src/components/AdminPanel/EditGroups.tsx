@@ -26,7 +26,7 @@ import {
   listGroupLeadersInOrganization,
 } from './adminApi'
 import { listAllFormDefinitionsForLoggedInUser } from './catalogApi'
-import commonStyles from './common.module.css'
+
 import DeleteGroupDialog from './DeleteGroupDialog'
 import DeleteUserFromGroupDialog from './DeleteUserFromGroupDialog'
 import GroupMembers from './GroupMembers'
@@ -146,10 +146,7 @@ const GroupsTable = ({
     .sort((g1: any, g2: any) => compareByName(g1?.groupLeader, g2?.groupLeader))
 
   return (
-    <TableContainer
-      className={commonStyles.tableContainer}
-      style={{ overflowX: 'hidden' }}
-    >
+    <TableContainer style={{ overflowX: 'hidden' }}>
       <Table>
         <TableHead>
           <TableRow>

@@ -52,45 +52,52 @@ const StyledQuestion = styled.div`
   }
 `
 
-const Question = ({ ...props }: QuestionProps) => {
-  const question = props.questionAnswer.question
+const Question = ({
+  questionAnswer,
+  setIsCategorySubmitted,
+  isSmall,
+  alerts,
+  sliderValues,
+  setSliderValues,
+}: QuestionProps) => {
+  const question = questionAnswer.question
   const questionId = question.id
   const questionType = question.type || QuestionType.KnowledgeMotivation
   const questionTopic = question.topic
   const questionText = question.text
-  const sliderValues = props.sliderValues.get(questionId)
+  const questionSliderValues = sliderValues.get(questionId)
 
   const sliderChanged = (newValue: number, motivation: boolean) => {
-    props.setIsCategorySubmitted(false)
-    if (sliderValues) {
+    setIsCategorySubmitted(false)
+    if (questionSliderValues) {
       if (questionType === QuestionType.KnowledgeMotivation) {
-        const sv = sliderValues as SliderKnowledgeMotivationValues
+        const sv = questionSliderValues as SliderKnowledgeMotivationValues
         if (motivation) {
-          props.setSliderValues(questionId, {
+          setSliderValues(questionId, {
             knowledge: sv.knowledge || 0,
             motivation: newValue,
           })
         } else {
-          props.setSliderValues(questionId, {
+          setSliderValues(questionId, {
             knowledge: newValue,
             motivation: sv.motivation || 0,
           })
         }
       } else if (questionType === QuestionType.CustomScaleLabels) {
-        props.setSliderValues(questionId, {
+        setSliderValues(questionId, {
           customScaleValue: newValue,
         })
       }
     }
   }
 
-  const hasAlerts = props.alerts?.qidMap.has(questionId)
-  let alertType = props.alerts?.qidMap.get(questionId)?.type
-  let alertMessage = props.alerts?.qidMap.get(questionId)?.message
+  const hasAlerts = alerts?.qidMap.has(questionId)
+  let alertType = alerts?.qidMap.get(questionId)?.type
+  let alertMessage = alerts?.qidMap.get(questionId)?.message
   let badgeContent = <></>
   if (hasAlerts) {
-    alertType = props.alerts?.qidMap.get(questionId)?.type
-    alertMessage = props.alerts?.qidMap.get(questionId)?.message
+    alertType = alerts?.qidMap.get(questionId)?.type
+    alertMessage = alerts?.qidMap.get(questionId)?.message
     switch (alertType) {
       case AlertType.Incomplete:
         badgeContent = (
@@ -115,7 +122,7 @@ const Question = ({ ...props }: QuestionProps) => {
   }
 
   return (
-    <StyledQuestion isSmall={props.isSmall}>
+    <StyledQuestion isSmall={isSmall}>
       <div className="questionInfo">
         <h2 className="questionTopic">{questionTopic}</h2>
         {hasAlerts && <Tooltip title={alertMessage}>{badgeContent}</Tooltip>}
@@ -123,17 +130,17 @@ const Question = ({ ...props }: QuestionProps) => {
       </div>
       {questionType === QuestionType.KnowledgeMotivation && (
         <KnowledgeMotivationSliders
-          sliderValues={sliderValues}
+          sliderValues={questionSliderValues}
           sliderChanged={sliderChanged}
-          isSmall={props.isSmall}
+          isSmall={isSmall}
         />
       )}
       {questionType === QuestionType.CustomScaleLabels && (
         <CustomLabelSlider
           question={question}
-          sliderValues={sliderValues}
+          sliderValues={questionSliderValues}
           sliderChanged={sliderChanged}
-          isSmall={props.isSmall}
+          isSmall={isSmall}
         />
       )}
     </StyledQuestion>
@@ -195,7 +202,6 @@ const KnowledgeMotivationSliders = ({
             value={sliderValues?.knowledge || -2}
             motivation={false}
             sliderChanged={sliderChanged}
-            isSmall={isSmall}
           />
         </div>
       </div>
@@ -207,7 +213,6 @@ const KnowledgeMotivationSliders = ({
             value={sliderValues?.motivation || -2}
             motivation={true}
             sliderChanged={sliderChanged}
-            isSmall={isSmall}
           />
         </div>
       </div>
@@ -235,7 +240,6 @@ const CustomLabelSlider = ({
           value={sliderValues.customScaleValue || -2}
           motivation={false}
           sliderChanged={sliderChanged}
-          isSmall={isSmall}
         />
       </div>
     </StyledQuestionContainer>

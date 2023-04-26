@@ -23,7 +23,6 @@ import {
   listGroupLeadersInOrganization,
   removeUserFromGroup,
 } from './adminApi'
-import commonStyles from './common.module.css'
 import DeleteUserFromGroupDialog from './DeleteUserFromGroupDialog'
 import { getAttribute } from './helpers'
 import PictureAndNameCell from './PictureAndNameCell'
@@ -63,7 +62,7 @@ const GroupLeaderTable = ({ groupLeaders, deleteGroupLeader }: any) => {
   const { t } = useTranslation()
 
   return (
-    <TableContainer className={commonStyles.tableContainer}>
+    <TableContainer>
       <Table stickyHeader>
         <TableHead>
           <TableRow>

@@ -87,15 +87,6 @@ const ContentContainer = styled.div`
     `}
 `
 
-export enum MenuButton {
-  Overview,
-  MyAnswers,
-  Category,
-  GroupLeader,
-  LeaderCategory,
-  Other,
-}
-
 const updateCategoryAlerts = (
   questionAnswers: Map<string, QuestionAnswer[]>,
   setAlerts: Dispatch<SetStateAction<AlertState | undefined>>,
@@ -138,7 +129,19 @@ const updateCategoryAlerts = (
   setAlerts({ qidMap: alerts, categoryMap: catAlerts })
 }
 
-const Content = ({ ...props }: ContentProps) => {
+const Content = ({
+  setAnswerHistoryOpen,
+  answerHistoryOpen,
+  isSmall,
+  signout,
+  collapseMobileCategories,
+  categoryNavRef,
+  scrollToTop,
+  setCollapseMobileCategories,
+  setScaleDescOpen,
+  setFirstTimeLogin,
+  setShowFab,
+}: ContentProps) => {
   const { t } = useTranslation()
 
   const userState = useAppSelector(selectUserState)
@@ -280,9 +283,9 @@ const Content = ({ ...props }: ContentProps) => {
           setActivePanel,
           setUserAnswersLoaded,
           setAnswerEditMode,
-          props.setFirstTimeLogin,
-          props.setScaleDescOpen,
-          props.isSmall
+          setFirstTimeLogin,
+          setScaleDescOpen,
+          isSmall
         ),
       (quAns, newUserAnswers) =>
         setFirstAnswers(
@@ -292,14 +295,8 @@ const Content = ({ ...props }: ContentProps) => {
           setAnswersBeforeSubmitted
         )
     )
-  }, [
-    userState,
-    props.setFirstTimeLogin,
-    props.setScaleDescOpen,
-    props.isSmall,
-  ])
+  }, [userState, setFirstTimeLogin, setScaleDescOpen, isSmall])
 
-  const { answerHistoryOpen, setAnswerHistoryOpen } = props
   useEffect(() => {
     const fetchUserFormsAndOpenView = async () => {
       // debugger
@@ -331,7 +328,7 @@ const Content = ({ ...props }: ContentProps) => {
 
   const showFabPanels = [Panel.Overview, Panel.MyAnswers, Panel.GroupLeader]
   useEffect(() => {
-    props.setShowFab(activePanel in showFabPanels)
+    setShowFab(activePanel in showFabPanels)
   }, [activePanel])
 
   const resetAnswers = () => {
@@ -346,7 +343,7 @@ const Content = ({ ...props }: ContentProps) => {
             activePanel={activePanel}
             questionAnswers={questionAnswers}
             categories={categories}
-            isSmall={props.isSmall}
+            isSmall={isSmall}
             userAnswersLoaded={userAnswersLoaded}
           />
         )
@@ -365,12 +362,12 @@ const Content = ({ ...props }: ContentProps) => {
             activeCategory={activeCategory}
             enableAnswerEditMode={enableAnswerEditMode}
             answerEditMode={answerEditMode}
-            isSmall={props.isSmall}
+            isSmall={isSmall}
             alerts={alerts}
-            collapseMobileCategories={props.collapseMobileCategories}
-            categoryNavRef={props.categoryNavRef}
-            scrollToTop={props.scrollToTop}
-            setCollapseMobileCategories={props.setCollapseMobileCategories}
+            collapseMobileCategories={collapseMobileCategories}
+            categoryNavRef={categoryNavRef}
+            scrollToTop={scrollToTop}
+            setCollapseMobileCategories={setCollapseMobileCategories}
           />
         )
       case Panel.GroupLeader:
@@ -380,7 +377,7 @@ const Content = ({ ...props }: ContentProps) => {
             activeSubmenuItem={activeSubmenuItem}
             members={groupMembers}
             setMembers={setGroupMembers}
-            isSmall={props.isSmall}
+            isSmall={isSmall}
           />
         )
       case Panel.Admin:
@@ -417,7 +414,7 @@ const Content = ({ ...props }: ContentProps) => {
       }
     }
     if (panelSource === Panel.Overview || itemSource !== 'MAIN') {
-      props.isSmall && toggleMenuOpen(!open)
+      isSmall && toggleMenuOpen(!open)
     }
   }
 
@@ -436,13 +433,13 @@ const Content = ({ ...props }: ContentProps) => {
       setActiveCategory('NONE')
     }
     setAlertDialogOpen(false)
-    props.setShowFab(activePanel in showFabPanels)
+    setShowFab(activePanel in showFabPanels)
   }
 
   return (
-    <ContentContainer isSmall={props.isSmall}>
+    <ContentContainer isSmall={isSmall}>
       <SideMenu
-        isSmall={props.isSmall}
+        isSmall={isSmall}
         activePanel={activePanel}
         categories={categories}
         menuOpen={menuOpen}
@@ -455,8 +452,8 @@ const Content = ({ ...props }: ContentProps) => {
       />
       <NavBar
         toggleMenuOpen={toggleMenuOpen}
-        isSmall={props.isSmall}
-        signout={props.signout}
+        isSmall={isSmall}
+        signout={signout}
         isOpen={menuOpen}
       />
 
@@ -471,9 +468,8 @@ const Content = ({ ...props }: ContentProps) => {
       />
       <AnswerHistory
         history={answerLog}
-        historyViewOpen={props.answerHistoryOpen}
-        setHistoryViewOpen={props.setAnswerHistoryOpen}
-        isSmall={props.isSmall}
+        historyViewOpen={answerHistoryOpen}
+        setHistoryViewOpen={setAnswerHistoryOpen}
       />
     </ContentContainer>
   )

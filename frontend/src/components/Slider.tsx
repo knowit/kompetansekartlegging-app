@@ -6,26 +6,26 @@ import { Slider as CoreSlider } from '@mui/material'
 const marks = new Array(51).fill(undefined).map((_v, i) => {
   return { value: i / 10 || 0 }
 })
-const Slider = ({ ...props }: SliderProps) => {
+const Slider = ({ sliderChanged, motivation, value }: SliderProps) => {
   const [sliderValue, setSliderValue] = useState<number>(-1)
 
-  const sliderChanged = (_event: any, newValue: number | number[]) => {
+  const customSliderChanged = (_event: any, newValue: number | number[]) => {
     setSliderValue(newValue as number)
   }
 
   const sliderCommitted = () => {
     setSliderValue(helper.roundDecimals(sliderValue, 1))
-    props.sliderChanged(helper.roundDecimals(sliderValue, 1), props.motivation)
+    sliderChanged(helper.roundDecimals(sliderValue, 1), motivation)
   }
 
   useEffect(() => {
-    setSliderValue(props.value)
-  }, [props.value, setSliderValue])
+    setSliderValue(value)
+  }, [value, setSliderValue])
 
   return (
     <CoreSlider
       value={sliderValue}
-      onChange={sliderChanged}
+      onChange={customSliderChanged}
       onChangeCommitted={sliderCommitted}
       step={0.1}
       max={5}

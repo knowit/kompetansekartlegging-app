@@ -72,7 +72,10 @@ const StyledHighlights = styled.article`
   }
 `
 
-export default function Highlights({ ...props }: HighlightsProps) {
+export default function Highlights({
+  questionAnswers,
+  isSmall,
+}: HighlightsProps) {
   const { t } = useTranslation()
 
   const [knowledgeAboveCutoff, setKnowledgeAboveCutoff] = useState<
@@ -92,7 +95,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
     )
     let factor = 27 //Scaling factor
     let desktopPanelWidth = 0
-    if (!props.isSmall) {
+    if (!isSmall) {
       factor = 60 //Scaling factor for desktop
       desktopPanelWidth = 0.2 * width //Menu panel is 20% of width (Content.tsx)
     }
@@ -105,7 +108,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
     const generateShortlist = () => {
       const shortlistMotivation: TopicScoreWithIcon[] = []
       const shortlistKnowledge: TopicScoreWithIcon[] = []
-      props.questionAnswers.forEach((quAns) => {
+      questionAnswers.forEach((quAns) => {
         quAns.forEach((answer) => {
           if (answer.knowledge >= shortlistCutoff) {
             shortlistKnowledge.push({
@@ -133,7 +136,7 @@ export default function Highlights({ ...props }: HighlightsProps) {
       )
     }
     generateShortlist()
-  }, [props.questionAnswers])
+  }, [questionAnswers])
 
   const createHighlights = (
     aboveCutoff: TopicScoreWithIcon[],
@@ -167,10 +170,10 @@ export default function Highlights({ ...props }: HighlightsProps) {
     false
   )
 
-  if (props.questionAnswers.size === 0) return <Fragment />
+  if (questionAnswers.size === 0) return <Fragment />
   else
     return (
-      <StyledHighlights isSmall={props.isSmall}>
+      <StyledHighlights isSmall={isSmall}>
         <h2>{t('overview.focusAreas')}</h2>
         <article id="focusAreas">
           <section id="strengths">
