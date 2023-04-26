@@ -330,7 +330,6 @@ const Content = ({ ...props }: ContentProps) => {
   }
 
   const showFabPanels = [Panel.Overview, Panel.MyAnswers, Panel.GroupLeader]
-
   useEffect(() => {
     props.setShowFab(activePanel in showFabPanels)
   }, [activePanel])
@@ -338,21 +337,6 @@ const Content = ({ ...props }: ContentProps) => {
   const resetAnswers = () => {
     setQuestionAnswers(new Map(answersBeforeSubmitted))
   }
-
-  const leaveFormButtonClicked = () => {
-    resetAnswers()
-    setAnswerEditMode(false)
-    setActivePanel(lastClickedPanel)
-
-    if (lastClickedPanel === Panel.MyAnswers) {
-      setActiveCategory(lastClickedCategory)
-    } else {
-      setActiveSubmenuItem(lastClickedSubmenu)
-    }
-    setAlertDialogOpen(false)
-    props.setShowFab(activePanel in showFabPanels)
-  }
-
   const [groupMembers, setGroupMembers] = useState<any>([])
   const setupPanel = (): JSX.Element => {
     switch (activePanel) {
@@ -412,7 +396,11 @@ const Content = ({ ...props }: ContentProps) => {
   const handleMenuClick = (panelSource: Panel, itemSource: string) => {
     if (answerEditMode) {
       setlastClickedPanel(panelSource)
-      setLastClickedCategory(itemSource)
+      if (panelSource != Panel.MyAnswers) {
+        setLastClickedSubmenu(itemSource)
+      } else {
+        setLastClickedCategory(itemSource)
+      }
       setAlertDialogOpen(true)
     } else {
       setActivePanel(panelSource)
@@ -431,6 +419,24 @@ const Content = ({ ...props }: ContentProps) => {
     if (panelSource === Panel.Overview || itemSource !== 'MAIN') {
       props.isSmall && toggleMenuOpen(!open)
     }
+  }
+
+  const leaveFormButtonClicked = () => {
+    resetAnswers()
+    setAnswerEditMode(false)
+    setActivePanel(lastClickedPanel)
+
+    if (lastClickedPanel === Panel.MyAnswers) {
+      setActiveCategory(
+        lastClickedCategory === 'MAIN' ? categories[0] : lastClickedCategory
+      )
+      setActiveSubmenuItem('NONE')
+    } else {
+      setActiveSubmenuItem(lastClickedSubmenu)
+      setActiveCategory('NONE')
+    }
+    setAlertDialogOpen(false)
+    props.setShowFab(activePanel in showFabPanels)
   }
 
   return (
