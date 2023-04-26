@@ -4,12 +4,14 @@ import json
 import requests
 
 session = boto3.session.Session()
-client = session.client(
+secrets_manager_client = session.client(
     service_name='secretsmanager',
     region_name="eu-central-1"
-    )
+)
 
 def handler(event, context):
+    print(event)
+
     attachments = []
     for record in event.get('Records', []):
         msg = record.get('Sns', {}).get('Message', "")
@@ -34,10 +36,10 @@ def create_payload(msg):
         'color': colors.get(msg['NewStateValue'], '#bfbfbf'),
     }
 
-def get_slack_webhook_url():
-    get_secret_value_response = client.get_secret_value(
+def get_slack_webhook_url(secrets_manager_client=secrets_manager_client):
+    get_secret_value_response = secrets_manager_client.get_secret_value(
         SecretId="slack_webhook_url"
-        )
+    )
     response = get_secret_value_response['SecretString']
     slack_webhook_url = json.loads(response)['url']
     
