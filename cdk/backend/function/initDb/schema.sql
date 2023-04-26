@@ -57,6 +57,8 @@ CREATE TABLE IF NOT EXISTS question_answer(
     motivation REAL,
     custom_scale_value REAL,
     text_value TEXT,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ,
     question_id UUID NOT NULL references question(id),
     user_username VARCHAR(255) NOT NULL references "user"(username)
 );
