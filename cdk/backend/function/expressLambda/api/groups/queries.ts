@@ -95,17 +95,17 @@ const upsert = async ({ username, group_id, organization_id }: UserInput) => {
   })
 }
 
-const deleteUser = async ({ username }: DeleteUserInput) => {
+const deleteUserFromGroup = async ({ username }: DeleteUserInput) => {
   const parameters: SqlParameter[] = [
     {
       name: 'username',
       value: {
         stringValue: username,
       },
-      typeHint: TypeHint.UUID,
     },
   ]
-  const query = 'DELETE FROM "user" WHERE username = :username RETURNING *'
+  const query =
+    'UPDATE "user" SET group_id=NULL WHERE username = :username RETURNING *'
 
   return await sqlQuery({
     message: `🚀 ~ > User with username '${username}' deleted.`,
@@ -140,7 +140,6 @@ const createGroup = async ({
       value: {
         stringValue: group_leader_username,
       },
-      typeHint: TypeHint.UUID,
     },
   ]
 
@@ -209,7 +208,7 @@ const updateGroupLeader = async (
 
 export default {
   upsert,
-  deleteUser,
+  deleteUserFromGroup,
   listGroups,
   listUsersInGroup,
   getGroup,

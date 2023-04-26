@@ -1,4 +1,3 @@
-import { Group, User } from '../../API'
 import { apiDELETE, apiGET, apiPATCH, apiPOST } from '../client'
 import {
   AddUserInput,
@@ -7,39 +6,39 @@ import {
   GetGroupInput,
   GetUsersInput,
   GroupInput,
+  IGroup,
+  IUser,
   UpdateGroupLeaderInput,
 } from './types'
 
-const path = '/groups'
-
-export const getAllGroups = async () => apiGET<Group[]>(path)
+export const getAllGroups = async () => apiGET<IGroup[]>('/groups')
 
 export const getAllUsersInGroup = async (groupid: GetUsersInput) =>
-  apiGET<User[]>(`${path}/users`, { queryStringParameters: groupid })
+  apiGET<IUser[]>('/groups/users', { queryStringParameters: groupid })
 
 export const addUserToGroup = async (
   id: GetGroupInput,
   userData: AddUserInput
 ) =>
-  apiPOST<User>(`${path}/:id/user`, {
+  apiPOST<IUser>('/groups/:id/user', {
     queryStringParameters: id,
     body: userData,
   })
 
-export const deleteUserFromGroup = async (id: DeleteUserInput) =>
-  apiDELETE<User>(`${path}/user`, { body: id })
+export const deleteUserFromGroup = async (username: DeleteUserInput) =>
+  apiDELETE<IUser>('/groups/user', { body: username })
 
 export const createGroup = async (data: GroupInput) =>
-  apiPOST<Group>(path, { body: data })
+  apiPOST<IGroup>('/groups', { body: data })
 
 export const updateGroupLeader = async (
   id: GetGroupInput,
   data: UpdateGroupLeaderInput
 ) =>
-  apiPATCH<Group>(path, {
+  apiPATCH<IGroup>('/groups', {
     queryStringParameters: id,
     body: data,
   })
 
 export const deleteGroup = async (id: DeleteGroupInput) =>
-  apiDELETE<Group>(path, { body: id })
+  apiDELETE<IGroup>('/groups', { body: id })

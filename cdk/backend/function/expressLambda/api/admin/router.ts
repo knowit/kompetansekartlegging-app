@@ -3,7 +3,7 @@ import express from 'express'
 import { getUser } from '../cognito/cognitoActions'
 import Group from '../groups/queries'
 import { User } from '../groups/types'
-import { GetGroupQuery } from './types'
+import { GetGroupQuery, UserAnnotated } from './types'
 
 const router = express.Router()
 
@@ -11,7 +11,7 @@ router.get<unknown, unknown, unknown, GetGroupQuery>(
   '/get-group',
   async (req, res, next) => {
     try {
-      const members: AdminGetUserResponse[] = []
+      const members: UserAnnotated[] = []
       const { id } = req.query
       const group = await Group.getGroup({ id })
       const groupLeader = await getUser(group.data.group_leader_username)
@@ -20,12 +20,14 @@ router.get<unknown, unknown, unknown, GetGroupQuery>(
       await Promise.all(
         groupMembers.data.map(async (user: User) => {
           return getUser(user.username).then((member: AdminGetUserResponse) => {
-            members.push(member)
+            const { Username, ...newMember } = { ...user, ...member }
+            members.push(newMember)
           })
         })
       )
         .then(() => {
           const result = {
+            status: 'ok',
             message: `🚀 ~ > Admin info on group with id ${id}`,
             data: {
               leader: groupLeader,
