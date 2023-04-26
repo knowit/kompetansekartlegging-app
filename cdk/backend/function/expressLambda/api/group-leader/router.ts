@@ -4,7 +4,7 @@ import { getUserOnRequest } from '../utils'
 import GroupLeader from './queries'
 const router = express.Router()
 
-router.get('/myGroup', async (req, res, next) => {
+router.get('/mygroup', async (req, res, next) => {
   try {
     const { username } = getUserOnRequest(req)
 
