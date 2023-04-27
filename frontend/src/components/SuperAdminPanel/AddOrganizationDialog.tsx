@@ -13,6 +13,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { OrganizationInfo } from './SuperAdminTypes'
 import { useTranslation } from 'react-i18next'
 import CenteredCircularProgress from '../CenteredCircularProgress'
+import { getUserExists } from '../AdminPanel/adminApi'
 
 interface AddOrganizationDialogProps {
   onCancel: () => void
@@ -32,12 +33,45 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
   const [organizationIdentifierAttribute, setOrganizationIdentifierAttribute] =
     useState('')
   const [organizationAdminEmail, setOrganizationAdminEmail] = useState('')
+  const [emailAlreadyExists, setEmailAlreadyExists] = useState<boolean>(false)
   const [isAddingOrganization, setIsAddingOrganization] = useState(false)
+  const [emailExistsValidationError, setEmailExistsValidationError] =
+    useState<boolean>(false)
 
   const emailRegex = /^[^\s@]+@[^\s@]+$/
   const isOrganizationAdminEmailValid =
     organizationAdminEmail.length === 0 ||
     emailRegex.test(organizationAdminEmail)
+
+  const addOrganization = () => {
+    onConfirm(
+      {
+        id: organizationID,
+        name: organizationName,
+        identifierAttribute: organizationIdentifierAttribute,
+      },
+      organizationAdminEmail
+    )
+  }
+
+  const addOrganizationIfEmailDoesNotExist = async () => {
+    setIsAddingOrganization(true)
+    setEmailExistsValidationError(false)
+
+    try {
+      const res = await getUserExists(organizationAdminEmail)
+
+      if (!res.userExists) {
+        addOrganization()
+      } else {
+        setEmailAlreadyExists(true)
+        setIsAddingOrganization(false)
+      }
+    } catch (e) {
+      setEmailExistsValidationError(true)
+      setIsAddingOrganization(false)
+    }
+  }
 
   return (
     <Dialog
@@ -103,15 +137,32 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
           fullWidth
           label={t('superAdmin.editOrganizations.adminEmail')}
           variant="outlined"
-          error={!isOrganizationAdminEmailValid}
+          error={!isOrganizationAdminEmailValid || emailAlreadyExists}
           helperText={
-            !isOrganizationAdminEmailValid &&
-            t('superAdmin.editOrganizations.adminEmailIsInvalid')
+            (!isOrganizationAdminEmailValid &&
+              t('superAdmin.editOrganizations.adminEmailIsInvalid')) ||
+            (emailAlreadyExists &&
+              t(
+                'superAdmin.editOrganizations.thereAlreadyExistsAUserWithTheEmail',
+                { email: organizationAdminEmail }
+              ))
           }
           value={organizationAdminEmail}
-          onChange={(e: any) => setOrganizationAdminEmail(e.target.value)}
+          onChange={(e: any) => {
+            setOrganizationAdminEmail(e.target.value)
+            setEmailAlreadyExists(false)
+            setEmailExistsValidationError(false)
+          }}
         />
       </DialogTitle>
+      {emailExistsValidationError && (
+        <p style={{ textAlign: 'center' }}>
+          {t('errorOccured') +
+            t(
+              'superAdmin.editOrganizations.couldNotValidateIfAUserWithTheEmailAlreadyExists'
+            )}
+        </p>
+      )}
       {isAddingOrganization ? (
         <div style={{ height: 65, display: 'flex', justifyContent: 'center' }}>
           <CenteredCircularProgress />
@@ -129,17 +180,11 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
               organizationIdentifierAttribute === '' ||
               !isOrganizationAdminEmailValid
             }
-            onClick={() => {
-              setIsAddingOrganization(true)
-              onConfirm(
-                {
-                  id: organizationID,
-                  name: organizationName,
-                  identifierAttribute: organizationIdentifierAttribute,
-                },
-                organizationAdminEmail
-              )
-            }}
+            onClick={
+              organizationAdminEmail == ''
+                ? addOrganization
+                : addOrganizationIfEmailDoesNotExist
+            }
           >
             <span>{t('add')}</span>
           </Button>
