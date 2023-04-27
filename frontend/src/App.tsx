@@ -120,16 +120,6 @@ const App = () => {
 
   const { width } = useWindowDimensions()
   const isSmall = width < 700
-  useEffect(() => {
-    if (isSmall) {
-      // hide body overflow to avoid doublescroll
-      if (scaleDescOpen) {
-        document.body.style.overflow = 'hidden'
-      } else {
-        document.body.style.overflow = ''
-      }
-    }
-  }, [scaleDescOpen])
 
   const signout = () => {
     Auth.signOut()
