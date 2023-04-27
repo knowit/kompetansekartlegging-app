@@ -6,14 +6,17 @@ from unittest.mock import MagicMock, patch, ANY
 from boto3 import client
 from moto import mock_secretsmanager
 
+# Set environment variable before importing lambda
+os.environ["AWS_DEFAULT_REGION"] = "eu-central-1"
+
 sys.path.append('../')
 from slackAlarmForwarder.index import handler, create_payload, get_slack_webhook_url
 
-os.environ["AWS_DEFAULT_REGION"] = "eu-central-1"
-slack_url = "fake.url"
+slack_url = "slack.url"
 expected_payload_keys = ["mrkdwn_in", "title", "title_link", "text", "color"]
 
-def create_event(new_state_value, alarm_name="Name", message_only=False):
+# Helper function to create an alarm event similar to what SNS sends to the Lambda
+def get_alarm_event(alarm_name="Name", new_state_value="Alarm", new_state_reason="Reason", message_only=False):
     event = {
         "Records": [{
             "Sns": {
@@ -22,7 +25,7 @@ def create_event(new_state_value, alarm_name="Name", message_only=False):
                     "AlarmName": alarm_name,
                     "AWSAccountId": "accountID",
                     "NewStateValue": new_state_value,
-                    "NewStateReason": "reason",
+                    "NewStateReason": new_state_reason,
                 })
             }
         }]
@@ -45,57 +48,61 @@ class TestConfigureNewOrganizationLambda(TestCase):
         self.assertEqual(slack_url, actual_url)
 
 
-    def test_create_payload(self):
-        alarm_name = "Important alarm"
-        actual_payload = create_payload(
-            msg=create_event(
-                new_state_value="ALARM",
+    def test_create_payload_alarm_state(self):
+        alarm_name = "Alarm 1"
+        new_state_value = "ALARM"
+        new_state_reason = "Threshold Crossed: datapoint greater than or equal to threshold"
+
+        payload = create_payload(
+            msg=get_alarm_event(
                 alarm_name=alarm_name,
+                new_state_value=new_state_value,
+                new_state_reason=new_state_reason,
                 message_only=True)
         )
-        # Assert payload contains expected keys, alarm name and correct color
-        self.assertTrue([expected_key in actual_payload.keys() for expected_key in expected_payload_keys])
-        self.assertIn(alarm_name, actual_payload["text"])
-
-
-    def test_create_payload_color_in_different_alarm_states(self):
-        payload_alarm_state = create_payload(
-            msg=create_event(
-                new_state_value="ALARM",
-                message_only=True)
-        )
-        payload_ok_state = create_payload(
-            msg=create_event(
-                new_state_value="OK",
-                message_only=True)
-        )
-        # Assert payloads contains correct color
-        self.assertEqual("danger", payload_alarm_state["color"])
-        self.assertEqual("good", payload_ok_state["color"])
+        # Assert payload contains expected keys and values
+        self.assertTrue([expected_key in payload.keys() for expected_key in expected_payload_keys])
+        self.assertIn(alarm_name, payload["title"])
+        self.assertIn(new_state_value, payload["text"])
+        self.assertIn(new_state_reason, payload["text"])
+        self.assertEqual("danger", payload["color"])
 
 
     def test_create_payload_ok_state(self):
-        actual_payload = create_payload(
-            msg=create_event(
-                new_state_value="OK",
+        alarm_name = "Alarm 2"
+        new_state_value = "OK"
+        new_state_reason = "Threshold Crossed: missing datapoint treated as [NonBreaching]"
+
+        payload = create_payload(
+            msg=get_alarm_event(
+                alarm_name=alarm_name,
+                new_state_value=new_state_value,
+                new_state_reason=new_state_reason,
                 message_only=True)
         )
-        # Assert payload contains correct color
-        self.assertEqual("good", actual_payload["color"])
+        # Assert payload contains expected keys and values
+        self.assertTrue([expected_key in payload.keys() for expected_key in expected_payload_keys])
+        self.assertIn(alarm_name, payload["title"])
+        self.assertIn(new_state_value, payload["text"])
+        self.assertIn(new_state_reason, payload["text"])
+        self.assertEqual("good", payload["color"])
 
 
+    @patch("slackAlarmForwarder.index.create_payload")
     @patch("slackAlarmForwarder.index.get_slack_webhook_url", return_value=slack_url)
     @patch("slackAlarmForwarder.index.requests.post")
     def test_handler(
         self,
         patch_requests_post: MagicMock,
-        patch_get_slack_webhook_url: MagicMock
+        patch_get_slack_webhook_url: MagicMock,
+        patch_create_payload: MagicMock
     ):
         response = handler(
-            event=create_event(alarm_name="name", new_state_value="ALARM"),
+            event=get_alarm_event(),
             context=None
         )
         # Assert handler returns 200, and that functions are called as expected
         self.assertEqual(200, response["status_code"])
+        patch_create_payload.assert_called_once()
         patch_get_slack_webhook_url.assert_called_once()
         patch_requests_post.assert_called_once_with(url=slack_url, json=ANY)
