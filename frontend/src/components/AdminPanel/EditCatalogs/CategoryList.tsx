@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
-import List from '@material-ui/core/List'
+import List from '@mui/material/List'
 
 import { Category } from '../../../API'
 import {

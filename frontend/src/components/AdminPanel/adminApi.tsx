@@ -2,6 +2,7 @@ import { API, Auth } from 'aws-amplify'
 import {
   ADMIN_COGNITOGROUP_SUFFIX,
   GROUPLEADER_COGNITOGROUP_SUFFIX,
+  SUPER_ADMIN_COGNITO_GROUP,
 } from '../../constants'
 import i18n from '../../i18n/i18n'
 
@@ -146,7 +147,8 @@ const listGroupLeadersInOrganization = async (organizationID: string) =>
 const listGroupLeaders = async () => await listUsersInGroup('groupLeader')
 const listAdminsInOrganization = async (organizationID: string) =>
   await listUsersInGroup(`${organizationID}${ADMIN_COGNITOGROUP_SUFFIX}`)
-const listAdmins = async () => await listUsersInGroup('admin')
+const listSuperAdmins = async () =>
+  await listUsersInGroup(SUPER_ADMIN_COGNITO_GROUP)
 
 const listAllUsers = async (limit = 60): Promise<ApiResponse<any[]>> => {
   let nextToken = ''
@@ -178,11 +180,30 @@ const listAllUsers = async (limit = 60): Promise<ApiResponse<any[]>> => {
   return { result: allUsers }
 }
 
+const getUserExists = async (username: string) => {
+  const apiName = 'AdminQueries'
+  const path = '/getUserExists'
+  const myInit = {
+    queryStringParameters: {
+      username,
+    },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `${(await Auth.currentSession())
+        .getAccessToken()
+        .getJwtToken()}`,
+    },
+  }
+
+  return await API.get(apiName, path, myInit)
+}
+
 export {
+  getUserExists,
   listAllUsers,
   listAllUsersInOrganization,
   listGroupLeaders,
   listGroupLeadersInOrganization,
-  listAdmins,
+  listSuperAdmins,
   listAdminsInOrganization,
 }

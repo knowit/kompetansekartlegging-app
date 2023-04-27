@@ -22,9 +22,11 @@ export const English: LanguageSchema = {
     username: 'Username',
     name: 'Name',
     description: 'Description',
+    organizationID: 'Organization ID',
     groupDefiniteForm: 'group',
     roleDefiniteForm: ' role',
     searchForEmployeeInOrganization: 'Search for employee in {{organization}}',
+    searchForEmployeeAcrossOrganizations: 'Search for employee across organizations',
     nameCantBeEmpty: "Name can't be empty.",
     addAdministrator: 'Add administrator',
     pressHereToSeeWhatTheIconsMean: 'Press here to see what the icons mean',
@@ -166,7 +168,7 @@ export const English: LanguageSchema = {
       noGroupLeader: 'No group leader',
     },
     admin: {
-      areYouSureYouWantToDeleteNameFromRole: 'Are you sure you want to delete {{name}} from the {{role}}?',
+      areYouSureYouWantToRemoveNameFromRole: 'Are you sure you want to remove {{name}} from the {{role}}?',
       removeNameFromRole: 'Remove {{name}} from the {{role}}?',
       editGroupLeaders: {
         description: "Group leaders can access their group members' answers. They can also choose their group members. On this page you can add and remove group leaders.",
@@ -254,6 +256,8 @@ export const English: LanguageSchema = {
         idCantBeEmptyOrContainZero: "ID can't be empty or contain '0'.",
         identifierAttributeCantBeEmpty: "Identifier attribute can't be empty.",
         adminEmailIsInvalid: 'Admin email is invalid.',
+        thereAlreadyExistsAUserWithTheEmail: "There already exists a user with the email '{{email}}'.",
+        couldNotValidateIfAUserWithTheEmailAlreadyExists: 'Could not validate if a user with the email already exists.',
         adminEmailTooltip: 'Empty: Create organization without admin user.\nFilled: Create organization and new admin user.',
       },
       editSuperAdministrators: {

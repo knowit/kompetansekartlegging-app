@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
-import Box from '@material-ui/core/Box'
-import IconButton from '@material-ui/core/IconButton'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogTitle from '@mui/material/DialogTitle'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
+import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton'
 
 import { dialogStyles } from '../../../styles'
 import { CloseIcon } from '../../DescriptionTable'
@@ -21,11 +21,13 @@ const CopyCatalogDialog = ({ onCancel, onConfirm, onExited, open }: any) => {
     <Dialog
       open={open}
       onClose={onCancel}
-      onExited={onExited}
       fullWidth
       maxWidth="sm"
       PaperProps={{
         style: { borderRadius: 30 },
+      }}
+      TransitionProps={{
+        onExited,
       }}
     >
       <DialogTitle>
@@ -38,7 +40,11 @@ const CopyCatalogDialog = ({ onCancel, onConfirm, onExited, open }: any) => {
           <span className={style.dialogTitleText}>
             {t('admin.editCatalogs.copyCatalog')}
           </span>
-          <IconButton className={style.closeButton} onClick={onCancel}>
+          <IconButton
+            className={style.closeButton}
+            onClick={onCancel}
+            size="large"
+          >
             <CloseIcon />
           </IconButton>
         </Box>

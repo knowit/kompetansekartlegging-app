@@ -20,9 +20,11 @@ export type LanguageSchema = {
     username: string
     name: string
     description: string
+    organizationID: string
     groupDefiniteForm: string
     roleDefiniteForm: string
     searchForEmployeeInOrganization: string
+    searchForEmployeeAcrossOrganizations: string
     nameCantBeEmpty: string
     addAdministrator: string
     pressHereToSeeWhatTheIconsMean: string
@@ -164,7 +166,7 @@ export type LanguageSchema = {
       noGroupLeader: string
     }
     admin: {
-      areYouSureYouWantToDeleteNameFromRole: string
+      areYouSureYouWantToRemoveNameFromRole: string
       removeNameFromRole: string
       editGroupLeaders: {
         description: string
@@ -252,6 +254,8 @@ export type LanguageSchema = {
         idCantBeEmptyOrContainZero: string
         identifierAttributeCantBeEmpty: string
         adminEmailIsInvalid: string
+        thereAlreadyExistsAUserWithTheEmail: string
+        couldNotValidateIfAUserWithTheEmailAlreadyExists: string
         adminEmailTooltip: string
       }
       editSuperAdministrators: {

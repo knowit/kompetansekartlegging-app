@@ -1,4 +1,5 @@
-import { makeStyles, Theme } from '@material-ui/core'
+import { Theme } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 
 export const cardCornerRadius = 40
 
@@ -58,6 +59,7 @@ export const dialogStyles = makeStyles(
       background: KnowitColors.lightGreen,
       borderRadius: '19px',
       borderColor: KnowitColors.lightGreen,
+      color: KnowitColors.black,
     },
     cancelButton: {
       width: '162px',
@@ -66,6 +68,7 @@ export const dialogStyles = makeStyles(
       borderColor: KnowitColors.flamingo,
       boxsizing: 'border-box',
       borderRadius: '19px',
+      color: KnowitColors.black,
     },
     buttonText: {
       fontWeight: 'bold',
@@ -86,9 +89,7 @@ export const dialogStyles = makeStyles(
       marginBottom: '10px',
     },
     dialogTitle: {
-      '& h2': {
-        display: 'flex',
-      },
+      display: 'flex',
     },
     dialogTitleText: {
       fontWeight: 'bold',

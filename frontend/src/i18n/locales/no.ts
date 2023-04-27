@@ -22,9 +22,11 @@ export const Norwegian: LanguageSchema = {
     username: 'Brukernavn',
     name: 'Navn',
     description: 'Beskrivelse',
+    organizationID: 'Organisasjons-ID',
     groupDefiniteForm: 'gruppen',
     roleDefiniteForm: 'rollen',
     searchForEmployeeInOrganization: 'Søk etter ansatt i {{organization}}',
+    searchForEmployeeAcrossOrganizations: 'Søk etter ansatt på tvers av organisasjoner',
     nameCantBeEmpty: 'Navn kan ikke være tom.',
     addAdministrator: 'Legg til administrator',
     pressHereToSeeWhatTheIconsMean: 'Trykk her for å se hva ikonene betyr!',
@@ -166,7 +168,7 @@ export const Norwegian: LanguageSchema = {
       noGroupLeader: 'Mangler gruppeleder',
     },
     admin: {
-      areYouSureYouWantToDeleteNameFromRole: 'Er du sikker på at du har lyst til å fjerne {{name}} fra {{role}}?',
+      areYouSureYouWantToRemoveNameFromRole: 'Er du sikker på at du har lyst til å fjerne {{name}} fra {{role}}?',
       removeNameFromRole: 'Fjern {{name}} fra {{role}}?',
       editGroupLeaders: {
         description: 'Gruppeledere har tilgang til sine egne gruppebarns svar. De kan også velge sine gruppebarn. På denne siden kan du legge til og fjerne gruppeledere.',
@@ -254,6 +256,8 @@ export const Norwegian: LanguageSchema = {
         idCantBeEmptyOrContainZero: "ID kan ikke være tom eller inneholde '0'.",
         identifierAttributeCantBeEmpty: 'Identifier attribute kan ikke være tom.',
         adminEmailIsInvalid: 'Admin e-post er ugyldig.',
+        thereAlreadyExistsAUserWithTheEmail: "Det finnes allerede en bruker med mailen '{{email}}'.",
+        couldNotValidateIfAUserWithTheEmailAlreadyExists: 'Kunne ikke validere om en bruker med e-posten allerede finnes.',
         adminEmailTooltip: 'Tomt: Opprett organisasjon uten admin-bruker.\nFylt: Opprett organisasjon og ny admin-bruker.',
       },
       editSuperAdministrators: {

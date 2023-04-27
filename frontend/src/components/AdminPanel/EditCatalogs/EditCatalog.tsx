@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { makeStyles, createStyles } from '@material-ui/core/styles'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Container from '@material-ui/core/Container'
-import Box from '@material-ui/core/Box'
-import AddIcon from '@material-ui/icons/Add'
+import { makeStyles, createStyles } from '@mui/styles'
+import CircularProgress from '@mui/material/CircularProgress'
+import Container from '@mui/material/Container'
+import Box from '@mui/material/Box'
+import AddIcon from '@mui/icons-material/Add'
 
 import { listCategoriesByFormDefinitionID, createCategory } from '../catalogApi'
 import useApiGet from '../useApiGet'

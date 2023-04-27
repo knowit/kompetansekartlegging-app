@@ -1,20 +1,19 @@
-import React from 'react'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import TreeView from '@material-ui/lab/TreeView'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import TreeView from '@mui/lab/TreeView'
 import {
   AnswerHistoryProps,
   HistoryTreeViewProps,
   UserAnswer,
   UserFormWithAnswers,
 } from '../types'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import ChevronRightIcon from '@material-ui/icons/ChevronRight'
-import TreeItem from '@material-ui/lab/TreeItem'
-import { makeStyles } from '@material-ui/core/styles'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import TreeItem from '@mui/lab/TreeItem'
+import { makeStyles } from '@mui/styles'
 import { useTranslation } from 'react-i18next'
 import { TFunction } from 'i18next'
 

@@ -1,16 +1,9 @@
-import React from 'react'
-
-import {
-  createStyles,
-  makeStyles,
-  withStyles,
-  Theme,
-} from '@material-ui/core/styles'
-import InputBase from '@material-ui/core/InputBase'
-import MenuItem from '@material-ui/core/MenuItem'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
-
+import { createStyles, makeStyles, withStyles } from '@mui/styles'
+import { Theme } from '@mui/material/styles'
+import InputBase from '@mui/material/InputBase'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import Select from '@mui/material/Select'
 import { KnowitColors } from '../../styles'
 import { useTranslation } from 'react-i18next'
 

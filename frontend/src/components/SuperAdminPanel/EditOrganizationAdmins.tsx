@@ -1,14 +1,14 @@
 import { useState } from 'react'
 
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Container from '@material-ui/core/Container'
-import Typography from '@material-ui/core/Typography'
-import PersonAddIcon from '@material-ui/icons/PersonAdd'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CircularProgress from '@mui/material/CircularProgress'
+import Container from '@mui/material/Container'
+import Typography from '@mui/material/Typography'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
 import { useAppSelector } from '../../redux/hooks'
-import { selectAdminCognitoGroupName } from '../../redux/User'
+import { selectAdminCognitoGroupName, selectUserState } from '../../redux/User'
 import { useTranslation } from 'react-i18next'
 import AddUserToGroupDialog from '../AdminPanel/AddUserToGroupDialog'
 import {
@@ -25,6 +25,7 @@ import AdminTable from '../AdminPanel/AdminTable'
 const EditOrganizationAdmins = () => {
   const { t } = useTranslation()
   const adminCognitoGroupName = useAppSelector(selectAdminCognitoGroupName)
+  const userState = useAppSelector(selectUserState)
 
   const {
     result: admins,
@@ -96,9 +97,13 @@ const EditOrganizationAdmins = () => {
           open={showAddAdmin}
           currentUsersInGroup={admins}
           userGetFn={listAllUsersInOrganization}
+          userGetFnParams={
+            userState.isSignedIn ? userState.organizationID : null
+          }
           onCancel={hideShowAddAdmin}
           onConfirm={addAdminConfirm}
           roleName={t('administrator').toLowerCase()}
+          searchFieldPlaceholder={t('searchForEmployeeAcrossOrganizations')}
         />
       )}
     </Container>

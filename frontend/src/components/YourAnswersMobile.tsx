@@ -1,4 +1,5 @@
-import { Button, makeStyles } from '@material-ui/core'
+import { Button } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import clsx from 'clsx'
 import { useEffect } from 'react'
 import { KnowitColors } from '../styles'
@@ -123,6 +124,7 @@ const yourAnswersStyleMobile = makeStyles({
     justifyContent: 'left',
     fontSize: '14px',
     lineHeight: '16px',
+    color: KnowitColors.black,
   },
   yourAnswersMobileContainer: {
     minHeight: '100vh',
