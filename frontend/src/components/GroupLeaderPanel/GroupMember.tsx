@@ -7,7 +7,7 @@ import {
   setFirstAnswers,
 } from '../answersApi'
 import { getAttribute } from '../AdminPanel/helpers'
-import { Panel, UserAnswer, QuestionAnswer } from '../../types'
+import { UserAnswer, QuestionAnswer } from '../../types'
 import { Overview } from '../Overview'
 import AnswerDiagram from '../AnswerDiagram'
 import Nav from './Nav'
@@ -85,7 +85,6 @@ const GroupMember = ({ members, userId, isSmall }: any) => {
           {category === 'Oversikt' ? (
             <Overview
               questionAnswers={questionAnswers}
-              categories={categories}
               isSmall={isSmall}
               userAnswersLoaded={userAnswersLoaded}
             />

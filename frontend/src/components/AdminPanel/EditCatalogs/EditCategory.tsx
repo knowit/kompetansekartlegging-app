@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import Box from '@mui/material/Box'
 import CenteredCircularProgress from '../../CenteredCircularProgress'
 import { Auth } from 'aws-amplify'
 import { useTranslation } from 'react-i18next'

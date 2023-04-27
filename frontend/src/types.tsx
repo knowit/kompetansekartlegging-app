@@ -326,7 +326,6 @@ export type BatchCreatedQuestionAnswer = {
 
 export type OverviewProps = {
   questionAnswers: Map<string, QuestionAnswer[]>
-  categories: string[]
   isSmall: boolean
   userAnswersLoaded: boolean
 }
@@ -374,7 +373,7 @@ export type HighlightsProps = {
 
 export type ResultDiagramProps = {
   questionAnswers: Map<string, QuestionAnswer[]>
-  categories: string[]
+  categories?: string[]
   isSmall: boolean
 }
 

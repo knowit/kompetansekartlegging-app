@@ -14,7 +14,6 @@ import CategoryListItem from './CategoryListItem'
 import DeleteCategoryDialog from './DeleteCategoryDialog'
 import { useTranslation } from 'react-i18next'
 import styled from '@emotion/styled'
-import { Card, CardContent } from '@mui/material'
 import { KnowitColors } from '../../../styleconstants'
 
 const StyledCategoryList = styled.div`

@@ -78,7 +78,6 @@ const recalculate = (
 
 export default function TypedOverviewChart({
   questionAnswers,
-  categories,
   isSmall,
 }: ResultDiagramProps) {
   const { t } = useTranslation()

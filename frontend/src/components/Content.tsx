@@ -340,9 +340,7 @@ const Content = ({
       case Panel.Overview:
         return (
           <Overview
-            activePanel={activePanel}
             questionAnswers={questionAnswers}
-            categories={categories}
             isSmall={isSmall}
             userAnswersLoaded={userAnswersLoaded}
           />

@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box'
 import CenteredCircularProgress from '../CenteredCircularProgress'
 import DeleteUserFromGroupDialog from '../AdminPanel/DeleteUserFromGroupDialog'
 import GroupMembers from '../AdminPanel/GroupMembers'

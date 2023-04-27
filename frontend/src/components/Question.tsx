@@ -185,11 +185,7 @@ const StyledQuestionContainer = styled.div`
   }
 `
 
-const KnowledgeMotivationSliders = ({
-  sliderValues,
-  sliderChanged,
-  isSmall,
-}: any) => {
+const KnowledgeMotivationSliders = ({ sliderValues, sliderChanged }: any) => {
   const { t } = useTranslation()
 
   return (

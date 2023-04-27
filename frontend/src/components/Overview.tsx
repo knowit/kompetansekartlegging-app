@@ -4,17 +4,12 @@ import TypedOverviewChart from './TypedOverviewChart'
 
 export const Overview = ({
   questionAnswers,
-  categories,
   isSmall,
   userAnswersLoaded,
 }: OverviewProps) => {
   return userAnswersLoaded ? (
     <div>
-      <TypedOverviewChart
-        isSmall={isSmall}
-        questionAnswers={questionAnswers}
-        categories={categories}
-      />
+      <TypedOverviewChart isSmall={isSmall} questionAnswers={questionAnswers} />
       <Highlights isSmall={isSmall} questionAnswers={questionAnswers} />
     </div>
   ) : null
