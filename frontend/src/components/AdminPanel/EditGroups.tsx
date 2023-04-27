@@ -45,6 +45,7 @@ import PictureAndNameEditCell from './PictureAndNameEditCell'
 import { useTranslation } from 'react-i18next'
 import useApiGet from './useApiGet'
 import InfoCard from '../InfoCard'
+import { KnowitColors } from '../../styleconstants'
 
 const Group = ({
   addMembersToGroup,
