@@ -62,7 +62,6 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
 
     try {
       const res = await getUserExists(organizationAdminEmail)
-      console.log(res)
 
       if (!res.userExists) {
         addOrganization()

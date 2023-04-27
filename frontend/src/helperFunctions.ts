@@ -210,7 +210,6 @@ export const getLatestUserFormUpdatedAtForUser = (
           : null
       sorted ? resolve(sorted[0]) : resolve(null)
     } catch (e) {
-      console.log(e)
       reject(i18n.t('errorWhileFetchingUpdatedAtFromLatestUserForm'))
     }
   })
