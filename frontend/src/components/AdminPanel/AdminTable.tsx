@@ -1,15 +1,17 @@
-import IconButton from '@mui/material/IconButton'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
-import { Delete as DeleteIcon } from '@mui/icons-material'
-import { useTranslation } from 'react-i18next'
 import { Table } from '@mui/material'
+import {
+  IconButton,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material'
+import { useTranslation } from 'react-i18next'
 import { ORGANIZATION_ID_ATTRIBUTE } from '../../constants'
 import { getAttribute } from './helpers'
 import PictureAndNameCell from './PictureAndNameCell'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 const Admin = (props: any) => {
   const { admin, deleteAdmin, showOrgId } = props
@@ -28,7 +30,7 @@ const Admin = (props: any) => {
       <TableCell>{username}</TableCell>
       {showOrgId && <TableCell>{orgId}</TableCell>}
       <TableCell>
-        <IconButton edge="end" onClick={() => deleteAdmin(admin)}>
+        <IconButton edge="end" onClick={() => deleteAdmin(admin)} size="large">
           <DeleteIcon />
         </IconButton>
       </TableCell>

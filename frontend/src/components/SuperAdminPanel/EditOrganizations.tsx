@@ -7,10 +7,8 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import DeleteIcon from '@mui/icons-material/Delete'
-import commonStyles from '../AdminPanel/common.module.css'
 import { Button } from '@mui/material'
 import { Table } from '@mui/material'
-
 import AddIcon from '@mui/icons-material/Add'
 import useApiGet from '../AdminPanel/useApiGet'
 import AddOrganizationDialog from './AddOrganizationDialog'
@@ -66,7 +64,7 @@ const OrganizationTable: FC<OrganizationTableProps> = ({
   const { t } = useTranslation()
 
   return (
-    <TableContainer className={commonStyles.tableContainer}>
+    <TableContainer>
       <Table stickyHeader>
         <TableHead>
           <TableRow>

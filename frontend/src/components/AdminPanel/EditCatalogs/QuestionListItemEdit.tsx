@@ -23,10 +23,7 @@ const StyledItemEdit = styled.div`
     .subjectCategory {
       display: flex;
       flex-wrap: wrap;
-
-      > * {
-        margin-bottom: 10px;
-      }
+      align-items: baseline;
 
       .questionSubject {
         flex-grow: 4;
@@ -102,6 +99,7 @@ const QuestionListItemEdit = ({
           <CardContent className="questionContent">
             <div className="subjectCategory">
               <TextField
+                margin="dense"
                 className="questionSubject"
                 label={t('admin.editCatalogs.subject')}
                 variant="outlined"
@@ -122,6 +120,7 @@ const QuestionListItemEdit = ({
             </div>
 
             <TextField
+              margin="dense"
               fullWidth
               multiline
               minRows={4}
@@ -158,18 +157,21 @@ const QuestionListItemEdit = ({
               <FormControl fullWidth component="fieldset">
                 <Box display="flex" justifyContent="space-between">
                   <TextField
+                    margin="dense"
                     label={t('admin.editCatalogs.start')}
                     variant="outlined"
                     value={questionConfig.scaleStart}
                     onChange={onQuestionConfigChange('scaleStart')}
                   />
                   <TextField
+                    margin="dense"
                     label={t('admin.editCatalogs.middle')}
                     variant="outlined"
                     value={questionConfig.scaleMiddle}
                     onChange={onQuestionConfigChange('scaleMiddle')}
                   />
                   <TextField
+                    margin="dense"
                     label={t('admin.editCatalogs.end')}
                     variant="outlined"
                     value={questionConfig.scaleEnd}

@@ -84,7 +84,11 @@ const Group = ({
         </TableCell>
         <TableCell>{group.members.length}</TableCell>
         <TableCell align="right">
-          <Button endIcon={<DeleteIcon />} onClick={() => deleteGroup(group)}>
+          <Button
+            endIcon={<DeleteIcon />}
+            onClick={() => deleteGroup(group)}
+            style={{ color: KnowitColors.black }}
+          >
             {t('admin.editGroups.removeGroup')}
           </Button>
         </TableCell>

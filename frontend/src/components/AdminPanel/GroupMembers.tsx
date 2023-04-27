@@ -5,6 +5,7 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 import { Button } from '@mui/material'
 import { Table } from '@mui/material'
@@ -14,7 +15,6 @@ import { i18nDateToLocaleDateString } from '../../i18n/i18n'
 import AddMemberToGroupDialog from './AddMemberToGroupDialog'
 import { getAttribute } from './helpers'
 import PictureAndNameCell from './PictureAndNameCell'
-import { Delete as DeleteIcon } from '@mui/icons-material'
 const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
   const { t } = useTranslation()
 

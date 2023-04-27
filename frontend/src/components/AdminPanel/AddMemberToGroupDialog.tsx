@@ -103,6 +103,7 @@ const AddMemberToGroupDialog = ({
         </Box>
         <FormGroup row>
           <TextField
+            margin="dense"
             fullWidth
             placeholder={
               t('searchForEmployeeInOrganization', {

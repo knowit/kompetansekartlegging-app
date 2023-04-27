@@ -8,6 +8,7 @@ const CategoriesSelect = ({ categories, categoryID, setCategoryID }: any) => {
     <FormControl variant="outlined">
       <InputLabel>{t('admin.editCatalogs.category')}</InputLabel>
       <Select
+        label={t('admin.editCatalogs.category')}
         value={categoryID}
         onChange={(e) => setCategoryID(e.target.value)}
       >

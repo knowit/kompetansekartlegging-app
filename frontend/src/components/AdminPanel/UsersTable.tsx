@@ -33,10 +33,7 @@ const UsersTable = ({ users, selectedUser, setSelectedUser }: any) => {
     selectedUser && user.Username === selectedUser.Username
 
   return (
-    <TableContainer
-      component={Paper}
-      className={commonStyles.usersTableContainer}
-    >
+    <TableContainer component={Paper}>
       <Table stickyHeader>
         <TableHead>
           <TableRow>

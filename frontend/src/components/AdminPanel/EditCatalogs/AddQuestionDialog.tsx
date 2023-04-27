@@ -81,6 +81,7 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
           </IconButton>
         </Box>
         <TextField
+          margin="dense"
           autoFocus
           fullWidth
           label={t('admin.editCatalogs.subjectOfTheNewQuestion')}
@@ -95,6 +96,7 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
       </DialogTitle>
       <DialogContent>
         <TextField
+          margin="dense"
           fullWidth
           multiline
           minRows={4}
@@ -109,7 +111,7 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
           onChange={(e: any) => setDescription(e.target.value)}
         />
         <FormControl component="fieldset">
-          <FormLabel component="legend">
+          <FormLabel component="legend" style={{ color: '#0000008A' }}>
             {t('admin.editCatalogs.typeOfQuestion')}
           </FormLabel>
           <RadioGroup row value={questionType} onChange={onQuestionTypeChange}>
@@ -129,18 +131,21 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
           <FormControl fullWidth component="fieldset">
             <Box display="flex" justifyContent="space-between">
               <TextField
+                margin="dense"
                 label={t('admin.editCatalogs.start')}
                 variant="outlined"
                 value={questionConfig.scaleStart}
                 onChange={onQuestionConfigChange('scaleStart')}
               />
               <TextField
+                margin="dense"
                 label={t('admin.editCatalogs.middle')}
                 variant="outlined"
                 value={questionConfig.scaleMiddle}
                 onChange={onQuestionConfigChange('scaleMiddle')}
               />
               <TextField
+                margin="dense"
                 label={t('admin.editCatalogs.end')}
                 variant="outlined"
                 value={questionConfig.scaleEnd}

@@ -35,14 +35,13 @@ const theme = createTheme({
       },
     },
 
-    MuiTable: {
+    MuiTableContainer: {
       styleOverrides: {
         root: {
+          marginBottom: 10,
           '.MuiTableCell-head': {
             fontWeight: 'bold',
           },
-          marginBottom: 15,
-          marginTop: 15,
         },
       },
     },

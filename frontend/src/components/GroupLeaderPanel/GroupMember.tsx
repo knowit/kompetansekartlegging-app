@@ -84,7 +84,6 @@ const GroupMember = ({ members, userId, isSmall }: any) => {
           />
           {category === 'Oversikt' ? (
             <Overview
-              activePanel={Panel.Overview}
               questionAnswers={questionAnswers}
               categories={categories}
               isSmall={isSmall}

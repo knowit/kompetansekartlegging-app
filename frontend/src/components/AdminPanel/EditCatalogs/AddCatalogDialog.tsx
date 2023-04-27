@@ -39,6 +39,7 @@ const AddCatalogDialog = ({ onCancel, onConfirm, open }: any) => {
           </IconButton>
         </Box>
         <TextField
+          margin="dense"
           autoFocus
           fullWidth
           label={t('admin.editCatalogs.nameOfNewCatalog')}

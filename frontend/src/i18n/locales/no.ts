@@ -26,8 +26,7 @@ export const Norwegian: LanguageSchema = {
     groupDefiniteForm: 'gruppen',
     roleDefiniteForm: 'rollen',
     searchForEmployeeInOrganization: 'Søk etter ansatt i {{organization}}',
-    searchForEmployeeAcrossOrganizations:
-      'Søk etter ansatt på tvers av organisasjoner',
+    searchForEmployeeAcrossOrganizations: 'Søk etter ansatt på tvers av organisasjoner',
     nameCantBeEmpty: 'Navn kan ikke være tom.',
     addAdministrator: 'Legg til administrator',
     pressHereToSeeWhatTheIconsMean: 'Trykk her for å se hva ikonene betyr!',
@@ -181,8 +180,7 @@ export const Norwegian: LanguageSchema = {
       noGroupLeader: 'Mangler gruppeleder',
     },
     admin: {
-      areYouSureYouWantToDeleteNameFromRole:
-        'Er du sikker på at du har lyst til å fjerne {{name}} fra {{role}}?',
+      areYouSureYouWantToRemoveNameFromRole: 'Er du sikker på at du har lyst til å fjerne {{name}} fra {{role}}?',
       removeNameFromRole: 'Fjern {{name}} fra {{role}}?',
       editGroupLeaders: {
         description:

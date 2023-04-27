@@ -26,8 +26,7 @@ export const English: LanguageSchema = {
     groupDefiniteForm: 'group',
     roleDefiniteForm: ' role',
     searchForEmployeeInOrganization: 'Search for employee in {{organization}}',
-    searchForEmployeeAcrossOrganizations:
-      'Search for employee across organizations',
+    searchForEmployeeAcrossOrganizations: 'Search for employee across organizations',
     nameCantBeEmpty: "Name can't be empty.",
     addAdministrator: 'Add administrator',
     pressHereToSeeWhatTheIconsMean: 'Press here to see what the icons mean',
@@ -183,8 +182,7 @@ export const English: LanguageSchema = {
       noGroupLeader: 'No group leader',
     },
     admin: {
-      areYouSureYouWantToDeleteNameFromRole:
-        'Are you sure you want to delete {{name}} from the {{role}}?',
+      areYouSureYouWantToRemoveNameFromRole: 'Are you sure you want to remove {{name}} from the {{role}}?',
       removeNameFromRole: 'Remove {{name}} from the {{role}}?',
       editGroupLeaders: {
         description:

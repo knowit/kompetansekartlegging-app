@@ -65,7 +65,6 @@ const EditSuperAdmins = () => {
             deleteAdmin={deleteAdmin}
             showOrgId={true}
           />
-
           <Button
             variant="contained"
             startIcon={<PersonAddIcon />}

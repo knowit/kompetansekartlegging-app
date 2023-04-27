@@ -1,7 +1,5 @@
 import { useState } from 'react'
-
 import Button from '@mui/material/Button'
-
 import Box from '@mui/material/Box'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -40,6 +38,7 @@ const AddCategoryDialog = ({ onCancel, onConfirm, open }: any) => {
           </IconButton>
         </Box>
         <TextField
+          margin="dense"
           autoFocus
           fullWidth
           label={t('admin.editCatalogs.nameOfNewCategory')}
@@ -52,6 +51,7 @@ const AddCategoryDialog = ({ onCancel, onConfirm, open }: any) => {
       </DialogTitle>
       <DialogContent>
         <TextField
+          margin="dense"
           fullWidth
           multiline
           minRows={4}

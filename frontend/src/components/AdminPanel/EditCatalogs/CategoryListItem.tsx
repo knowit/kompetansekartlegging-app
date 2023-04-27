@@ -50,6 +50,7 @@ const CategoryListItem = ({
         primary={
           <>
             <TextField
+              margin="dense"
               fullWidth
               label={t('name')}
               variant="outlined"
@@ -62,6 +63,7 @@ const CategoryListItem = ({
               }
             />
             <TextField
+              margin="dense"
               fullWidth
               multiline
               minRows={4}

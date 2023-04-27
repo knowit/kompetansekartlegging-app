@@ -82,6 +82,7 @@ const AddUserToGroupDialog = ({
           </IconButton>
         </Box>
         <TextField
+          margin="dense"
           fullWidth
           placeholder={searchFieldPlaceholder}
           variant="outlined"
