@@ -1,3 +1,4 @@
+import { KeyboardEvent, MouseEvent, useState } from 'react'
 import {
   AppBar,
   Toolbar,
@@ -7,7 +8,6 @@ import {
   ListItem,
 } from '@mui/material'
 import { makeStyles } from '@mui/styles'
-import React from 'react'
 import { KnowitColors } from '../styles'
 import { NavBarPropsMobile } from '../types'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -93,8 +93,8 @@ const navbarStyles = makeStyles((theme) => ({
 const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
   const { t } = useTranslation()
   const style = navbarStyles()
-  // const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [drawerOpen, setDrawerOpen] = React.useState(false)
+  // const [mobileOpen, setMobileOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false)
 
   // const handleDrawerToggle = () => {
   //   setMobileOpen(!mobileOpen);
@@ -111,12 +111,12 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
   }
 
   const toggleDrawer =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+    (open: boolean) => (event: KeyboardEvent | MouseEvent) => {
       if (
         event &&
         event.type === 'keydown' &&
-        ((event as React.KeyboardEvent).key === 'Tab' ||
-          (event as React.KeyboardEvent).key === 'Shift')
+        ((event as KeyboardEvent).key === 'Tab' ||
+          (event as KeyboardEvent).key === 'Shift')
       ) {
         return
       }

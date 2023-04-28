@@ -1,5 +1,4 @@
-import React from 'react'
-
+import { FC } from 'react'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -19,7 +18,7 @@ interface DeleteOrganiationDialogProps {
   organization: OrganizationInfo
 }
 
-const DeleteOrganizationDialog: React.FC<DeleteOrganiationDialogProps> = ({
+const DeleteOrganizationDialog: FC<DeleteOrganiationDialogProps> = ({
   open,
   onConfirm,
   onCancel,
@@ -30,6 +29,7 @@ const DeleteOrganizationDialog: React.FC<DeleteOrganiationDialogProps> = ({
   return (
     <Dialog
       open={open}
+      onClose={onCancel}
       PaperProps={{
         style: { borderRadius: 30 },
       }}

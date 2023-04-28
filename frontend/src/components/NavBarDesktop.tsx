@@ -19,7 +19,7 @@ import {
 } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import HelpIcon from '@mui/icons-material/Help'
-import React, { useEffect, useRef, useState } from 'react'
+import { KeyboardEvent, useEffect, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { ReactComponent as KnowitLogo } from '../Logotype-Knowit-Digital-white 1.svg'
 import { useAppSelector } from '../redux/hooks'
@@ -84,7 +84,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
 
   const [avatarMenuOpen, setAvatarMenuOpen] = useState<boolean>(false)
   // return focus to the button when we transitioned from !avatarMenuOpen -> avatarMenuOpen
-  const avatarMenuPrevOpen = React.useRef(avatarMenuOpen)
+  const avatarMenuPrevOpen = useRef(avatarMenuOpen)
   const style = navbarStyles()
 
   const [deleteAlertOpen, setDeleteAlertOpen] = useState<boolean>(false)
@@ -105,7 +105,7 @@ const NavBarDesktop = ({ ...props }: NavBarPropsDesktop) => {
     setAvatarMenuOpen(false)
   }
 
-  function handleListKeyDown(event: React.KeyboardEvent) {
+  function handleListKeyDown(event: KeyboardEvent) {
     if (event.key === 'Tab') {
       event.preventDefault()
       setAvatarMenuOpen(false)

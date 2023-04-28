@@ -58,10 +58,6 @@
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off"
     },
-    "globals": {
-      "React": "readonly",
-      "JSX": "readonly"
-    },
     "ignorePatterns": [
       "API.ts",
       "exports.js",

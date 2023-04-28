@@ -186,6 +186,25 @@ app.get('/getUser', async (req, res, next) => {
   }
 })
 
+app.get('/getUserExists', async (req, res, next) => {
+  if (!req.query.username) {
+    const err = new Error('username is required')
+    err.statusCode = 400
+    return next(err)
+  }
+
+  try {
+    const response = await getUser(req.query.username)
+    res.status(200).json({ userExists: true, username: req.query.username })
+  } catch (err) {
+    if (err.code == 'UserNotFoundException') {
+      res.status(200).json({ userExists: false, username: req.query.username })
+    } else {
+      next(err)
+    }
+  }
+})
+
 app.get('/listUsers', async (req, res, next) => {
   try {
     let response

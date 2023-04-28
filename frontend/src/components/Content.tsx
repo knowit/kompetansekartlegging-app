@@ -1,7 +1,7 @@
 import { Button, ListItem } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import clsx from 'clsx'
-import React, { Fragment, useEffect, useState } from 'react'
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react'
 import { CreateQuestionAnswerInput, QuestionType } from '../API'
 import * as customQueries from '../graphql/custom-queries'
 import * as helper from '../helperFunctions'
@@ -144,7 +144,7 @@ const contentStyle = makeStyles({
 
 const updateCategoryAlerts = (
   questionAnswers: Map<string, QuestionAnswer[]>,
-  setAlerts: React.Dispatch<React.SetStateAction<AlertState | undefined>>,
+  setAlerts: Dispatch<SetStateAction<AlertState | undefined>>,
   t: TFunction<'translation', undefined, 'translation'>
 ) => {
   const msNow = Date.now()

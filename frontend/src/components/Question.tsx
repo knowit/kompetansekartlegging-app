@@ -1,4 +1,3 @@
-import React from 'react'
 import clsx from 'clsx'
 import { QuestionType } from '../API'
 import { QuestionProps, SliderKnowledgeMotivationValues } from '../types'
