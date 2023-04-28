@@ -32,8 +32,12 @@ import styled from '@emotion/styled'
 import { KnowitColors } from '../styleconstants'
 import Modal from './Modal'
 const ToolbarContainer = styled.div`
+  button,
   svg {
     color: ${KnowitColors.white};
+  }
+  #usernameButtonText {
+    margin-left: 5px;
   }
   #toolbar {
     display: flex;
@@ -163,11 +167,11 @@ const NavBar = ({
               onClick={handleToggle}
               aria-label={t('aria.toggleDropdownMenu') as string}
             >
-              <div>{userState.name}</div>
               <Avatar
                 src={userState.picture}
                 alt={t('navbar.profilePicture') as string}
               />
+              <div id="usernameButtonText">{userState.name}</div>
             </Button>
           </div>
 

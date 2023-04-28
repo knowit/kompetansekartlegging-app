@@ -397,12 +397,6 @@ export type NavBarPropsDesktop = {
   isSmall: boolean
 }
 
-export type NavBarPropsMobile = {
-  menuButtons: JSX.Element[]
-  activePanel: Panel
-  signout: () => void
-}
-
 export type AlertDialogProps = {
   setAlertDialogOpen: (alertDialogOpen: boolean) => void
   alertDialogOpen: boolean
