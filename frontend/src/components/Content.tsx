@@ -138,7 +138,6 @@ const Content = ({
   categoryNavRef,
   scrollToTop,
   setCollapseMobileCategories,
-  setScaleDescOpen,
   setFirstTimeLogin,
   setShowFab,
 }: ContentProps) => {
@@ -283,9 +282,7 @@ const Content = ({
           setActivePanel,
           setUserAnswersLoaded,
           setAnswerEditMode,
-          setFirstTimeLogin,
-          setScaleDescOpen,
-          isSmall
+          setFirstTimeLogin
         ),
       (quAns, newUserAnswers) =>
         setFirstAnswers(
@@ -295,11 +292,10 @@ const Content = ({
           setAnswersBeforeSubmitted
         )
     )
-  }, [userState, setFirstTimeLogin, setScaleDescOpen, isSmall])
+  }, [userState, setFirstTimeLogin])
 
   useEffect(() => {
     const fetchUserFormsAndOpenView = async () => {
-      // debugger
       const allUserForms = await helper.listUserForms()
       setAnswerLog(allUserForms)
       setAnswerHistoryOpen(true)

@@ -183,6 +183,7 @@ const FloatingScaleDescButton = ({
   useEffect(() => {
     if (firstTimeLogin) {
       setTimeout(() => setShowTooltip(false), 5000)
+      !isSmall && setScaleDescOpen(true)
     }
   }, [firstTimeLogin])
 

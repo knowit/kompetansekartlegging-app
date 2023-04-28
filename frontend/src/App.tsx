@@ -191,7 +191,6 @@ const App = () => {
               mobileNavRef={mobileNavRef}
               scrollToTop={scrollToTopMobile}
               setCollapseMobileCategories={setCollapseMobileCategories}
-              setScaleDescOpen={setScaleDescOpen}
               setFirstTimeLogin={setFirstTimeLogin}
               setShowFab={setShowFab}
             />

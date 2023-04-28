@@ -134,9 +134,7 @@ const getUserAnswers = async (
   setActivePanel: Dispatch<SetStateAction<Panel>>,
   setUserAnswersLoaded: Dispatch<SetStateAction<boolean>>,
   setAnswerEditMode: Dispatch<SetStateAction<boolean>>,
-  setFirstTimeLogin: Dispatch<SetStateAction<boolean>>,
-  setScaleDescOpen: Dispatch<SetStateAction<boolean>>,
-  isSmall: boolean
+  setFirstTimeLogin: Dispatch<SetStateAction<boolean>>
 ) => {
   let nextToken: string | null = null
   let nextUserFormToken: string | null = null
@@ -189,9 +187,6 @@ const getUserAnswers = async (
     setAnswerEditMode(false)
     setUserAnswersLoaded(true)
     setFirstTimeLogin(true)
-    if (!isSmall) {
-      setScaleDescOpen(true)
-    }
   }
 
   return [] // Either could not load userform or no user form exists for current form definition

@@ -438,7 +438,6 @@ export type ContentProps = {
   scrollToTop: () => void
   mobileNavRef: MutableRefObject<HTMLInputElement | null>
   setCollapseMobileCategories: (collapseMobileCategories: boolean) => void
-  setScaleDescOpen: Dispatch<SetStateAction<boolean>>
   setFirstTimeLogin: Dispatch<SetStateAction<boolean>>
   setShowFab: Dispatch<SetStateAction<boolean>>
 }
