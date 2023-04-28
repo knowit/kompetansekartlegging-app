@@ -180,10 +180,10 @@ const FloatingScaleDescButton = ({
   const { t } = useTranslation()
 
   const [showTooltip, setShowTooltip] = useState(true)
+
   useEffect(() => {
     if (firstTimeLogin) {
       setTimeout(() => setShowTooltip(false), 5000)
-      !isSmall && setScaleDescOpen(true)
     }
   }, [firstTimeLogin])
 

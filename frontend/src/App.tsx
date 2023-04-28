@@ -192,6 +192,7 @@ const App = () => {
               scrollToTop={scrollToTopMobile}
               setCollapseMobileCategories={setCollapseMobileCategories}
               setFirstTimeLogin={setFirstTimeLogin}
+              firstTimeLogin={firstTimeLogin}
               setShowFab={setShowFab}
             />
             {showFab && (

@@ -439,6 +439,7 @@ export type ContentProps = {
   mobileNavRef: MutableRefObject<HTMLInputElement | null>
   setCollapseMobileCategories: (collapseMobileCategories: boolean) => void
   setFirstTimeLogin: Dispatch<SetStateAction<boolean>>
+  firstTimeLogin: boolean
   setShowFab: Dispatch<SetStateAction<boolean>>
 }
 

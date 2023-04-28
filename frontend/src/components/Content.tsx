@@ -139,6 +139,7 @@ const Content = ({
   scrollToTop,
   setCollapseMobileCategories,
   setFirstTimeLogin,
+  firstTimeLogin,
   setShowFab,
 }: ContentProps) => {
   const { t } = useTranslation()
@@ -342,6 +343,9 @@ const Content = ({
           />
         )
       case Panel.MyAnswers:
+        if (activeCategory === 'MAIN') {
+          setActiveCategory(categories[0])
+        }
         return (
           <YourAnswers
             activePanel={activePanel}
@@ -396,11 +400,7 @@ const Content = ({
     } else {
       setActivePanel(panelSource)
       if (panelSource === Panel.MyAnswers) {
-        if (itemSource === 'MAIN') {
-          setActiveCategory(categories[0])
-        } else {
-          setActiveCategory(itemSource)
-        }
+        setActiveCategory(itemSource)
         setActiveSubmenuItem('NONE')
       } else {
         setActiveCategory('NONE')
@@ -418,9 +418,7 @@ const Content = ({
     setActivePanel(lastClickedPanel)
 
     if (lastClickedPanel === Panel.MyAnswers) {
-      setActiveCategory(
-        lastClickedCategory === 'MAIN' ? categories[0] : lastClickedCategory
-      )
+      setActiveCategory(lastClickedCategory)
       setActiveSubmenuItem('NONE')
     } else {
       setActiveSubmenuItem(lastClickedSubmenu)
