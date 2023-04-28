@@ -258,6 +258,7 @@ export const Norwegian: LanguageSchema = {
         adminEmailIsInvalid: 'Admin e-post er ugyldig.',
         thereAlreadyExistsAUserWithTheEmail: "Det finnes allerede en bruker med mailen '{{email}}'.",
         couldNotValidateIfAUserWithTheEmailAlreadyExists: 'Kunne ikke validere om en bruker med e-posten allerede finnes.',
+        adminEmailTooltip: 'Tomt: Opprett organisasjon uten admin-bruker.\nFylt: Opprett organisasjon og ny admin-bruker.',
       },
       editSuperAdministrators: {
         description: 'På denne siden kan du legge til og fjerne super-administratorer.',

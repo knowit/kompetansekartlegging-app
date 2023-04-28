@@ -258,6 +258,7 @@ export const English: LanguageSchema = {
         adminEmailIsInvalid: 'Admin email is invalid.',
         thereAlreadyExistsAUserWithTheEmail: "There already exists a user with the email '{{email}}'.",
         couldNotValidateIfAUserWithTheEmailAlreadyExists: 'Could not validate if a user with the email already exists.',
+        adminEmailTooltip: 'Empty: Create organization without admin user.\nFilled: Create organization and new admin user.',
       },
       editSuperAdministrators: {
         description: 'On this page you can add and remove super-administrators.',

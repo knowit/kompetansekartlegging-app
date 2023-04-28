@@ -256,6 +256,7 @@ export type LanguageSchema = {
         adminEmailIsInvalid: string
         thereAlreadyExistsAUserWithTheEmail: string
         couldNotValidateIfAUserWithTheEmailAlreadyExists: string
+        adminEmailTooltip: string
       }
       editSuperAdministrators: {
         description: string
