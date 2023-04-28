@@ -1,5 +1,4 @@
 import {
-  Badge,
   ListItemButton,
   Collapse,
   List,
@@ -12,7 +11,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 import { Panel } from '../types'
 import styled from '@emotion/styled'
-import { menuWidth } from '../styleconstants'
+import { CheckCircleOutlineRounded, ErrorOutline } from '@mui/icons-material'
 
 type MenuItemProps = {
   panelId: Panel
@@ -61,16 +60,14 @@ const DropdownMenuItem = ({
   const subMenuItems = (activeSubmenuItem: any, items: any) =>
     items.map((item: any) => (
       <ListItemButton
-        className="submenuItem"
         key={item.key}
         onClick={() => handleMenuClick(panelId, item.key)}
         selected={item.key === activeSubmenuItem}
       >
-        <Badge badgeContent={item.alert} color="warning">
-          <ListItemText sx={{ maxWidth: menuWidth - 10 }}>
-            {t(item.text)}
-          </ListItemText>
-        </Badge>
+        <ListItemText>
+          {item.alert && <ErrorOutline color="warning" />}
+          {t(item.text)}
+        </ListItemText>
       </ListItemButton>
     ))
 
@@ -94,9 +91,8 @@ const DropdownMenuItem = ({
           handleMainItemClick()
         }}
       >
-        <Badge badgeContent={alert} color="warning">
-          <ListItemText>{t(text)}</ListItemText>
-        </Badge>
+        <ListItemText>{t(text)}</ListItemText>
+        {alert != 0 && <ErrorOutline color="warning" />}
         {hasChildren && (drawerOpen ? <ExpandLess /> : <ExpandMore />)}
       </ListItemButton>
 

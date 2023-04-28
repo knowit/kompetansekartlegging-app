@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material'
-import { KnowitColors } from './styleconstants'
+import { KnowitColors, menuWidth } from './styleconstants'
 
 /*The theme holds styles that override all default components
   Styles specific to specific components, 
@@ -52,16 +52,6 @@ const theme = createTheme({
           height: 6,
           borderRadius: 3,
           color: KnowitColors.green,
-        },
-      },
-    },
-
-    MuiCollapse: {
-      styleOverrides: {
-        root: {
-          '.submenuItem': {
-            paddingLeft: '25px',
-          },
         },
       },
     },

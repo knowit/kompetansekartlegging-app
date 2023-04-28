@@ -104,7 +104,7 @@ const Question = ({
           <PriorityHigh
             color="warning"
             aria-label={alertMessage}
-            fontSize="small"
+            fontSize="inherit"
           />
         )
         break
