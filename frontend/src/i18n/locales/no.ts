@@ -244,7 +244,8 @@ export const Norwegian: LanguageSchema = {
       }
     },
     superAdmin: {
-      identifierAttribute: 'Identifier Attribute',
+      identifierAttribute: 'Identifikatorattributt',
+      areYouSureYouWantToRemoveNameFromRoleAtOrganization: 'Er du sikker på at du har lyst til å fjerne {{name}} fra {{role}} i {{organization}}?',
       editOrganizations: {
         description: 'På denne siden kan du legge til, fjerne og oppdatere organisasjoner.',
         id: 'ID',
@@ -266,7 +267,8 @@ export const Norwegian: LanguageSchema = {
         addSuperAdministrator: 'Legg til super-administrator',
       },
       editOrganizationAdministrators: {
-        description: 'På denne siden kan du legge til og fjerne administratorer for spesifikke organisasjoner.',
+        description: 'På denne siden kan brukere legges til, og fjernes fra, administrator-rollen for organisasjonen de er en del av.',
+        couldNotGetAListOfAllAdministrators: 'Kunne ikke hente liste over alle administratorer.',
       }
     },
     adminApi: {

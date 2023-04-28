@@ -1,5 +1,13 @@
+import {
+  ADMIN_COGNITOGROUP_SUFFIX,
+  ORGANIZATION_ID_ATTRIBUTE,
+} from '../../constants'
+
 const getAttribute = (user: any, attribute: string): string | undefined =>
   user?.Attributes?.find((attr: any) => attr.Name === attribute)?.Value
+
+const getOrganizationAdminGroupNameFromUser = (user: any): string =>
+  getAttribute(user, ORGANIZATION_ID_ATTRIBUTE) + ADMIN_COGNITOGROUP_SUFFIX
 
 const not = (a: any, b: any) =>
   a.filter((av: any) => !b.some((bv: any) => bv.Username === av.Username))
@@ -21,4 +29,11 @@ const compareByIndex = (a: any, b: any) => {
 const compareByCreatedAt = (a: any, b: any) =>
   Date.parse(a.createdAt) > Date.parse(b.createdAt) ? -1 : 1
 
-export { getAttribute, not, compareByName, compareByIndex, compareByCreatedAt }
+export {
+  getAttribute,
+  not,
+  compareByName,
+  compareByIndex,
+  compareByCreatedAt,
+  getOrganizationAdminGroupNameFromUser,
+}

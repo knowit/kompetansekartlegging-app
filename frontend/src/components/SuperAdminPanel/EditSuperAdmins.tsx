@@ -94,6 +94,7 @@ const EditSuperAdmins = () => {
         roleName={t(
           'superAdmin.editSuperAdministrators.superAdministrator'
         ).toLowerCase()}
+        showOrgId
       />
       {showAddAdmin && (
         <AddUserToGroupDialog

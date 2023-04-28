@@ -295,6 +295,35 @@ app.get('/listUsersInGroup', async (req, res, next) => {
   }
 })
 
+app.get('/listAllOrganizationAdministrators', async (req, res, next) => {
+  try {
+    let nextToken
+    let allGroups = []
+    do {
+      const res = await listGroups(25, nextToken)
+      allGroups = [...allGroups, ...res.Groups]
+      nextToken = res.NextToken
+    } while (nextToken)
+
+    const orgAdmins = await Promise.all(
+      allGroups.map(async (group) => {
+        if (group.GroupName.includes('0admin')) {
+          return (await listUsersInGroup(group.GroupName)).Users
+        }
+      })
+    )
+
+    // Flatten and remove null values
+    orgAdminsFiltered = orgAdmins
+      .flat()
+      .filter((admin) => admin)
+
+    res.status(200).json({'Admins': orgAdminsFiltered})
+  } catch (err) {
+    next(err)
+  }
+})
+
 app.post('/signUserOut', async (req, res, next) => {
   /**
    * To prevent rogue actions of users with escalated privilege signing
