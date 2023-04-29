@@ -1,7 +1,11 @@
-import { AdminGetUserResponse } from 'aws-sdk/clients/cognitoidentityserviceprovider'
-import { User } from '../groups/types'
+import { AttributeListType } from 'aws-sdk/clients/cognitoidentityserviceprovider'
 export interface GetGroupQuery {
   id: string
 }
 
-export type UserAnnotated = User | Omit<AdminGetUserResponse, 'Username'>
+export interface UserAnnotated {
+  group_id: string
+  username: string
+  group_leader_username: string
+  cognito_attributes: AttributeListType
+}

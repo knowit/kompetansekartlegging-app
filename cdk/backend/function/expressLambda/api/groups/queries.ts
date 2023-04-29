@@ -206,6 +206,25 @@ const updateGroupLeader = async (
   })
 }
 
+const getUserByUsername = async (username: string) => {
+  const parameters: SqlParameter[] = [
+    {
+      name: 'username',
+      value: {
+        stringValue: username,
+      },
+    },
+  ]
+
+  const query = 'SELECT * "user" WHERE username=:username'
+
+  return await sqlQuery({
+    message: `🚀 ~ > User with username: ${username}`,
+    query,
+    parameters,
+  })
+}
+
 export default {
   upsert,
   deleteUserFromGroup,
@@ -215,4 +234,5 @@ export default {
   createGroup,
   deleteGroup,
   updateGroupLeader,
+  getUserByUsername,
 }

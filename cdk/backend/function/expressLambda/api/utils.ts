@@ -37,3 +37,21 @@ export const getRoles = (req: Request): string[] =>
         return role[1].toLocaleLowerCase()
       }
     })
+
+/**
+ * Returns the organization for the user based on the request object provided.
+ * @param {import('express').Request} req - The express request object.
+ * @returns {string[]} - An array of the organizations for the user, or undefined if the user has no organizations.
+ */
+export const getOrganizations = (req: Request): string[] => {
+  const organizations: string[] = []
+  req.apiGateway.event.requestContext.authorizer.claims['cognito:groups']
+    .split(',')
+    .map((o: string) => {
+      if (o.includes('0')) {
+        const org = o.split('0')
+        organizations.push(org[0])
+      }
+    })
+  return [...new Set<string>(organizations)]
+}
