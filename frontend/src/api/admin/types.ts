@@ -1,9 +1,16 @@
-import { AdminGetUserResponse } from '@aws-sdk/client-cognito-identity-provider'
-import { IUser } from '../groups/types'
+import {
+  AdminGetUserResponse,
+  AttributeType,
+} from '@aws-sdk/client-cognito-identity-provider'
 
 export interface IAdminGroup {
   leader: AdminGetUserResponse
-  members: UserAnnotated
+  members: IUserAnnotated
 }
 
-type UserAnnotated = IUser | Omit<AdminGetUserResponse, 'Username'>
+export interface IUserAnnotated {
+  group_id: string
+  username: string
+  group_leader_username: string
+  cognito_attributes: AttributeType[]
+}
