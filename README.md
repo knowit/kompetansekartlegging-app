@@ -57,6 +57,7 @@ To run the project locally:
  * `cdk deploy`       deploy this stack to your default AWS account/region
  * `cdk diff`         compare deployed stack with current state
  * `cdk synth`        emits the synthesized CloudFormation template
+ * `./test.sh`        installs test dependencies and runs tests
 
 ## Special packages used:
 * Appsync Transformer for CDK: https://github.com/kcwinner/cdk-appsync-transformer
