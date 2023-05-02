@@ -247,7 +247,7 @@ export const Norwegian: LanguageSchema = {
       identifierAttribute: 'Identifikatorattributt',
       areYouSureYouWantToRemoveNameFromRoleAtOrganization: 'Er du sikker på at du har lyst til å fjerne {{name}} fra {{role}} i {{organization}}?',
       editOrganizations: {
-        description: 'På denne siden kan du legge til, fjerne og oppdatere organisasjoner.',
+        description: 'På denne siden kan du legge til og fjerne organisasjoner.',
         id: 'ID',
         adminEmail: 'Admin E-post',
         addOrganization: 'Legg til organisasjon',
