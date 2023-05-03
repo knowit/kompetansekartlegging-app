@@ -5,10 +5,10 @@ import {
 import express, { NextFunction, Request, Response } from 'express'
 import { getUser, listUsersInGroup } from '../cognito/cognitoActions'
 import Group from '../groups/queries'
-import { User } from '../groups/types'
+import { IUser } from '../groups/types'
 import { getOrganizations } from '../utils'
 import Admin from './queries'
-import { GetGroupQuery, UserAnnotated } from './types'
+import { GetGroupQuery, IUserAnnotated } from './types'
 
 const router = express.Router()
 
@@ -16,14 +16,14 @@ router.get<unknown, unknown, unknown, GetGroupQuery>(
   '/get-group',
   async (req, res, next) => {
     try {
-      const members: UserAnnotated[] = []
+      const members: IUserAnnotated[] = []
       const { id } = req.query
       const group = await Group.getGroup({ id })
       const groupLeader = await getUser(group.data.group_leader_username)
       const groupMembers = await Group.listUsersInGroup({ group_id: id })
       console.log(groupMembers.data)
       await Promise.all(
-        groupMembers.data.map(async (user: User) => {
+        groupMembers.data.map(async (user: IUser) => {
           return getUser(user.username).then((member: AdminGetUserResponse) => {
             const newMember = {
               ...user,
@@ -106,11 +106,11 @@ router.get<any, any, any, any>(
   }
 )
 
-const annotateUsers = async (users: User[], cognitoUsers: UsersListType) => {
+const annotateUsers = async (users: IUser[], cognitoUsers: UsersListType) => {
   const usersAnnotated = cognitoUsers.map(async cu => {
     const user = users.find(u => u.username === cu.Username)
-    let userAnnotated: UserAnnotated
-    if (user)
+    let userAnnotated: IUserAnnotated
+    if (user) {
       return (userAnnotated = await annotateUserWithGroup(user).then(user => {
         const userAnnotated = {
           ...user,
@@ -118,17 +118,17 @@ const annotateUsers = async (users: User[], cognitoUsers: UsersListType) => {
         }
         return userAnnotated
       }))
+    }
   })
   return usersAnnotated
 }
 
-const annotateUserWithGroup = async (user: User) =>
+const annotateUserWithGroup = async (user: IUser) =>
   await Group.getGroup({ id: user.group_id }).then(response => {
-    const { organization_id, ...u } = {
+    return {
       ...user,
       group_leader_username: response.data.group_leader_username,
     }
-    return u
   })
 
 export { router as adminRouter }
