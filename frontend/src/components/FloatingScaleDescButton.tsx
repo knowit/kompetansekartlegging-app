@@ -1,4 +1,5 @@
-import { Fab, makeStyles, Modal, Tooltip } from '@material-ui/core'
+import { Fab, Modal, Tooltip } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KnowitColors } from '../styles'

@@ -1,18 +1,18 @@
 import { useState } from 'react'
 
-import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import FormControl from '@material-ui/core/FormControl'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import FormLabel from '@material-ui/core/FormLabel'
-import IconButton from '@material-ui/core/IconButton'
-import Radio from '@material-ui/core/Radio'
-import RadioGroup from '@material-ui/core/RadioGroup'
-import TextField from '@material-ui/core/TextField'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import FormControl from '@mui/material/FormControl'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import FormLabel from '@mui/material/FormLabel'
+import IconButton from '@mui/material/IconButton'
+import Radio from '@mui/material/Radio'
+import RadioGroup from '@mui/material/RadioGroup'
+import TextField from '@mui/material/TextField'
 
 import { useTranslation } from 'react-i18next'
 import { QuestionType } from '../../../API'
@@ -79,7 +79,11 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
           <span className={style.dialogTitleText}>
             {t('admin.editCatalogs.addNewQuestion')}
           </span>
-          <IconButton className={style.closeButton} onClick={onCancel}>
+          <IconButton
+            className={style.closeButton}
+            onClick={onCancel}
+            size="large"
+          >
             <CloseIcon />
           </IconButton>
         </Box>
@@ -111,10 +115,11 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
           }
           value={description}
           className={style.textField}
+          style={{ marginRight: 0 }}
           onChange={(e: any) => setDescription(e.target.value)}
         />
         <FormControl component="fieldset">
-          <FormLabel component="legend">
+          <FormLabel component="legend" style={{ color: '#0000008A' }}>
             {t('admin.editCatalogs.typeOfQuestion')}
           </FormLabel>
           <RadioGroup row value={questionType} onChange={onQuestionTypeChange}>

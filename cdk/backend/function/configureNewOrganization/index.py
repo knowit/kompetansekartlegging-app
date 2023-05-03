@@ -43,8 +43,7 @@ def handler(event, context):
         print(f"No admin email provided, organization '{org_id}' is configured without admin user")
     else:
         if user_already_exists(email):
-            print(f"User {email} already exists, adding user to groups")
-            add_user_to_groups(email, org_id)
+            print(f"User {email} already exists, no admin user will be created")
         else:
             create_admin_user(org_id, email)
 

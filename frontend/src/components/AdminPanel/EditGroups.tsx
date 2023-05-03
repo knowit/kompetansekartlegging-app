@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Container from '@material-ui/core/Container'
-import Typography from '@material-ui/core/Typography'
-import AddIcon from '@material-ui/icons/Add'
+import AddIcon from '@mui/icons-material/Add'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CircularProgress from '@mui/material/CircularProgress'
+import Container from '@mui/material/Container'
+import Typography from '@mui/material/Typography'
 
 import { useTranslation } from 'react-i18next'
 import { getLatestUserFormUpdatedAtForUser } from '../../helperFunctions'
@@ -274,6 +274,9 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
         <AddUserToGroupDialog
           usersConstant={groupLeaders}
           title={t('admin.editGroups.chooseNewGroupLeader')}
+          searchFieldPlaceholder={t('searchForEmployeeInOrganization', {
+            organization: userState.organizationName,
+          })}
           confirmButtonText={t('admin.editGroups.choose')}
           open={!!groupToEdit}
           currentUsersInGroup={
@@ -287,6 +290,9 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
         <AddUserToGroupDialog
           usersConstant={groupLeaders}
           title={t('admin.editGroups.chooseGroupLeaderForTheNewGroup')}
+          searchFieldPlaceholder={t('searchForEmployeeInOrganization', {
+            organization: userState.organizationName,
+          })}
           confirmButtonText={t('admin.editGroups.createGroup')}
           open={showAddGroup}
           currentUsersInGroup={[]}

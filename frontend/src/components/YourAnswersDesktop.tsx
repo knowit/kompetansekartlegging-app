@@ -1,6 +1,7 @@
-import { Button, makeStyles } from '@material-ui/core'
+import { Button } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import clsx from 'clsx'
-import React from 'react'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KnowitColors } from '../styles'
 import { Panel, YourAnswerProps } from '../types'
@@ -162,7 +163,7 @@ export const YourAnswersDesktop = ({ ...props }: YourAnswerProps) => {
   const { t } = useTranslation()
   const style = yourAnwersStyle()
 
-  const scrollRef = React.useRef<HTMLDivElement>(null)
+  const scrollRef = useRef<HTMLDivElement>(null)
 
   const scrollToTop = () => {
     scrollRef.current?.scroll(0, 0)

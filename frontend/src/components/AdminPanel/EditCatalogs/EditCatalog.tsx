@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import Box from '@material-ui/core/Box'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Container from '@material-ui/core/Container'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
-import AddIcon from '@material-ui/icons/Add'
+import AddIcon from '@mui/icons-material/Add'
+import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress'
+import Container from '@mui/material/Container'
+import { createStyles, makeStyles } from '@mui/styles'
 
 import { Auth } from 'aws-amplify'
 import { useTranslation } from 'react-i18next'

@@ -1,6 +1,7 @@
 import { Authenticator } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css'
-import { Button, makeStyles } from '@material-ui/core'
+import { Button } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import { Auth } from 'aws-amplify'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
