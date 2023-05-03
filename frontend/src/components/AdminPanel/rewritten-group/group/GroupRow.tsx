@@ -1,5 +1,5 @@
-import { Button, TableCell, TableRow } from '@material-ui/core'
-import DeleteIcon from '@material-ui/icons/Delete'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { Button, TableCell, TableRow } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { i18nDateToLocaleDateString } from '../../../../i18n/i18n'
 import PictureAndNameCell from '../../PictureAndNameCell'

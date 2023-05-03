@@ -5,7 +5,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@material-ui/core'
+} from '@mui/material'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { compareByName } from '../../helpers'

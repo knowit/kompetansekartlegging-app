@@ -1,10 +1,7 @@
 import { useState } from 'react'
 
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import PersonAddIcon from '@material-ui/icons/PersonAdd'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
+import { TableBody, TableCell, TableContainer, TableHead } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import Button from '../../../mui/Button'
 import Table from '../../../mui/Table'

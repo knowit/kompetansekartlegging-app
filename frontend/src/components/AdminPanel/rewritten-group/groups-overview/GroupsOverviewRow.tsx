@@ -1,3 +1,6 @@
+import DeleteIcon from '@mui/icons-material/Delete'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import {
   Box,
   Button,
@@ -6,11 +9,8 @@ import {
   TableCell,
   TableRow,
   Typography,
-  makeStyles,
-} from '@material-ui/core'
-import DeleteIcon from '@material-ui/icons/Delete'
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
+} from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import { useTranslation } from 'react-i18next'
 import GroupMembers from '../../GroupMembers'
 import PictureAndNameEditCell from '../../PictureAndNameEditCell'
