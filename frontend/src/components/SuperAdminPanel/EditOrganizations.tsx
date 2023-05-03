@@ -1,24 +1,24 @@
-import React, { useState } from 'react'
+import { FC, useState } from 'react'
 
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Container from '@material-ui/core/Container'
-import IconButton from '@material-ui/core/IconButton'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
-import Typography from '@material-ui/core/Typography'
-import DeleteIcon from '@material-ui/icons/Delete'
-import { useTranslation } from 'react-i18next'
+import AddIcon from '@mui/icons-material/Add'
+import DeleteIcon from '@mui/icons-material/Delete'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CircularProgress from '@mui/material/CircularProgress'
+import Container from '@mui/material/Container'
+import IconButton from '@mui/material/IconButton'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import Typography from '@mui/material/Typography'
 import commonStyles from '../AdminPanel/common.module.css'
 import Button from '../mui/Button'
 import Table from '../mui/Table'
 
-import AddIcon from '@material-ui/icons/Add'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import {
   createOrganization,
   deleteOrganization,
@@ -36,7 +36,7 @@ interface OrganizationProps {
   deleteOrganization: (id: Org) => void
 }
 
-const Organization: React.FC<OrganizationProps> = ({
+const Organization: FC<OrganizationProps> = ({
   organization,
   deleteOrganization,
 }) => {
@@ -50,6 +50,7 @@ const Organization: React.FC<OrganizationProps> = ({
           <IconButton
             edge="end"
             onClick={() => deleteOrganization(organization)}
+            size="large"
           >
             <DeleteIcon />
           </IconButton>
@@ -64,7 +65,7 @@ interface OrganizationTableProps {
   deleteOrganization: (id: Org) => void
 }
 
-const OrganizationTable: React.FC<OrganizationTableProps> = ({
+const OrganizationTable: FC<OrganizationTableProps> = ({
   organizations,
   deleteOrganization,
 }) => {

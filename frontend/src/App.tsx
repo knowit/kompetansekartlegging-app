@@ -2,8 +2,13 @@ import { Auth, Hub } from 'aws-amplify'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import './App.css'
 // import awsconfig from "./aws-exports";
-import { Button, debounce, makeStyles, Snackbar } from '@material-ui/core'
-import { ThemeProvider } from '@material-ui/core/styles'
+import { Button, Snackbar, debounce } from '@mui/material'
+import {
+  StyledEngineProvider,
+  Theme,
+  ThemeProvider,
+} from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { isMobile } from 'react-device-detect'
 import { useTranslation } from 'react-i18next'
@@ -13,14 +18,20 @@ import Login from './components/Login'
 import NavBarDesktop from './components/NavBarDesktop'
 import './config/aws-config'
 import { queryClient } from './config/tanstack-config'
-import { useAppDispatch, useAppSelector } from './redux/hooks'
 import {
   fetchOrganizationNameByID,
   selectUserState,
   setUserInfo,
   setUserInfoLogOut,
 } from './redux/User'
+import { useAppDispatch, useAppSelector } from './redux/hooks'
+import { KnowitColors } from './styles'
 import theme from './theme'
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
 
 const appStyle = makeStyles({
   root: {
@@ -152,65 +163,70 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <div className={style.root}>
-          {import.meta.env.VITE_USER_BRANCH !== 'master' ? (
-            <Snackbar
-              open={bannerOpen}
-              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-            >
-              <div
-                style={{
-                  background: 'rgba(0,255,0, 255)',
-                  borderRadius: 5,
-                  padding: 4,
-                  textAlign: 'center',
-                }}
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <div className={style.root}>
+            {import.meta.env.VITE_USER_BRANCH !== 'master' ? (
+              <Snackbar
+                open={bannerOpen}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
               >
-                {t('thisIsATestEnvironment') + ' '}
-                <Button onClick={() => setBannerOpen(false)}>
-                  {t('close').toUpperCase()}
-                </Button>
-              </div>
-            </Snackbar>
-          ) : null}
-          {userState.isSignedIn ? (
-            <Fragment>
-              {isMobile ? null : (
-                <NavBarDesktop
-                  displayAnswers={displayAnswers}
-                  signout={signout}
-                />
-              )}
+                <div
+                  style={{
+                    background: 'rgba(0,255,0, 255)',
+                    borderRadius: 5,
+                    padding: 4,
+                    textAlign: 'center',
+                  }}
+                >
+                  {t('thisIsATestEnvironment') + ' '}
+                  <Button
+                    onClick={() => setBannerOpen(false)}
+                    style={{ color: KnowitColors.black }}
+                  >
+                    {t('close').toUpperCase()}
+                  </Button>
+                </div>
+              </Snackbar>
+            ) : null}
+            {userState.isSignedIn ? (
+              <Fragment>
+                {isMobile ? null : (
+                  <NavBarDesktop
+                    displayAnswers={displayAnswers}
+                    signout={signout}
+                  />
+                )}
 
-              <Content
-                setAnswerHistoryOpen={setAnswerHistoryOpen}
-                answerHistoryOpen={answerHistoryOpen}
-                isMobile={isMobile}
-                signout={signout}
-                collapseMobileCategories={collapseMobileCategories}
-                categoryNavRef={categoryNavRef}
-                mobileNavRef={mobileNavRef}
-                scrollToTop={scrollToTopMobile}
-                setCollapseMobileCategories={setCollapseMobileCategories}
-                setScaleDescOpen={setScaleDescOpen}
-                setFirstTimeLogin={setFirstTimeLogin}
-                setShowFab={setShowFab}
-              />
-              {showFab && (
-                <FloatingScaleDescButton
-                  scaleDescOpen={scaleDescOpen}
-                  setScaleDescOpen={setScaleDescOpen}
-                  firstTimeLogin={firstTimeLogin}
+                <Content
+                  setAnswerHistoryOpen={setAnswerHistoryOpen}
+                  answerHistoryOpen={answerHistoryOpen}
                   isMobile={isMobile}
+                  signout={signout}
+                  collapseMobileCategories={collapseMobileCategories}
+                  categoryNavRef={categoryNavRef}
+                  mobileNavRef={mobileNavRef}
+                  scrollToTop={scrollToTopMobile}
+                  setCollapseMobileCategories={setCollapseMobileCategories}
+                  setScaleDescOpen={setScaleDescOpen}
+                  setFirstTimeLogin={setFirstTimeLogin}
+                  setShowFab={setShowFab}
                 />
-              )}
-            </Fragment>
-          ) : (
-            <Login isMobile={isMobile} />
-          )}
-        </div>
-      </ThemeProvider>
+                {showFab && (
+                  <FloatingScaleDescButton
+                    scaleDescOpen={scaleDescOpen}
+                    setScaleDescOpen={setScaleDescOpen}
+                    firstTimeLogin={firstTimeLogin}
+                    isMobile={isMobile}
+                  />
+                )}
+              </Fragment>
+            ) : (
+              <Login isMobile={isMobile} />
+            )}
+          </div>
+        </ThemeProvider>
+      </StyledEngineProvider>
     </QueryClientProvider>
   )
 }

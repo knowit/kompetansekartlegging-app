@@ -1,6 +1,6 @@
-import { Button } from '@material-ui/core'
+import { Button } from '@mui/material'
 import clsx from 'clsx'
-import React from 'react'
+import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Panel } from '../../types'
 import { SubmenuCategory } from './AdminPanel'
@@ -8,7 +8,7 @@ import { SubmenuCategory } from './AdminPanel'
 type AdminMenuProps = {
   show: boolean
   selected: boolean
-  setShowFab: React.Dispatch<React.SetStateAction<boolean>>
+  setShowFab: Dispatch<SetStateAction<boolean>>
   style: any
   activeSubmenuItem: any
   setActiveSubmenuItem: any

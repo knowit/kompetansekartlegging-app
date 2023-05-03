@@ -1,7 +1,7 @@
 import { QuestionType } from './API'
 import { MenuButton } from './components/Content'
 import { AlertType } from './components/AlertNotification'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, MutableRefObject, SetStateAction } from 'react'
 import { OverviewType } from './components/TypedOverviewChart'
 
 export interface UserState {
@@ -361,7 +361,7 @@ export type YourAnswerProps = {
     category?: string | undefined
   ) => void
   collapseMobileCategories: boolean
-  categoryNavRef: React.MutableRefObject<HTMLInputElement | null>
+  categoryNavRef: MutableRefObject<HTMLInputElement | null>
   scrollToTop: () => void
   setCollapseMobileCategories: (collapseMobileCategories: boolean) => void
 }
@@ -447,9 +447,9 @@ export type ContentProps = {
   isMobile: boolean
   signout: () => void
   collapseMobileCategories: boolean
-  categoryNavRef: React.MutableRefObject<HTMLInputElement | null>
+  categoryNavRef: MutableRefObject<HTMLInputElement | null>
   scrollToTop: () => void
-  mobileNavRef: React.MutableRefObject<HTMLInputElement | null>
+  mobileNavRef: MutableRefObject<HTMLInputElement | null>
   setCollapseMobileCategories: (collapseMobileCategories: boolean) => void
   setScaleDescOpen: Dispatch<SetStateAction<boolean>>
   setFirstTimeLogin: Dispatch<SetStateAction<boolean>>

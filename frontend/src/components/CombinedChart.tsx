@@ -1,4 +1,4 @@
-import makeStyles from '@material-ui/core/styles/makeStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import { useTranslation } from 'react-i18next'
 import {
   Bar,

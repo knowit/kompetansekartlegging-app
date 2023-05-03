@@ -1,3 +1,4 @@
+import ErrorIcon from '@mui/icons-material/Error'
 import {
   Button,
   Dialog,
@@ -5,8 +6,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-} from '@material-ui/core'
-import ErrorIcon from '@material-ui/icons/Error'
+} from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { dialogStyles } from '../styles'
 import { AlertDialogProps } from '../types'

@@ -1,3 +1,4 @@
+import MenuIcon from '@mui/icons-material/Menu'
 import {
   AppBar,
   IconButton,
@@ -5,11 +6,10 @@ import {
   ListItem,
   Toolbar,
   Typography,
-} from '@material-ui/core'
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
-import { makeStyles } from '@material-ui/core/styles'
-import MenuIcon from '@material-ui/icons/Menu'
-import React from 'react'
+} from '@mui/material'
+import SwipeableDrawer from '@mui/material/SwipeableDrawer'
+import { makeStyles } from '@mui/styles'
+import { KeyboardEvent, MouseEvent, useState } from 'react'
 import { isIOS } from 'react-device-detect'
 import { useTranslation } from 'react-i18next'
 import { KnowitColors } from '../styles'
@@ -93,8 +93,8 @@ const navbarStyles = makeStyles((theme) => ({
 const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
   const { t } = useTranslation()
   const style = navbarStyles()
-  // const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [drawerOpen, setDrawerOpen] = React.useState(false)
+  // const [mobileOpen, setMobileOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false)
 
   // const handleDrawerToggle = () => {
   //   setMobileOpen(!mobileOpen);
@@ -111,12 +111,12 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
   }
 
   const toggleDrawer =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+    (open: boolean) => (event: KeyboardEvent | MouseEvent) => {
       if (
         event &&
         event.type === 'keydown' &&
-        ((event as React.KeyboardEvent).key === 'Tab' ||
-          (event as React.KeyboardEvent).key === 'Shift')
+        ((event as KeyboardEvent).key === 'Tab' ||
+          (event as KeyboardEvent).key === 'Shift')
       ) {
         return
       }
@@ -131,7 +131,11 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
-      <LanguageSelect color={KnowitColors.beige} marginLeft={15} />
+      <LanguageSelect
+        color={KnowitColors.beige}
+        marginTop={12}
+        marginLeft={15}
+      />
       <List className={style.list}>
         {props.menuButtons}
         <ListItem className={style.logout} onClick={props.signout}>
@@ -152,6 +156,7 @@ const NavBarMobile = ({ ...props }: NavBarPropsMobile) => {
             color="inherit"
             aria-label={t('aria.menu') as string}
             onClick={toggleDrawer(true)}
+            size="large"
           >
             <MenuIcon fontSize="large" />
           </IconButton>

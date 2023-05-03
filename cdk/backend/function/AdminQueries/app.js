@@ -186,6 +186,25 @@ app.get('/getUser', async (req, res, next) => {
   }
 })
 
+app.get('/getUserExists', async (req, res, next) => {
+  if (!req.query.username) {
+    const err = new Error('username is required')
+    err.statusCode = 400
+    return next(err)
+  }
+
+  try {
+    const response = await getUser(req.query.username)
+    res.status(200).json({ userExists: true, username: req.query.username })
+  } catch (err) {
+    if (err.code == 'UserNotFoundException') {
+      res.status(200).json({ userExists: false, username: req.query.username })
+    } else {
+      next(err)
+    }
+  }
+})
+
 app.get('/listUsers', async (req, res, next) => {
   try {
     let response
@@ -271,6 +290,35 @@ app.get('/listUsersInGroup', async (req, res, next) => {
       response = await listUsersInGroup(req.query.groupname)
     }
     res.status(200).json(response)
+  } catch (err) {
+    next(err)
+  }
+})
+
+app.get('/listAllOrganizationAdministrators', async (req, res, next) => {
+  try {
+    let nextToken
+    let allGroups = []
+    do {
+      const res = await listGroups(25, nextToken)
+      allGroups = [...allGroups, ...res.Groups]
+      nextToken = res.NextToken
+    } while (nextToken)
+
+    const orgAdmins = await Promise.all(
+      allGroups.map(async (group) => {
+        if (group.GroupName.includes('0admin')) {
+          return (await listUsersInGroup(group.GroupName)).Users
+        }
+      })
+    )
+
+    // Flatten and remove null values
+    orgAdminsFiltered = orgAdmins
+      .flat()
+      .filter((admin) => admin)
+
+    res.status(200).json({'Admins': orgAdminsFiltered})
   } catch (err) {
     next(err)
   }

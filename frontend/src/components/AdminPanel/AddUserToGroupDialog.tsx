@@ -1,15 +1,15 @@
 import { useState } from 'react'
 
-import Button from '@material-ui/core/Button'
-import CircularProgress from '@material-ui/core/CircularProgress'
+import Button from '@mui/material/Button'
+import CircularProgress from '@mui/material/CircularProgress'
 
-import Box from '@material-ui/core/Box'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import IconButton from '@material-ui/core/IconButton'
-import TextField from '@material-ui/core/TextField'
+import Box from '@mui/material/Box'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import IconButton from '@mui/material/IconButton'
+import TextField from '@mui/material/TextField'
 
 import { useTranslation } from 'react-i18next'
 import { selectUserState } from '../../redux/User'
@@ -27,13 +27,15 @@ const AddUserToGroupDialog = ({
   currentUsersInGroup,
   usersConstant,
   userGetFn,
+  userGetFnParams,
   roleName,
+  searchFieldPlaceholder,
   title,
   confirmButtonText,
+  showOrgId,
 }: any) => {
   const { t } = useTranslation()
   const style = dialogStyles()
-  const userState = useAppSelector(selectUserState)
 
   const {
     result: users,
@@ -42,7 +44,7 @@ const AddUserToGroupDialog = ({
   } = useApiGet({
     getFn: userGetFn,
     constantResult: usersConstant,
-    params: userState.isSignedIn ? userState.organizationID : null,
+    params: userGetFnParams,
   })
   const [selectedUser, setSelectedUser] = useState<any>()
   const onSelect = (user: any) => {
@@ -83,17 +85,17 @@ const AddUserToGroupDialog = ({
           <span className={style.dialogTitleText}>
             {title || t('add') + ' ' + roleName}
           </span>
-          <IconButton className={style.closeButton} onClick={onCancel}>
+          <IconButton
+            className={style.closeButton}
+            onClick={onCancel}
+            size="large"
+          >
             <CloseIcon />
           </IconButton>
         </Box>
         <TextField
           fullWidth
-          placeholder={
-            t('searchForEmployeeInOrganization', {
-              organization: userState.organizationName,
-            }) as string
-          }
+          placeholder={searchFieldPlaceholder}
           variant="outlined"
           value={nameFilter}
           className={style.searchField}
@@ -108,6 +110,7 @@ const AddUserToGroupDialog = ({
             users={usersInList}
             selectedUser={selectedUser}
             setSelectedUser={onSelect}
+            showOrgId={showOrgId}
           />
         )}
       </DialogContent>
