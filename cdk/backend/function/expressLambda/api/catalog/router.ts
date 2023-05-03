@@ -10,7 +10,7 @@ import { GetOrganizationInput } from '../organizations/types'
 
 const router = express.Router()
 
-// Get all form definitions
+// Get all catalogs
 router.get('/', async (req, res, next) => {
   try {
     const listResponse = await Catalog.listCatalogs()
@@ -24,14 +24,14 @@ router.get('/', async (req, res, next) => {
 
 // Get active catalog by organization
 router.get<unknown, unknown, unknown, GetOrganizationInput>(
-  '/org/:id',
+  '/:id',
   async (req, res, next) => {
     try {
-      const fetchResponse = await Catalog.findActiveCatalogByOrganization(
+      const getCatalogResponse = await Catalog.findActiveCatalogByOrganization(
         req.query
       )
 
-      res.status(200).json(fetchResponse)
+      res.status(200).json(getCatalogResponse)
     } catch (err) {
       console.error(err)
       next(err)
