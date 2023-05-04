@@ -222,6 +222,24 @@ const listAllOrganizationAdministrators = async (): Promise<
   }
 }
 
+const anonymizeUser = async (username: string): Promise<ApiResponse<any[]>> => {
+  const apiName = 'AdminQueries'
+  const path = '/anonymizeUser'
+  const myInit = {
+    body: {
+      username,
+    },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `${(await Auth.currentSession())
+        .getAccessToken()
+        .getJwtToken()}`,
+    },
+  }
+
+  return await API.post(apiName, path, myInit)
+}
+
 export {
   getUserExists,
   listAllUsers,
@@ -231,4 +249,5 @@ export {
   listSuperAdmins,
   listAdminsInOrganization,
   listAllOrganizationAdministrators,
+  anonymizeUser,
 }

@@ -124,6 +124,17 @@ async function enableUser(username) {
   }
 }
 
+async function anonymizeUser(username) {
+  console.log(`Attempting to anonymize user ${username}`)
+  try {
+    // TODO
+    throw Error('Functionality not complete')
+  } catch (err) {
+    console.log(err)
+    throw err
+  }
+}
+
 async function getUser(username) {
   const params = {
     UserPoolId: userPoolId,
@@ -272,6 +283,7 @@ module.exports = {
   confirmUserSignUp,
   disableUser,
   enableUser,
+  anonymizeUser,
   getUser,
   listUsers,
   listGroups,

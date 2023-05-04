@@ -287,7 +287,8 @@ export const Norwegian: LanguageSchema = {
         couldNotRemoveUserFromGroup: "Kunne ikke fjerne brukeren '{{username}}' fra gruppen '{{groupname}}'.",
         couldNotAddUserToGroup: "Kunne ikke legge til brukeren '{{username}}' i gruppen '{{groupname}}'.",
         couldNotGetAListOfUsersInGroup: "Kunne ikke hente liste over medlemmer i gruppen '{{groupname}}'.",
-        couldNotGetAListOfAllUsers: 'Kunne ikke hente liste over alle brukere.'
+        couldNotGetAListOfAllUsers: 'Kunne ikke hente liste over alle brukere.',
+        couldNotAnonymizeName: 'Kunne ikke anonymisere {{name}}.',
       }
     },
     catalogApi: {

@@ -23,6 +23,7 @@ import { selectUserState } from '../../redux/User'
 import PictureAndNameCell from './PictureAndNameCell'
 import { getAttribute } from './helpers'
 import AnonymizeUserDialog from './AnonymizeUserDialog'
+import { anonymizeUser as anonymizeUserApiCall } from './adminApi'
 
 type UserProps = {
   user: any
@@ -111,21 +112,35 @@ const AnonymizeUsers = () => {
   const [userToAnonymize, setUserToAnonymize] = useState<any>()
   const [showAnonymizeUserDialog, setShowAnonymizeUserDialog] =
     useState<boolean>(false)
+  const [mutationError, setMutationError] = useState<string | null>(null)
 
   const anonymizeUser = (user: any) => {
+    setMutationError(null)
     setShowAnonymizeUserDialog(true)
     setUserToAnonymize(user)
   }
 
   const anonymizeUserConfirm = async () => {
-    //await anonymizeUser(userToAnonymize)
-    setShowAnonymizeUserDialog(false)
-    refresh()
+    await anonymizeUserApiCall(userToAnonymize.Username)
+      .then(() => {
+        setMutationError(null)
+        setShowAnonymizeUserDialog(false)
+        refresh()
+      })
+      .catch(() => {
+        setShowAnonymizeUserDialog(false)
+        setMutationError(
+          t('adminApi.error.couldNotAnonymizeName', {
+            name: userToAnonymize.Username,
+          })
+        )
+      })
   }
 
   return (
     <Container maxWidth="md" className={commonStyles.container}>
       {error && <p>{t('errorOccured') + error}</p>}
+      {mutationError && <p>{t('errorOccured') + mutationError}</p>}
       {loading && <CircularProgress />}
       {!error && !loading && users && (
         <>

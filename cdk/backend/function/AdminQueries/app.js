@@ -21,6 +21,7 @@ const {
   confirmUserSignUp,
   disableUser,
   enableUser,
+  anonymizeUser,
   getUser,
   listUsers,
   listGroups,
@@ -165,6 +166,20 @@ app.post('/enableUser', async (req, res, next) => {
 
   try {
     const response = await enableUser(req.body.username)
+    res.status(200).json(response)
+  } catch (err) {
+    next(err)
+  }
+})
+
+app.post('/anonymizeUser', async (req, res, next) => {
+  if (!req.body.username) {
+    const err = new Error('username is required')
+    err.statusCode = 400
+    return next(err)
+  }
+  try {
+    const response = await anonymizeUser(req.body.username)
     res.status(200).json(response)
   } catch (err) {
     next(err)
