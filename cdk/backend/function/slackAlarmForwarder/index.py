@@ -6,8 +6,7 @@ import requests
 session = boto3.session.Session()
 secrets_manager_client = session.client(
     service_name='secretsmanager',
-    region_name="eu-central-1"
-)
+    region_name="eu-central-1")
 
 def handler(event, context):
     print(event)
@@ -38,8 +37,7 @@ def create_payload(msg):
 
 def get_slack_webhook_url(secrets_manager_client=secrets_manager_client):
     get_secret_value_response = secrets_manager_client.get_secret_value(
-        SecretId="slack_webhook_url"
-    )
+        SecretId="slack_webhook_url")
     response = get_secret_value_response['SecretString']
     slack_webhook_url = json.loads(response)['url']
     

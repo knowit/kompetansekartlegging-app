@@ -245,8 +245,9 @@ export const English: LanguageSchema = {
     },
     superAdmin: {
       identifierAttribute: 'Identifier Attribute',
+      areYouSureYouWantToRemoveNameFromRoleAtOrganization: 'Are you sure you want to remove {{name}} from the {{role}} at {{organization}}?',
       editOrganizations: {
-        description: 'On this page you can add, remove and update organizations.',
+        description: 'On this page you can add and remove organizations.',
         id: 'ID',
         adminEmail: 'Admin Email',
         addOrganization: 'Add organization',
@@ -255,7 +256,10 @@ export const English: LanguageSchema = {
         addNewOrganization: 'Add new organization',
         idCantBeEmptyOrContainZero: "ID can't be empty or contain '0'.",
         identifierAttributeCantBeEmpty: "Identifier attribute can't be empty.",
-        adminEmailIsInvalid: 'Admin email is invalid.'
+        adminEmailIsInvalid: 'Admin email is invalid.',
+        thereAlreadyExistsAUserWithTheEmail: "There already exists a user with the email '{{email}}'.",
+        couldNotValidateIfAUserWithTheEmailAlreadyExists: 'Could not validate if a user with the email already exists.',
+        adminEmailTooltip: 'Empty: Create organization without admin user.\nFilled: Create organization and new admin user.',
       },
       editSuperAdministrators: {
         description: 'On this page you can add and remove super-administrators.',
@@ -263,7 +267,8 @@ export const English: LanguageSchema = {
         addSuperAdministrator: 'Add super-administrator',
       },
       editOrganizationAdministrators: {
-        description: 'On this page you can add and remove administrators for specific organizations.',
+        description: 'On this page you can add and remove users to and from the administrator role for their organization.',
+        couldNotGetAListOfAllAdministrators: 'Could not get a list of all administrators.',
       }
     },
     adminApi: {

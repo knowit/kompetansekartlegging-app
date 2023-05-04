@@ -1,15 +1,9 @@
-import os
-import sys
 import json
 from unittest import TestCase
 from unittest.mock import MagicMock, patch, ANY
 from boto3 import client
 from moto import mock_secretsmanager
 
-# Set environment variable before importing lambda
-os.environ["AWS_DEFAULT_REGION"] = "eu-central-1"
-
-sys.path.append('../')
 from slackAlarmForwarder.index import handler, create_payload, get_slack_webhook_url
 
 slack_url = "slack.url"
@@ -38,7 +32,7 @@ class TestConfigureNewOrganizationLambda(TestCase):
 
     def test_get_slack_webhook_url(self):
         # Create secret
-        secrets_manager_client = client('secretsmanager')
+        secrets_manager_client = client("secretsmanager", "eu-central-1")
         secrets_manager_client.create_secret(
             Name="slack_webhook_url",
             SecretString="{\"url\": \"" + slack_url + "\"}"

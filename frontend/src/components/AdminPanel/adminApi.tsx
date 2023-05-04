@@ -180,11 +180,55 @@ const listAllUsers = async (limit = 60): Promise<ApiResponse<any[]>> => {
   return { result: allUsers }
 }
 
+const getUserExists = async (username: string) => {
+  const apiName = 'AdminQueries'
+  const path = '/getUserExists'
+  const myInit = {
+    queryStringParameters: {
+      username,
+    },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `${(await Auth.currentSession())
+        .getAccessToken()
+        .getJwtToken()}`,
+    },
+  }
+
+  return await API.get(apiName, path, myInit)
+}
+
+const listAllOrganizationAdministrators = async (): Promise<
+  ApiResponse<any[]>
+> => {
+  const apiName = 'AdminQueries'
+  const path = '/listAllOrganizationAdministrators'
+  const myInit = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `${(await Auth.currentSession())
+        .getAccessToken()
+        .getJwtToken()}`,
+    },
+  }
+
+  try {
+    const res = await API.get(apiName, path, myInit)
+    return { result: res.Admins }
+  } catch (e) {
+    return {
+      error: i18n.t('adminApi.error.couldNotGetAListOfAllAdministrators'),
+    }
+  }
+}
+
 export {
+  getUserExists,
   listAllUsers,
   listAllUsersInOrganization,
   listGroupLeaders,
   listGroupLeadersInOrganization,
   listSuperAdmins,
   listAdminsInOrganization,
+  listAllOrganizationAdministrators,
 }
