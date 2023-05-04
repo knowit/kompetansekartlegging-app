@@ -244,7 +244,10 @@ export const English: LanguageSchema = {
         download: 'Download'
       },
       anonymizeUsers: {
-        description: 'On this page you can anonymize all data associated with a user who has left the organization.',
+        description: 'On this page you can anonymize all data associated with a person.',
+        anonymize: 'Anonymize',
+        anonymizeNameQuestion: 'Anonymize {{name}}?',
+        areYouSureYouWantToAnonymizeName: 'Are you sure you want to anonymize {{name}}? It will no longer be possible to connect the person to their answers.',
       },
     },
     superAdmin: {

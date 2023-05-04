@@ -243,6 +243,9 @@ export type LanguageSchema = {
       }
       anonymizeUsers: {
         description: string
+        anonymize: string
+        anonymizeNameQuestion: string
+        areYouSureYouWantToAnonymizeName: string
       }
     }
     superAdmin: {

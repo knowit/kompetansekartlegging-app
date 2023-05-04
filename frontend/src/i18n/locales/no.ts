@@ -244,7 +244,10 @@ export const Norwegian: LanguageSchema = {
         download: 'Last ned'
       },
       anonymizeUsers: {
-        description: 'På denne siden kan du anonymisere all data tilknyttet en bruker som har sluttet i organisasjonen.',
+        description: 'På denne siden kan du anonymisere all data tilknyttet en person.',
+        anonymize: 'Anonymiser',
+        anonymizeNameQuestion: 'Anonymiser {{name}}?',
+        areYouSureYouWantToAnonymizeName: 'Er du sikker på at du har lyst til å anonymisere {{name}}? Personen vil ikke lengre kunne knyttes opp mot sine svar.',
       },
     },
     superAdmin: {
