@@ -287,7 +287,8 @@ export const English: LanguageSchema = {
         couldNotRemoveUserFromGroup: "Could not remove user '{{username}}' from group '{{groupname}}'.",
         couldNotAddUserToGroup: "Could not add user '{{username}}' to group '{{groupname}}'.",
         couldNotGetAListOfUsersInGroup: "Could not get a list of users in group '{{groupname}}'.",
-        couldNotGetAListOfAllUsers: 'Could not get a list of all users.'
+        couldNotGetAListOfAllUsers: 'Could not get a list of all users.',
+        couldNotAnonymizeName: 'Could not anonymize {{name}}.',
       }
     },
     catalogApi: {

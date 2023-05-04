@@ -286,6 +286,7 @@ export type LanguageSchema = {
         couldNotAddUserToGroup: string
         couldNotGetAListOfUsersInGroup: string
         couldNotGetAListOfAllUsers: string
+        couldNotAnonymizeName: string
       }
     }
     catalogApi: {
