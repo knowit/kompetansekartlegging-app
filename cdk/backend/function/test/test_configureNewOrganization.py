@@ -1,5 +1,4 @@
 import os
-import sys
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 from boto3 import client
@@ -9,7 +8,6 @@ from moto import mock_cognitoidp
 os.environ["AWS_DEFAULT_REGION"] = "eu-central-1"
 os.environ["GROUP"] = "admin"
 
-sys.path.append('../')
 from configureNewOrganization.index import handler, create_groups, user_already_exists, add_user_to_groups, create_admin_user
 
 new_org_id = "newOrg"
