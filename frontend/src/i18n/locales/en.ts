@@ -84,6 +84,7 @@ export const English: LanguageSchema = {
         editAdministrators: 'Edit administrators',
         editCatalogs: 'Edit catalogs',
         downloadCatalogs: 'Download catalogs',
+        anonymizeUsers: 'Anonymize users',
         editOrganizations: 'Edit organizations',
         editSuperAdministrators: 'Edit super-administrators',
       },
@@ -241,7 +242,10 @@ export const English: LanguageSchema = {
         created: 'Created',
         downloadFailedIsTheCatalogEmpty: 'Download failed.\nIs the catalog empty?',
         download: 'Download'
-      }
+      },
+      anonymizeUsers: {
+        description: 'On this page you can anonymize all data associated with a user who has left the organization.',
+      },
     },
     superAdmin: {
       identifierAttribute: 'Identifier Attribute',

@@ -82,6 +82,7 @@ export type LanguageSchema = {
         editAdministrators: string
         editCatalogs: string
         downloadCatalogs: string
+        anonymizeUsers: string
         editOrganizations: string
         editSuperAdministrators: string
       }
@@ -239,6 +240,9 @@ export type LanguageSchema = {
         created: string
         downloadFailedIsTheCatalogEmpty: string
         download: string
+      }
+      anonymizeUsers: {
+        description: string
       }
     }
     superAdmin: {

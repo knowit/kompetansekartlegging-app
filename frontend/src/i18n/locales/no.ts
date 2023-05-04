@@ -84,6 +84,7 @@ export const Norwegian: LanguageSchema = {
         editAdministrators: 'Rediger administratorer',
         editCatalogs: 'Rediger kataloger',
         downloadCatalogs: 'Last ned kataloger',
+        anonymizeUsers: 'Anonymiser brukere',
         editOrganizations: 'Rediger organisasjoner',
         editSuperAdministrators: 'Rediger super-administratorer',
       },
@@ -241,7 +242,10 @@ export const Norwegian: LanguageSchema = {
         created: 'Opprettet',
         downloadFailedIsTheCatalogEmpty: 'Nedlasting feilet.\nEr katalogen tom?',
         download: 'Last ned'
-      }
+      },
+      anonymizeUsers: {
+        description: 'På denne siden kan du anonymisere all data tilknyttet en bruker som har sluttet i organisasjonen.',
+      },
     },
     superAdmin: {
       identifierAttribute: 'Identifikatorattributt',
