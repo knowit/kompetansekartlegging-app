@@ -47,9 +47,7 @@ const GroupMember = ({ members, userId, isSmall }: any) => {
               voidFn,
               setUserAnswersLoaded,
               voidFn,
-              voidFn,
-              voidFn,
-              isSmall
+              voidFn
             ),
           (quAns, newUserAnswers) =>
             setFirstAnswers(
