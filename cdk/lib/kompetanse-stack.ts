@@ -307,6 +307,8 @@ export class KompetanseStack extends Stack {
               pool.userPoolArn,
               tableArns['UserFormTable'],
               `${tableArns['UserFormTable']}/index/*`,
+              tableArns['QuestionAnswerTable'],
+              `${tableArns['QuestionAnswerTable']}/index/*`,
             ],
           }),
         ],
