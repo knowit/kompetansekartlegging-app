@@ -29,6 +29,7 @@ const AddUserToGroupDialog = ({
   searchFieldPlaceholder,
   title,
   confirmButtonText,
+  showOrgId,
 }: any) => {
   const { t } = useTranslation()
 
@@ -96,6 +97,7 @@ const AddUserToGroupDialog = ({
             users={usersInList}
             selectedUser={selectedUser}
             setSelectedUser={onSelect}
+            showOrgId={showOrgId}
           />
         )}
       </DialogContent>

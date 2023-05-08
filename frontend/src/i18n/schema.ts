@@ -243,6 +243,7 @@ export type LanguageSchema = {
     }
     superAdmin: {
       identifierAttribute: string
+      areYouSureYouWantToRemoveNameFromRoleAtOrganization: string
       editOrganizations: {
         description: string
         id: string
@@ -256,6 +257,7 @@ export type LanguageSchema = {
         adminEmailIsInvalid: string
         thereAlreadyExistsAUserWithTheEmail: string
         couldNotValidateIfAUserWithTheEmailAlreadyExists: string
+        adminEmailTooltip: string
       }
       editSuperAdministrators: {
         description: string
@@ -264,6 +266,7 @@ export type LanguageSchema = {
       }
       editOrganizationAdministrators: {
         description: string
+        couldNotGetAListOfAllAdministrators: string
       }
     }
     adminApi: {

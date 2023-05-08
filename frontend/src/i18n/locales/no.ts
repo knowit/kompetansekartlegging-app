@@ -271,10 +271,10 @@ export const Norwegian: LanguageSchema = {
       },
     },
     superAdmin: {
-      identifierAttribute: 'Identifier Attribute',
+      identifierAttribute: 'Identifikatorattributt',
+      areYouSureYouWantToRemoveNameFromRoleAtOrganization: 'Er du sikker på at du har lyst til å fjerne {{name}} fra {{role}} i {{organization}}?',
       editOrganizations: {
-        description:
-          'På denne siden kan du legge til, fjerne og oppdatere organisasjoner.',
+        description: 'På denne siden kan du legge til og fjerne organisasjoner.',
         id: 'ID',
         adminEmail: 'Admin E-post',
         addOrganization: 'Legg til organisasjon',
@@ -288,6 +288,7 @@ export const Norwegian: LanguageSchema = {
         adminEmailIsInvalid: 'Admin e-post er ugyldig.',
         thereAlreadyExistsAUserWithTheEmail: "Det finnes allerede en bruker med mailen '{{email}}'.",
         couldNotValidateIfAUserWithTheEmailAlreadyExists: 'Kunne ikke validere om en bruker med e-posten allerede finnes.',
+        adminEmailTooltip: 'Tomt: Opprett organisasjon uten admin-bruker.\nFylt: Opprett organisasjon og ny admin-bruker.',
       },
       editSuperAdministrators: {
         description:
@@ -296,9 +297,9 @@ export const Norwegian: LanguageSchema = {
         addSuperAdministrator: 'Legg til super-administrator',
       },
       editOrganizationAdministrators: {
-        description:
-          'På denne siden kan du legge til og fjerne administratorer for spesifikke organisasjoner.',
-      },
+        description: 'På denne siden kan brukere legges til, og fjernes fra, administrator-rollen for organisasjonen de er en del av.',
+        couldNotGetAListOfAllAdministrators: 'Kunne ikke hente liste over alle administratorer.',
+      }
     },
     adminApi: {
       result: {

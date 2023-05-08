@@ -9,11 +9,13 @@ import { Table } from '@mui/material'
 import TableRow from '@mui/material/TableRow'
 import PictureAndNameCell from './PictureAndNameCell'
 import { useTranslation } from 'react-i18next'
+import { ORGANIZATION_ID_ATTRIBUTE } from '../../constants'
 
-const User = ({ user, selected, setSelectedUser }: any) => {
+const User = ({ user, selected, setSelectedUser, showOrgId }: any) => {
   const name = getAttribute(user, 'name')
   const email = getAttribute(user, 'email')
   const picture = getAttribute(user, 'picture')
+  const orgId = getAttribute(user, ORGANIZATION_ID_ATTRIBUTE)
 
   return (
     <>
@@ -22,12 +24,18 @@ const User = ({ user, selected, setSelectedUser }: any) => {
           <PictureAndNameCell name={name} picture={picture} />
         </TableCell>
         <TableCell>{email}</TableCell>
+        {showOrgId && <TableCell>{orgId}</TableCell>}
       </TableRow>
     </>
   )
 }
 
-const UsersTable = ({ users, selectedUser, setSelectedUser }: any) => {
+const UsersTable = ({
+  users,
+  selectedUser,
+  setSelectedUser,
+  showOrgId,
+}: any) => {
   const { t } = useTranslation()
   const isSelected = (user: any) =>
     selectedUser && user.Username === selectedUser.Username
@@ -39,6 +47,7 @@ const UsersTable = ({ users, selectedUser, setSelectedUser }: any) => {
           <TableRow>
             <TableCell>{t('employee')}</TableCell>
             <TableCell>{t('email')}</TableCell>
+            {showOrgId && <TableCell>{t('organizationID')}</TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -48,6 +57,7 @@ const UsersTable = ({ users, selectedUser, setSelectedUser }: any) => {
               user={u}
               selected={isSelected(u)}
               setSelectedUser={setSelectedUser}
+              showOrgId={showOrgId}
             />
           ))}
         </TableBody>
