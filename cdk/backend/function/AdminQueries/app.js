@@ -188,11 +188,20 @@ app.post('/anonymizeUser', async (req, res, next) => {
   console.log('Hash: ' + hashedUsername) // TODO: remove
 
   try {
-    //await anonymizeUserInCognito(username, hashedUsername)
-    await anonymizeUserInDb(username, hashedUsername)
+    const cognitoRes = await anonymizeUserInCognito(username)
+    if (cognitoRes.statusCode === 200) {
+      console.log("cognito deleted")
+      //await anonymizeUserInDb(username, hashedUsername)
+    } else {
+      console.log("cognito failed")
+    }
+    
+    
 
     res.status(200).json({functionalityComplete: false})
   } catch (err) {
+    // TODO: save user info in case process fails at some point
+    // Should we handle this step by step? 
     console.log(err)
     next(err)
   }

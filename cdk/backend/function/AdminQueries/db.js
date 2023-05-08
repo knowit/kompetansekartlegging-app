@@ -18,7 +18,7 @@ const anonymizeUser = async (username, hashedUsername) => {
         Key: { id : userform.id },
         UpdateExpression: "SET #owner = :hash",
         ExpressionAttributeNames: { '#owner': 'owner' },
-        ExpressionAttributeValues: { ':hash': hash }
+        ExpressionAttributeValues: { ':hash': hashedUsername }
       })
       .promise()
   
@@ -32,7 +32,7 @@ const anonymizeUser = async (username, hashedUsername) => {
           Key: { id: questionAnswer.id },
           UpdateExpression: 'SET #owner = :hash',
           ExpressionAttributeNames: { '#owner': 'owner' },
-          ExpressionAttributeValues: { ':hash': hash }
+          ExpressionAttributeValues: { ':hash': hashedUsername }
         })
         .promise()
       })

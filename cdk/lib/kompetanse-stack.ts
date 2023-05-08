@@ -297,10 +297,11 @@ export class KompetanseStack extends Stack {
               'cognito-idp:AdminListGroupsForUser',
               'cognito-idp:AdminGetUser',
               'cognito-idp:AdminConfirmSignUp',
+              'cognito-idp:AdminDeleteUser',
               'cognito-idp:ListUsers',
               'cognito-idp:ListGroups',
               'dynamodb:Query',
-              'dynamodb:UpdateItem'
+              'dynamodb:UpdateItem',
             ],
             effect: iam.Effect.ALLOW,
             resources: [
