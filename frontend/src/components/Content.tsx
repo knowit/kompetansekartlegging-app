@@ -139,7 +139,6 @@ const Content = ({
   scrollToTop,
   setCollapseMobileCategories,
   setFirstTimeLogin,
-  firstTimeLogin,
   setShowFab,
 }: ContentProps) => {
   const { t } = useTranslation()

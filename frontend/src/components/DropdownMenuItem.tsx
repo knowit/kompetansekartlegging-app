@@ -11,7 +11,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 import { Panel } from '../types'
 import styled from '@emotion/styled'
-import { CheckCircleOutlineRounded, ErrorOutline } from '@mui/icons-material'
+import { ErrorOutline } from '@mui/icons-material'
 
 type MenuItemProps = {
   panelId: Panel
