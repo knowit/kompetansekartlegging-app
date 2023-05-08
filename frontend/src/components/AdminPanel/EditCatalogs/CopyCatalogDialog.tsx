@@ -40,11 +40,9 @@ const CopyCatalogDialog = ({ onCancel, onConfirm, onExited, open }: any) => {
           </IconButton>
         </Box>
         <TextField
-          margin="dense"
           autoFocus
           fullWidth
           label={t('admin.editCatalogs.nameOfNewCatalog')}
-          variant="outlined"
           error={name === ''}
           helperText={name === '' && t('nameCantBeEmpty')}
           value={name}

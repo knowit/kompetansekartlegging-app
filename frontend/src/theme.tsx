@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material'
-import { KnowitColors, menuWidth } from './styleconstants'
+import { KnowitColors } from './styleconstants'
 
 /*The theme holds styles that override all default components
   Styles specific to specific components, 
@@ -45,6 +45,8 @@ const theme = createTheme({
         },
       },
     },
+
+    MuiTextField: { defaultProps: { margin: 'dense', variant: 'outlined' } },
 
     MuiLinearProgress: {
       styleOverrides: {

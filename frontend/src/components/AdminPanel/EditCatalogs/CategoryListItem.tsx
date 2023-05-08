@@ -49,10 +49,8 @@ const CategoryListItem = ({
         primary={
           <>
             <TextField
-              margin="dense"
               fullWidth
               label={t('name')}
-              variant="outlined"
               value={text}
               onChange={(e: any) => setText(e.target.value)}
               error={text.length === 0}
@@ -62,13 +60,11 @@ const CategoryListItem = ({
               }
             />
             <TextField
-              margin="dense"
               fullWidth
               multiline
               minRows={4}
               maxRows={6}
               label={t('description')}
-              variant="outlined"
               value={description}
               onChange={(e: any) => setDescription(e.target.value)}
             />

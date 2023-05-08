@@ -99,7 +99,6 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
           autoFocus
           fullWidth
           label={t('name')}
-          variant="outlined"
           error={organizationName === ''}
           helperText={organizationName === '' && t('nameCantBeEmpty')}
           value={organizationName}
@@ -109,7 +108,6 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
           required
           fullWidth
           label={t('superAdmin.editOrganizations.id')}
-          variant="outlined"
           error={organizationID === '' || organizationID.includes('0')}
           helperText={
             (organizationID === '' || organizationID.includes('0')) &&
@@ -122,7 +120,6 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
           required
           fullWidth
           label={t('superAdmin.identifierAttribute')}
-          variant="outlined"
           error={organizationIdentifierAttribute === ''}
           helperText={
             organizationIdentifierAttribute === '' &&
@@ -136,7 +133,6 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
         <TextField
           fullWidth
           label={t('superAdmin.editOrganizations.adminEmail')}
-          variant="outlined"
           error={!isOrganizationAdminEmailValid || emailAlreadyExists}
           helperText={
             (!isOrganizationAdminEmailValid &&

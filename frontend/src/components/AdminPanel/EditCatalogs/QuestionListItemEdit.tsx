@@ -99,10 +99,8 @@ const QuestionListItemEdit = ({
           <CardContent className="questionContent">
             <div className="subjectCategory">
               <TextField
-                margin="dense"
                 className="questionSubject"
                 label={t('admin.editCatalogs.subject')}
-                variant="outlined"
                 value={topic}
                 onChange={(e: any) => setTopic(e.target.value)}
                 error={topic.length === 0}
@@ -120,13 +118,11 @@ const QuestionListItemEdit = ({
             </div>
 
             <TextField
-              margin="dense"
               fullWidth
               multiline
               minRows={4}
               maxRows={6}
               label={t('description')}
-              variant="outlined"
               error={text === ''}
               helperText={
                 text === '' && t('admin.editCatalogs.descriptionCantBeEmpty')
@@ -157,23 +153,17 @@ const QuestionListItemEdit = ({
               <FormControl fullWidth component="fieldset">
                 <Box display="flex" justifyContent="space-between">
                   <TextField
-                    margin="dense"
                     label={t('admin.editCatalogs.start')}
-                    variant="outlined"
                     value={questionConfig.scaleStart}
                     onChange={onQuestionConfigChange('scaleStart')}
                   />
                   <TextField
-                    margin="dense"
                     label={t('admin.editCatalogs.middle')}
-                    variant="outlined"
                     value={questionConfig.scaleMiddle}
                     onChange={onQuestionConfigChange('scaleMiddle')}
                   />
                   <TextField
-                    margin="dense"
                     label={t('admin.editCatalogs.end')}
-                    variant="outlined"
                     value={questionConfig.scaleEnd}
                     onChange={onQuestionConfigChange('scaleEnd')}
                   />

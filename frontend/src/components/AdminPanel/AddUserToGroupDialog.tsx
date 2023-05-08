@@ -82,10 +82,8 @@ const AddUserToGroupDialog = ({
           </IconButton>
         </Box>
         <TextField
-          margin="dense"
           fullWidth
           placeholder={searchFieldPlaceholder}
-          variant="outlined"
           value={nameFilter}
           onChange={(e: any) => setNameFilter(e.target.value)}
         />

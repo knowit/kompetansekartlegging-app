@@ -38,11 +38,9 @@ const AddCategoryDialog = ({ onCancel, onConfirm, open }: any) => {
           </IconButton>
         </Box>
         <TextField
-          margin="dense"
           autoFocus
           fullWidth
           label={t('admin.editCatalogs.nameOfNewCategory')}
-          variant="outlined"
           error={name === ''}
           helperText={name === '' && t('nameCantBeEmpty')}
           value={name}
@@ -51,13 +49,11 @@ const AddCategoryDialog = ({ onCancel, onConfirm, open }: any) => {
       </DialogTitle>
       <DialogContent>
         <TextField
-          margin="dense"
           fullWidth
           multiline
           minRows={4}
           maxRows={6}
           label={t('description')}
-          variant="outlined"
           value={description}
           onChange={(e: any) => setDescription(e.target.value)}
         />

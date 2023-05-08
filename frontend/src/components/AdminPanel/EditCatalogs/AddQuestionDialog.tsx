@@ -81,11 +81,9 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
           </IconButton>
         </Box>
         <TextField
-          margin="dense"
           autoFocus
           fullWidth
           label={t('admin.editCatalogs.subjectOfTheNewQuestion')}
-          variant="outlined"
           error={topic === ''}
           helperText={
             topic === '' && t('admin.editCatalogs.subjectCantBeEmpty')
@@ -96,13 +94,11 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
       </DialogTitle>
       <DialogContent>
         <TextField
-          margin="dense"
           fullWidth
           multiline
           minRows={4}
           maxRows={6}
           label={t('description')}
-          variant="outlined"
           error={description === ''}
           helperText={
             description === '' && t('admin.editCatalogs.descriptionCantBeEmpty')
@@ -131,23 +127,17 @@ const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
           <FormControl fullWidth component="fieldset">
             <Box display="flex" justifyContent="space-between">
               <TextField
-                margin="dense"
                 label={t('admin.editCatalogs.start')}
-                variant="outlined"
                 value={questionConfig.scaleStart}
                 onChange={onQuestionConfigChange('scaleStart')}
               />
               <TextField
-                margin="dense"
                 label={t('admin.editCatalogs.middle')}
-                variant="outlined"
                 value={questionConfig.scaleMiddle}
                 onChange={onQuestionConfigChange('scaleMiddle')}
               />
               <TextField
-                margin="dense"
                 label={t('admin.editCatalogs.end')}
-                variant="outlined"
                 value={questionConfig.scaleEnd}
                 onChange={onQuestionConfigChange('scaleEnd')}
               />

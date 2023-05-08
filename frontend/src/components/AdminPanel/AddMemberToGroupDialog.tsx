@@ -103,14 +103,12 @@ const AddMemberToGroupDialog = ({
         </Box>
         <FormGroup row>
           <TextField
-            margin="dense"
             fullWidth
             placeholder={
               t('searchForEmployeeInOrganization', {
                 organization: userState.organizationName,
               }) as string
             }
-            variant="outlined"
             value={nameFilter}
             onChange={(e: any) => setNameFilter(e.target.value)}
             helperText={t('myGroup.theEmployeeMustHaveSignedInOnce')}
