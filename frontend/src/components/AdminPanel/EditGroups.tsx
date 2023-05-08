@@ -76,7 +76,7 @@ const Group = ({
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell align="right">
+        <TableCell>
           <PictureAndNameEditCell
             name={name}
             picture={picture}
@@ -84,7 +84,7 @@ const Group = ({
           />
         </TableCell>
         <TableCell>{group.members.length}</TableCell>
-        <TableCell align="right">
+        <TableCell>
           <Button
             endIcon={<DeleteIcon />}
             onClick={() => deleteGroup(group)}
