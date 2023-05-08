@@ -63,44 +63,42 @@ const EditCatalog = () => {
 
   return (
     <>
-      <>
-        {error && <p>{t('errorOccured') + error}</p>}
-        {loading && <CenteredCircularProgress />}
-        {!error && !loading && categories && (
+      {error && <p>{t('errorOccured') + error}</p>}
+      {loading && <CenteredCircularProgress />}
+      {!error && !loading && categories && (
+        <>
+          <Box flexBasis="100%">
+            <RouterBreadcrumbs
+              extraCrumbsMap={breadCrumbs}
+              urlOverrides={breadCrumbsUrlOverrides}
+            />
+          </Box>
           <>
-            <Box flexBasis="100%">
-              <RouterBreadcrumbs
-                extraCrumbsMap={breadCrumbs}
-                urlOverrides={breadCrumbsUrlOverrides}
-              />
-            </Box>
-            <>
-              <CategoryList
-                categories={categories}
-                refresh={refresh}
-                formDefinitionID={formDefinitionID}
-                formDefinitionLabel={label}
-              />
-            </>
-            <div>
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={() => setShowAddCategoryDialog(true)}
-              >
-                {t('admin.editCatalogs.addNewCategory')}
-              </Button>
-            </div>
-            {showAddCategoryDialog && (
-              <AddCategoryDialog
-                open={showAddCategoryDialog}
-                onCancel={() => setShowAddCategoryDialog(false)}
-                onConfirm={addCategoryConfirm}
-              />
-            )}
+            <CategoryList
+              categories={categories}
+              refresh={refresh}
+              formDefinitionID={formDefinitionID}
+              formDefinitionLabel={label}
+            />
           </>
-        )}
-      </>
+          <div>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => setShowAddCategoryDialog(true)}
+            >
+              {t('admin.editCatalogs.addNewCategory')}
+            </Button>
+          </div>
+          {showAddCategoryDialog && (
+            <AddCategoryDialog
+              open={showAddCategoryDialog}
+              onCancel={() => setShowAddCategoryDialog(false)}
+              onConfirm={addCategoryConfirm}
+            />
+          )}
+        </>
+      )}
     </>
   )
 }

@@ -1,6 +1,6 @@
 import { SubmenuCategory } from './AdminPanel'
 
-const adminItems = [
+const adminMenuItems = [
   {
     key: SubmenuCategory.EDIT_GROUP_LEADERS,
     text: 'menu.submenu.editGroupLeaders',
@@ -23,4 +23,4 @@ const adminItems = [
   },
 ]
 
-export default adminItems
+export default adminMenuItems

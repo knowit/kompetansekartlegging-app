@@ -1,5 +1,5 @@
 import { Button } from '@mui/material'
-import React from 'react'
+import { useRef } from 'react'
 import { YourAnswerProps } from '../types'
 import AnswerDiagram from './AnswerDiagram'
 import { Form } from './Form'
@@ -130,7 +130,7 @@ export const YourAnswers = ({
 }: YourAnswerProps) => {
   const { t } = useTranslation()
 
-  const scrollRef = React.useRef<HTMLDivElement>(null)
+  const scrollRef = useRef<HTMLDivElement>(null)
 
   const scrollToTop = () => {
     scrollRef.current?.scroll(0, 0)

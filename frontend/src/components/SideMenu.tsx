@@ -1,7 +1,7 @@
 import { Drawer, List, ListItemButton, ListItemText } from '@mui/material'
-import adminItems from './AdminPanel/AdminMenu'
-import getGroupMenuitems from './GroupLeaderPanel/GroupLeaderMenu'
-import { superAdminItems } from './SuperAdminPanel/SuperAdminMenu'
+import adminMenuItems from './AdminPanel/MenuItems'
+import getGroupLeaderItems from './GroupLeaderPanel/MenuItems'
+import { superAdminItems } from './SuperAdminPanel/MenuItems'
 import { DropdownMenuItem } from './DropdownMenuItem'
 import { Close } from '@mui/icons-material'
 import { IconButton } from '@mui/material'
@@ -16,6 +16,7 @@ import {
 import { AlertState } from '../types'
 
 import { useTranslation } from 'react-i18next'
+import getYourAnswersMenuItems from './YourAnswersMenuItems'
 
 type SideMenuProps = {
   isSmall: boolean
@@ -48,14 +49,6 @@ const SideMenu = ({
   const isAdmin = useAppSelector(selectIsAdmin)
   const isGroupLeader = useAppSelector(selectIsGroupLeader)
 
-  const myAnswers = categories.map((cat) => {
-    return {
-      key: cat,
-      text: cat,
-      alert: alerts?.categoryMap.get(cat),
-    }
-  })
-
   return (
     <Drawer
       id="menu"
@@ -78,7 +71,7 @@ const SideMenu = ({
         <DropdownMenuItem
           panelId={Panel.MyAnswers}
           show={true}
-          items={myAnswers}
+          items={getYourAnswersMenuItems(categories, alerts)}
           text={'menu.myAnswers'}
           alert={alerts?.qidMap.size !== 0 ? '!' : 0}
           activeSubmenuItem={activeCategory}
@@ -88,7 +81,7 @@ const SideMenu = ({
         <DropdownMenuItem
           panelId={Panel.GroupLeader}
           show={isGroupLeader}
-          items={getGroupMenuitems(groupMembers)}
+          items={getGroupLeaderItems(groupMembers)}
           text={'menu.myGroup'}
           alert={0}
           activeSubmenuItem={activeSubmenuItem}
@@ -98,7 +91,7 @@ const SideMenu = ({
         <DropdownMenuItem
           panelId={Panel.Admin}
           show={isAdmin}
-          items={adminItems}
+          items={adminMenuItems}
           text={'menu.admin'}
           alert={0}
           activeSubmenuItem={activeSubmenuItem}

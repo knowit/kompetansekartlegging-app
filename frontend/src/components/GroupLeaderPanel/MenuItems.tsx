@@ -1,5 +1,5 @@
 import { getAttribute } from '../AdminPanel/helpers'
-const getGroupMenuitems = (members: any) => {
+const getGroupLeaderItems = (members: any) => {
   const items = members.map((m: any) => ({
     text: getAttribute(m, 'name'),
     key: m.Username,
@@ -9,4 +9,4 @@ const getGroupMenuitems = (members: any) => {
   console.log(items)
   return items
 }
-export default getGroupMenuitems
+export default getGroupLeaderItems
