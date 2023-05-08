@@ -82,31 +82,35 @@ const CategoryListItem = ({
       />
     </ListItem>
   ) : (
-    <ListItemButton divider onClick={onClick}>
-      <ListItemText primary={`${ind + 1}. ${c.text}`} />
-      <IconButton onClick={() => setEditMode(true)}>
-        <EditIcon />
-      </IconButton>
-      <IconButton onClick={() => deleteCategory(c)}>
-        <DeleteIcon />
-      </IconButton>
-      <ButtonGroup variant="text" orientation="vertical">
-        <Button
-          size="small"
-          onClick={() => moveCategory(c, 1)}
-          disabled={!enableUpdates || ind === 0}
-        >
-          <KeyboardArrowUpIcon fontSize="small" />
-        </Button>
-        <Button
-          size="small"
-          onClick={() => moveCategory(c, -1)}
-          disabled={!enableUpdates || ind === categories.length - 1}
-        >
-          <KeyboardArrowDownIcon fontSize="small" />
-        </Button>
+    <ListItem divider>
+      <ButtonGroup fullWidth>
+        <ListItemButton onClick={() => onClick()}>
+          <ListItemText primary={`${ind + 1}. ${c.text}`} />
+        </ListItemButton>
+        <IconButton onClick={() => setEditMode(true)}>
+          <EditIcon />
+        </IconButton>
+        <IconButton onClick={() => deleteCategory(c)}>
+          <DeleteIcon />
+        </IconButton>
+        <ButtonGroup variant="text" orientation="vertical">
+          <Button
+            size="small"
+            onClick={() => moveCategory(c, 1)}
+            disabled={!enableUpdates || ind === 0}
+          >
+            <KeyboardArrowUpIcon fontSize="small" />
+          </Button>
+          <Button
+            size="small"
+            onClick={() => moveCategory(c, -1)}
+            disabled={!enableUpdates || ind === categories.length - 1}
+          >
+            <KeyboardArrowDownIcon fontSize="small" />
+          </Button>
+        </ButtonGroup>
       </ButtonGroup>
-    </ListItemButton>
+    </ListItem>
   )
 }
 
