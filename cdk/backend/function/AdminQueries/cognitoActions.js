@@ -126,12 +126,14 @@ async function enableUser(username) {
   }
 }
 
-async function anonymizeUser(username, hashedUsername) {
+async function anonymizeUser(username) {
+  const params = {
+    UserPoolId: userPoolId,
+    Username: username,
+  }
   try {
-    // TODO
-    // Email + custom attribute isAnonymized/anonymizedAt
-    // Kanskje slette cognito-brukeren og lage ny? (cognito-idp:AdminDeleteUser permission i lib)
-    //.adminDeleteUser
+    const result = await cognitoIdentityServiceProvider.adminDeleteUser(params).promise()
+    return result
   } catch (err) {
     console.log(err)
     throw err
