@@ -24,6 +24,7 @@ import PictureAndNameCell from './PictureAndNameCell'
 import { getAttribute } from './helpers'
 import AnonymizeUserDialog from './AnonymizeUserDialog'
 import { anonymizeUser as anonymizeUserApiCall } from './adminApi'
+import { ORGANIZATION_ID_ATTRIBUTE } from '../../constants'
 
 type UserProps = {
   user: any
@@ -121,7 +122,10 @@ const AnonymizeUsers = () => {
   }
 
   const anonymizeUserConfirm = async () => {
-    await anonymizeUserApiCall(userToAnonymize.Username)
+    console.log(userToAnonymize)
+    const username = userToAnonymize.Username
+    const orgId = getAttribute(userToAnonymize, ORGANIZATION_ID_ATTRIBUTE)
+    await anonymizeUserApiCall(username, orgId!)
       .then(() => {
         setMutationError(null)
         setShowAnonymizeUserDialog(false)
