@@ -14,6 +14,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
+const { createHash } = require('crypto')
 
 const {
   addUserToGroup,
@@ -21,7 +22,7 @@ const {
   confirmUserSignUp,
   disableUser,
   enableUser,
-  anonymizeUser,
+  anonymizeUser: anonymizeUserInCognito,
   getUser,
   listUsers,
   listGroups,
@@ -29,6 +30,8 @@ const {
   listUsersInGroup,
   signUserOut,
 } = require('./cognitoActions')
+
+const { anonymizeUser: anonymizeUserInDb } = require('./db')
 
 const app = express()
 app.use(bodyParser.json())
@@ -173,15 +176,24 @@ app.post('/enableUser', async (req, res, next) => {
 })
 
 app.post('/anonymizeUser', async (req, res, next) => {
-  if (!req.body.username) {
-    const err = new Error('username is required')
+  if (!req.body.username || !req.body.orgId) {
+    const err = new Error('username and orgId is required')
     err.statusCode = 400
     return next(err)
   }
+  const username = req.body.username
+  console.log(`Attempting to anonymize user ${username}, in ${req.body.orgId}`) // TODO: remove?
+
+  const hashedUsername = createHash('sha256').update(username).digest('hex') // base64 / hex
+  console.log('Hash: ' + hashedUsername) // TODO: remove
+
   try {
-    const response = await anonymizeUser(req.body.username)
-    res.status(200).json(response)
+    //await anonymizeUserInCognito(username, hashedUsername)
+    await anonymizeUserInDb(username, hashedUsername)
+
+    res.status(200).json({functionalityComplete: false})
   } catch (err) {
+    console.log(err)
     next(err)
   }
 })

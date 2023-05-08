@@ -13,6 +13,8 @@
  */
 
 const { CognitoIdentityServiceProvider } = require('aws-sdk')
+const { createHash } = require('crypto')
+const { anonymizeUser: anonymizeUserInDb } = require('./db')
 
 const cognitoIdentityServiceProvider = new CognitoIdentityServiceProvider()
 const userPoolId = process.env.USERPOOL
@@ -124,11 +126,12 @@ async function enableUser(username) {
   }
 }
 
-async function anonymizeUser(username) {
-  console.log(`Attempting to anonymize user ${username}`)
+async function anonymizeUser(username, hashedUsername) {
   try {
     // TODO
-    throw Error('Functionality not complete')
+    // Email + custom attribute isAnonymized/anonymizedAt
+    // Kanskje slette cognito-brukeren og lage ny? (cognito-idp:AdminDeleteUser permission i lib)
+    //.adminDeleteUser
   } catch (err) {
     console.log(err)
     throw err

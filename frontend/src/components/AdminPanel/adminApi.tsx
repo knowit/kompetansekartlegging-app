@@ -222,12 +222,16 @@ const listAllOrganizationAdministrators = async (): Promise<
   }
 }
 
-const anonymizeUser = async (username: string): Promise<ApiResponse<any[]>> => {
+const anonymizeUser = async (
+  username: string,
+  orgId: string
+): Promise<ApiResponse<any[]>> => {
   const apiName = 'AdminQueries'
   const path = '/anonymizeUser'
   const myInit = {
     body: {
       username,
+      orgId,
     },
     headers: {
       'Content-Type': 'application/json',

@@ -283,6 +283,7 @@ export class KompetanseStack extends Stack {
           USERPOOL: pool.userPoolId,
           GROUP: 'admin',
           GROUP_LIST_USERS: 'groupLeader',
+          TABLE_MAP: JSON.stringify(appSync.tableNameMap),
         },
         initialPolicy: [
           new iam.PolicyStatement({
@@ -298,9 +299,15 @@ export class KompetanseStack extends Stack {
               'cognito-idp:AdminConfirmSignUp',
               'cognito-idp:ListUsers',
               'cognito-idp:ListGroups',
+              'dynamodb:Query',
+              'dynamodb:UpdateItem'
             ],
             effect: iam.Effect.ALLOW,
-            resources: [pool.userPoolArn],
+            resources: [
+              pool.userPoolArn,
+              tableArns['UserFormTable'],
+              `${tableArns['UserFormTable']}/index/*`,
+            ],
           }),
         ],
       }
