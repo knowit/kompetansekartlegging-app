@@ -122,7 +122,6 @@ const AnonymizeUsers = () => {
   }
 
   const anonymizeUserConfirm = async () => {
-    console.log(userToAnonymize)
     const username = userToAnonymize.Username
     const orgId = getAttribute(userToAnonymize, ORGANIZATION_ID_ATTRIBUTE)
     await anonymizeUserApiCall(username, orgId!)
