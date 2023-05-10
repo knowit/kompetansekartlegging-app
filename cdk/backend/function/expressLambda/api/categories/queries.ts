@@ -1,7 +1,7 @@
 import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
 
 import { v4 as uuidv4 } from 'uuid'
-import { sqlQuery } from '../../app'
+import { sqlQuery } from '../../utils/sql'
 import {
   Category,
   CategoryInput,
