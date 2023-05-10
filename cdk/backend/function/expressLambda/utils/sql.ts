@@ -40,7 +40,6 @@ export const sqlQuery = async <T>({
   })
 
   const response = await rds.send(cmd)
-
   return handleResponse<T>(response, message, isArray)
 }
 
@@ -49,11 +48,10 @@ const handleResponse = <T>(
   message: string,
   isArray: boolean
 ): SqlQueryResult<T> => {
-  const status =
+  const isSuccess =
     response.$metadata.httpStatusCode >= 200 &&
     response.$metadata.httpStatusCode < 300
-      ? 'ok'
-      : 'unknown'
+  const status = isSuccess ? 'ok' : 'unknown'
 
   if (response.formattedRecords) {
     const records = isArray
