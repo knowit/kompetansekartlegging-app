@@ -241,6 +241,7 @@ export class KompetanseStack extends Stack {
       APIKeyPermissionTable: `APIKeyPermission-${this.artifactId}`,
       GroupTable: `Group-${this.artifactId}`,
       CategoryTable: `Category-${this.artifactId}`,
+      AnonymizedUserTable: `AnonymizedUser-${this.artifactId}`,
     }
 
     const appSync = new AppSyncTransformer(this, 'Appsync', {
@@ -298,6 +299,7 @@ export class KompetanseStack extends Stack {
               'cognito-idp:ListGroups',
               'dynamodb:Query',
               'dynamodb:UpdateItem',
+              'dynamodb:PutItem',
             ],
             effect: iam.Effect.ALLOW,
             resources: [
@@ -306,6 +308,8 @@ export class KompetanseStack extends Stack {
               `${tableArns['UserFormTable']}/index/*`,
               tableArns['QuestionAnswerTable'],
               `${tableArns['QuestionAnswerTable']}/index/*`,
+              tableArns['AnonymizedUserTable'],
+              `${tableArns['AnonymizedUserTable']}/index/*`,
             ],
           }),
         ],
@@ -341,6 +345,8 @@ export class KompetanseStack extends Stack {
         `${tableArns['FormDefinitionTable']}/index/*`,
         tableArns['APIKeyPermissionTable'],
         `${tableArns['APIKeyPermissionTable']}/index/*`,
+        tableArns['AnonymizedUserTable'],
+        `${tableArns['AnonymizedUserTable']}/index/*`,
       ],
     })
 
@@ -416,8 +422,11 @@ export class KompetanseStack extends Stack {
           `${tableArns['CategoryTable']}/index/*`,
           tableArns['FormDefinitionTable'],
           `${tableArns['FormDefinitionTable']}/index/*`,
+          tableArns['AnonymizedUserTable'],
+          `${tableArns['AnonymizedUserTable']}/index/*`,
           excelBucket.bucketArn,
           `${excelBucket.bucketArn}/*`,
+          
         ],
       })
 
