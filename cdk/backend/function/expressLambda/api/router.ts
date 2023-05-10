@@ -22,6 +22,5 @@ router.use('/questions', questionsRouter)
 router.use('/catalogs', catalogRouter)
 router.use('/cognito', cognitoRouter)
 router.use('/group-leader', groupLeaderRouter)
-router.use('/admin', adminRouter)
 
 export { router as apiRouter }

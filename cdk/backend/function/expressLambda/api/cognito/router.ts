@@ -141,7 +141,7 @@ router.post<unknown, unknown, UserBody, unknown>(
 )
 
 router.get<unknown, unknown, unknown, UserBody>(
-  '/getUser',
+  '/get-user',
   async (req, res, next) => {
     try {
       const response = await getUser(req.query.username)
