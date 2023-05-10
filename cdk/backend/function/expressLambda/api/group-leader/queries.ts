@@ -13,7 +13,7 @@ const getGroupMembersByGroupLeader = async ({ username }: GetByUsername) => {
   ]
 
   const query = `
-    SELECT group_id, username, group_leader_username 
+    SELECT group_id, username, group_leader_username, organization_id 
     FROM "user" u
     JOIN "group" g ON u.group_id = g.id
     WHERE g.group_leader_username = :username
