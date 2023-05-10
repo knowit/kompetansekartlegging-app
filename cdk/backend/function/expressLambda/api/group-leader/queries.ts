@@ -1,5 +1,5 @@
 import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
-import { sqlQuery } from '../../app'
+import { sqlQuery } from '../../utils/sql'
 import { GetByUsername, GetByUsernameAndOrganizationId } from './types'
 
 const getGroupMembersByGroupLeader = async ({ username }: GetByUsername) => {

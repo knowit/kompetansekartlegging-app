@@ -19,11 +19,11 @@ router.get<unknown, unknown, unknown, GetGroupQuery>(
       const members: IUserAnnotated[] = []
       const { id } = req.query
       const group = await Group.getGroup({ id })
-      const groupLeader = await getUser(group.data.group_leader_username)
+      const groupLeader = await getUser(group.data!.group_leader_username)
       const groupMembers = await Group.listUsersInGroup({ group_id: id })
       console.log(groupMembers.data)
       await Promise.all(
-        groupMembers.data.map(async (user: IUser) => {
+        groupMembers.data!.map(async (user: IUser) => {
           return getUser(user.username).then((member: AdminGetUserResponse) => {
             const newMember = {
               ...user,
@@ -126,11 +126,10 @@ const annotateUsers = async (users: IUser[], cognitoUsers: UsersListType) => {
 const annotateUserWithGroup = async (user: IUser) => {
   try {
     return await Group.getGroup({ id: user.group_id }).then(response => {
-      const { organization_id, ...u } = {
+      return {
         ...user,
         group_leader_username: response.data?.group_leader_username ?? '',
       }
-      return u
     })
   } catch {
     return { ...user, group_leader_username: '' }
