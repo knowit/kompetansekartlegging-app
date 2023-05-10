@@ -5,7 +5,17 @@ const QUESTION_ANSWER_TABLE_NAME = TableMap['QuestionAnswerTable']
 const USER_FORM_TABLE_NAME = TableMap['UserFormTable']
 const USER_TABLE_NAME = TableMap['UserTable']
 
-const docClient = new DynamoDB.DocumentClient()
+const isTest = process.env.JEST_WORKER_ID
+const config = {
+  ...(isTest && {
+    convertEmptyValues: true,
+    endpoint: 'localhost:8000',
+    sslEnabled: false,
+    region: 'local-env',
+  }),
+}
+
+const docClient = new DynamoDB.DocumentClient(config)
 
 const anonymizeUser = async (username, hashedUsername) => {
   const userFormsForUser = await getUserFormsForUser(username)
@@ -78,5 +88,7 @@ const getQuestionAnswersByUserFormId = async (userFormId) => {
 }
 
 module.exports = {
-    anonymizeUser
+    anonymizeUser,
+    getUserFormsForUser,
+    getQuestionAnswersByUserFormId
 }
