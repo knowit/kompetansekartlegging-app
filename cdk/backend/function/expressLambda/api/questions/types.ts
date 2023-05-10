@@ -5,7 +5,7 @@ export interface Question {
   id: string
   text: string | null
   topic: string
-  index: number | null
+  index: number
   type: 'custom_scale_value' | 'knowledge_motivation' | 'text' | null
   scale_start: string | null
   scale_middle: string | null

@@ -71,3 +71,5 @@ ADD IF NOT EXISTS group_id UUID references "group"(id) ON DELETE
 SET NULL;
 ALTER TABLE "group"
 ADD IF NOT EXISTS group_leader_username VARCHAR(255) NOT NULL references "user"(username);
+ALTER TABLE organization
+ADD IF NOT EXISTS active_catalog_id UUID references "catalog"(id)

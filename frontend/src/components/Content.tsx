@@ -323,8 +323,8 @@ const Content = ({ ...props }: ContentProps) => {
 
   useEffect(() => {
     // console.log('fetchLastFormDefitniio');
-    fetchLastFormDefinition(
-      setFormDefinition,
+    fetchLastCatalog(
+      setCatalog,
       (formDef) => createQuestionAnswers(formDef, setCategories),
       (formDef) =>
         getUserAnswers(
@@ -344,7 +344,8 @@ const Content = ({ ...props }: ContentProps) => {
           newUserAnswers,
           setQuestionAnswers,
           setAnswersBeforeSubmitted
-        )
+        ),
+      userState.organizationID
     )
   }, [
     userState,
