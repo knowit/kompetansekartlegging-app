@@ -10,34 +10,22 @@ import {
 
 const router = express.Router()
 
-// List all questionAnswers
 router.get('/', async (req, res, next) => {
-  if (req.query.id) next()
   try {
-    const listQuestionAnswerResponse = await QuestionAnswer.listQuestionAnswers()
-    res.status(200).json(listQuestionAnswerResponse)
+    if (req.query.id) {
+      const getQuestionAnswerResponse = await QuestionAnswer.getQuestionAnswer(
+        req.query as GetQuestionAnswerInput
+      )
+      res.status(200).json(getQuestionAnswerResponse)
+    } else {
+      const listQuestionAnswerResponse = await QuestionAnswer.listQuestionAnswers()
+      res.status(200).json(listQuestionAnswerResponse)
+    }
   } catch (err) {
     console.error(err)
     next(err)
   }
 })
-
-// Get questionAnswer from id
-router.get<unknown, unknown, unknown, GetQuestionAnswerInput>(
-  '/',
-  async (req, res, next) => {
-    try {
-      const getQuestionAnswerResponse = await QuestionAnswer.getQuestionAnswer(
-        req.query
-      )
-
-      res.status(200).json(getQuestionAnswerResponse)
-    } catch (err) {
-      console.error(err)
-      next(err)
-    }
-  }
-)
 
 // Create questionAnswer
 router.post<unknown, unknown, QuestionAnswerInput>(

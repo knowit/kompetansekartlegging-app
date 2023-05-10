@@ -16,32 +16,22 @@ router.post<unknown, unknown, CategoryInput>('/', async (req, res, next) => {
   }
 })
 
-// Get all categories
 router.get('/', async (req, res, next) => {
   try {
-    const listCategoriesResponse = await Category.listCategories()
-
-    res.status(200).json(listCategoriesResponse)
+    if (req.query.id) {
+      const getCategoryResponse = await Category.getCategory(
+        req.query as GetCategoryInput
+      )
+      res.status(200).json(getCategoryResponse)
+    } else {
+      const listCategoriesResponse = await Category.listCategories()
+      res.status(200).json(listCategoriesResponse)
+    }
   } catch (err) {
     console.error(err)
     next(err)
   }
 })
-
-// Get single category from id
-router.get<unknown, unknown, unknown, GetCategoryInput>(
-  '/:id',
-  async (req, res, next) => {
-    try {
-      const getCategoryResponse = await Category.getCategory(req.query)
-
-      res.status(200).json(getCategoryResponse)
-    } catch (err) {
-      console.error(err)
-      next(err)
-    }
-  }
-)
 
 // Update category with given id
 router.patch<unknown, unknown, CategoryInput, GetCategoryInput>(
