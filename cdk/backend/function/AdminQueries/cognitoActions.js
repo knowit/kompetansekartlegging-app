@@ -14,7 +14,6 @@
 
 const { CognitoIdentityServiceProvider } = require('aws-sdk')
 const { createHash } = require('crypto')
-const { anonymizeUser: anonymizeUserInDb } = require('./db')
 
 const cognitoIdentityServiceProvider = new CognitoIdentityServiceProvider()
 const userPoolId = process.env.USERPOOL
@@ -132,12 +131,11 @@ async function anonymizeUser(username) {
     Username: username,
   }
   try {
-    const result = await cognitoIdentityServiceProvider.adminDeleteUser(params).promise()
-    return result
+    cognitoIdentityServiceProvider.adminDeleteUser(params).promise()
   } catch (err) {
-    console.log(err)
     throw err
   }
+  
 }
 
 async function getUser(username) {

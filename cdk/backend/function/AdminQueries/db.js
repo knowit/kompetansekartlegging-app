@@ -3,40 +3,50 @@ const { DynamoDB } = require('aws-sdk')
 const TableMap = JSON.parse(process.env.TABLE_MAP)
 const QUESTION_ANSWER_TABLE_NAME = TableMap['QuestionAnswerTable']
 const USER_FORM_TABLE_NAME = TableMap['UserFormTable']
-const USER_TABLE_NAME = TableMap['UserTable']
+const ANON_USER_TABLE_NAME = TableMap['AnonymizedUserTable']
+
 
 const docClient = new DynamoDB.DocumentClient()
 
-const anonymizeUser = async (username, hashedUsername) => {
-  const userFormsForUser = await getUserFormsForUser(username)
+const anonymizeUser = async (username, hashedUsername, orgId) => {
+    console.log('Adding user to AnonymizedUser table')
+    docClient.put({
+      TableName : ANON_USER_TABLE_NAME,
+      Item: {
+        id: hashedUsername,
+        organizationID: orgId,
+        anonymizedAt: new Date().toISOString(),
+      },
+      ConditionExpression: "attribute_not_exists(id)"
+    }).promise()
 
-  userFormsForUser.map(async (userForm) => {
-    console.log('Anonymizing UserForm with ID: ', userForm.id)
-    docClient
-    .update({
-      TableName: USER_FORM_TABLE_NAME,
-      Key: { id : userForm.id },
-      UpdateExpression: "SET #owner = :hash",
-      ExpressionAttributeNames: { '#owner': 'owner' },
-      ExpressionAttributeValues: { ':hash': hashedUsername }
-    })
-    .promise()
+    const userFormsForUser = await getUserFormsForUser(username)
 
-    const allQuestionAnswers = await getQuestionAnswersByUserFormId(userForm.id)
-
-    console.log('Anonymizing QuestionAnswers for UserForm with ID: ', userForm.id)
-    allQuestionAnswers.map((questionAnswer) => {
+    userFormsForUser.map(async (userForm) => {
+      console.log('Anonymizing UserForm with ID: ', userForm.id)
       docClient
       .update({
-        TableName: QUESTION_ANSWER_TABLE_NAME,
-        Key: { id: questionAnswer.id },
-        UpdateExpression: 'SET #owner = :hash',
+        TableName: USER_FORM_TABLE_NAME,
+        Key: { id : userForm.id },
+        UpdateExpression: "SET #owner = :hash",
         ExpressionAttributeNames: { '#owner': 'owner' },
         ExpressionAttributeValues: { ':hash': hashedUsername }
+      }).promise()
+
+      const allQuestionAnswers = await getQuestionAnswersByUserFormId(userForm.id)
+
+      console.log('Anonymizing QuestionAnswers for UserForm with ID: ', userForm.id)
+      allQuestionAnswers.map((questionAnswer) => {
+        docClient
+        .update({
+          TableName: QUESTION_ANSWER_TABLE_NAME,
+          Key: { id: questionAnswer.id },
+          UpdateExpression: 'SET #owner = :hash',
+          ExpressionAttributeNames: { '#owner': 'owner' },
+          ExpressionAttributeValues: { ':hash': hashedUsername }
+        }).promise()
       })
-      .promise()
     })
-  })
 }
 
 const getUserFormsForUser = async (username) => {

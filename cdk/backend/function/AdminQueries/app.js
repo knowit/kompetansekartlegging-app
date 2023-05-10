@@ -182,29 +182,25 @@ app.post('/anonymizeUser', async (req, res, next) => {
     return next(err)
   }
   const username = req.body.username
-  console.log(`Attempting to anonymize user ${username}, in ${req.body.orgId}`) // TODO: remove?
+  const orgId = req.body.orgId
+  console.log(`Attempting to anonymize user from ${req.body.orgId}`)
 
   const hashedUsername = createHash('sha256').update(username).digest('hex') // base64 / hex
   console.log('Hash: ' + hashedUsername) // TODO: remove
 
-  try {
-    const cognitoRes = await anonymizeUserInCognito(username)
-    if (cognitoRes.statusCode === 200) {
-      console.log("cognito deleted")
-      //await anonymizeUserInDb(username, hashedUsername)
-    } else {
-      console.log("cognito failed")
-    }
-    
-    
+  anonymizeUserInCognito(username).catch(err => {
+    console.log("Error anonymizing user in cognito")
+    err.statusCode = 500
+    return next(err)
+  })
 
-    res.status(200).json({functionalityComplete: false})
-  } catch (err) {
-    // TODO: save user info in case process fails at some point
-    // Should we handle this step by step? 
-    console.log(err)
-    next(err)
-  }
+  anonymizeUserInDb(username, hashedUsername, orgId).catch(err => {
+    console.log("Error anonymizing user in db")
+    err.statusCode = 500
+    return next(err)
+  })
+    
+  res.status(200).json({functionalityComplete: false})
 })
 
 app.get('/getUser', async (req, res, next) => {
