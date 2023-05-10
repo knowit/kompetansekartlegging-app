@@ -12,7 +12,7 @@ import { ReactComponent as M3 } from '../icons/M - onsker erfaring.svg'
 import { ReactComponent as M5 } from '../icons/M - perfekt.svg'
 import { ReactComponent as M2 } from '../icons/M - vedbehov.svg'
 
-import { Tooltip } from '@material-ui/core'
+import { Tooltip } from '@mui/material'
 import { Fragment } from 'react'
 import i18n from '../i18n/i18n'
 

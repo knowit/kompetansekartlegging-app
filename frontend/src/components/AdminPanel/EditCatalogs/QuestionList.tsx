@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import List from '@material-ui/core/List'
+import List from '@mui/material/List'
 
 import { useTranslation } from 'react-i18next'
 import { Question, QuestionInput } from '../../../api/questions/types'

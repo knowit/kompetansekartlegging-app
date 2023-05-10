@@ -1,14 +1,15 @@
 import { useState } from 'react'
 
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import PersonAddIcon from '@material-ui/icons/PersonAdd'
+import DeleteIcon from '@mui/icons-material/Delete'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
 
-import DeleteIcon from '@material-ui/icons/Delete'
 import { useTranslation } from 'react-i18next'
 import { i18nDateToLocaleDateString } from '../../i18n/i18n'
+import { KnowitColors } from '../../styles'
 import Button from '../mui/Button'
 import Table from '../mui/Table'
 import TableRow from '../mui/TableRow'
@@ -42,7 +43,7 @@ const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
         <Button
           endIcon={<DeleteIcon />}
           onClick={() => deleteMember(user)}
-          style={{ fontStyle: 'italic' }}
+          style={{ fontStyle: 'italic', color: KnowitColors.black }}
         >
           {t('myGroup.removeFromGroup')}
         </Button>

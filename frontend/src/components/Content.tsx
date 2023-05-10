@@ -1,7 +1,8 @@
-import { Button, ListItem, makeStyles } from '@material-ui/core'
+import { Button, ListItem } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import clsx from 'clsx'
 import { TFunction } from 'i18next'
-import React, { Fragment, useEffect, useState } from 'react'
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CreateQuestionAnswerInput, QuestionType } from '../API'
 import * as customQueries from '../graphql/custom-queries'
@@ -143,7 +144,7 @@ const contentStyle = makeStyles({
 
 const updateCategoryAlerts = (
   questionAnswers: Map<string, QuestionAnswer[]>,
-  setAlerts: React.Dispatch<React.SetStateAction<AlertState | undefined>>,
+  setAlerts: Dispatch<SetStateAction<AlertState | undefined>>,
   t: TFunction<'translation', undefined, 'translation'>
 ) => {
   const msNow = Date.now()

@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 
-import { Button } from '@material-ui/core'
+import { Button } from '@mui/material'
 
 import { useTranslation } from 'react-i18next'
 import { Panel } from '../../types'

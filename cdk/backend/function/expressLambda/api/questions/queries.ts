@@ -1,20 +1,22 @@
 import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
-import { sqlQuery } from '../../app'
+import { sqlQuery } from '../../utils/sql'
 
 import { v4 as uuidv4 } from 'uuid'
 import {
   DeleteQuestionInput,
   GetQuestionInput,
   GetQuestionsByCategoryInput,
+  Question,
   QuestionInput,
 } from './types'
 
 const listQuestions = async () => {
   const query = `SELECT * FROM question`
 
-  return await sqlQuery({
+  return await sqlQuery<Question[]>({
     message: '🚀 ~ > All questions',
     query,
+    isArray: true,
   })
 }
 
@@ -31,7 +33,7 @@ const getQuestion = async ({ id }: GetQuestionInput) => {
 
   const query = `SELECT * FROM question WHERE id = :id`
 
-  return await sqlQuery({
+  return await sqlQuery<Question>({
     message: `🚀 ~ > Question with id: ${id}`,
     query,
     parameters,
@@ -53,10 +55,11 @@ const getQuestionsInCategory = async ({
 
   const query = `SELECT * FROM question WHERE category_id = :categoryid`
 
-  return await sqlQuery({
+  return await sqlQuery<Question[]>({
     message: `🚀 ~ > All questions with categoryid: ${category_id}`,
     query,
     parameters,
+    isArray: true,
   })
 }
 
@@ -109,7 +112,7 @@ const createQuestion = async ({
     VALUES(:id, :categoryid, :index, :scalestart, :scalemiddle, :scaleend, :text, :topic, '${type}')
     RETURNING *`
 
-  return await sqlQuery({
+  return await sqlQuery<Question>({
     message: `🚀 ~ > Question with id: ${id} was successfully created`,
     query,
     parameters,
@@ -168,7 +171,7 @@ const updateQuestion = async (
     WHERE id=:id
     RETURNING *`
 
-  return await sqlQuery({
+  return await sqlQuery<Question>({
     message: `🚀 ~ > Question with id: ${id} was updated`,
     query,
     parameters,
@@ -186,7 +189,7 @@ const deleteQuestion = async ({ id }: DeleteQuestionInput) => {
 
   const query = `DELETE FROM "question" WHERE id=:id RETURNING *`
 
-  return await sqlQuery({
+  return await sqlQuery<Question>({
     message: `🚀 ~ > Question with id: ${id} was successfully deleted`,
     query,
     parameters,

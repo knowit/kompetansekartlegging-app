@@ -1,5 +1,5 @@
-import { createStyles, withStyles } from '@material-ui/core/styles'
-import Button, { ButtonProps as MuiButtonProps } from '@material-ui/core/Button'
+import { createStyles, withStyles } from '@mui/styles'
+import Button, { ButtonProps as MuiButtonProps } from '@mui/material/Button'
 import { KnowitColors } from '../../styles'
 
 const StyledButton = withStyles(() =>

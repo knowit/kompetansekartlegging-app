@@ -1,22 +1,22 @@
 import { useEffect, useState } from 'react'
 
-import Box from '@material-ui/core/Box'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Collapse from '@material-ui/core/Collapse'
-import Container from '@material-ui/core/Container'
-import IconButton from '@material-ui/core/IconButton'
-import { makeStyles } from '@material-ui/core/styles'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import Typography from '@material-ui/core/Typography'
-import AddIcon from '@material-ui/icons/Add'
-import DeleteIcon from '@material-ui/icons/Delete'
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
+import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CircularProgress from '@mui/material/CircularProgress'
+import Collapse from '@mui/material/Collapse'
+import Container from '@mui/material/Container'
+import IconButton from '@mui/material/IconButton'
+import { makeStyles } from '@mui/styles'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import Typography from '@mui/material/Typography'
+import AddIcon from '@mui/icons-material/Add'
+import DeleteIcon from '@mui/icons-material/Delete'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 
 import { useTranslation } from 'react-i18next'
 import { getLatestUserFormUpdatedAtForUser } from '../../helperFunctions'
@@ -49,6 +49,7 @@ import {
 import { compareByCreatedAt, compareByName, getAttribute } from './helpers'
 import PictureAndNameEditCell from './PictureAndNameEditCell'
 import useApiGet from './useApiGet'
+import { KnowitColors } from '../../styles'
 
 const useRowStyles = makeStyles({
   root: {
@@ -98,7 +99,11 @@ const Group = ({
         </TableCell>
         <TableCell>{group.members.length}</TableCell>
         <TableCell align="right">
-          <Button endIcon={<DeleteIcon />} onClick={() => deleteGroup(group)}>
+          <Button
+            endIcon={<DeleteIcon />}
+            onClick={() => deleteGroup(group)}
+            style={{ color: KnowitColors.black }}
+          >
             {t('admin.editGroups.removeGroup')}
           </Button>
         </TableCell>
@@ -433,6 +438,9 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
         <AddUserToGroupDialog
           usersConstant={groupLeaders}
           title={t('admin.editGroups.chooseNewGroupLeader')}
+          searchFieldPlaceholder={t('searchForEmployeeInOrganization', {
+            organization: userState.organizationName,
+          })}
           confirmButtonText={t('admin.editGroups.choose')}
           open={!!groupToEdit}
           currentUsersInGroup={
@@ -446,6 +454,9 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
         <AddUserToGroupDialog
           usersConstant={groupLeaders}
           title={t('admin.editGroups.chooseGroupLeaderForTheNewGroup')}
+          searchFieldPlaceholder={t('searchForEmployeeInOrganization', {
+            organization: userState.organizationName,
+          })}
           confirmButtonText={t('admin.editGroups.createGroup')}
           open={showAddGroup}
           currentUsersInGroup={[]}

@@ -1,14 +1,16 @@
 import { apiDELETE, apiGET, apiPATCH, apiPOST } from '../client'
 import { GetOrganizationInput } from '../organizations/types'
 import {
-  DeleteCatalogInput,
   Catalog,
   CatalogInput,
+  DeleteCatalogInput,
   GetCatalogInput,
   UpdateCatalogInput,
 } from './types'
 
-export const getAllCatalogs = async () => apiGET<Catalog>('/catalogs')
+const path = '/catalogs'
+
+export const getAllCatalogs = async () => apiGET<Catalog>(path)
 
 export const getActiveCatalogByOrganization = async (
   id: GetOrganizationInput
@@ -18,12 +20,12 @@ export const getActiveCatalogByOrganization = async (
   })
 
 export const createCatalog = async (data: CatalogInput) =>
-  apiPOST<Catalog>('/catalogs', { body: data })
+  apiPOST<Catalog>(path, { body: data })
 
 export const deleteCatalog = async (id: DeleteCatalogInput) =>
-  apiDELETE<Catalog>('/catalogs', { body: id })
+  apiDELETE<Catalog>(path, { body: id })
 
 export const updateCatalog = async (
   id: GetCatalogInput,
   data: UpdateCatalogInput
-) => apiPATCH('/catalogs/:id', { queryStringParameters: id, body: data })
+) => apiPATCH(`${path}/:id`, { queryStringParameters: id, body: data })

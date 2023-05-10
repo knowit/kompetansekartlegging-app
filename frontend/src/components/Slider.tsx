@@ -1,9 +1,5 @@
-import {
-  Slider as CoreSlider,
-  Theme,
-  makeStyles,
-  withStyles,
-} from '@material-ui/core'
+import { Slider as CoreSlider, Theme } from '@mui/material'
+import { makeStyles, withStyles } from '@mui/styles'
 import { useEffect, useState } from 'react'
 import * as helper from '../helperFunctions'
 import { KnowitColors } from '../styles'
@@ -20,6 +16,7 @@ const ValueSlider = withStyles(
       opacity: 0,
     },
     track: {
+      visibility: 'hidden',
       backgroundColor: KnowitColors.white,
       height: 15,
     },
@@ -41,22 +38,22 @@ const ValueSlider = withStyles(
     },
     markActive: {},
     '@global': {
-      'span:nth-child(4)': {
+      'span:nth-child(3)': {
         height: 30,
       },
-      'span:nth-child(14)': {
+      'span:nth-child(13)': {
         height: 30,
       },
-      'span:nth-child(24)': {
+      'span:nth-child(23)': {
         height: 30,
       },
-      'span:nth-child(34)': {
+      'span:nth-child(33)': {
         height: 30,
       },
-      'span:nth-child(44)': {
+      'span:nth-child(43)': {
         height: 30,
       },
-      'span:nth-child(54)': {
+      'span:nth-child(53)': {
         height: 30,
       },
     },
@@ -78,6 +75,7 @@ const ValueSliderMobile = withStyles(
       opacity: 0,
     },
     track: {
+      visibility: 'hidden',
       backgroundColor: KnowitColors.white,
       height: 15,
     },
@@ -99,22 +97,22 @@ const ValueSliderMobile = withStyles(
     },
     markActive: {},
     '@global': {
-      'span:nth-child(4)': {
+      'span:nth-child(3)': {
         height: 20,
       },
-      'span:nth-child(14)': {
+      'span:nth-child(13)': {
         height: 20,
       },
-      'span:nth-child(24)': {
+      'span:nth-child(23)': {
         height: 20,
       },
-      'span:nth-child(34)': {
+      'span:nth-child(33)': {
         height: 20,
       },
-      'span:nth-child(44)': {
+      'span:nth-child(43)': {
         height: 20,
       },
-      'span:nth-child(54)': {
+      'span:nth-child(53)': {
         height: 20,
       },
     },

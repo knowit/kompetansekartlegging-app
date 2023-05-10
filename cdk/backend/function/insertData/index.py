@@ -208,13 +208,11 @@ def questionSQL(file, start, end):
 def questionAnswerSQL(file, start, end):
     sqlInsertStatment = "INSERT INTO question_answer (id, question_id, knowledge, motivation, custom_scale_value, text_value, user_username)\nSELECT * FROM (\nVALUES"
     for row in file.loc[start:end].itertuples():
-        sqlInsertStatment += (
-            f"\n({getValueOnSqlFormat(row.id, isUUID=True)},"
-            f"{getValueOnSqlFormat(row.questionID, isUUID=True)},"
-            f"{getValueOnSqlFormat(row.knowledge, isNumber=True)},{getValueOnSqlFormat(row.motivation, isNumber=True)},"
-            f"{getValueOnSqlFormat(row.customScaleValue, isNumber=True)},{getValueOnSqlFormat(row.textValue)},"
-            f"(SELECT COALESCE ((SELECT u.username FROM \"user\" u WHERE u.username = {getValueOnSqlFormat(row.owner)}),(SELECT du.username FROM \"user\" du WHERE du.username = {getValueOnSqlFormat('dummyUser@dummy')})))),"
-        )
+        sqlInsertStatment += f"\n({getValueOnSqlFormat(row.id, isUUID=True)}," \
+            f"{getValueOnSqlFormat(row.questionID, isUUID=True)}," \
+            f"{getValueOnSqlFormat(row.knowledge, isNumber=True)},{getValueOnSqlFormat(row.motivation, isNumber=True)}," \
+            f"{getValueOnSqlFormat(row.customScaleValue, isNumber=True)},{getValueOnSqlFormat(row.textValue)}," \
+            f"{getValueOnSqlFormat(row.owner)}),"
     sqlInsertStatment = sqlInsertStatment.rstrip(sqlInsertStatment[-1])
     sqlInsertStatment += ") as x (id, question_id, knowledge, motivation, custom_scale_value, text_value, user_username) WHERE EXISTS (SELECT 1 FROM question q WHERE q.id = x.question_id) ON CONFLICT DO NOTHING;"
     print(sqlInsertStatment)
@@ -243,13 +241,10 @@ def groupSQL(file, start, end):
         'INSERT INTO "group" (id, organization_id, group_leader_username)\nVALUES'
     )
     for row in file.loc[start:end].itertuples():
-        sqlInsertStatment += (
-            f"\n({getValueOnSqlFormat(row.id, isUUID=True)},"
-            f"(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)}), (SELECT COALESCE((SELECT u.username FROM \"user\" u WHERE u.username = {getValueOnSqlFormat(row.groupLeaderUsername)}), (SELECT du.username FROM \"user\" du WHERE du.username = {getValueOnSqlFormat('dummyUser@dummy')})))),"
-        )
-    sqlInsertStatment = (
-        sqlInsertStatment.rstrip(sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
-    )
+        sqlInsertStatment += f"\n({getValueOnSqlFormat(row.id, isUUID=True)}," \
+            f"(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)}), {getValueOnSqlFormat(row.groupLeaderUsername)}),"
+    sqlInsertStatment = sqlInsertStatment.rstrip(
+        sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
     print(sqlInsertStatment)
     return sqlInsertStatment
 

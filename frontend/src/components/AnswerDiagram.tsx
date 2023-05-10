@@ -1,5 +1,5 @@
-import { makeStyles } from '@material-ui/core'
-import React from 'react'
+import { makeStyles } from '@mui/styles'
+import { QuestionType } from '../API'
 import {
   AnswerDiagramProps,
   CustomScaleLabelsChartData,

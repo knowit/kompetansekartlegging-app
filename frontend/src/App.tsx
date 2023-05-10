@@ -1,18 +1,23 @@
-import { API, Auth, Hub } from 'aws-amplify'
+import { Auth, Hub } from 'aws-amplify'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import './App.css'
 // import awsconfig from "./aws-exports";
-import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth'
-import { Button, Snackbar, debounce, makeStyles } from '@material-ui/core'
-import { ThemeProvider } from '@material-ui/core/styles'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { Button, Snackbar, debounce } from '@mui/material'
+import {
+  StyledEngineProvider,
+  Theme,
+  ThemeProvider,
+} from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { isMobile } from 'react-device-detect'
 import { useTranslation } from 'react-i18next'
 import Content from './components/Content'
 import FloatingScaleDescButton from './components/FloatingScaleDescButton'
 import Login from './components/Login'
 import NavBarDesktop from './components/NavBarDesktop'
-import awsconfig from './exports'
+import './config/aws-config'
+import { queryClient } from './config/tanstack-config'
 import {
   fetchOrganizationNameByID,
   selectUserState,
@@ -20,50 +25,13 @@ import {
   setUserInfoLogOut,
 } from './redux/User'
 import { useAppDispatch, useAppSelector } from './redux/hooks'
+import { KnowitColors } from './styles'
 import theme from './theme'
 
-const userBranch = import.meta.env.VITE_USER_BRANCH
-
-// console.log("Hosted branch: ", userBranch);
-
-switch (userBranch) {
-  case 'master':
-    awsconfig.oauth.domain = 'auth.kompetanse.knowit.no'
-    break
-  case 'dev':
-    awsconfig.oauth.domain = 'auth.dev.kompetanse.knowit.no'
-    break
-  default:
-    break
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
 }
-
-awsconfig.oauth.redirectSignIn = `${window.location.origin}/`
-awsconfig.oauth.redirectSignOut = `${window.location.origin}/`
-
-// let config = Amplify.configure(awsconfig);
-API.configure(awsconfig)
-Auth.configure(awsconfig)
-
-Hub.listen(/.*/, (data) => {
-  console.log('Hub listening to all messages: ', data)
-  if (data.payload.event === 'signIn_failure') {
-    const message = data.payload.data.message
-    if (message.includes('Google') && !message.includes('organization')) {
-      Auth.federatedSignIn({
-        customProvider: CognitoHostedUIIdentityProvider.Google,
-      })
-    } else if (
-      message.includes('AzureAD') &&
-      !message.includes('organization')
-    ) {
-      // console.log("Failure in the membrane");
-      Auth.federatedSignIn({
-        customProvider: 'AzureAD',
-      })
-    }
-    // Auth.federatedSignIn();
-  }
-})
 
 const appStyle = makeStyles({
   root: {
@@ -82,8 +50,6 @@ const appStyle = makeStyles({
 const cognitoUserContainsAttributes = (data: any): boolean => {
   return 'attributes' in data
 }
-
-const queryClient = new QueryClient()
 
 const App = () => {
   const dispatch = useAppDispatch()
@@ -197,65 +163,70 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <div className={style.root}>
-          {userBranch !== 'master' ? (
-            <Snackbar
-              open={bannerOpen}
-              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-            >
-              <div
-                style={{
-                  background: 'rgba(0,255,0, 255)',
-                  borderRadius: 5,
-                  padding: 4,
-                  textAlign: 'center',
-                }}
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <div className={style.root}>
+            {import.meta.env.VITE_USER_BRANCH !== 'master' ? (
+              <Snackbar
+                open={bannerOpen}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
               >
-                {t('thisIsATestEnvironment') + ' '}
-                <Button onClick={() => setBannerOpen(false)}>
-                  {t('close').toUpperCase()}
-                </Button>
-              </div>
-            </Snackbar>
-          ) : null}
-          {userState.isSignedIn ? (
-            <Fragment>
-              {isMobile ? null : (
-                <NavBarDesktop
-                  displayAnswers={displayAnswers}
-                  signout={signout}
-                />
-              )}
+                <div
+                  style={{
+                    background: 'rgba(0,255,0, 255)',
+                    borderRadius: 5,
+                    padding: 4,
+                    textAlign: 'center',
+                  }}
+                >
+                  {t('thisIsATestEnvironment') + ' '}
+                  <Button
+                    onClick={() => setBannerOpen(false)}
+                    style={{ color: KnowitColors.black }}
+                  >
+                    {t('close').toUpperCase()}
+                  </Button>
+                </div>
+              </Snackbar>
+            ) : null}
+            {userState.isSignedIn ? (
+              <Fragment>
+                {isMobile ? null : (
+                  <NavBarDesktop
+                    displayAnswers={displayAnswers}
+                    signout={signout}
+                  />
+                )}
 
-              <Content
-                setAnswerHistoryOpen={setAnswerHistoryOpen}
-                answerHistoryOpen={answerHistoryOpen}
-                isMobile={isMobile}
-                signout={signout}
-                collapseMobileCategories={collapseMobileCategories}
-                categoryNavRef={categoryNavRef}
-                mobileNavRef={mobileNavRef}
-                scrollToTop={scrollToTopMobile}
-                setCollapseMobileCategories={setCollapseMobileCategories}
-                setScaleDescOpen={setScaleDescOpen}
-                setFirstTimeLogin={setFirstTimeLogin}
-                setShowFab={setShowFab}
-              />
-              {showFab && (
-                <FloatingScaleDescButton
-                  scaleDescOpen={scaleDescOpen}
-                  setScaleDescOpen={setScaleDescOpen}
-                  firstTimeLogin={firstTimeLogin}
+                <Content
+                  setAnswerHistoryOpen={setAnswerHistoryOpen}
+                  answerHistoryOpen={answerHistoryOpen}
                   isMobile={isMobile}
+                  signout={signout}
+                  collapseMobileCategories={collapseMobileCategories}
+                  categoryNavRef={categoryNavRef}
+                  mobileNavRef={mobileNavRef}
+                  scrollToTop={scrollToTopMobile}
+                  setCollapseMobileCategories={setCollapseMobileCategories}
+                  setScaleDescOpen={setScaleDescOpen}
+                  setFirstTimeLogin={setFirstTimeLogin}
+                  setShowFab={setShowFab}
                 />
-              )}
-            </Fragment>
-          ) : (
-            <Login isMobile={isMobile} />
-          )}
-        </div>
-      </ThemeProvider>
+                {showFab && (
+                  <FloatingScaleDescButton
+                    scaleDescOpen={scaleDescOpen}
+                    setScaleDescOpen={setScaleDescOpen}
+                    firstTimeLogin={firstTimeLogin}
+                    isMobile={isMobile}
+                  />
+                )}
+              </Fragment>
+            ) : (
+              <Login isMobile={isMobile} />
+            )}
+          </div>
+        </ThemeProvider>
+      </StyledEngineProvider>
     </QueryClientProvider>
   )
 }

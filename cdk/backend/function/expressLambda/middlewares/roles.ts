@@ -1,19 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
+import { getRoles } from '../api/utils'
 
 export enum Role {
   ADMIN = 'admin',
   GROUP_LEADER = 'groupleader',
 }
-
-export const getRoles = (req: Request) =>
-  req.apiGateway.event.requestContext.authorizer?.claims['cognito:groups']
-    .split(',')
-    .map((r: string) => {
-      const role = r.split('0')
-      if (role.length > 1) {
-        return role[1].toLocaleLowerCase()
-      }
-    })
 
 export const requireRole = (role: Role) => {
   return (req: Request, res: Response, next: NextFunction) => {

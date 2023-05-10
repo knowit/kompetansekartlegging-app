@@ -1,15 +1,15 @@
 import { useState } from 'react'
 
-import Button from '@material-ui/core/Button'
-import ButtonGroup from '@material-ui/core/ButtonGroup'
-import IconButton from '@material-ui/core/IconButton'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
-import DeleteIcon from '@material-ui/icons/Delete'
-import EditIcon from '@material-ui/icons/Edit'
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
+import Button from '@mui/material/Button'
+import ButtonGroup from '@mui/material/ButtonGroup'
+import IconButton from '@mui/material/IconButton'
+import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
+import { createStyles, makeStyles } from '@mui/styles'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 
 import { KnowitColors } from '../../../styles'
 import QuestionListItemEdit from './QuestionListItemEdit'
@@ -81,12 +81,14 @@ const QuestionListItem = ({
               <IconButton
                 onClick={() => setEditMode(true)}
                 className={classes.button}
+                size="large"
               >
                 <EditIcon />
               </IconButton>
               <IconButton
                 onClick={() => deleteQuestion(q)}
                 className={classes.button}
+                size="large"
               >
                 <DeleteIcon />
               </IconButton>

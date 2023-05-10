@@ -3,7 +3,6 @@ import Question from './queries'
 import {
   DeleteQuestionInput,
   GetQuestionInput,
-  GetQuestionReqQuery,
   GetQuestionsByCategoryInput,
   QuestionInput,
 } from './types'
@@ -11,48 +10,26 @@ import {
 const router = express.Router()
 
 router.get('/', async (req, res, next) => {
-  if (req.query.id || req.query.categoryid) next()
   try {
-    const listQuestionsResponse = await Question.listQuestions()
-    res.status(200).json(listQuestionsResponse)
+    if (req.query.id) {
+      const getQuestionResponse = await Question.getQuestion(
+        req.query as GetQuestionInput
+      )
+      res.status(200).json(getQuestionResponse)
+    } else if (req.query.categoryid) {
+      const listQuestionsInCategoryResponse = await Question.getQuestionsInCategory(
+        req.query as GetQuestionsByCategoryInput
+      )
+      res.status(200).json(listQuestionsInCategoryResponse)
+    } else {
+      const listQuestionsResponse = await Question.listQuestions()
+      res.status(200).json(listQuestionsResponse)
+    }
   } catch (err) {
     console.error(err)
     next(err)
   }
 })
-
-router.get<unknown, unknown, unknown, GetQuestionReqQuery>(
-  '/',
-  async (req, res, next) => {
-    if (req.query.category_id) next()
-    else {
-      try {
-        const getQuestionResponse = await Question.getQuestion(
-          req.query as GetQuestionInput
-        )
-        res.status(200).json(getQuestionResponse)
-      } catch (err) {
-        console.error(err)
-        next(err)
-      }
-    }
-  }
-)
-
-router.get<unknown, unknown, unknown, GetQuestionReqQuery>(
-  '/',
-  async (req, res, next) => {
-    try {
-      const listQuestionsInCategoryResponse = await Question.getQuestionsInCategory(
-        req.query as GetQuestionsByCategoryInput
-      )
-      res.status(200).json(listQuestionsInCategoryResponse)
-    } catch (err) {
-      console.error(err)
-      next(err)
-    }
-  }
-)
 
 router.post<unknown, unknown, QuestionInput>('/', async (req, res, next) => {
   try {

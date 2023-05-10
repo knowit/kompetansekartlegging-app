@@ -1,12 +1,21 @@
 import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
 
 import { v4 as uuidv4 } from 'uuid'
-import { sqlQuery } from '../../app'
-import { CategoryInput, DeleteCategoryInput, GetCategoryInput } from './types'
+import { sqlQuery } from '../../utils/sql'
+import {
+  Category,
+  CategoryInput,
+  DeleteCategoryInput,
+  GetCategoryInput,
+} from './types'
 
 const listCategories = async () => {
   const query = 'SELECT * FROM "category"'
-  return await sqlQuery({ message: '🚀 ~ > All categories.', query })
+  return await sqlQuery<Category[]>({
+    message: '🚀 ~ > All categories.',
+    query,
+    isArray: true,
+  })
 }
 
 const getCategory = async ({ id }: GetCategoryInput) => {
@@ -22,7 +31,7 @@ const getCategory = async ({ id }: GetCategoryInput) => {
 
   const query = 'SELECT * FROM "category" WHERE id = :id'
 
-  return await sqlQuery({
+  return await sqlQuery<Category>({
     message: `🚀 ~ > Category with id ${id}`,
     query,
     parameters,
@@ -80,7 +89,7 @@ const createCategory = async ({
      VALUES(:id, :text, :description, :index, :catalog_id)
      RETURNING *`
 
-  return await sqlQuery({
+  return await sqlQuery<Category>({
     message: `🚀 ~ > Category with id ${id} was successfully created`,
     query,
     parameters,
@@ -135,7 +144,7 @@ const updateCategory = async (
     WHERE id=:id
     RETURNING *`
 
-  return await sqlQuery({
+  return await sqlQuery<Category>({
     message: `🚀 ~ > Category with id ${id} was updated`,
     query,
     parameters,
@@ -155,7 +164,7 @@ const deleteCategory = async ({ id }: DeleteCategoryInput) => {
 
   const query = `DELETE FROM "category" WHERE id=:id RETURNING *`
 
-  return await sqlQuery({
+  return await sqlQuery<Category>({
     message: `🚀 ~ > Category with id ${id} was deleted`,
     query,
     parameters,

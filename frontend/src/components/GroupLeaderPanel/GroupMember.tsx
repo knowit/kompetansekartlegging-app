@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import CircularProgress from '@material-ui/core/CircularProgress'
+import CircularProgress from '@mui/material/CircularProgress'
 
 import { t } from 'i18next'
 import { Panel, QuestionAnswer, UserAnswer } from '../../types'

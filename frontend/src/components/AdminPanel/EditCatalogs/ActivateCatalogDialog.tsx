@@ -1,10 +1,10 @@
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import ErrorIcon from '@material-ui/icons/Error'
+import ErrorIcon from '@mui/icons-material/Error'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
 
 import { useTranslation } from 'react-i18next'
 import { dialogStyles } from '../../../styles'
@@ -22,9 +22,11 @@ const ActivateCatalogDialog = ({
     <Dialog
       open={open}
       onClose={onCancel}
-      onExited={onExited}
       PaperProps={{
         style: { borderRadius: 30 },
+      }}
+      TransitionProps={{
+        onExited,
       }}
     >
       <DialogTitle className={style.dialogTitle}>

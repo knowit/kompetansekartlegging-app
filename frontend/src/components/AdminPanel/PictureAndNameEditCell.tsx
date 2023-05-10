@@ -1,8 +1,8 @@
-import Avatar from '@material-ui/core/Avatar'
-import Badge from '@material-ui/core/Badge'
-import IconButton from '@material-ui/core/IconButton'
-import { makeStyles, withStyles } from '@material-ui/core/styles'
-import EditIcon from '@material-ui/icons/Edit'
+import Avatar from '@mui/material/Avatar'
+import Badge from '@mui/material/Badge'
+import IconButton from '@mui/material/IconButton'
+import { makeStyles, withStyles } from '@mui/styles'
+import EditIcon from '@mui/icons-material/Edit'
 
 const useStyles = makeStyles({
   root: {
