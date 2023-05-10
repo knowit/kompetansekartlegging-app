@@ -1,8 +1,14 @@
-import { questionAnswerTestData, testDataUser, userFormTestData } from "./testdata/adminqueries.db.dynamodb";
+import {
+  testUserOla,
+  testUserKari,
+  testUsers,
+  userFormTestData,
+  questionAnswerTestData
+} from "./testdata/adminqueries.db.dynamodb";
 
-const questionAnswerTableName = 'QuestionAnswer'
-const userFormTableName = 'UserForm'
 const userTableName = 'User'
+const userFormTableName = 'UserForm'
+const questionAnswerTableName = 'QuestionAnswer'
 const tableMap = {
   'QuestionAnswerTable': questionAnswerTableName,
   'UserFormTable': userFormTableName,
@@ -21,35 +27,58 @@ const docClient = new DocumentClient({
 });
 
 
-// TODO: beforeEach (tøm db først?)
-beforeAll(async () => {
-  // Add User to db
-  await docClient.put({
-    TableName: userTableName,
-    Item: testDataUser
-  })
-  .promise()
-
-  // Add UserForms to db
-  userFormTestData.map(async (userForm) => {
-    await docClient.put({
-      TableName: userFormTableName,
-      Item: userForm
-    })
-    .promise()
-  })
-
-  // Add QuestionAnswers to db
-  questionAnswerTestData.map(async (questionAnswer) => {
-    await docClient.put({
-      TableName: questionAnswerTableName,
-      Item: questionAnswer
-    })
-    .promise()
-  })
-  // Ensure all db writes are completed before starting tests
-  await new Promise(resolve => setTimeout(resolve, 200))
+beforeEach(async () => {
+  await emptyDatabase()
+  await fillDatabase()
 })
+
+const emptyDatabase = async () => {
+  const [ users, userForms, questionAnswers ] = await Promise.all([
+    docClient.scan({TableName: userTableName}).promise(),
+    docClient.scan({TableName: userFormTableName}).promise(),
+    docClient.scan({TableName: questionAnswerTableName}).promise()
+  ])
+
+  await Promise.all([
+    users.Items.map(async (user: any) => {
+      await docClient.delete({TableName: userTableName, Key: {id: user.id}}).promise()
+    }),
+    userForms.Items.map(async (userForm: any) => {
+      await docClient.delete({TableName: userFormTableName, Key: {id: userForm.id}}).promise()
+    }),
+    questionAnswers.Items.map(async (qa: any) => {
+      await docClient.delete({TableName: questionAnswerTableName, Key: {id: qa.id}}).promise()
+    })
+  ])
+}
+
+const fillDatabase = async () => {
+  await Promise.all([
+    ...testUsers.map(async (testUser) => {
+      await docClient.put({
+        TableName: userTableName,
+        Item: testUser
+      })
+      .promise()
+    }),
+
+    ...userFormTestData.map(async (userForm) => {
+      await docClient.put({
+        TableName: userFormTableName,
+        Item: userForm
+      })
+      .promise()
+    }),
+
+    ...questionAnswerTestData.map(async (questionAnswer) => {
+      await docClient.put({
+        TableName: questionAnswerTableName,
+        Item: questionAnswer
+      })
+      .promise()
+    }),
+  ])
+}
 
 test('DynamoDB has correct number of items', async () => {
   // Also validates testdata in case items have the same id
@@ -61,8 +90,8 @@ test('DynamoDB has correct number of items', async () => {
   })
   .promise()
 
-  expect(userScan["Count"]).toBe(1)
-  expect(userScan["ScannedCount"]).toBe(1)
+  expect(userScan["Count"]).toBe(testUsers.length)
+  expect(userScan["ScannedCount"]).toBe(testUsers.length)
 
   // Assert correct number of UserForms
   const userFormScan = await docClient.scan({
@@ -83,16 +112,4 @@ test('DynamoDB has correct number of items', async () => {
 
   expect(questionAnswerScan["Count"]).toBe(questionAnswerTestData.length)
   expect(questionAnswerScan["ScannedCount"]).toBe(questionAnswerTestData.length)
-
 })
-
-
-/*
-test('should work', async () => {
-  await docClient.put({TableName: 'UserForm', Item: {id: '1111', createdAt: '1', owner: 'ola.nordmann@knowit.no'}}).promise()
-  const response = await adminDbQueries.getUserFormsForUser('ola.nordmann@knowit.no')
-  expect(response["Items"][0]).toEqual({
-      id: '1',
-      hello: 'world',
-    });
-})*/
