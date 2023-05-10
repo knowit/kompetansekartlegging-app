@@ -68,7 +68,7 @@ router.get<any, any, any, any>(
       const results = organizations.map(org => {
         return Promise.all([
           Admin.getOrganizationIdFromIdentifierAttribute(org).then(response =>
-            Admin.getUsersInOrganization(response.data.id)
+            Admin.getUsersInOrganization(response.data)
           ),
           listUsersInGroup(org, 25, nextToken),
         ])
@@ -123,12 +123,18 @@ const annotateUsers = async (users: IUser[], cognitoUsers: UsersListType) => {
   return usersAnnotated
 }
 
-const annotateUserWithGroup = async (user: IUser) =>
-  await Group.getGroup({ id: user.group_id }).then(response => {
-    return {
-      ...user,
-      group_leader_username: response.data.group_leader_username,
-    }
-  })
+const annotateUserWithGroup = async (user: IUser) => {
+  try {
+    return await Group.getGroup({ id: user.group_id }).then(response => {
+      const { organization_id, ...u } = {
+        ...user,
+        group_leader_username: response.data?.group_leader_username ?? '',
+      }
+      return u
+    })
+  } catch {
+    return { ...user, group_leader_username: '' }
+  }
+}
 
 export { router as adminRouter }
