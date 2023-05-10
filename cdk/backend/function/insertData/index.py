@@ -115,9 +115,9 @@ def create_dummy_data():
         f"({getValueOnSqlFormat(organization_id)}, 'dummy', 'dummy', 'dummy') ON CONFLICT (organization_name) DO NOTHING;\n"
     )
     sqlInsertStatement += (
-        'INSERT INTO "user" (id, mail, group_id, organization_id)\nVALUES '
-        f"({getValueOnSqlFormat(str(uuid.uuid4()))}, 'dummyUser@dummy', NULL, {getValueOnSqlFormat(organization_id)}) "
-        "ON CONFLICT (mail) DO NOTHING;"
+        'INSERT INTO "user" (username, group_id, organization_id)\nVALUES '
+        f"('dummyUser@dummy', NULL, {getValueOnSqlFormat(organization_id)}) "
+        "ON CONFLICT (username) DO NOTHING;"
     )
     return sqlInsertStatement
 
@@ -129,8 +129,8 @@ def organizationSQL(file, start, end):
             f"\n({getValueOnSqlFormat(str(uuid.uuid4()))},"
             f"{getValueOnSqlFormat(row.createdAt, isUTC=True)},"
             f"{getValueOnSqlFormat(row.orgname)},{getValueOnSqlFormat(row.identifierAttribute)},"
-            f"{getValueOnSqlFormat(row.id)}),"
-            f"NULL,"
+            f"{getValueOnSqlFormat(row.id)},"
+            f"NULL),"
         )
     sqlInsertStatment = (
         sqlInsertStatment.rstrip(sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
@@ -161,7 +161,8 @@ def formDefinitionSQL(file, start, end):
         sqlInsertStatment += (
             f"\n({getValueOnSqlFormat(row.id, isUUID=True)},"
             f"{getValueOnSqlFormat(row.label)},{getValueOnSqlFormat(row.createdAt, isUTC=True)},"
-            f"{getValueOnSqlFormat(row.updatedAt, isUTC=True)},(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)})),"
+            f"{getValueOnSqlFormat(row.updatedAt, isUTC=True)},"
+            f"(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)})),"
         )
     sqlInsertStatment = (
         sqlInsertStatment.rstrip(sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
@@ -212,7 +213,7 @@ def questionAnswerSQL(file, start, end):
             f"{getValueOnSqlFormat(row.questionID, isUUID=True)},"
             f"{getValueOnSqlFormat(row.knowledge, isNumber=True)},{getValueOnSqlFormat(row.motivation, isNumber=True)},"
             f"{getValueOnSqlFormat(row.customScaleValue, isNumber=True)},{getValueOnSqlFormat(row.textValue)},"
-            f"(SELECT COALESCE ((SELECT u.id FROM \"user\" u WHERE u.mail = {getValueOnSqlFormat(row.owner)}),(SELECT du.id FROM \"user\" du WHERE du.mail = {getValueOnSqlFormat('dummyUser@dummy')})))),"
+            f"(SELECT COALESCE ((SELECT u.username FROM \"user\" u WHERE u.username = {getValueOnSqlFormat(row.owner)}),(SELECT du.username FROM \"user\" du WHERE du.username = {getValueOnSqlFormat('dummyUser@dummy')})))),"
         )
     sqlInsertStatment = sqlInsertStatment.rstrip(sqlInsertStatment[-1])
     sqlInsertStatment += ") as x (id, question_id, knowledge, motivation, custom_scale_value, text_value, user_username) WHERE EXISTS (SELECT 1 FROM question q WHERE q.id = x.question_id) ON CONFLICT DO NOTHING;"
@@ -222,16 +223,16 @@ def questionAnswerSQL(file, start, end):
 
 def userSQL(file, start, end):
     sqlInsertStatment = (
-        'INSERT INTO "user" (id, mail, group_id, organization_id)\nVALUES'
+        'INSERT INTO "user" (username, group_id, organization_id)\nVALUES'
     )
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += (
-            f"\n({getValueOnSqlFormat(str(uuid.uuid4()), isUUID=True)},{getValueOnSqlFormat(row.id)},"
-            f"NULL,(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)})),"
+            f"\n({getValueOnSqlFormat(row.id)},{getValueOnSqlFormat(row.groupID)},"
+            f"(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)})),"
         )
     sqlInsertStatment = (
         sqlInsertStatment.rstrip(sqlInsertStatment[-1])
-        + " ON CONFLICT (mail) DO NOTHING;"
+        + " ON CONFLICT (username) DO NOTHING;"
     )
     print(sqlInsertStatment)
     return sqlInsertStatment
@@ -239,12 +240,12 @@ def userSQL(file, start, end):
 
 def groupSQL(file, start, end):
     sqlInsertStatment = (
-        'INSERT INTO "group" (id, organization_id, group_leader_id)\nVALUES'
+        'INSERT INTO "group" (id, organization_id, group_leader_username)\nVALUES'
     )
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += (
             f"\n({getValueOnSqlFormat(row.id, isUUID=True)},"
-            f"(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)}), (SELECT COALESCE((SELECT u.id FROM \"user\" u WHERE u.mail = {getValueOnSqlFormat(row.groupLeaderUsername)}), (SELECT du.id FROM \"user\" du WHERE du.mail = {getValueOnSqlFormat('dummyUser@dummy')})))),"
+            f"(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)}), (SELECT COALESCE((SELECT u.username FROM \"user\" u WHERE u.username = {getValueOnSqlFormat(row.groupLeaderUsername)}), (SELECT du.username FROM \"user\" du WHERE du.username = {getValueOnSqlFormat('dummyUser@dummy')})))),"
         )
     sqlInsertStatment = (
         sqlInsertStatment.rstrip(sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
@@ -256,14 +257,14 @@ def groupSQL(file, start, end):
 def add_group_id_to_user(file, start, end):
     sqlUpdateStatement = ""
     for row in file.loc[start:end].itertuples():
-        sqlUpdateStatement += f'UPDATE "user"\n SET group_id = {getValueOnSqlFormat(row.groupID)}\nWHERE mail = {getValueOnSqlFormat(row.id)};'
+        sqlUpdateStatement += f'UPDATE "user"\n SET group_id = {getValueOnSqlFormat(row.groupID)}\nWHERE username = {getValueOnSqlFormat(row.id)};'
     print(sqlUpdateStatement)
     return sqlUpdateStatement
 
 
 def add_active_catalog_to_organization():
     sqlUpdateStatement = ""
-    sqlUpdateStatement += "UPDATE organization SET active_catalog_id = (SELECT id FROM catalog WHERE organization_id = organization.id ORDER BY created_at DESC LIMIT 1)"
+    sqlUpdateStatement += "UPDATE organization SET active_catalog_id = (SELECT c.id FROM catalog c WHERE c.organization_id = organization.id ORDER BY created_at DESC LIMIT 1);"
     print(sqlUpdateStatement)
     return sqlUpdateStatement
 

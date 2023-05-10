@@ -12,6 +12,7 @@ const router = express.Router()
 
 // Get all catalogs
 router.get('/', async (req, res, next) => {
+  if (req.query.id) next()
   try {
     const listResponse = await Catalog.listCatalogs()
 
@@ -24,7 +25,7 @@ router.get('/', async (req, res, next) => {
 
 // Get active catalog by organization
 router.get<unknown, unknown, unknown, GetOrganizationInput>(
-  '/:id',
+  '/',
   async (req, res, next) => {
     try {
       const getCatalogResponse = await Catalog.findActiveCatalogByOrganization(

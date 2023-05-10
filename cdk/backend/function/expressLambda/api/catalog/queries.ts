@@ -32,7 +32,9 @@ const findActiveCatalogByOrganization = async ({
       typeHint: TypeHint.UUID,
     },
   ]
-  const query = 'SELECT * FROM organization o RIGHT JOIN catalog c ON o.active_catalog_id = c.id WHERE o.id = :id'
+
+  const query = 'SELECT * FROM catalog c WHERE c.id = (SELECT o.active_catalog_id FROM organization o WHERE o.id =:id)'
+
   return await sqlQuery({
     message: `🚀 ~ > Active catalog of organization with id ${id}`,
     query,
