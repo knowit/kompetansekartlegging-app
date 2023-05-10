@@ -14,11 +14,11 @@ router.get<unknown, unknown, unknown, GetGroupQuery>(
       const members: UserAnnotated[] = []
       const { id } = req.query
       const group = await Group.getGroup({ id })
-      const groupLeader = await getUser(group.data.group_leader_username)
+      const groupLeader = await getUser(group.data!.group_leader_username)
       const groupMembers = await Group.listUsersInGroup({ group_id: id })
       console.log(groupMembers.data)
       await Promise.all(
-        groupMembers.data.map(async (user: User) => {
+        groupMembers.data!.map(async (user: User) => {
           return getUser(user.username).then((member: AdminGetUserResponse) => {
             const { Username, ...newMember } = { ...user, ...member }
             members.push(newMember)

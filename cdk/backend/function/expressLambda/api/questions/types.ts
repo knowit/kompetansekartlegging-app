@@ -1,7 +1,7 @@
 // TODO: Fix this endpoint
 // ! Validate that question and questionAnswer
 
-interface Question {
+export interface Question {
   id: string
   text: string | null
   topic: string

@@ -3,7 +3,9 @@ import QuestionAnswer from './queries'
 import {
   DeleteQuestionAnswerInput,
   GetQuestionAnswerInput,
+  IQuestionAnswer,
   QuestionAnswerInput,
+  QuestionAnswerResponses,
 } from './types'
 
 const router = express.Router()
@@ -86,23 +88,28 @@ router.delete<unknown, unknown, DeleteQuestionAnswerInput>(
   }
 )
 
-interface Response {
-  message: string
-  data: {}
-}
-
 // Batch create questionAnswers
 router.post<unknown, unknown, QuestionAnswerInput[]>(
   '/batch',
   async (req, res, next) => {
     try {
-      const responses: Response[] = []
+      let responses: QuestionAnswerResponses = {
+        status: 'ok',
+        message: '🚀 ~ > Created questionAnswers from batch',
+        data: [],
+      }
+      const data: (IQuestionAnswer | null)[] = []
       await Promise.all(
         req.body.map(async qa => {
-          const createQuestionAnswerResponse: Response = await QuestionAnswer.createQuestionAnswer(
-            qa
-          )
-          responses.push(createQuestionAnswerResponse)
+          await QuestionAnswer.createQuestionAnswer(qa).then(response => {
+            data.push(response.data)
+            responses = {
+              ...responses,
+              status:
+                response.status === 'ok' ? responses.status : response.status,
+              data: data,
+            }
+          })
         })
       )
       res.status(200).json(responses)

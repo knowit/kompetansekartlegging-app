@@ -5,13 +5,18 @@ import { createTimestampNow } from '../utils'
 import {
   DeleteQuestionAnswerInput,
   GetQuestionAnswerInput,
+  QuestionAnswer,
   QuestionAnswerInput,
 } from './types'
 
 const listQuestionAnswers = async () => {
   const query = 'SELECT id FROM question_answer'
 
-  return await sqlQuery({ message: '🚀 ~ > All question_answers', query })
+  return await sqlQuery<QuestionAnswer[]>({
+    message: '🚀 ~ > All question_answers',
+    query,
+    isArray: true,
+  })
 }
 
 const getQuestionAnswer = async ({ id }: GetQuestionAnswerInput) => {
@@ -26,7 +31,7 @@ const getQuestionAnswer = async ({ id }: GetQuestionAnswerInput) => {
   ]
   const query = 'SELECT * FROM question_answer WHERE id = :id'
 
-  return await sqlQuery({
+  return await sqlQuery<QuestionAnswer>({
     message: `🚀 ~ > Question Answer with id: ${id}`,
     query,
     parameters,
@@ -99,7 +104,7 @@ const createQuestionAnswer = async ({
     VALUES(:id, :user_username, :questionid, :knowledge, :motivation, :customscalevalue, :textvalue)
     RETURNING *`
 
-  return await sqlQuery({
+  return await sqlQuery<QuestionAnswer>({
     message: `🚀 ~ > Question Answer with id: ${id} was successfully created`,
     query,
     parameters,
@@ -182,7 +187,7 @@ const updateQuestionAnswer = async (
         WHERE id=:id
         RETURNING *`
 
-  return await sqlQuery({
+  return await sqlQuery<QuestionAnswer>({
     message: `🚀 ~ > questionAnswer with id: ${id} was updated`,
     query,
     parameters,
@@ -202,7 +207,7 @@ const deleteQuestionAnswer = async ({ id }: DeleteQuestionAnswerInput) => {
 
   const query = `DELETE FROM question_answer WHERE id=:id RETURNING *`
 
-  return await sqlQuery({
+  return await sqlQuery<QuestionAnswer>({
     message: `🚀 ~ > QuestionAnswer with id: ${id} was deleted`,
     query,
     parameters,
@@ -275,7 +280,7 @@ const createQuestionAnswerFromBatch = async ({
   VALUES(:id, :user_username, :questionid, :knowledge, :motivation, :customscalevalue, :textvalue)
   RETURNING *`
 
-  return await sqlQuery({
+  return await sqlQuery<QuestionAnswer>({
     message: `🚀 ~ > QuestionAnswer with id: ${id} has been added or updated`,
     query,
     parameters,
