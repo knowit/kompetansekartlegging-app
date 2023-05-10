@@ -1,16 +1,16 @@
-import commonStyles from './common.module.css'
+import Paper from '@mui/material/Paper'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
-import Paper from '@mui/material/Paper'
+import commonStyles from './common.module.css'
 
-import { getAttribute } from './helpers'
+import { useTranslation } from 'react-i18next'
+import { ORGANIZATION_ID_ATTRIBUTE } from '../../constants'
 import Table from '../mui/Table'
 import TableRow from '../mui/TableRow'
 import PictureAndNameCell from './PictureAndNameCell'
-import { useTranslation } from 'react-i18next'
-import { ORGANIZATION_ID_ATTRIBUTE } from '../../constants'
+import { getAttribute } from './helpers'
 
 const User = ({ user, selected, setSelectedUser, showOrgId }: any) => {
   const name = getAttribute(user, 'name')

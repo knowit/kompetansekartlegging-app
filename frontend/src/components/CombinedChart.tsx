@@ -1,16 +1,16 @@
 import makeStyles from '@mui/styles/makeStyles'
 import { useTranslation } from 'react-i18next'
 import {
-  BarChart,
   Bar,
+  BarChart,
   CartesianGrid,
+  Label,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
+  TooltipProps,
   XAxis,
   YAxis,
-  Tooltip,
-  Label,
-  ResponsiveContainer,
-  ReferenceLine,
-  TooltipProps,
 } from 'recharts'
 import {
   NameType,

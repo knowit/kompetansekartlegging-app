@@ -1,18 +1,17 @@
 import { v4 as uuidv4 } from 'uuid'
 
+import { API, Auth } from 'aws-amplify'
 import { callGraphQL } from '../../helperFunctions'
 import { store } from '../../redux/store'
-import { API, Auth } from 'aws-amplify'
 
 import {
-  // CategoriesByFormDefinitionQuery,
-  Query,
-  Mutation,
   Category,
   // DeleteCategoryMutation,
   // DeleteFormDefinitionMutation,
   // DeleteQuestionMutation,
   FormDefinition,
+  Mutation,
+  Query,
   Question,
   // QuestionsByCategoryQuery,
   // UpdateCategoryMutation,
@@ -21,27 +20,25 @@ import {
   // CreateFormDefinitionMutation,
   // CreateCategoryMutation,
   QuestionType,
-  // CreateQuestionMutation,
-  // FormDefinitionByOrganizationIdQuery,
 } from '../../API'
+import {
+  createCategory as createCategoryGq,
+  createFormDefinition as createFormDefinitionGq,
+  createQuestion as createQuestionGq,
+  deleteCategory as deleteCategoryGq,
+  deleteFormDefinition as deleteFormDefinitionGq,
+  deleteQuestion as deleteQuestionGq,
+  updateCategory as updateCategoryGq,
+  updateFormDefinition as updateFormDefinitionGq,
+  updateQuestion as updateQuestionGq,
+} from '../../graphql/mutations'
 import {
   categoriesByFormDefinition,
   formDefinitionByOrganizationId,
   questionsByCategory,
 } from '../../graphql/queries'
-import {
-  updateCategory as updateCategoryGq,
-  updateQuestion as updateQuestionGq,
-  updateFormDefinition as updateFormDefinitionGq,
-  deleteFormDefinition as deleteFormDefinitionGq,
-  deleteCategory as deleteCategoryGq,
-  deleteQuestion as deleteQuestionGq,
-  createFormDefinition as createFormDefinitionGq,
-  createCategory as createCategoryGq,
-  createQuestion as createQuestionGq,
-} from '../../graphql/mutations'
-import { ApiResponse } from './adminApi'
 import i18n from '../../i18n/i18n'
+import { ApiResponse } from './adminApi'
 
 const listAllFormDefinitionsForLoggedInUser = async (): Promise<
   ApiResponse<FormDefinition[]>

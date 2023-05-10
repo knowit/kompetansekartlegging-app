@@ -14,10 +14,10 @@ import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import TextField from '@mui/material/TextField'
 
+import { useTranslation } from 'react-i18next'
 import { QuestionType } from '../../../API'
 import { dialogStyles } from '../../../styles'
 import { CloseIcon } from '../../DescriptionTable'
-import { useTranslation } from 'react-i18next'
 
 const AddQuestionDialog = ({ onCancel, onConfirm, open }: any) => {
   const { t } = useTranslation()

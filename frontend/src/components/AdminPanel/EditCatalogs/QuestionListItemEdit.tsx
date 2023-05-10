@@ -11,10 +11,10 @@ import RadioGroup from '@mui/material/RadioGroup'
 import { createStyles, makeStyles } from '@mui/styles'
 import TextField from '@mui/material/TextField'
 
+import { useTranslation } from 'react-i18next'
 import { QuestionType } from '../../../API'
 import { KnowitColors } from '../../../styles'
 import CategoriesSelect from './CategoriesSelect'
-import { useTranslation } from 'react-i18next'
 import EditActionButtons from './EditActionButtons'
 
 const useQuestionListStyles = makeStyles(() =>

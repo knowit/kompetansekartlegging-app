@@ -13,8 +13,8 @@ import { ReactComponent as M5 } from '../icons/M - perfekt.svg'
 import { ReactComponent as M2 } from '../icons/M - vedbehov.svg'
 
 import { Tooltip } from '@mui/material'
-import i18n from '../i18n/i18n'
 import { Fragment } from 'react'
+import i18n from '../i18n/i18n'
 
 const getIconDescription = (knowledge: boolean, level: number): string => {
   if (knowledge) {

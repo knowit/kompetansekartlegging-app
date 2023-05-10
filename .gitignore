@@ -67,9 +67,14 @@ __pycache__
 
 *.xlsx
 
+# SSO script
+aws_sso.ps1
+
+# Tooling
+Makefile
+.tool-versions
+poetry.lock
 .idea
 
 # Env
-poetry.lock
-.tool-versions
 pyproject.toml

@@ -1,22 +1,22 @@
 import makeStyles from '@mui/styles/makeStyles'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useSwipeable } from 'react-swipeable'
 import {
-  BarChart,
   Bar,
+  BarChart,
   CartesianGrid,
+  Label,
+  ReferenceLine,
+  ResponsiveContainer,
   XAxis,
   YAxis,
-  Label,
-  ResponsiveContainer,
-  ReferenceLine,
 } from 'recharts'
+import { wrapString } from '../helperFunctions'
 import { GetIcon } from '../icons/iconController'
 import { KnowitColors } from '../styles'
 import { ChartData, CombinedChartProps } from '../types'
-import { wrapString } from '../helperFunctions'
-import { useSwipeable } from 'react-swipeable'
 import { OverviewType } from './TypedOverviewChart'
-import { useTranslation } from 'react-i18next'
 
 const numTicks = 5
 const chartSplitAt = numTicks + 2

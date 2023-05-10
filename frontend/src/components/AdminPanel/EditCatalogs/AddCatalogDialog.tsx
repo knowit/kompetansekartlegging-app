@@ -9,9 +9,9 @@ import DialogTitle from '@mui/material/DialogTitle'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 
+import { useTranslation } from 'react-i18next'
 import { dialogStyles } from '../../../styles'
 import { CloseIcon } from '../../DescriptionTable'
-import { useTranslation } from 'react-i18next'
 
 const AddCatalogDialog = ({ onCancel, onConfirm, open }: any) => {
   const { t } = useTranslation()

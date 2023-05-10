@@ -1,21 +1,21 @@
 import { useState } from 'react'
 
+import DeleteIcon from '@mui/icons-material/Delete'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
-import PersonAddIcon from '@mui/icons-material/PersonAdd'
-import DeleteIcon from '@mui/icons-material/Delete'
 
+import { useTranslation } from 'react-i18next'
+import { i18nDateToLocaleDateString } from '../../i18n/i18n'
+import { KnowitColors } from '../../styles'
 import Button from '../mui/Button'
 import Table from '../mui/Table'
 import TableRow from '../mui/TableRow'
-import { useTranslation } from 'react-i18next'
-import { i18nDateToLocaleDateString } from '../../i18n/i18n'
 import AddMemberToGroupDialog from './AddMemberToGroupDialog'
-import { getAttribute } from './helpers'
 import PictureAndNameCell from './PictureAndNameCell'
-import { KnowitColors } from '../../styles'
+import { getAttribute } from './helpers'
 
 const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
   const { t } = useTranslation()

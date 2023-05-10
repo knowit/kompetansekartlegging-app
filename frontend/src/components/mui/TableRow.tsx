@@ -1,5 +1,5 @@
-import { createStyles, withStyles } from '@mui/styles'
 import TableRow from '@mui/material/TableRow'
+import { createStyles, withStyles } from '@mui/styles'
 import { KnowitColors } from '../../styles'
 
 const StyledTableRow = withStyles(() =>

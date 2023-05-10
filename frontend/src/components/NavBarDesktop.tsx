@@ -1,3 +1,4 @@
+import HelpIcon from '@mui/icons-material/Help'
 import {
   AppBar,
   Avatar,
@@ -18,16 +19,15 @@ import {
   Toolbar,
 } from '@mui/material'
 import { makeStyles } from '@mui/styles'
-import HelpIcon from '@mui/icons-material/Help'
 import { KeyboardEvent, useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import ReactMarkdown from 'react-markdown'
 import { ReactComponent as KnowitLogo } from '../Logotype-Knowit-Digital-white 1.svg'
-import { useAppSelector } from '../redux/hooks'
 import { selectUserState } from '../redux/User'
-import { LanguageSelect } from './LanguageSelect'
-import { useTranslation } from 'react-i18next'
+import { useAppSelector } from '../redux/hooks'
 import { KnowitColors } from '../styles'
 import { NavBarPropsDesktop, UserRole } from '../types'
+import { LanguageSelect } from './LanguageSelect'
 
 const navbarStyles = makeStyles((theme) => ({
   root: {

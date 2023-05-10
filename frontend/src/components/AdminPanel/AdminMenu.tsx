@@ -1,9 +1,9 @@
-import { Dispatch, SetStateAction } from 'react'
 import { Button } from '@mui/material'
 import clsx from 'clsx'
+import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SubmenuCategory } from './AdminPanel'
 import { Panel } from '../../types'
+import { SubmenuCategory } from './AdminPanel'
 
 type AdminMenuProps = {
   show: boolean

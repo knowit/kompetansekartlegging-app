@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+import DeleteIcon from '@mui/icons-material/Delete'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -11,17 +13,17 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
-import DeleteIcon from '@mui/icons-material/Delete'
-import PersonAddIcon from '@mui/icons-material/PersonAdd'
-import { useAppSelector } from '../../redux/hooks'
+import { useTranslation } from 'react-i18next'
 import {
   selectGroupLeaderCognitoGroupName,
   selectUserState,
 } from '../../redux/User'
-import { useTranslation } from 'react-i18next'
+import { useAppSelector } from '../../redux/hooks'
 import Button from '../mui/Button'
 import Table from '../mui/Table'
 import AddUserToGroupDialog from './AddUserToGroupDialog'
+import DeleteUserFromGroupDialog from './DeleteUserFromGroupDialog'
+import PictureAndNameCell from './PictureAndNameCell'
 import {
   addUserToGroup,
   listAllUsersInOrganization,
@@ -29,9 +31,7 @@ import {
   removeUserFromGroup,
 } from './adminApi'
 import commonStyles from './common.module.css'
-import DeleteUserFromGroupDialog from './DeleteUserFromGroupDialog'
 import { getAttribute } from './helpers'
-import PictureAndNameCell from './PictureAndNameCell'
 import useApiGet from './useApiGet'
 
 const GroupLeader = (props: any) => {

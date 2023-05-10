@@ -1,9 +1,9 @@
+import { Slider as CoreSlider, Theme } from '@mui/material'
+import { makeStyles, withStyles } from '@mui/styles'
 import { useEffect, useState } from 'react'
-import { SliderProps } from '../types'
 import * as helper from '../helperFunctions'
 import { KnowitColors } from '../styles'
-import { Slider as CoreSlider, Theme } from '@mui/material'
-import { withStyles, makeStyles } from '@mui/styles'
+import { SliderProps } from '../types'
 
 const ValueSlider = withStyles(
   {

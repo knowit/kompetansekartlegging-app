@@ -2,9 +2,9 @@ import clsx from 'clsx'
 
 import { Button } from '@mui/material'
 
-import { getAttribute } from '../AdminPanel/helpers'
-import { Panel } from '../../types'
 import { useTranslation } from 'react-i18next'
+import { Panel } from '../../types'
+import { getAttribute } from '../AdminPanel/helpers'
 
 const GroupLeaderMenu = ({
   members,

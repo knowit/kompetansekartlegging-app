@@ -1,12 +1,12 @@
-import clsx from 'clsx'
-import { QuestionType } from '../API'
-import { QuestionProps, SliderKnowledgeMotivationValues } from '../types'
-import Slider from './Slider'
 import { makeStyles } from '@mui/styles'
-import { KnowitColors } from '../styles'
-import * as Icon from '../icons/iconController'
-import { AlertNotification } from './AlertNotification'
+import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
+import { QuestionType } from '../API'
+import * as Icon from '../icons/iconController'
+import { KnowitColors } from '../styles'
+import { QuestionProps, SliderKnowledgeMotivationValues } from '../types'
+import { AlertNotification } from './AlertNotification'
+import Slider from './Slider'
 
 const questionStyleDesktop = makeStyles({
   root: {

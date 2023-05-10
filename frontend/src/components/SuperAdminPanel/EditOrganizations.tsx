@@ -1,5 +1,7 @@
 import { FC, useState } from 'react'
 
+import AddIcon from '@mui/icons-material/Add'
+import DeleteIcon from '@mui/icons-material/Delete'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -11,27 +13,27 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
-import DeleteIcon from '@mui/icons-material/Delete'
 import commonStyles from '../AdminPanel/common.module.css'
 import Button from '../mui/Button'
 import Table from '../mui/Table'
 
-import AddIcon from '@mui/icons-material/Add'
-import useApiGet from '../AdminPanel/useApiGet'
+import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+import {
+  createOrganization,
+  deleteOrganization,
+  getAllOrganizations,
+} from '../../api/organizations'
+import {
+  Organization as Org,
+  OrganizationInput,
+} from '../../api/organizations/types'
 import AddOrganizationDialog from './AddOrganizationDialog'
 import DeleteOrganizationDialog from './DeleteOrganizationDialog'
-import { useTranslation } from 'react-i18next'
-import { t } from 'i18next'
-import {
-  addOrganization,
-  getOrganizations,
-  removeOrganization,
-} from './SuperAdminAPI'
-import { OrganizationInfo } from './SuperAdminTypes'
 
 interface OrganizationProps {
-  organization: OrganizationInfo
-  deleteOrganization: (id: OrganizationInfo) => void
+  organization: Org
+  deleteOrganization: (id: Org) => void
 }
 
 const Organization: FC<OrganizationProps> = ({
@@ -41,9 +43,9 @@ const Organization: FC<OrganizationProps> = ({
   return (
     <>
       <TableRow>
-        <TableCell>{organization.name}</TableCell>
+        <TableCell>{organization.orgname}</TableCell>
         <TableCell>{organization.id}</TableCell>
-        <TableCell>{organization.identifierAttribute}</TableCell>
+        <TableCell>{organization.identifier_attribute}</TableCell>
         <TableCell align="center">
           <IconButton
             edge="end"
@@ -59,8 +61,8 @@ const Organization: FC<OrganizationProps> = ({
 }
 
 interface OrganizationTableProps {
-  organizations: OrganizationInfo[]
-  deleteOrganization: (id: OrganizationInfo) => void
+  organizations: Org[]
+  deleteOrganization: (id: Org) => void
 }
 
 const OrganizationTable: FC<OrganizationTableProps> = ({
@@ -96,13 +98,14 @@ const OrganizationTable: FC<OrganizationTableProps> = ({
 
 const EditOrganizations = () => {
   const {
-    result: organizations,
+    data: organizations,
     error,
-    loading,
-    refresh: refreshOrganizations,
-  } = useApiGet({
-    getFn: getOrganizations,
+    isLoading,
+  } = useQuery({
+    queryKey: ['edit_organizations'],
+    queryFn: getAllOrganizations,
   })
+  const { t } = useTranslation()
 
   const [mutationError, setMutationError] = useState<string>('')
 
@@ -110,14 +113,11 @@ const EditOrganizations = () => {
   const [showDeleteOrganization, setShowDeleteOrganization] =
     useState<boolean>(false)
   const [organizationToBeDeleted, setOrganizationToBeDeleted] =
-    useState<OrganizationInfo | null>(null)
+    useState<Org | null>(null)
 
-  const addOrganizationConfirm = (
-    organization: OrganizationInfo,
-    adminEmail: string
-  ) => {
-    addOrganization(organization, adminEmail)
-      .then(() => {
+  const addOrganizationConfirm = (organization: OrganizationInput) => {
+    createOrganization(organization)
+      .then((res) => {
         setMutationError('')
       })
       .catch((err) => {
@@ -125,25 +125,21 @@ const EditOrganizations = () => {
       })
       .finally(() => {
         setShowAddOrganization(false)
-        refreshOrganizations()
       })
   }
 
-  const openDeleteOrganizationDialog = (organization: OrganizationInfo) => {
+  const openDeleteOrganizationDialog = (organization: Org) => {
     setOrganizationToBeDeleted(organization)
     setShowDeleteOrganization(true)
   }
 
-  const deleteOrganizationConfirm = (organization: OrganizationInfo) => {
-    removeOrganization(organization)
-      .then(() => {
+  const deleteOrganizationConfirm = (organization: Org) => {
+    deleteOrganization(organization)
+      .then((res) => {
         setMutationError('')
       })
       .catch((err) => {
         setMutationError(err)
-      })
-      .finally(() => {
-        refreshOrganizations()
       })
   }
 
@@ -155,32 +151,35 @@ const EditOrganizations = () => {
           <p>{t('errorOccured') + mutationError}</p>
         </>
       )}
-      {loading && <CircularProgress />}
-      {!error && !loading && (
-        <>
-          <Card style={{ marginBottom: '24px' }} variant="outlined">
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                {t('menu.submenu.editOrganizations')}
-              </Typography>
-              {t('superAdmin.editOrganizations.description')}
-            </CardContent>
-          </Card>
-          <OrganizationTable
-            organizations={organizations}
-            deleteOrganization={openDeleteOrganizationDialog}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddIcon />}
-            style={{ marginTop: '24px' }}
-            onClick={() => setShowAddOrganization(true)}
-          >
-            {t('superAdmin.editOrganizations.addOrganization')}
-          </Button>
-        </>
-      )}
+      {isLoading && <CircularProgress />}
+      {!error &&
+        !isLoading &&
+        organizations !== undefined &&
+        organizations.data !== null && (
+          <>
+            <Card style={{ marginBottom: '24px' }} variant="outlined">
+              <CardContent>
+                <Typography color="textSecondary" gutterBottom>
+                  {t('menu.submenu.editOrganizations')}
+                </Typography>
+                {t('superAdmin.editOrganizations.description')}
+              </CardContent>
+            </Card>
+            <OrganizationTable
+              organizations={organizations.data}
+              deleteOrganization={openDeleteOrganizationDialog}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddIcon />}
+              style={{ marginTop: '24px' }}
+              onClick={() => setShowAddOrganization(true)}
+            >
+              {t('superAdmin.editOrganizations.addOrganization')}
+            </Button>
+          </>
+        )}
       {showAddOrganization && (
         <AddOrganizationDialog
           open={showAddOrganization}

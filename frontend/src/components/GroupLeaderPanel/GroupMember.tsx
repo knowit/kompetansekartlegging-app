@@ -1,19 +1,19 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import CircularProgress from '@mui/material/CircularProgress'
 
+import { t } from 'i18next'
+import { Panel, QuestionAnswer, UserAnswer } from '../../types'
+import { getAttribute } from '../AdminPanel/helpers'
+import AnswerDiagram from '../AnswerDiagram'
 import {
-  fetchLastFormDefinition,
   createQuestionAnswers,
+  fetchLastFormDefinition,
   getUserAnswers,
   setFirstAnswers,
 } from '../answersApi'
-import { getAttribute } from '../AdminPanel/helpers'
-import { Panel, UserAnswer, QuestionAnswer } from '../../types'
 import { Overview } from '../cards/Overview'
-import AnswerDiagram from '../AnswerDiagram'
 import Nav from './Nav'
-import { t } from 'i18next'
 
 const voidFn = () => 1
 

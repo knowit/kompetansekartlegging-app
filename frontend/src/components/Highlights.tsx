@@ -1,7 +1,7 @@
 import { makeStyles } from '@mui/styles'
 import clsx from 'clsx'
-import { useTranslation } from 'react-i18next'
 import { Fragment, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { wrapString } from '../helperFunctions'
 import { GetIcon } from '../icons/iconController'
 import { KnowitColors } from '../styles'

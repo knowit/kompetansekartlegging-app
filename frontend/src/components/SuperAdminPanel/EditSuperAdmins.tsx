@@ -1,26 +1,26 @@
 import { useState } from 'react'
 
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CircularProgress from '@mui/material/CircularProgress'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
-import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
 import { useTranslation } from 'react-i18next'
+import { SUPER_ADMIN_COGNITO_GROUP } from '../../constants'
 import AddUserToGroupDialog from '../AdminPanel/AddUserToGroupDialog'
+import AdminTable from '../AdminPanel/AdminTable'
+import DeleteUserFromGroupDialog from '../AdminPanel/DeleteUserFromGroupDialog'
 import {
   addUserToGroup,
-  listSuperAdmins,
   listAllUsers,
+  listSuperAdmins,
   removeUserFromGroup,
 } from '../AdminPanel/adminApi'
 import commonStyles from '../AdminPanel/common.module.css'
-import DeleteUserFromGroupDialog from '../AdminPanel/DeleteUserFromGroupDialog'
 import useApiGet from '../AdminPanel/useApiGet'
 import Button from '../mui/Button'
-import AdminTable from '../AdminPanel/AdminTable'
-import { SUPER_ADMIN_COGNITO_GROUP } from '../../constants'
 
 const EditSuperAdmins = () => {
   const { t } = useTranslation()

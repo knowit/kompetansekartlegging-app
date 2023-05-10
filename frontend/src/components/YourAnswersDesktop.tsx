@@ -1,14 +1,14 @@
-import { useRef } from 'react'
 import { Button } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import clsx from 'clsx'
+import { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { KnowitColors } from '../styles'
 import { Panel, YourAnswerProps } from '../types'
 import AnswerDiagram from './AnswerDiagram'
 import { BlockInfo } from './BlockInfo'
 import { Form } from './Form'
 import ProgressBar from './ProgressBar'
-import { useTranslation } from 'react-i18next'
 
 const cardCornerRadius = 40
 const zIndex = 20

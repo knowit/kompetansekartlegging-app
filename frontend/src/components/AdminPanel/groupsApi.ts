@@ -11,7 +11,6 @@ import {
   ADMIN_COGNITOGROUP_SUFFIX,
   GROUPLEADER_COGNITOGROUP_SUFFIX,
 } from '../../constants'
-import i18n from '../../i18n/i18n'
 import {
   createGroup,
   createUser,
@@ -22,6 +21,7 @@ import {
 } from '../../graphql/mutations'
 import { listGroups, listUsers, usersByGroup } from '../../graphql/queries'
 import { callGraphQL } from '../../helperFunctions'
+import i18n from '../../i18n/i18n'
 import { ApiResponse } from './adminApi'
 
 const getGroupMembers = async (

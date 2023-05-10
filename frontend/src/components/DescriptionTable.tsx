@@ -1,12 +1,12 @@
-import { FunctionComponent, MouseEventHandler, SVGProps } from 'react'
-import * as Icon from '../icons/iconController'
-import { makeStyles } from '@mui/styles'
-import clsx from 'clsx'
-import { KnowitColors } from '../styles'
 import IconButton from '@mui/material/IconButton'
 import SvgIcon from '@mui/material/SvgIcon'
-import i18n from '../i18n/i18n'
+import { makeStyles } from '@mui/styles'
+import clsx from 'clsx'
+import { FunctionComponent, MouseEventHandler, SVGProps } from 'react'
 import { useTranslation } from 'react-i18next'
+import i18n from '../i18n/i18n'
+import * as Icon from '../icons/iconController'
+import { KnowitColors } from '../styles'
 
 export const CloseIcon = () => (
   <SvgIcon>

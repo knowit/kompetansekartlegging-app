@@ -18,6 +18,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 
+import { useTranslation } from 'react-i18next'
 import { getLatestUserFormUpdatedAtForUser } from '../../helperFunctions'
 import { useAppSelector } from '../../redux/hooks'
 import { selectUserState } from '../../redux/User'
@@ -47,7 +48,6 @@ import {
 } from './groupsApi'
 import { compareByCreatedAt, compareByName, getAttribute } from './helpers'
 import PictureAndNameEditCell from './PictureAndNameEditCell'
-import { useTranslation } from 'react-i18next'
 import useApiGet from './useApiGet'
 import { KnowitColors } from '../../styles'
 

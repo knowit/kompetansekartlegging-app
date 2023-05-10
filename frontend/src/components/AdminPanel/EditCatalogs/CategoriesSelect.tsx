@@ -1,13 +1,13 @@
-import { createStyles, withStyles, makeStyles } from '@mui/styles'
-import { Theme } from '@mui/material/styles'
-import InputLabel from '@mui/material/InputLabel'
-import InputBase from '@mui/material/InputBase'
-import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
+import InputBase from '@mui/material/InputBase'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
+import { Theme } from '@mui/material/styles'
+import { createStyles, makeStyles, withStyles } from '@mui/styles'
 
-import { KnowitColors } from '../../../styles'
 import { useTranslation } from 'react-i18next'
+import { KnowitColors } from '../../../styles'
 
 const BootstrapInput = withStyles((theme: Theme) =>
   createStyles({

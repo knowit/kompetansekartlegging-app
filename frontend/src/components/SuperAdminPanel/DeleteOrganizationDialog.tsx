@@ -1,24 +1,23 @@
-import { FC } from 'react'
+import ErrorIcon from '@mui/icons-material/Error'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
-import ErrorIcon from '@mui/icons-material/Error'
 
-import { dialogStyles } from '../../styles'
-import { OrganizationInfo } from './SuperAdminTypes'
 import { t } from 'i18next'
+import { Organization } from '../../api/organizations/types'
+import { dialogStyles } from '../../styles'
 
-interface DeleteOrganiationDialogProps {
+interface DeleteOrganizationDialogProps {
   open: boolean
-  onConfirm: (arg: OrganizationInfo) => void
+  onConfirm: (arg: Organization) => void
   onCancel: () => void
-  organization: OrganizationInfo
+  organization: Organization
 }
 
-const DeleteOrganizationDialog: FC<DeleteOrganiationDialogProps> = ({
+const DeleteOrganizationDialog: React.FC<DeleteOrganizationDialogProps> = ({
   open,
   onConfirm,
   onCancel,
@@ -38,7 +37,7 @@ const DeleteOrganizationDialog: FC<DeleteOrganiationDialogProps> = ({
         <ErrorIcon fontSize="large" className={style.errorIcon}></ErrorIcon>
         <span className={style.dialogTitleText}>
           {t('superAdmin.editOrganizations.removeOrganization', {
-            organization: organization.name,
+            organization: organization.orgname,
           })}
         </span>
       </DialogTitle>
@@ -46,7 +45,7 @@ const DeleteOrganizationDialog: FC<DeleteOrganiationDialogProps> = ({
         <DialogContentText>
           {t(
             'superAdmin.editOrganizations.areYouSureYouWantToRemoveTheOrganization',
-            { organization: organization.name }
+            { organization: organization.orgname }
           )}
         </DialogContentText>
       </DialogContent>

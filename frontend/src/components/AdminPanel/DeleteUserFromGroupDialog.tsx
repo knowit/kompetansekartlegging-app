@@ -1,15 +1,15 @@
+import ErrorIcon from '@mui/icons-material/Error'
+import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
-import Button from '@mui/material/Button'
-import ErrorIcon from '@mui/icons-material/Error'
 
-import { dialogStyles } from '../../styles'
-import { getAttribute } from './helpers'
 import { useTranslation } from 'react-i18next'
 import { ORGANIZATION_ID_ATTRIBUTE } from '../../constants'
+import { dialogStyles } from '../../styles'
+import { getAttribute } from './helpers'
 
 const DeleteUserFromGroupDialog = ({
   onCancel,

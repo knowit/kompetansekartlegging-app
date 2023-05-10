@@ -12,11 +12,13 @@ import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 
 import { useTranslation } from 'react-i18next'
+import { selectUserState } from '../../redux/User'
+import { useAppSelector } from '../../redux/hooks'
 import { dialogStyles } from '../../styles'
 import { CloseIcon } from '../DescriptionTable'
+import UsersTable from './UsersTable'
 import { getAttribute, not } from './helpers'
 import useApiGet from './useApiGet'
-import UsersTable from './UsersTable'
 
 const AddUserToGroupDialog = ({
   onCancel,

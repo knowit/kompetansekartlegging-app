@@ -7,8 +7,8 @@ import {
 import { getOrganizationNameByID } from '../helperFunctions'
 import { RootState } from './store'
 
-import { UserRole } from '../types'
 import i18n from '../i18n/i18n'
+import { UserRole } from '../types'
 
 const initialState = {
   userState: {

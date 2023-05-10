@@ -1,9 +1,9 @@
 import { Fab, Modal, Tooltip } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { KnowitColors } from '../styles'
 import DescriptionTable from './DescriptionTable'
-import { useTranslation } from 'react-i18next'
 
 const floatingScaleDescButtonStyleDesktop = makeStyles({
   fab: {

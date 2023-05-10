@@ -1,12 +1,12 @@
 import Button from '@mui/material/Button'
 import { makeStyles } from '@mui/styles'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { roundDecimals } from '../helperFunctions'
 import { KnowitColors } from '../styles'
 import { ChartData, ResultData, ResultDiagramProps } from '../types'
 import { CombinedChart } from './CombinedChart'
 import { CombinedChartMobile } from './CombinedChartMobile'
-import { useTranslation } from 'react-i18next'
 
 const graphStyle = makeStyles({
   resultDiagramContainer: {

@@ -2,24 +2,24 @@ import { FC, useState } from 'react'
 
 import Button from '@mui/material/Button'
 
-import Box from '@mui/material/Box'
+import HelpIcon from '@mui/icons-material/Help'
 import { CircularProgress, Tooltip } from '@mui/material'
+import Box from '@mui/material/Box'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogTitle from '@mui/material/DialogTitle'
-import HelpIcon from '@mui/icons-material/Help'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 
-import { dialogStyles, KnowitColors } from '../../styles'
-import { CloseIcon } from '../DescriptionTable'
-import { OrganizationInfo } from './SuperAdminTypes'
 import { useTranslation } from 'react-i18next'
+import { OrganizationInput } from '../../api/organizations/types'
+import { dialogStyles, KnowitColors } from '../../styles'
 import { getUserExists } from '../AdminPanel/adminApi'
+import { CloseIcon } from '../DescriptionTable'
 
 interface AddOrganizationDialogProps {
   onCancel: () => void
-  onConfirm: (organization: OrganizationInfo, adminEmail: string) => void
+  onConfirm: (organization: OrganizationInput, adminEmail: string) => void
   open: boolean
 }
 
@@ -49,8 +49,8 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
     onConfirm(
       {
         id: organizationID,
-        name: organizationName,
-        identifierAttribute: organizationIdentifierAttribute,
+        orgname: organizationName,
+        identifier_attribute: organizationIdentifierAttribute,
       },
       organizationAdminEmail
     )
@@ -226,11 +226,17 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
               organizationIdentifierAttribute === '' ||
               !isOrganizationAdminEmailValid
             }
-            onClick={
-              organizationAdminEmail == ''
-                ? addOrganization
-                : addOrganizationIfEmailDoesNotExist
-            }
+            onClick={() => {
+              setIsAddingOrganization(true)
+              onConfirm(
+                {
+                  id: organizationID,
+                  orgname: organizationName,
+                  identifier_attribute: organizationIdentifierAttribute,
+                },
+                organizationAdminEmail
+              )
+            }}
             className={style.confirmButton}
           >
             <span className={style.buttonText}>{t('add')}</span>

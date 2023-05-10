@@ -1,7 +1,7 @@
-import { makeStyles, createStyles } from '@mui/styles'
 import Button from '@mui/material/Button'
-import { KnowitColors } from '../../../styles'
+import { createStyles, makeStyles } from '@mui/styles'
 import { useTranslation } from 'react-i18next'
+import { KnowitColors } from '../../../styles'
 
 const useStyles = makeStyles(() =>
   createStyles({

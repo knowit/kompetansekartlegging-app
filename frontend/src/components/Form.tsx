@@ -2,11 +2,11 @@ import { Button } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import { Fragment, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { QuestionType as QuestionTypeT } from '../API'
 import { KnowitColors } from '../styles'
 import { FormProps, SliderValues } from '../types'
 import Question from './Question'
-import { useTranslation } from 'react-i18next'
 
 const FormStyleDesktop = makeStyles({
   root: {

@@ -1,20 +1,20 @@
-import { KeyboardEvent, MouseEvent, useState } from 'react'
+import MenuIcon from '@mui/icons-material/Menu'
 import {
   AppBar,
-  Toolbar,
   IconButton,
-  Typography,
   List,
   ListItem,
+  Toolbar,
+  Typography,
 } from '@mui/material'
+import SwipeableDrawer from '@mui/material/SwipeableDrawer'
 import { makeStyles } from '@mui/styles'
+import { KeyboardEvent, MouseEvent, useState } from 'react'
+import { isIOS } from 'react-device-detect'
+import { useTranslation } from 'react-i18next'
 import { KnowitColors } from '../styles'
 import { NavBarPropsMobile } from '../types'
-import MenuIcon from '@mui/icons-material/Menu'
-import SwipeableDrawer from '@mui/material/SwipeableDrawer'
-import { isIOS } from 'react-device-detect'
 import { LanguageSelect } from './LanguageSelect'
-import { useTranslation } from 'react-i18next'
 
 const navbarStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,

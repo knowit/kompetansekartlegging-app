@@ -4,10 +4,10 @@ import { Button } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { Auth } from 'aws-amplify'
 import { useState } from 'react'
-import { ReactComponent as KnowitLogo } from '../Logotype-Knowit-Digital-white 1.svg'
 import { useTranslation } from 'react-i18next'
-import { LanguageSelect } from './LanguageSelect'
+import { ReactComponent as KnowitLogo } from '../Logotype-Knowit-Digital-white 1.svg'
 import { KnowitColors } from '../styles'
+import { LanguageSelect } from './LanguageSelect'
 
 const loginStyle = makeStyles({
   container: {

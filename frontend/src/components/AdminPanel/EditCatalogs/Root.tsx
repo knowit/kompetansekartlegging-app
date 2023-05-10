@@ -1,40 +1,40 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
-import Container from '@mui/material/Container'
+import AddIcon from '@mui/icons-material/Add'
+import BookmarkIcon from '@mui/icons-material/Bookmark'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
 import CircularProgress from '@mui/material/CircularProgress'
+import Container from '@mui/material/Container'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import DeleteIcon from '@mui/icons-material/Delete'
-import BookmarkIcon from '@mui/icons-material/Bookmark'
-import EditIcon from '@mui/icons-material/Edit'
-import AddIcon from '@mui/icons-material/Add'
 import Typography from '@mui/material/Typography'
 
-import commonStyles from '../common.module.css'
-import useApiGet from '../useApiGet'
-import { compareByCreatedAt } from '../helpers'
-import {
-  listAllFormDefinitionsForLoggedInUser,
-  updateFormDefinitionCreatedAt,
-  deleteFormDefinition,
-  createFormDefinition,
-  copyFormDefinition,
-} from '../catalogApi'
+import { useTranslation } from 'react-i18next'
+import { i18nDateToLocaleString } from '../../../i18n/i18n'
+import { KnowitColors } from '../../../styles'
 import Button from '../../mui/Button'
 import Table from '../../mui/Table'
 import TableRow from '../../mui/TableRow'
+import {
+  copyFormDefinition,
+  createFormDefinition,
+  deleteFormDefinition,
+  listAllFormDefinitionsForLoggedInUser,
+  updateFormDefinitionCreatedAt,
+} from '../catalogApi'
+import commonStyles from '../common.module.css'
+import { compareByCreatedAt } from '../helpers'
+import useApiGet from '../useApiGet'
 import ActivateCatalogDialog from './ActivateCatalogDialog'
-import DeleteCatalogDialog from './DeleteCatalogDialog'
 import AddCatalogDialog from './AddCatalogDialog'
-import { useTranslation } from 'react-i18next'
-import { i18nDateToLocaleString } from '../../../i18n/i18n'
 import CopyCatalogDialog from './CopyCatalogDialog'
-import { KnowitColors } from '../../../styles'
+import DeleteCatalogDialog from './DeleteCatalogDialog'
 
 const Catalog = ({
   catalog,

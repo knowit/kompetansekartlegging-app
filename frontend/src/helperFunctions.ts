@@ -1,10 +1,10 @@
-import { API, graphqlOperation } from 'aws-amplify'
 import { GraphQLResult } from '@aws-amplify/api'
-import { UserFormList, UserFormWithAnswers } from './types'
-import * as customQueries from './graphql/custom-queries'
+import { API, graphqlOperation } from 'aws-amplify'
 import { Query } from './API'
+import * as customQueries from './graphql/custom-queries'
 import { getOrganization } from './graphql/queries'
 import i18n from './i18n/i18n'
+import { UserFormList, UserFormWithAnswers } from './types'
 
 /*
     Used to call graphql queries and mutations.

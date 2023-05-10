@@ -1,12 +1,12 @@
-import { makeStyles } from '@mui/styles'
-import { KnowitColors } from '../styles'
-import { QuestionAnswer } from '../types'
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded'
 import ErrorOutlineRoundedIcon from '@mui/icons-material/ErrorOutlineRounded'
 import UpdateIcon from '@mui/icons-material/Update'
-import { staleAnswersLimit } from './AlertNotification'
+import { makeStyles } from '@mui/styles'
 import { useTranslation } from 'react-i18next'
 import { i18nDateToLocaleDateString } from '../i18n/i18n'
+import { KnowitColors } from '../styles'
+import { QuestionAnswer } from '../types'
+import { staleAnswersLimit } from './AlertNotification'
 
 const useStyles = makeStyles({
   root: {},

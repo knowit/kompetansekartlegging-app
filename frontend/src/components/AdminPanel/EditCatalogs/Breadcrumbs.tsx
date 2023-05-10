@@ -1,12 +1,12 @@
-import { makeStyles, createStyles } from '@mui/styles'
-import { Theme } from '@mui/material/styles'
+import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Link, { LinkProps } from '@mui/material/Link'
 import Typography from '@mui/material/Typography'
-import Breadcrumbs from '@mui/material/Breadcrumbs'
+import { Theme } from '@mui/material/styles'
+import { createStyles, makeStyles } from '@mui/styles'
+import { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import { Route } from 'react-router'
 import { Link as RouterLink } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
-import { TFunction } from 'i18next'
 
 const getBreadcrumbNameMap = (
   t: TFunction<'translation', undefined, 'translation'>

@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 
 import List from '@mui/material/List'
 
+import { useTranslation } from 'react-i18next'
 import { Category } from '../../../API'
 import {
   deleteCategory as deleteCategoryApi,
@@ -12,7 +13,6 @@ import {
 } from '../catalogApi'
 import CategoryListItem from './CategoryListItem'
 import DeleteCategoryDialog from './DeleteCategoryDialog'
-import { useTranslation } from 'react-i18next'
 
 const CategoryList = ({
   categories,

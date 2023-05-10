@@ -6,8 +6,8 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import ErrorIcon from '@mui/icons-material/Error'
 
-import { dialogStyles } from '../../../styles'
 import { useTranslation } from 'react-i18next'
+import { dialogStyles } from '../../../styles'
 
 const DeleteCategoryDialog = ({
   category,

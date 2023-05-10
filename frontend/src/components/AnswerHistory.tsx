@@ -1,21 +1,21 @@
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import TreeItem from '@mui/lab/TreeItem'
+import TreeView from '@mui/lab/TreeView'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import TreeView from '@mui/lab/TreeView'
+import { makeStyles } from '@mui/styles'
+import { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import {
   AnswerHistoryProps,
   HistoryTreeViewProps,
   UserAnswer,
   UserFormWithAnswers,
 } from '../types'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight'
-import TreeItem from '@mui/lab/TreeItem'
-import { makeStyles } from '@mui/styles'
-import { useTranslation } from 'react-i18next'
-import { TFunction } from 'i18next'
 
 const answerHistoryStyles = makeStyles({
   historyView: {

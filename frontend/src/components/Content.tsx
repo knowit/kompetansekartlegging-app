@@ -1,11 +1,12 @@
 import { Button, ListItem } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import clsx from 'clsx'
+import { TFunction } from 'i18next'
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { CreateQuestionAnswerInput, QuestionType } from '../API'
 import * as customQueries from '../graphql/custom-queries'
 import * as helper from '../helperFunctions'
-import { useAppSelector } from '../redux/hooks'
 import {
   selectAdminCognitoGroupName,
   selectGroupLeaderCognitoGroupName,
@@ -14,6 +15,7 @@ import {
   selectIsSuperAdmin,
   selectUserState,
 } from '../redux/User'
+import { useAppSelector } from '../redux/hooks'
 import { KnowitColors } from '../styles'
 import {
   Alert,
@@ -35,6 +37,10 @@ import {
   staleAnswersLimit,
 } from './AlertNotification'
 import { AnswerHistory } from './AnswerHistory'
+import { GroupLeaderMenu, GroupLeaderPanel } from './GroupLeaderPanel/'
+import NavBarMobile from './NavBarMobile'
+import { SuperAdminMenu } from './SuperAdminPanel/SuperAdminMenu'
+import { SuperAdminPanel } from './SuperAdminPanel/SuperAdminPanel'
 import {
   createQuestionAnswers,
   fetchLastFormDefinition,
@@ -43,12 +49,6 @@ import {
 } from './answersApi'
 import { Overview } from './cards/Overview'
 import { YourAnswers } from './cards/YourAnswers'
-import { GroupLeaderMenu, GroupLeaderPanel } from './GroupLeaderPanel/'
-import NavBarMobile from './NavBarMobile'
-import { SuperAdminMenu } from './SuperAdminPanel/SuperAdminMenu'
-import { SuperAdminPanel } from './SuperAdminPanel/SuperAdminPanel'
-import { useTranslation } from 'react-i18next'
-import { TFunction } from 'i18next'
 
 const cardCornerRadius = 40
 
@@ -150,7 +150,6 @@ const updateCategoryAlerts = (
   const msNow = Date.now()
   const alerts = new Map<string, Alert>()
   const catAlerts = new Map<string, number>()
-
   questionAnswers.forEach((quAnsArr) => {
     quAnsArr.forEach((quAns) => {
       if (
@@ -324,8 +323,8 @@ const Content = ({ ...props }: ContentProps) => {
 
   useEffect(() => {
     // console.log('fetchLastFormDefitniio');
-    fetchLastFormDefinition(
-      setFormDefinition,
+    fetchLastCatalog(
+      setCatalog,
       (formDef) => createQuestionAnswers(formDef, setCategories),
       (formDef) =>
         getUserAnswers(
@@ -345,7 +344,8 @@ const Content = ({ ...props }: ContentProps) => {
           newUserAnswers,
           setQuestionAnswers,
           setAnswersBeforeSubmitted
-        )
+        ),
+      userState.organizationID
     )
   }, [
     userState,

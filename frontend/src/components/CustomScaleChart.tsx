@@ -15,9 +15,9 @@ import {
   ValueType,
 } from 'recharts/types/component/DefaultTooltipContent'
 
+import { useTranslation } from 'react-i18next'
 import { KnowitColors } from '../styles'
 import { CustomScaleChartProps } from '../types'
-import { useTranslation } from 'react-i18next'
 
 const numTicks = 5
 const heightPerColumn = 50

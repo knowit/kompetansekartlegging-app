@@ -1,14 +1,16 @@
 import { useState } from 'react'
 
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CircularProgress from '@mui/material/CircularProgress'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
-import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
 import { useTranslation } from 'react-i18next'
 import AddUserToGroupDialog from '../AdminPanel/AddUserToGroupDialog'
+import AdminTable from '../AdminPanel/AdminTable'
+import DeleteUserFromGroupDialog from '../AdminPanel/DeleteUserFromGroupDialog'
 import {
   addUserToGroup,
   listAllOrganizationAdministrators,
@@ -16,11 +18,9 @@ import {
   removeUserFromGroup,
 } from '../AdminPanel/adminApi'
 import commonStyles from '../AdminPanel/common.module.css'
-import DeleteUserFromGroupDialog from '../AdminPanel/DeleteUserFromGroupDialog'
+import { getOrganizationAdminGroupNameFromUser } from '../AdminPanel/helpers'
 import useApiGet from '../AdminPanel/useApiGet'
 import Button from '../mui/Button'
-import AdminTable from '../AdminPanel/AdminTable'
-import { getOrganizationAdminGroupNameFromUser } from '../AdminPanel/helpers'
 
 const EditOrganizationAdmins = () => {
   const { t } = useTranslation()

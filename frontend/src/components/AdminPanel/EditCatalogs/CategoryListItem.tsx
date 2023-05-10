@@ -13,9 +13,9 @@ import EditIcon from '@mui/icons-material/Edit'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 
+import { useTranslation } from 'react-i18next'
 import { KnowitColors } from '../../../styles'
 import EditActionButtons from './EditActionButtons'
-import { useTranslation } from 'react-i18next'
 
 const useCategoryListItemStyles = makeStyles(() =>
   createStyles({

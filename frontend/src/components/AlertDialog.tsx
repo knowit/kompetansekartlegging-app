@@ -1,15 +1,15 @@
-import {
-  Dialog,
-  Button,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  DialogContentText,
-} from '@mui/material'
-import { AlertDialogProps } from '../types'
 import ErrorIcon from '@mui/icons-material/Error'
-import { dialogStyles } from '../styles'
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@mui/material'
 import { useTranslation } from 'react-i18next'
+import { dialogStyles } from '../styles'
+import { AlertDialogProps } from '../types'
 
 export const AlertDialog = ({ ...props }: AlertDialogProps) => {
   const { t } = useTranslation()

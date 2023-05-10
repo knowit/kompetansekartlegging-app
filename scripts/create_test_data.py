@@ -1,16 +1,19 @@
+import json
 import profile
 import random
-import boto3
-import json
 import uuid
+
+import boto3
 
 with open('parameters.json') as parameters_file:
     parameters = json.load(parameters_file)
 
-parameter_keys = ["destination_userpool_id", 'destination_iam_user', 'destination_env']
+parameter_keys = ["destination_userpool_id",
+                  'destination_iam_user', 'destination_env']
 
 if not all(key in parameters for key in parameter_keys):
-    print(f"parameters.json must contain the following keys: f{parameter_keys}")
+    print(
+        f"parameters.json must contain the following keys: f{parameter_keys}")
     exit()
 
 profile_name = parameters["destination_iam_user"]
@@ -25,13 +28,24 @@ orgid = "testorg"
 
 dynamoclient.put_item(
     TableName=f"Organization-KompetanseStack-{env}",
-    Item= {
+    Item={
         "id": {"S": orgid},
         "createdAt": {"S": "2022-10-10T12:00:00.000Z"},
         "updatedAt": {"S": "2022-10-10T12:00:00.000Z"},
         "identifierAttribute": {"S": "testorg"},
         "orgname": {"S": "Test organisasjon"}
     }
+)
+
+apiKeyPermission = {
+    "id": {"S": str(uuid.uuid4())},
+    "APIKeyHashed": {"S": "some_random_value"},
+    "organizationID": {"S": orgid}
+}
+
+dynamoclient.put_item(
+    TableName=f"APIKeyPermission-KompetanseStack-{env}",
+    Item=apiKeyPermission
 )
 
 formDefID = str(uuid.uuid4())
@@ -49,19 +63,22 @@ categories = [
     {
         "id": {"S": str(uuid.uuid4())},
         "text": {"S": "Category 1"},
+        "description": {"S": "Kategori med noen spørmsål"},
         "createdAt": {"S": "2022-10-10T12:00:00.000Z"},
         "updatedAt": {"S": "2022-10-10T12:00:00.000Z"},
+        "description": {"S": "Some description"},
         "organizationID": {"S": orgid},
         "orgAdmins": {"S": f"{orgid}0admin"},
         "formDefinitionID": {"S": formDefID},
         "index": {"N": "1"}
-    }
-    ,
+    },
     {
         "id": {"S": str(uuid.uuid4())},
         "text": {"S": "Category 2"},
+        "description": {"S": "Kategori med noen spørmsål"},
         "createdAt": {"S": "2022-10-10T12:00:00.000Z"},
         "updatedAt": {"S": "2022-10-10T12:00:00.000Z"},
+        "description": {"S": "Some description"},
         "organizationID": {"S": orgid},
         "orgAdmins": {"S": f"{orgid}0admin"},
         "index": {"N": "2"},
@@ -70,14 +87,16 @@ categories = [
     {
         "id": {"S": str(uuid.uuid4())},
         "text": {"S": "Category 3"},
+        "description": {"S": "Kategori med noen spørmsål"},
         "createdAt": {"S": "2022-10-10T12:00:00.000Z"},
         "updatedAt": {"S": "2022-10-10T12:00:00.000Z"},
+        "description": {"S": "Some description"},
         "organizationID": {"S": orgid},
         "orgAdmins": {"S": f"{orgid}0admin"},
         "index": {"N": "3"},
         "formDefinitionID": {"S": formDefID}
     }
-    ]
+]
 numberOfQuestions = [10, 12, 9]
 questions = []
 
@@ -139,21 +158,44 @@ try:
     cognitoclient.create_group(
         GroupName=orgid,
         UserPoolId=userpoolId
-        )
+    )
     cognitoclient.create_group(
         GroupName=f"{orgid}0admin",
         UserPoolId=userpoolId
-        )
+    )
     cognitoclient.create_group(
         GroupName=f"{orgid}0groupLeader",
         UserPoolId=userpoolId
-        )
+    )
+    cognitoclient.create_group(
+        GroupName="admin",
+        UserPoolId=userpoolId
+    )
 except:
     print("Could not create cognito groups, either due to missing permissions or they already exists")
 
+
+groupID = str(uuid.uuid4())
+
 testUsers = ["tester1@test", "tester2@test", "tester3@test"]
 
-for user in testUsers: 
+for user in testUsers:
+
+    dynamoUser = {
+        "id": {"S": user},
+        "createdAt": {"S": "2022-10-10T12:00:00.000Z"},
+        "updatedAt": {"S": "2022-10-10T12:00:00.000Z"},
+        "groupID": {"S": groupID},
+        "organizationID": {"S": orgid},
+        "orgAdmins": {"S": f"{orgid}0admin"},
+        "orgGroupLeaders": {"S": f"{orgid}0groupLeader"}
+    }
+
+    dynamoclient.put_item(
+        TableName=f"User-KompetanseStack-{env}",
+        Item=dynamoUser
+    )
+
     try:
         cognitoclient.admin_create_user(
             UserPoolId=userpoolId,
@@ -175,13 +217,15 @@ for user in testUsers:
             GroupName=orgid
         )
     except:
-        print("Could not add user", user, "to testorg group, either due to them already being in it or some other error")
+        print("Could not add user", user,
+              "to testorg group, either due to them already being in it or some other error")
     cognitoclient.admin_set_user_password(
         UserPoolId=userpoolId,
         Username=user,
         Password="tester123",
         Permanent=True
     )
+
     userformId = str(uuid.uuid4())
     userform = {
         "id": {"S": userformId},
@@ -221,3 +265,16 @@ for user in testUsers:
             TableName=f"QuestionAnswer-KompetanseStack-{env}",
             Item=qa
         )
+
+dynamoclient.put_item(
+    TableName=f"Group-KompetanseStack-{env}",
+    Item={
+        "id": {"S": groupID},
+        "createdAt": {"S": "2022-10-10T12:00:00.000Z"},
+        "updatedAt": {"S": "2022-10-10T12:00:00.000Z"},
+        "groupLeaderUsername": {"S": testUsers[0]},
+        "organizationID": {"S": orgid},
+        "orgAdmins": {"S": f"{orgid}0admin"},
+        "orgGroupLeaders": {"S": f"{orgid}0groupLeader"}
+    }
+)

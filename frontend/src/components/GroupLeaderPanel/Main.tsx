@@ -3,10 +3,10 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 
+import { useTranslation } from 'react-i18next'
 import commonStyles from '../AdminPanel/common.module.css'
 import DeleteUserFromGroupDialog from '../AdminPanel/DeleteUserFromGroupDialog'
 import GroupMembers from '../AdminPanel/GroupMembers'
-import { useTranslation } from 'react-i18next'
 
 const Main = ({
   allAvailableUsersAnnotated,

@@ -3,6 +3,7 @@ import { MenuButton } from './components/Content'
 import { AlertType } from './components/AlertNotification'
 import { Dispatch, MutableRefObject, SetStateAction } from 'react'
 import { OverviewType } from './components/TypedOverviewChart'
+import { QuestionAnswer } from './api/questionAnswers/types'
 
 export interface UserState {
   isSignedIn: boolean
@@ -56,14 +57,6 @@ export type Question = {
     description: string | undefined
     index: number | undefined
   }
-}
-
-export type QuestionAnswer = {
-  knowledge: number
-  motivation: number
-  customScaleValue: number
-  updatedAt: number
-  question: Question
 }
 
 export type AggregatedAnswer = {
