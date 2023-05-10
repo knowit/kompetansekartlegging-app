@@ -1,19 +1,21 @@
 import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
 import { v4 as uuidv4 } from 'uuid'
-import { sqlQuery } from '../../app'
+import { sqlQuery } from '../../utils/sql'
 import { createTimestampNow } from '../utils'
 import {
   DeleteOrganizationInput,
   GetOrganizationInput,
+  Organization,
   OrganizationInput,
 } from './types'
 
 const listOrganizations = async () => {
   const query = 'SELECT * FROM organization'
 
-  return await sqlQuery({
+  return await sqlQuery<Organization[]>({
     message: '🚀 ~ > All organizations.',
     query,
+    isArray: true,
   })
 }
 
@@ -30,7 +32,7 @@ const getOrganization = async ({ id }: GetOrganizationInput) => {
 
   const query = 'SELECT * FROM organization WHERE id = :id'
 
-  return await sqlQuery({
+  return await sqlQuery<Organization>({
     message: `🚀 ~ > Organization with id ${id}`,
     query,
     parameters,
@@ -76,7 +78,7 @@ const createOrganization = async ({
   VALUES (:id, to_timestamp(:createdat, 'YYYY-MM-DD HH24:MI:SS'), :orgname, :identifierattribute)
   RETURNING *`
 
-  return await sqlQuery({
+  return await sqlQuery<Organization>({
     message: `🚀 ~ > Organization '${orgname}' with the id '${id}' inserted.`,
     query,
     parameters,
@@ -96,7 +98,7 @@ const deleteOrganization = async ({ id }: DeleteOrganizationInput) => {
 
   const query = 'DELETE FROM organization WHERE id=:id RETURNING *;'
 
-  return await sqlQuery({
+  return await sqlQuery<Organization>({
     message: `🚀 ~ > Organization '${id}' is now deleted.`,
     query,
     parameters,

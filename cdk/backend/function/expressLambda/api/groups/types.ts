@@ -1,4 +1,4 @@
-interface Group {
+export interface Group {
   id: string
   organization_id: string
   group_leader_username: string

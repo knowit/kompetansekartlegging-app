@@ -1,5 +1,4 @@
 import express from 'express'
-import { sqlQuery } from '../../app'
 
 const router = express.Router()
 

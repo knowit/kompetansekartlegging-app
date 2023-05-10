@@ -1,11 +1,12 @@
 import { SqlParameter } from '@aws-sdk/client-rds-data'
 import { v4 as uuidv4 } from 'uuid'
-import { sqlQuery } from '../../app'
+import { sqlQuery } from '../../utils/sql'
 import { createTimestampNow } from '../utils'
 import { catalogColumns, kindToParam } from './helpers'
 import {
-  DeleteCatalogInput,
+  Catalog,
   CatalogInput,
+  DeleteCatalogInput,
   GetCatalogInput,
   UpdateCatalogInput,
 } from './types'
@@ -13,9 +14,10 @@ import {
 const listCatalogs = async () => {
   const query = `SELECT * FROM "catalog"`
 
-  return await sqlQuery({
+  return await sqlQuery<Catalog[]>({
     message: `🚀 ~ > All Catalogs:`,
     query,
+    isArray: true,
   })
 }
 
@@ -43,7 +45,7 @@ const createCatalog = async ({ label, organization_id }: CatalogInput) => {
         VALUES (:id, :label, :created_at, :organization_id) 
         RETURNING *`
 
-  return await sqlQuery({
+  return await sqlQuery<Catalog>({
     message: `🚀 ~ > Catalog '${label}' created.`,
     query,
     parameters,
@@ -59,7 +61,7 @@ const deleteCatalog = async ({ id }: DeleteCatalogInput) => {
   ]
 
   const query = `DELETE FROM Catalog WHERE id = :id RETURNING *`
-  return await sqlQuery({
+  return await sqlQuery<Catalog>({
     message: `🚀 ~ > Catalog with id '${id}' deleted.`,
     query,
     parameters,
@@ -106,7 +108,7 @@ const updateCatalog = async (
 
   const query = `UPDATE "catalog" SET ${columnString} WHERE id=:id RETURNING *`
 
-  return await sqlQuery({
+  return await sqlQuery<Catalog>({
     message: `🚀 ~ > Catalog with id '${id}' is now updated.`,
     query,
     parameters,
