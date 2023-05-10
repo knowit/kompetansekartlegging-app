@@ -2,18 +2,11 @@ import { useEffect, useState } from 'react'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Chip from '@mui/material/Chip'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormGroup from '@mui/material/FormGroup'
 import IconButton from '@mui/material/IconButton'
-import Paper from '@mui/material/Paper'
 import Switch from '@mui/material/Switch'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
 import TextField from '@mui/material/TextField'
-import { makeStyles } from '@mui/styles'
 
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -21,7 +14,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 
 import { Close as CloseIcon } from '@mui/icons-material'
-import { Table, TableRow } from '@mui/material'
+import { CircularProgress } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { getAllUsers } from '../../../../api/admin'
@@ -29,20 +22,23 @@ import { IUserAnnotated } from '../../../../api/admin/types'
 import { selectUserState } from '../../../../redux/User'
 import { useAppSelector } from '../../../../redux/hooks'
 import { dialogStyles } from '../../../../styles'
-import PictureAndNameCell from '../../PictureAndNameCell'
-import { containsUser, getAttribute } from '../utils'
+import { containsUser, getCognitoAttribute } from '../utils'
+import SelectedUsers from './SelectedUsers'
+import UsersTable from './UserTable'
 
-const getNameOrUsername = (user: any) => {
-  const name = getAttribute(user, 'name')
-  return name || user.Username
+interface AddUsersToGroupDialogProps {
+  onCancel: () => void
+  onConfirm: (users: IUserAnnotated[]) => void
+  open: boolean
+  members: IUserAnnotated[]
 }
 
-const AddMemberToGroupDialog = ({
+export const AddUsersToGroupDialog = ({
   onCancel,
   onConfirm,
   open,
   members,
-}: any) => {
+}: AddUsersToGroupDialogProps) => {
   const { t } = useTranslation()
   const style = dialogStyles()
   const userState = useAppSelector(selectUserState)
@@ -62,10 +58,15 @@ const AddMemberToGroupDialog = ({
     }
   }
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['get-all-users'],
     queryFn: getAllUsers,
   })
+
+  /**
+   * TODO: kjør kall for å legge til brukere
+   * !invalidate get-all-users og getgroupMembers (ikke eksisterenede enda, men kommer snart til en fil nær deg)
+   */
 
   const onClose = () => {
     setSelectedUsers([])
@@ -76,7 +77,7 @@ const AddMemberToGroupDialog = ({
     setShowOnlyUnset((showOnlyUnset) => !showOnlyUnset)
 
   const nameFilterFn = (user: IUserAnnotated) => {
-    const name = getAttribute(user, 'name')
+    const name = getCognitoAttribute(user.cognito_attributes, 'name')
     return (
       !name ||
       name.toLocaleLowerCase().startsWith(nameFilter.toLocaleLowerCase())
@@ -95,6 +96,10 @@ const AddMemberToGroupDialog = ({
 
   console.log(usersInList)
   console.log(data?.data)
+
+  if (isLoading) {
+    return <CircularProgress />
+  }
 
   return (
     <Dialog
@@ -181,87 +186,3 @@ const AddMemberToGroupDialog = ({
     </Dialog>
   )
 }
-
-const useStylesSelectedUsers = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    listStyle: 'none',
-    padding: theme.spacing(0.5),
-    margin: 0,
-  },
-  chip: {
-    margin: theme.spacing(0.5),
-  },
-}))
-
-const SelectedUsers = ({ selectedUsers, setSelectedUser }: any) => {
-  const classes = useStylesSelectedUsers()
-  return (
-    <Paper component="ul" className={classes.root}>
-      {selectedUsers.map((user: IUserAnnotated) => {
-        const nameOrUsername = getNameOrUsername(user)
-        return (
-          <li key={user.username}>
-            <Chip
-              label={nameOrUsername}
-              onDelete={() => setSelectedUser(user)}
-              className={classes.chip}
-            />
-          </li>
-        )
-      })}
-    </Paper>
-  )
-}
-
-const User = ({ user, selected, setSelectedUser }: any) => {
-  const { t } = useTranslation()
-  const name = getAttribute(user, 'name')
-  const picture = getAttribute(user, 'picture')
-  const hasGroup = !!user.groupLeader
-  const groupLeaderName = hasGroup && getAttribute(user.groupLeader, 'name')
-
-  return (
-    <>
-      <TableRow hover selected={selected} onClick={() => setSelectedUser(user)}>
-        <TableCell>
-          <PictureAndNameCell name={name} picture={picture} />
-        </TableCell>
-        <TableCell>{groupLeaderName || t('myGroup.noGroupLeader')}</TableCell>
-      </TableRow>
-    </>
-  )
-}
-
-const UsersTable = ({ users, selectedUsers, setSelectedUser }: any) => {
-  const { t } = useTranslation()
-  const isSelected = (user: any) =>
-    selectedUsers.some((u: any) => u.Username === user.Username)
-
-  return (
-    <TableContainer component={Paper} style={{ height: '100%' }}>
-      <Table stickyHeader style={{ maxHeight: '100%' }}>
-        <TableHead>
-          <TableRow>
-            <TableCell>{t('employee')}</TableCell>
-            <TableCell>{t('groupLeader')}</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {users.map((u: any) => (
-            <User
-              key={u.Username}
-              user={u}
-              selected={isSelected(u)}
-              setSelectedUser={setSelectedUser}
-            />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  )
-}
-
-export default AddMemberToGroupDialog

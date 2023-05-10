@@ -8,3 +8,4 @@ export interface IUserAnnotated extends IUser {
   group_leader_username: string
   cognito_attributes: AttributeListType
 }
+

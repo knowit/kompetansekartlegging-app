@@ -3,20 +3,24 @@ import { useState } from 'react'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { TableBody, TableCell, TableContainer, TableHead } from '@mui/material'
 import { useTranslation } from 'react-i18next'
+import { IUserAnnotated } from '../../../../api/admin/types'
 import Button from '../../../mui/Button'
 import Table from '../../../mui/Table'
 import TableRow from '../../../mui/TableRow'
 import AddMemberToGroupDialog from '../../AddMemberToGroupDialog'
 import { GroupRow } from './GroupRow'
 
+interface GroupTableProps {
+  members: IUserAnnotated
+}
+
 export const GroupTable = ({
-  allUsers,
   members,
   addMembersToGroup,
   deleteMember,
   viewMember,
   showLastAnsweredAt,
-}: any) => {
+}) => {
   const { t } = useTranslation()
 
   const [open, setOpen] = useState<boolean>(false)
@@ -63,7 +67,6 @@ export const GroupTable = ({
       <AddMemberToGroupDialog
         open={open}
         onCancel={() => setOpen(false)}
-        allUsers={allUsers}
         members={members}
         onConfirm={onConfirm}
       />
