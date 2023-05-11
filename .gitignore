@@ -61,6 +61,7 @@ cdk/cdk.out
 
 # Python cache
 __pycache__
+.pytest_cache
 
 # VSCode
 .vscode
