@@ -40,5 +40,5 @@ def get_slack_webhook_url(secrets_manager_client=secrets_manager_client):
         SecretId="slack_webhook_url")
     response = get_secret_value_response['SecretString']
     slack_webhook_url = json.loads(response)['url']
-    
+
     return slack_webhook_url
