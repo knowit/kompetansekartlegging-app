@@ -10,3 +10,8 @@ done
 
 echo "Running python tests..."
 pytest
+
+echo "Installing ./cdk dependencies..."
+cd cdk && npm install -s
+echo "Running cdk tests..."
+npm run test
