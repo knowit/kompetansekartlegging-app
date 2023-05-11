@@ -6,7 +6,17 @@ const USER_FORM_TABLE_NAME = TableMap['UserFormTable']
 const ANON_USER_TABLE_NAME = TableMap['AnonymizedUserTable']
 
 
-const docClient = new DynamoDB.DocumentClient()
+const isTest = process.env.JEST_WORKER_ID
+const config = {
+  ...(isTest && {
+    convertEmptyValues: true,
+    endpoint: 'localhost:8000',
+    sslEnabled: false,
+    region: 'local-env',
+  }),
+}
+
+const docClient = new DynamoDB.DocumentClient(config)
 
 const anonymizeUser = async (username, hashedUsername, orgId) => {
     console.log('Adding user to AnonymizedUser table')
@@ -88,5 +98,7 @@ const getQuestionAnswersByUserFormId = async (userFormId) => {
 }
 
 module.exports = {
-    anonymizeUser
+    anonymizeUser,
+    getUserFormsForUser,
+    getQuestionAnswersByUserFormId
 }

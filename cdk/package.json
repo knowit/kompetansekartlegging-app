@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "jest",
+    "test": "jest --verbose true",
     "cdk": "cdk",
     "deploy": "cdk deploy --outputs-file outputs.json  && npx ts-node --prefer-ts-exts hooks/hooks.ts",
     "codegen": "npx amplify-graphql-docs-generator --schema appsync/schema.graphql --output ../frontend/src/graphql --separateFiles true --language typescript && graphql-codegen --config codegen.yml",
@@ -19,6 +19,7 @@
     "@graphql-codegen/introspection": "3.0.0",
     "@graphql-codegen/typescript": "3.0.0",
     "@graphql-codegen/typescript-operations": "3.0.0",
+    "@shelf/jest-dynamodb": "^3.4.1",
     "@types/jest": "^29.4.0",
     "@types/node": "18.11.19",
     "aws-cdk": "2.63.2",
