@@ -60,8 +60,8 @@ def handler(event, context):
         "body": json.dumps(f"Configured organization with ID '{org_id}'")
     }
 
-def create_groups(orgId):
-    groupNamesToCreate = [orgId, f'{orgId}0admin', f'{orgId}0groupLeader']
+def create_groups(org_id, userpool_id=userpool_id, cognito_client=cognito_client):
+    groupNamesToCreate = [org_id, f'{org_id}0admin', f'{org_id}0groupLeader']
 
     for groupName in groupNamesToCreate:
         try:
@@ -73,7 +73,7 @@ def create_groups(orgId):
         except cognito_client.exceptions.GroupExistsException:
             print(f"Group {groupName} already exists")
 
-def user_already_exists(email):
+def user_already_exists(email, userpool_id=userpool_id, cognito_client=cognito_client):
     try:
         cognito_client.admin_get_user(
             UserPoolId=userpool_id,
@@ -83,7 +83,7 @@ def user_already_exists(email):
     except cognito_client.exceptions.UserNotFoundException:
         return False
 
-def create_admin_user(org_id, email):
+def create_admin_user(org_id, email, userpool_id=userpool_id, cognito_client=cognito_client):
     print("Creating admin user")
     userAttributes = [
         {
@@ -107,17 +107,17 @@ def create_admin_user(org_id, email):
         cognito_client.admin_set_user_password(
             UserPoolId = userpool_id,
             Username = email,
-            Password = "NotReal123",
+            Password = "NotReal123!",
             Permanent = True
         )
-        add_user_to_groups(email, org_id)
+        add_user_to_groups(org_id, email, userpool_id, cognito_client)
         print(f"Admin user {email} created for orgID {org_id}")
 
     except Exception as e:
-        print((f"Could not create admin user {email} for orgID {org_id}"))
+        print(f"Could not create admin user {email} for orgID {org_id}")
         print(e)
 
-def add_user_to_groups(email, org_id):
+def add_user_to_groups(org_id, email, userpool_id=userpool_id, cognito_client=cognito_client):
     try:
         cognito_client.admin_add_user_to_group(
             UserPoolId = userpool_id,
