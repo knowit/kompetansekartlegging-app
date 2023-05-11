@@ -27,9 +27,11 @@ const docClient = new DocumentClient({
 });
 
 
-beforeEach(async () => {
-  await emptyDatabase()
-  await fillDatabase()
+beforeEach(() => {
+  return Promise.all([
+    emptyDatabase(),
+    fillDatabase()
+  ])
 })
 
 const emptyDatabase = async () => {
