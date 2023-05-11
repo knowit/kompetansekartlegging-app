@@ -76,7 +76,7 @@ if __name__ == '__main__':
     cognito_client.admin_set_user_password(
         UserPoolId=destUserPoolId,
         Username=user_email,
-        Password="NotReal123",
+        Password="NotReal123!",
         Permanent=True
     )
     cognito_client.admin_add_user_to_group(
