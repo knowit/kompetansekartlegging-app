@@ -1,7 +1,8 @@
 import random
 import boto3
 import json
-import uuid
+import random
+import string
 
 with open('parameters.json') as parameters_file:
     parameters = json.load(parameters_file)
@@ -22,7 +23,13 @@ cognitoclient = session.client("cognito-idp")
 
 orgid = "testorg"
 
-testUsers = ["anon1@test", "anon2@test", "anon3@test", "anon4@test", "anon5@test"]
+def random_char(char_num):
+       return ''.join(random.choice(string.ascii_letters) for _ in range(char_num))
+
+
+testUsers1 = ["anon1@test", "anon2@test", "anon3@test", "anon4@test", "anon5@test"]
+testUsers2 = [random_char(7)+"@anonme.com" for i in range(5)]
+testUsers = testUsers1 + testUsers2
 
 for user in testUsers: 
     try:
