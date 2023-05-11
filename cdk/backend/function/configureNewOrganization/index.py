@@ -115,7 +115,7 @@ def create_admin_user(org_id, email, userpool_id=userpool_id, cognito_client=cog
         print(f"Admin user {email} created for orgID {org_id}")
 
     except Exception as e:
-        print((f"Could not create admin user {email} for orgID {org_id}"))
+        print(f"Could not create admin user {email} for orgID {org_id}")
         print(e)
 
 def add_user_to_groups(org_id, email, userpool_id=userpool_id, cognito_client=cognito_client):
