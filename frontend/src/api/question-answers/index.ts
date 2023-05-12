@@ -15,6 +15,11 @@ export const getQuestionAnswerById = async (id: GetQuestionAnswerInput) =>
     queryStringParameters: id,
   })
 
+export const getMostRecentQuestionAnswerForUser = async (username: string) =>
+  apiGET<QuestionAnswer>(`${path}/user`, {
+    queryStringParameters: { username: username, most_recent: '' },
+  })
+
 export const createQuestionAnswer = async (data: QuestionAnswerInput) =>
   apiPOST<QuestionAnswer>(`${path}`, {
     body: data,

@@ -6,6 +6,7 @@ export interface QuestionAnswer {
   motivation: number | null
   custom_scale_value: number | null
   text_value: string | null
+  updated_at: Date
 }
 
 export type QuestionAnswerInput = Omit<QuestionAnswer, 'id'>
