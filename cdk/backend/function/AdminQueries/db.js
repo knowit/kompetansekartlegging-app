@@ -19,22 +19,24 @@ const config = {
 const docClient = new DynamoDB.DocumentClient(config)
 
 const anonymizeUser = async (username, hashedUsername, orgId) => {
+  // Put will overwrite the old item if the key exists
+  // That way, the only case where promise throws is on error
     console.log('Adding user to AnonymizedUser table')
-    docClient.put({
+    await docClient.put({
       TableName : ANON_USER_TABLE_NAME,
       Item: {
         id: hashedUsername,
         organizationID: orgId,
         anonymizedAt: new Date().toISOString(),
       },
-      ConditionExpression: "attribute_not_exists(id)"
+      //ConditionExpression: "attribute_not_exists(id)"
     }).promise()
 
     const userFormsForUser = await getUserFormsForUser(username)
 
     userFormsForUser.map(async (userForm) => {
       console.log('Anonymizing UserForm with ID: ', userForm.id)
-      docClient
+      await docClient
       .update({
         TableName: USER_FORM_TABLE_NAME,
         Key: { id : userForm.id },
@@ -46,8 +48,8 @@ const anonymizeUser = async (username, hashedUsername, orgId) => {
       const allQuestionAnswers = await getQuestionAnswersByUserFormId(userForm.id)
 
       console.log('Anonymizing QuestionAnswers for UserForm with ID: ', userForm.id)
-      allQuestionAnswers.map((questionAnswer) => {
-        docClient
+      allQuestionAnswers.map(async (questionAnswer) => {
+        await docClient
         .update({
           TableName: QUESTION_ANSWER_TABLE_NAME,
           Key: { id: questionAnswer.id },
@@ -90,7 +92,7 @@ const getQuestionAnswersByUserFormId = async (userFormId) => {
       ExpressionAttributeValues: {
         ':userFormId': userFormId,
       },
-      ConsistentRead: false, // TODO: necessary?
+      ConsistentRead: false,
     })
     .promise()
 
