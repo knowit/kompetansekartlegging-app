@@ -132,6 +132,7 @@ const listUsersInGroup = async (
     }
     return { result: Users }
   } catch (e) {
+    console.log(e)
     return {
       error: i18n.t('adminApi.error.couldNotGetAListOfUsersInGroup', {
         groupname: groupname,
@@ -175,6 +176,7 @@ const listAllUsers = async (limit = 60): Promise<ApiResponse<any[]>> => {
       allUsers = [...allUsers, ...Users]
     } while (nextToken)
   } catch (e) {
+    console.log("error in listAllUsers")
     return { error: i18n.t('adminApi.error.couldNotGetAListOfAllUsers') }
   }
   return { result: allUsers }
