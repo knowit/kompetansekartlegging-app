@@ -1,3 +1,5 @@
+import { IUser } from '../groups/types'
+
 export interface QuestionAnswer {
   id: string
   user_username: string
@@ -22,6 +24,12 @@ export type QuestionAnswerInput = Omit<QuestionAnswer, 'id'>
 
 export type GetQuestionAnswerInput = Pick<QuestionAnswer, 'id'>
 export type DeleteQuestionAnswerInput = Pick<QuestionAnswer, 'id'>
+
+export type GetUserQuestionAnswers = Pick<IUser, 'username'>
+
+export type GetMostRecentQuestionAnswerForUser = Pick<IUser, 'username'> & {
+  most_recent: string
+}
 
 export interface QuestionAnswerResponse {
   message: string

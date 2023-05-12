@@ -2,7 +2,9 @@ import express from 'express'
 import QuestionAnswer from './queries'
 import {
   DeleteQuestionAnswerInput,
+  GetMostRecentQuestionAnswerForUser,
   GetQuestionAnswerInput,
+  GetUserQuestionAnswers,
   IQuestionAnswer,
   QuestionAnswerInput,
   QuestionAnswerResponses,
@@ -20,6 +22,25 @@ router.get('/', async (req, res, next) => {
     } else {
       const listQuestionAnswerResponse = await QuestionAnswer.listQuestionAnswers()
       res.status(200).json(listQuestionAnswerResponse)
+    }
+  } catch (err) {
+    console.error(err)
+    next(err)
+  }
+})
+
+router.get('/user', async (req, res, next) => {
+  try {
+    if (req.query.most_recent) {
+      const getMostRecentQuestionAnswerForUserResponse = await QuestionAnswer.getMostRecentQuestionAnswerForUser(
+        (req.query as GetMostRecentQuestionAnswerForUser).username
+      )
+      res.status(200).json(getMostRecentQuestionAnswerForUserResponse)
+    } else {
+      const getUserQuestionAnswersResponse = await QuestionAnswer.getUserQuestionAnswers(
+        (req.query as GetUserQuestionAnswers).username
+      )
+      res.status(200).json(getUserQuestionAnswersResponse)
     }
   } catch (err) {
     console.error(err)

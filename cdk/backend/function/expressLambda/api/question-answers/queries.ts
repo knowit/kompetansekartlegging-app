@@ -38,6 +38,46 @@ const getQuestionAnswer = async ({ id }: GetQuestionAnswerInput) => {
   })
 }
 
+const getUserQuestionAnswers = async (username: string) => {
+  const parameters: SqlParameter[] = [
+    {
+      name: 'username',
+      value: {
+        stringValue: username,
+      },
+    },
+  ]
+
+  const query = 'SELECT * FROM question_answer WHERE user_username = :username'
+
+  return await sqlQuery<QuestionAnswer[]>({
+    message: `🚀 ~ > Question Answers for user with username: ${username}`,
+    query,
+    parameters,
+    isArray: true,
+  })
+}
+
+const getMostRecentQuestionAnswerForUser = async (username: string) => {
+  const parameters: SqlParameter[] = [
+    {
+      name: 'username',
+      value: {
+        stringValue: username,
+      },
+    },
+  ]
+
+  const query =
+    'SELECT * FROM question_answer WHERE user_username = :username ORDER BY updated_at DESC LIMIT 1'
+
+  return await sqlQuery<QuestionAnswer>({
+    message: `🚀 ~ > Most recent question answer for user with username: ${username}`,
+    query,
+    parameters,
+  })
+}
+
 const createQuestionAnswer = async ({
   user_username,
   question_id,
@@ -290,6 +330,8 @@ const createQuestionAnswerFromBatch = async ({
 export default {
   listQuestionAnswers,
   getQuestionAnswer,
+  getUserQuestionAnswers,
+  getMostRecentQuestionAnswerForUser,
   createQuestionAnswer,
   updateQuestionAnswer,
   deleteQuestionAnswer,
