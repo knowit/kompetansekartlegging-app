@@ -130,7 +130,7 @@ const AnonymizeUsers = () => {
         setShowAnonymizeUserDialog(false)
         refresh()
       })
-      .catch(() => {
+      .catch((err) => {
         setShowAnonymizeUserDialog(false)
         setMutationError(
           t('adminApi.error.couldNotAnonymizeName', {

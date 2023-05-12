@@ -188,19 +188,20 @@ app.post('/anonymizeUser', async (req, res, next) => {
   const hashedUsername = createHash('sha256').update(username).digest('hex') // base64 / hex
   console.log('Hash: ' + hashedUsername) // TODO: remove
 
-  anonymizeUserInCognito(username).catch(err => {
+  // TODO: handle when one of these fails-- restore user in cognito at least
+  await anonymizeUserInCognito(username).catch(err => {
     console.log("Error anonymizing user in cognito")
     err.statusCode = 500
     return next(err)
   })
 
-  anonymizeUserInDb(username, hashedUsername, orgId).catch(err => {
+  await anonymizeUserInDb(username, hashedUsername, orgId).catch(err => {
     console.log("Error anonymizing user in db")
     err.statusCode = 500
     return next(err)
   })
     
-  res.status(200).json({functionalityComplete: false})
+  return res.status(200).json({functionalityComplete: false})
 })
 
 app.get('/getUser', async (req, res, next) => {
