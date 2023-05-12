@@ -7,27 +7,25 @@ import { IUserAnnotated } from '../../../../api/admin/types'
 import Button from '../../../mui/Button'
 import Table from '../../../mui/Table'
 import TableRow from '../../../mui/TableRow'
-import AddMemberToGroupDialog from '../../AddMemberToGroupDialog'
+import { AddUsersToGroupDialog } from '../dialogs/AddUsersToGroupDialog'
 import { GroupRow } from './GroupRow'
 
 interface GroupTableProps {
-  members: IUserAnnotated
+  groupId: string
+  members: IUserAnnotated[]
+  viewMember: (username: string) => void
+  showLastAnsweredAt: boolean
 }
 
 export const GroupTable = ({
+  groupId,
   members,
-  addMembersToGroup,
-  deleteMember,
   viewMember,
   showLastAnsweredAt,
-}) => {
+}: GroupTableProps) => {
   const { t } = useTranslation()
 
   const [open, setOpen] = useState<boolean>(false)
-  const onConfirm = (users: any[]) => {
-    addMembersToGroup(users)
-    setOpen(false)
-  }
 
   return (
     <>
@@ -48,7 +46,6 @@ export const GroupTable = ({
               <GroupRow
                 key={u.Username}
                 user={u}
-                deleteMember={deleteMember}
                 viewMember={viewMember}
                 showLastAnsweredAt={showLastAnsweredAt}
               />
@@ -64,11 +61,11 @@ export const GroupTable = ({
       >
         {t('myGroup.addMembers')}
       </Button>
-      <AddMemberToGroupDialog
+      <AddUsersToGroupDialog
+        groupId={groupId}
+        members={members}
         open={open}
         onCancel={() => setOpen(false)}
-        members={members}
-        onConfirm={onConfirm}
       />
     </>
   )
