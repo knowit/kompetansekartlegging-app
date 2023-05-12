@@ -202,7 +202,7 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
               </div>
             }
             style={{
-              marginBottom: isOrganizationAdminEmailValid ? '8px' : '30px',
+              marginBottom: isOrganizationAdminEmailValid ? '0' : '22px',
             }}
           >
             <HelpIcon htmlColor={KnowitColors.darkBrown} fontSize={'medium'} />
