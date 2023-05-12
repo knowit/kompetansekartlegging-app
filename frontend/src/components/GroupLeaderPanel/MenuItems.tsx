@@ -6,7 +6,6 @@ const getGroupLeaderItems = (members: any) => {
   }))
 
   items.unshift({ text: 'menu.overview', key: 'MAIN' })
-  console.log(items)
   return items
 }
 export default getGroupLeaderItems
