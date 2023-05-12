@@ -1,6 +1,7 @@
 import { apiDELETE, apiGET, apiPATCH, apiPOST } from '../client'
 import {
   AddUserInput,
+  AddUsersBody,
   DeleteGroupInput,
   DeleteUserInput,
   GetGroupInput,
@@ -23,6 +24,15 @@ export const addUserToGroup = async (
   apiPOST<IUser>('/groups/:id/user', {
     queryStringParameters: id,
     body: userData,
+  })
+
+export const addMultipleUsersToGroup = async (
+  id: GetGroupInput,
+  userDataList: AddUsersBody
+) =>
+  apiPOST<IUser[]>('/groups/users', {
+    queryStringParameters: id,
+    body: userDataList,
   })
 
 export const deleteUserFromGroup = async (username: DeleteUserInput) =>

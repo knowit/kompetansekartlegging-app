@@ -15,10 +15,11 @@ import DialogTitle from '@mui/material/DialogTitle'
 
 import { Close as CloseIcon } from '@mui/icons-material'
 import { CircularProgress } from '@mui/material'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { getAllUsers } from '../../../../api/admin'
 import { IUserAnnotated } from '../../../../api/admin/types'
+import { addMultipleUsersToGroup } from '../../../../api/groups'
 import { selectUserState } from '../../../../redux/User'
 import { useAppSelector } from '../../../../redux/hooks'
 import { dialogStyles } from '../../../../styles'
@@ -27,26 +28,34 @@ import SelectedUsers from './SelectedUsers'
 import UsersTable from './UserTable'
 
 interface AddUsersToGroupDialogProps {
+  groupId: string
   onCancel: () => void
-  onConfirm: (users: IUserAnnotated[]) => void
   open: boolean
   members: IUserAnnotated[]
 }
 
 export const AddUsersToGroupDialog = ({
+  groupId,
   onCancel,
-  onConfirm,
   open,
   members,
 }: AddUsersToGroupDialogProps) => {
   const { t } = useTranslation()
   const style = dialogStyles()
   const userState = useAppSelector(selectUserState)
+  const queryClient = useQueryClient()
 
   const [showOnlyUnset, setShowOnlyUnset] = useState<boolean>(true)
   const [nameFilter, setNameFilter] = useState<string>('')
   const [selectedUsers, setSelectedUsers] = useState<IUserAnnotated[]>([])
   const [usersInList, setUsersInList] = useState<IUserAnnotated[]>([])
+
+  const resetState = () => {
+    setShowOnlyUnset(true)
+    setNameFilter('')
+    setSelectedUsers([])
+    setUsersInList([])
+  }
 
   const onSelect = (user: IUserAnnotated) => {
     if (selectedUsers.find((u) => user.username === u.username)) {
@@ -59,18 +68,28 @@ export const AddUsersToGroupDialog = ({
   }
 
   const { data, isLoading } = useQuery({
-    queryKey: ['get-all-users'],
+    queryKey: ['admin_get_all_users'],
     queryFn: getAllUsers,
   })
 
   /**
-   * TODO: kjør kall for å legge til brukere
-   * !invalidate get-all-users og getgroupMembers (ikke eksisterenede enda, men kommer snart til en fil nær deg)
+   * TODO: invalidate getgroupMembers (ikke eksisterenede enda, men kommer snart til en fil nær deg)
    */
 
+  const addUsersToGroupMutation = useMutation({
+    mutationFn: () => addMultipleUsersToGroup({ id: groupId }, selectedUsers),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['admin_get_all_users'] }),
+  })
+
   const onClose = () => {
-    setSelectedUsers([])
+    resetState()
     onCancel()
+  }
+
+  const onConfirm = () => {
+    addUsersToGroupMutation.mutate
+    onClose()
   }
 
   const toggleShowOnlyUnset = () =>
@@ -93,9 +112,6 @@ export const AddUsersToGroupDialog = ({
       .filter(showOnlyUnsetFilterFn)
     setUsersInList(usersToShow ?? [])
   }, [data?.data])
-
-  console.log(usersInList)
-  console.log(data?.data)
 
   if (isLoading) {
     return <CircularProgress />
@@ -173,10 +189,7 @@ export const AddUsersToGroupDialog = ({
           <span className={style.buttonText}>{t('abort')}</span>
         </Button>
         <Button
-          onClick={() => {
-            onConfirm(selectedUsers)
-            onClose()
-          }}
+          onClick={onConfirm}
           disabled={selectedUsers.length === 0}
           className={style.confirmButton}
         >

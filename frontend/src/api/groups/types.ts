@@ -21,3 +21,5 @@ export type UserInput = IUser
 export type AddUserInput = Omit<IUser, 'group_id'>
 export type GetUsersInput = Pick<IUser, 'group_id'>
 export type DeleteUserInput = Pick<IUser, 'username'>
+
+export type AddUsersBody = Omit<IUser, 'group_id'>[]
