@@ -2,6 +2,8 @@ import express from 'express'
 import Group from './queries'
 import {
   AddUserInput,
+  AddUsersBody,
+  AddUsersQuery,
   DeleteGroupInput,
   DeleteUserInput,
   GetGroupInput,
@@ -53,6 +55,42 @@ router.post<unknown, unknown, AddUserInput, GetGroupInput>(
       })
 
       res.status(200).json(upsertResponse)
+    } catch (err) {
+      console.error(err)
+      next(err)
+    }
+  }
+)
+
+// TODO: bytt ut upsert med ny versjon som kan ta flere brukere når den er på plass
+// Add multiple users to group
+router.post<unknown, unknown, AddUsersBody, AddUsersQuery>(
+  '/users',
+  async (req, res, next) => {
+    try {
+      const { id: group_id } = req.query
+      const users = req.body
+      const upsertResponses = await Promise.all(
+        users.map(async user => {
+          const { status, data } = await Group.upsert({
+            group_id,
+            username: user.username,
+            organization_id: user.organization_id,
+          })
+          if (status !== 'ok') {
+            throw new Error(
+              'Something went wrong while trying to add users to group. User' +
+                JSON.stringify(data)
+            )
+          }
+          return data
+        })
+      )
+      res.status(200).json({
+        message: `🚀 ~ > Users were added to the group with id: ${group_id}`,
+        status: 'ok',
+        data: upsertResponses,
+      })
     } catch (err) {
       console.error(err)
       next(err)

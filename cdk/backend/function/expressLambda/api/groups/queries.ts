@@ -6,17 +6,17 @@ import {
   DeleteUserInput,
   GetGroupInput,
   GetUsersInput,
-  Group,
   GroupInput,
+  IGroup,
+  IUser,
   UpdateGroupLeaderInput,
-  User,
   UserInput,
 } from './types'
 
 const listGroups = async () => {
   const query = 'SELECT * FROM "group"'
 
-  return await sqlQuery<Group[]>({
+  return await sqlQuery<IGroup[]>({
     message: '🚀 ~ > All groups.',
     query,
     isArray: true,
@@ -36,7 +36,7 @@ const listUsersInGroup = async ({ group_id }: GetUsersInput) => {
 
   const query = 'SELECT * FROM "user" WHERE group_id = :group_id'
 
-  return await sqlQuery<User[]>({
+  return await sqlQuery<IUser[]>({
     message: `🚀 ~ > All users in group with id '${group_id}'.`,
     query,
     parameters,
@@ -57,7 +57,7 @@ const getGroup = async ({ id }: GetGroupInput) => {
 
   const query = 'SELECT * FROM "group" WHERE id=:id'
 
-  return await sqlQuery<Group>({
+  return await sqlQuery<IGroup>({
     message: `🚀 ~ > Group with id: ${id}`,
     query,
     parameters,
@@ -91,16 +91,20 @@ const upsert = async ({ username, group_id, organization_id }: UserInput) => {
   const query = `INSERT INTO "user" (username, group_id, organization_id) 
         VALUES (:username, :group_id, :organization_id) 
         ON CONFLICT (username) 
-        DO UPDATE SET mail = :mail, group_id = :group_id, organization_id = :organization_id 
+        DO UPDATE SET group_id = :group_id, organization_id = :organization_id 
         WHERE excluded.username=:username 
         RETURNING *`
 
-  return await sqlQuery<User>({
+  return await sqlQuery<IUser>({
     message: `🚀 ~ > User with username '${username}' is now in group with id '${group_id}'.`,
     query,
     parameters,
   })
 }
+
+/**
+ * TODO: Prøv å lage en upsert som lager/oppdaterer flere brukere samtidig, dette vil kutte antall kall til RDS
+ */
 
 const deleteUserFromGroup = async ({ username }: DeleteUserInput) => {
   const parameters: SqlParameter[] = [
@@ -114,7 +118,7 @@ const deleteUserFromGroup = async ({ username }: DeleteUserInput) => {
   const query =
     'UPDATE "user" SET group_id=NULL WHERE username = :username RETURNING *'
 
-  return await sqlQuery<User>({
+  return await sqlQuery<IUser>({
     message: `🚀 ~ > User with username '${username}' deleted.`,
     query,
     parameters,
@@ -154,7 +158,7 @@ const createGroup = async ({
   VALUES (:id, :organization_id, :group_leader_username)
   RETURNING *`
 
-  return await sqlQuery<Group>({
+  return await sqlQuery<IGroup>({
     message: `🚀 ~ > Created group with id '${generatedgroup_id}' and group leader '${group_leader_username}'.`,
     query,
     parameters,
@@ -173,7 +177,7 @@ const deleteGroup = async ({ id }: DeleteGroupInput) => {
   ]
   const query = 'DELETE FROM "group" WHERE id = :id RETURNING *'
 
-  return await sqlQuery<Group>({
+  return await sqlQuery<IGroup>({
     message: `🚀 ~ > Group with id '${id}' deleted.`,
     query,
     parameters,
@@ -206,7 +210,7 @@ const updateGroupLeader = async (
   WHERE id = :id 
   RETURNING *`
 
-  return await sqlQuery<Group>({
+  return await sqlQuery<IGroup>({
     message: `🚀 ~ > '${group_leader_username}' is now leader for group with id '${id}'.`,
     query,
     parameters,
