@@ -186,21 +186,20 @@ app.post('/anonymizeUser', async (req, res, next) => {
   console.log(`Attempting to anonymize user from ${req.body.orgId}`)
 
   const hashedUsername = createHash('sha256').update(username).digest('hex') // base64 / hex
-  console.log('Hash: ' + hashedUsername) // TODO: remove
-
-  // TODO: handle when one of these fails-- restore user in cognito at least
-  await anonymizeUserInCognito(username).catch(err => {
-    console.log("Error anonymizing user in cognito")
-    err.statusCode = 500
+  
+  let err = new Error()
+  err.statusCode = 500
+  try {
+    await anonymizeUserInCognito(username)
+  } catch (e) {
+    err.message = "Failed to anonymize in Cognito: " + e
     return next(err)
-  })
-
-  await anonymizeUserInDb(username, hashedUsername, orgId).catch(err => {
-    console.log("Error anonymizing user in db")
-    err.statusCode = 500
+  } try {
+    await anonymizeUserInDb(username, hashedUsername, orgId)
+  } catch (e) {
+    err.message = "Failed to anonymize in DynamoDB: " + e
     return next(err)
-  })
-    
+  }
   return res.status(200).json({functionalityComplete: false})
 })
 
@@ -389,7 +388,7 @@ app.use((err, req, res, next) => {
   if (!err.statusCode) err.statusCode = 500 // If err has no specified error code, set error code to 'Internal Server Error (500)'
   res
     .status(err.statusCode)
-    .json({ message: err.message })
+    .json({ custom_error: err.message })
     .end()
 })
 

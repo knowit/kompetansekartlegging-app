@@ -131,11 +131,10 @@ async function anonymizeUser(username) {
     Username: username,
   }
   try {
-    cognitoIdentityServiceProvider.adminDeleteUser(params).promise()
+    await cognitoIdentityServiceProvider.adminDeleteUser(params).promise()
   } catch (err) {
     throw err
   }
-  
 }
 
 async function getUser(username) {
@@ -231,7 +230,6 @@ async function listGroupsForUser(username, Limit, NextToken) {
 
     return result
   } catch (err) {
-    console.log(err)
     throw err
   }
 }

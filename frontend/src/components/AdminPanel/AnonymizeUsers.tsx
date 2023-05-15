@@ -131,6 +131,8 @@ const AnonymizeUsers = () => {
         refresh()
       })
       .catch((err) => {
+        const error_message = err.response.data.custom_error
+        console.log(error_message)
         setShowAnonymizeUserDialog(false)
         setMutationError(
           t('adminApi.error.couldNotAnonymizeName', {

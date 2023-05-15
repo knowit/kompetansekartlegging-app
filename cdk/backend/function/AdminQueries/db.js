@@ -21,6 +21,7 @@ const docClient = new DynamoDB.DocumentClient(config)
 const anonymizeUser = async (username, hashedUsername, orgId) => {
   // Put will overwrite the old item if the key exists
   // That way, the only case where promise throws is on error
+  try {
     console.log('Adding user to AnonymizedUser table')
     await docClient.put({
       TableName : ANON_USER_TABLE_NAME,
@@ -29,9 +30,7 @@ const anonymizeUser = async (username, hashedUsername, orgId) => {
         organizationID: orgId,
         anonymizedAt: new Date().toISOString(),
       },
-      //ConditionExpression: "attribute_not_exists(id)"
     }).promise()
-
     const userFormsForUser = await getUserFormsForUser(username)
 
     userFormsForUser.map(async (userForm) => {
@@ -43,7 +42,7 @@ const anonymizeUser = async (username, hashedUsername, orgId) => {
         UpdateExpression: "SET #owner = :hash",
         ExpressionAttributeNames: { '#owner': 'owner' },
         ExpressionAttributeValues: { ':hash': hashedUsername }
-      }).promise()
+      }).promise().catch(e => {throw(e)})
 
       const allQuestionAnswers = await getQuestionAnswersByUserFormId(userForm.id)
 
@@ -56,9 +55,12 @@ const anonymizeUser = async (username, hashedUsername, orgId) => {
           UpdateExpression: 'SET #owner = :hash',
           ExpressionAttributeNames: { '#owner': 'owner' },
           ExpressionAttributeValues: { ':hash': hashedUsername }
-        }).promise()
+        }).promise().catch(e => {throw(e)})
       })
     })
+  } catch (e) {
+    throw e
+  }
 }
 
 const getUserFormsForUser = async (username) => {
