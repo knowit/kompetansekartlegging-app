@@ -73,7 +73,7 @@ router.get('/', (req, res) => {
 router.get('/answers', async (req, res) => {
   // Find the newest FormDefinition.
 
-  const organization_ID = "testorg" // TODO: change back await getOrganizationID()
+  const organization_ID = await getOrganizationID()
 
   const newestFormDef = await getNewestFormDef(organization_ID)
 
@@ -172,7 +172,7 @@ router.get('/answers/:username/newest', async (req, res) => {
 
 // returns: list of all users
 router.get('/users', async (req, res) => {
-  const organization_ID = "testorg" // TODO: change back await getOrganizationID()
+  const organization_ID = await getOrganizationID()
 
   let allUsers = await getAllUsers(organization_ID)
 
