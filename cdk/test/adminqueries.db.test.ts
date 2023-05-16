@@ -15,6 +15,8 @@ const tableMap = {
   'UserTable': userTableName,
 }
 process.env['TABLE_MAP'] = JSON.stringify(tableMap)
+process.env['AWS_ACCESS_KEY_ID'] = 'accessKeyId'
+process.env['AWS_SECRET_ACCESS_KEY'] = 'secretAccessKey'
 
 const {DocumentClient} = require('aws-sdk/clients/dynamodb');
 const adminDbQueries = require('../backend/function/AdminQueries/db')
