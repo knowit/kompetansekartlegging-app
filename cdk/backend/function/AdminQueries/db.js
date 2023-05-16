@@ -7,16 +7,17 @@ const USER_TABLE_NAME = TableMap['UserTable']
 const ANON_USER_TABLE_NAME = TableMap['AnonymizedUserTable']
 
 const isTest = process.env.JEST_WORKER_ID
-const config = {
+const docClient = new DynamoDB.DocumentClient({
   ...(isTest && {
     convertEmptyValues: true,
-    endpoint: 'localhost:8000',
-    sslEnabled: false,
-    region: 'local-env',
-  }),
-}
-
-const docClient = new DynamoDB.DocumentClient(config)
+    endpoint: 'http://localhost:8000',
+    region: 'local',
+    credentials: {
+      accessKeyId: 'foo',
+      secretAccessKey: 'foo'
+    }
+  })
+})
 
 const anonymizeUser = async (username, hashedUsername, orgId) => {
   // Put will overwrite the old item if the key exists
