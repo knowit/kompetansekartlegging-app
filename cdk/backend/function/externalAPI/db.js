@@ -27,6 +27,7 @@ const GROUP_TABLE_NAME = TableMap['GroupTable']
 // process.env.API_KOMPETANSEKARTLEGGIN_GROUPTABLE_NAME;
 const USER_TABLE_NAME = TableMap['UserTable']
 // process.env.API_KOMPETANSEKARTLEGGIN_GROUPTABLE_NAME;
+const ANON_USER_TABLE_NAME = TableMap['AnonymizedUserTable']
 
 const organizationFilterParameter = ':oid'
 const organizationFilterExpression =
@@ -231,8 +232,33 @@ const getAllUsers = async organization_ID => {
       ),
     }
   })
-
   return filteredUsersWithoutOrganizationID
+}
+
+const getAnonUsers = async (organization_ID) => {
+  const anon_users_res = await docClient
+  .scan({
+    TableName: ANON_USER_TABLE_NAME ,
+    FilterExpression: organizationFilterExpression,
+    ExpressionAttributeValues: {
+      [organizationFilterParameter]: organization_ID,
+    },
+  })
+  .promise().catch(e => { 
+    console.log("Error fetching anon users: " + e)
+    return []
+  })
+
+  //Mock AWS-styled result
+  const anon_users = anon_users_res.Items.map(anon => {
+    return {
+      Enabled: true,
+      Username: anon.id,
+      Attributes: [{ Name: "isAnonymous", Value: true }]
+    }
+  })
+
+  return anon_users
 }
 
 // Find all form definitions.
@@ -295,6 +321,7 @@ module.exports = {
   getNewestFormDef,
   getAllFormDefs,
   getAllUsers,
+  getAnonUsers,
   getAllCategories,
   getAllQuestionForFormDef,
   getAnswersForUserForm,
