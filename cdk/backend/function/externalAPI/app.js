@@ -28,6 +28,7 @@ const crypto = require('crypto')
 const {
   getNewestFormDef,
   getAllUsers,
+  getAnonUsers,
   getAllCategories,
   getAllQuestionForFormDef,
   getAnswersForUser,
@@ -166,9 +167,15 @@ router.get('/answers/:username/newest', async (req, res) => {
 
 // returns: list of all users
 router.get('/users', async (req, res) => {
-  const organization_ID = await getOrganizationID()
+  const organization_ID = "testorg" // TODO: change back await getOrganizationID()
 
-  const allUsers = await getAllUsers(organization_ID)
+  let allUsers = await getAllUsers(organization_ID)
+
+  if (req.query.include_anonymous === "true") {
+    const anonUsers = await getAnonUsers(organization_ID)
+    allUsers = allUsers.concat(anonUsers)
+  }
+  
   return res.json(
     allUsers
       .filter(u => u.Enabled)
