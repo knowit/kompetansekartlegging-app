@@ -3,8 +3,8 @@ const { DynamoDB } = require('aws-sdk')
 const TableMap = JSON.parse(process.env.TABLE_MAP)
 const QUESTION_ANSWER_TABLE_NAME = TableMap['QuestionAnswerTable']
 const USER_FORM_TABLE_NAME = TableMap['UserFormTable']
+const USER_TABLE_NAME = TableMap['UserTable']
 const ANON_USER_TABLE_NAME = TableMap['AnonymizedUserTable']
-
 
 const isTest = process.env.JEST_WORKER_ID
 const config = {
@@ -30,7 +30,8 @@ const anonymizeUser = async (username, hashedUsername, orgId) => {
         organizationID: orgId,
         anonymizedAt: new Date().toISOString(),
       },
-    }).promise()
+    }).promise().catch(e => {throw(e)})
+
     const userFormsForUser = await getUserFormsForUser(username)
 
     userFormsForUser.map(async (userForm) => {
@@ -58,6 +59,12 @@ const anonymizeUser = async (username, hashedUsername, orgId) => {
         }).promise().catch(e => {throw(e)})
       })
     })
+
+    console.log('Finally deleting user from Users-table')
+    await docClient.delete({
+      TableName: USER_TABLE_NAME,
+      Key: { id: username }
+    }).promise()
   } catch (e) {
     throw e
   }

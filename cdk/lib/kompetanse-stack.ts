@@ -304,6 +304,7 @@ export class KompetanseStack extends Stack {
               'dynamodb:Query',
               'dynamodb:UpdateItem',
               'dynamodb:PutItem',
+              'dynamodb:DeleteItem',
             ],
             effect: iam.Effect.ALLOW,
             resources: [
@@ -312,6 +313,8 @@ export class KompetanseStack extends Stack {
               `${tableArns['UserFormTable']}/index/*`,
               tableArns['QuestionAnswerTable'],
               `${tableArns['QuestionAnswerTable']}/index/*`,
+              tableArns['UserTable'],
+              `${tableArns['UserTable']}/index/*`,
               tableArns['AnonymizedUserTable'],
               `${tableArns['AnonymizedUserTable']}/index/*`,
             ],
