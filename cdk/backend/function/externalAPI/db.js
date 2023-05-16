@@ -254,7 +254,10 @@ const getAnonUsers = async (organization_ID) => {
     return {
       Enabled: true,
       Username: anon.id,
-      Attributes: [{ Name: "isAnonymous", Value: true }]
+      Attributes: [
+        { Name: "email", Value: anon.id },
+        { Name: "isAnonymous", Value: true }
+      ]
     }
   })
 

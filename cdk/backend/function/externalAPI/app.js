@@ -73,7 +73,7 @@ router.get('/', (req, res) => {
 router.get('/answers', async (req, res) => {
   // Find the newest FormDefinition.
 
-  const organization_ID = await getOrganizationID()
+  const organization_ID = "testorg" // TODO: change back await getOrganizationID()
 
   const newestFormDef = await getNewestFormDef(organization_ID)
 
@@ -101,8 +101,13 @@ router.get('/answers', async (req, res) => {
   const questionMap = mapFromArray(allQuestionsWithCategory, 'id')
 
   // Find all users.
-  const allUsers = await getAllUsers(organization_ID)
+  let allUsers = await getAllUsers(organization_ID)
   //console.log('allUsers:',allUsers);
+
+  if (req.query.include_anonymous === "true") {
+    const anonUsers = await getAnonUsers(organization_ID)
+    allUsers = allUsers.concat(anonUsers)
+  }
 
   // Find answers for the current form definition for each user.
   const userAnswers = await Promise.all(
