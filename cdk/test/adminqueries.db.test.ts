@@ -1,3 +1,4 @@
+import { DynamoDB } from "aws-sdk";
 import {
   testUserOla,
   testUserKari,
@@ -5,36 +6,48 @@ import {
   userFormTestData,
   questionAnswerTestData
 } from "./testdata/adminqueries.db.dynamodb";
+import dynamoDBTables from "./testdata/dynamodb.tables"
 
 const userTableName = 'User'
+const anonymizedUserTableName = 'AnonymizedUser'
 const userFormTableName = 'UserForm'
 const questionAnswerTableName = 'QuestionAnswer'
-const tableMap = {
-  'QuestionAnswerTable': questionAnswerTableName,
-  'UserFormTable': userFormTableName,
+process.env['TABLE_MAP'] = JSON.stringify({
   'UserTable': userTableName,
-}
-process.env['TABLE_MAP'] = JSON.stringify(tableMap)
-process.env['AWS_ACCESS_KEY_ID'] = 'accessKeyId'
-process.env['AWS_SECRET_ACCESS_KEY'] = 'secretAccessKey'
-
-const {DocumentClient} = require('aws-sdk/clients/dynamodb');
-const adminDbQueries = require('../backend/function/AdminQueries/db')
-
-const docClient = new DocumentClient({
-  convertEmptyValues: true,
-  endpoint: 'localhost:8000',
-  sslEnabled: false,
-  region: 'local-env',
-});
-
-
-beforeEach(async () => {
-  await emptyDatabase()
-  await fillDatabase()
+  'AnonymizedUserTable': anonymizedUserTableName,
+  'UserFormTable': userFormTableName,
+  'QuestionAnswerTable': questionAnswerTableName,
 })
 
-const emptyDatabase = async () => {
+const adminDbQueries = require('../backend/function/AdminQueries/db')
+
+const dynamoDbConfig = {
+  endpoint: 'http://localhost:8000',
+  region: 'local',
+  credentials: {
+    accessKeyId: 'foo',
+    secretAccessKey: 'foo'
+  }
+}
+
+const docClient = new DynamoDB.DocumentClient(dynamoDbConfig)
+
+// Create tables
+beforeAll(async () => {
+  const dynamoDBClient = new DynamoDB(dynamoDbConfig)
+  await Promise.all(
+    dynamoDBTables.map(async (table) => {
+      return await dynamoDBClient.createTable(table).promise()
+    })
+  )
+})
+
+beforeEach(async () => {
+  await emptyDatabaseTables()
+  await fillDatabaseTables()
+})
+
+const emptyDatabaseTables = async () => {
   const [ users, userForms, questionAnswers ] = await Promise.all([
     docClient.scan({ TableName: userTableName }).promise(),
     docClient.scan({ TableName: userFormTableName }).promise(),
@@ -42,19 +55,19 @@ const emptyDatabase = async () => {
   ])
 
   await Promise.all([
-    ...users.Items.map(async (user: any) => {
+    ...users.Items!.map(async (user: any) => {
       return docClient.delete({ TableName: userTableName, Key: {id: user.id} }).promise()
     }),
-    ...userForms.Items.map(async (userForm: any) => {
+    ...userForms.Items!.map(async (userForm: any) => {
       return docClient.delete({ TableName: userFormTableName, Key: {id: userForm.id} }).promise()
     }),
-    ...questionAnswers.Items.map(async (qa: any) => {
+    ...questionAnswers.Items!.map(async (qa: any) => {
       return docClient.delete({ TableName: questionAnswerTableName, Key: {id: qa.id} }).promise()
     })
   ])
 }
 
-const fillDatabase = async () => {
+const fillDatabaseTables = async () => {
   await Promise.all([
     ...testUsers.map(async (testUser) => {
       return docClient.put({ TableName: userTableName, Item: testUser }).promise()
@@ -121,7 +134,7 @@ test('getQuestionAnswersByUserFormId returns correct number of items', async () 
 
     // Get questionAnswers for testUserOlas UserForms
     const questionAnswers = await Promise.all(
-      userForms.Items.map(async (userForm: any) => {
+      userForms.Items!.map(async (userForm: any) => {
         return await adminDbQueries.getQuestionAnswersByUserFormId(userForm.id)
       })
     )
