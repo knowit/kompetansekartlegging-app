@@ -10,7 +10,7 @@ until [ "`docker inspect -f {{.State.Running}} $container_name`"=="true" ]; do
     sleep 0.1;
 done;
 echo "dynamodb-local-container is running"
-jest --verbose
+npx jest --verbose
 exitCode=$?
 docker stop $container_name >/dev/null
 docker rm $container_name >/dev/null
