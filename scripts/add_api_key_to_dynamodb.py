@@ -14,7 +14,7 @@ def add_api_key_to_dynamodb(organization_ID, api_key, iam_user, graphql_api_id, 
 
     dynamo_client = client_session.resource('dynamodb')
 
-    full_table_name = table_name + '-' + graphql_api_id + '-' + env
+    full_table_name = table_name + '-' + "KompetanseStack" + '-' + env
     
     table = dynamo_client.Table(full_table_name)
 
