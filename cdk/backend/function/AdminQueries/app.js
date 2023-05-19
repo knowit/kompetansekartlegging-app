@@ -306,7 +306,7 @@ app.get('/listAllOrganizationAdministrators', async (req, res, next) => {
     } while (nextToken)
 
     const orgAdmins = await Promise.all(
-      allGroups.map(async (group) => {
+      allGroups.map(async group => {
         if (group.GroupName.includes('0admin')) {
           return (await listUsersInGroup(group.GroupName)).Users
         }
@@ -314,11 +314,9 @@ app.get('/listAllOrganizationAdministrators', async (req, res, next) => {
     )
 
     // Flatten and remove null values
-    orgAdminsFiltered = orgAdmins
-      .flat()
-      .filter((admin) => admin)
+    orgAdminsFiltered = orgAdmins.flat().filter(admin => admin)
 
-    res.status(200).json({'Admins': orgAdminsFiltered})
+    res.status(200).json({ Admins: orgAdminsFiltered })
   } catch (err) {
     next(err)
   }
