@@ -124,6 +124,7 @@ const AnonymizeUsers = () => {
   const anonymizeUserConfirm = async () => {
     const username = userToAnonymize.Username
     const orgId = getAttribute(userToAnonymize, ORGANIZATION_ID_ATTRIBUTE)
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await anonymizeUserApiCall(username, orgId!)
       .then(() => {
         setMutationError(null)
