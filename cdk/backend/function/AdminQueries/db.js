@@ -34,32 +34,8 @@ const anonymizeUser = async (username, hashedUsername, orgId) => {
     }).promise().catch(e => {throw(e)})
 
     const userFormsForUser = await getUserFormsForUser(username)
-
-    userFormsForUser.map(async (userForm) => {
-      console.log('Anonymizing UserForm with ID: ', userForm.id)
-      await docClient
-      .update({
-        TableName: USER_FORM_TABLE_NAME,
-        Key: { id : userForm.id },
-        UpdateExpression: "SET #owner = :hash",
-        ExpressionAttributeNames: { '#owner': 'owner' },
-        ExpressionAttributeValues: { ':hash': hashedUsername }
-      }).promise().catch(e => {throw(e)})
-
-      const allQuestionAnswers = await getQuestionAnswersByUserFormId(userForm.id)
-
-      console.log('Anonymizing QuestionAnswers for UserForm with ID: ', userForm.id)
-      allQuestionAnswers.map(async (questionAnswer) => {
-        await docClient
-        .update({
-          TableName: QUESTION_ANSWER_TABLE_NAME,
-          Key: { id: questionAnswer.id },
-          UpdateExpression: 'SET #owner = :hash',
-          ExpressionAttributeNames: { '#owner': 'owner' },
-          ExpressionAttributeValues: { ':hash': hashedUsername }
-        }).promise().catch(e => {throw(e)})
-      })
-    })
+    await anonymizeQuestionAnswers(userFormsForUser, hashedUsername)
+    await anonymizeUserForms(userFormsForUser, hashedUsername)
 
     console.log('Finally deleting user from Users-table')
     await docClient.delete({
@@ -107,6 +83,40 @@ const getQuestionAnswersByUserFormId = async (userFormId) => {
     .promise()
 
   return result.Items
+}
+
+const anonymizeQuestionAnswers = async (userForms, hashedUsername) => {
+  await Promise.all(
+    userForms.map(async (userForm) => {
+      const questionAnswers = await getQuestionAnswersByUserFormId(userForm.id)
+
+      console.log('Anonymizing QuestionAnswers for UserForm with ID: ', userForm.id)
+      return questionAnswers.map(async (questionAnswer) =>
+        docClient.update({
+          TableName: QUESTION_ANSWER_TABLE_NAME,
+          Key: { id: questionAnswer.id },
+          UpdateExpression: 'SET #owner = :hash',
+          ExpressionAttributeNames: { '#owner': 'owner' },
+          ExpressionAttributeValues: { ':hash': hashedUsername }
+        }).promise()
+      )
+    })
+  )
+}
+
+const anonymizeUserForms = async (userForms, hashedUsername) => {
+  await Promise.all(
+    userForms.map(async (userForm) => {
+      console.log('Anonymizing UserForm with ID: ', userForm.id)
+      return docClient.update({
+        TableName: USER_FORM_TABLE_NAME,
+        Key: { id : userForm.id },
+        UpdateExpression: "SET #owner = :hash",
+        ExpressionAttributeNames: { '#owner': 'owner' },
+        ExpressionAttributeValues: { ':hash': hashedUsername }
+      }).promise()
+    })
+  )
 }
 
 module.exports = {
