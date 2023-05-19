@@ -176,7 +176,6 @@ const listAllUsers = async (limit = 60): Promise<ApiResponse<any[]>> => {
       allUsers = [...allUsers, ...Users]
     } while (nextToken)
   } catch (e) {
-    console.log("error in listAllUsers")
     return { error: i18n.t('adminApi.error.couldNotGetAListOfAllUsers') }
   }
   return { result: allUsers }
