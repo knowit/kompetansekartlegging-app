@@ -1,3 +1,4 @@
+jest.useFakeTimers()
 import { DynamoDB } from "aws-sdk";
 import {
   testUserOla,
@@ -20,6 +21,7 @@ process.env['TABLE_MAP'] = JSON.stringify({
 })
 
 const adminDbQueries = require('../backend/function/AdminQueries/db')
+const { createHash } = require('crypto')
 
 const dynamoDbConfig = {
   endpoint: 'http://localhost:8000',
@@ -80,7 +82,6 @@ const fillDatabaseTables = async () => {
     }),
   ])
 }
-
 
 test('DynamoDB has correct number of items', async () => {
   // Also validates testdata in case items have the same id
@@ -143,4 +144,107 @@ test('getQuestionAnswersByUserFormId returns correct number of items', async () 
     const qaCountInTestData = questionAnswerTestData.filter((qa) => qa.owner == testUserOla.id).length
 
     expect(qaCountInDb).toBe(qaCountInTestData)
+})
+
+test('Anonymizing user', async () => {
+  const hashedId = createHash('sha256').update(testUserOla.id).digest('hex')
+
+  const makeParams = (keyName: string, value: string) => {
+    return {
+      Select: "COUNT",
+      FilterExpression : `#${keyName} = :value`,
+      ExpressionAttributeNames: {
+        [`#${keyName}`]: `${keyName}`,
+      },
+      ExpressionAttributeValues: {
+        ':value': value
+      }
+    }
+  }
+
+  const olaOwnerParams = makeParams("owner", testUserOla.id)
+  const olaIdParams = makeParams("id", testUserOla.id)
+
+  const olaHashOwnerParams = makeParams("owner", hashedId)
+  const olaHashIdParams = makeParams("id", hashedId)
+
+  const userScan = await docClient.scan({ 
+    TableName: userTableName,
+    ...olaIdParams,
+    Select: "COUNT" 
+  }).promise()
+  
+  const userFormScan = await docClient.scan({ 
+    TableName: userFormTableName, 
+    ...olaOwnerParams 
+  }).promise()
+
+  const qaScan = await docClient.scan({ 
+    TableName: questionAnswerTableName, 
+    ...olaOwnerParams 
+  }).promise()
+
+  const userCountBeforeAnon = userScan["Count"] as number
+  const userFormCountBeforeAnon = userFormScan["Count"]
+  const qaCountBeforeAnon = qaScan["Count"]
+
+  // Anonymize user
+  await adminDbQueries.anonymizeUser(testUserOla.id, hashedId, testUserOla.organizationID)
+
+  // Check user was added to the anonymized table with correct id, and is the only one added
+  const anonWithHashScan = await docClient.scan({ 
+    TableName: anonymizedUserTableName,
+    ...olaHashIdParams
+  }).promise()
+
+  expect(anonWithHashScan["Count"]).toBe(1)
+
+  const anonScan = await docClient.scan({ 
+    TableName: anonymizedUserTableName, 
+    Select: "COUNT" })
+  .promise()
+
+  expect(anonScan["Count"]).toBe(1)
+
+  // Check that user with original id is not in users table
+  const userScanAfterAnon = await docClient.scan({ 
+    TableName: userTableName,
+    ...olaIdParams,
+    Select: "COUNT",
+  }).promise()
+
+  expect(userScanAfterAnon["Count"]).toBe(userCountBeforeAnon - 1)
+
+  // Check that the owner id has been replaced with the hash in UserForm-table
+  const userformOlaScan = await docClient.scan({ 
+    TableName: userFormTableName,
+    ...olaOwnerParams,
+  }).promise()
+
+  expect(userformOlaScan["Count"]).toBe(0)
+
+  const userformHashScan = await docClient.scan({
+    TableName: userFormTableName, 
+    ...olaHashOwnerParams,
+  }).promise()
+  expect(userformHashScan["Count"]).toBe(userFormCountBeforeAnon)
+
+  // Check that the owner id has been replaced with the hash in QuestionAnswer-table
+  const qaOlaScan = await docClient.scan({ 
+    TableName: questionAnswerTableName,
+    ...olaOwnerParams,
+  }).promise()
+
+  expect(qaOlaScan["Count"]).toBe(0)
+
+  const qaHashScan = await docClient.scan({
+    TableName: questionAnswerTableName, 
+    ...olaHashOwnerParams,
+  }).promise()
+
+  expect(qaHashScan["Count"]).toBe(qaCountBeforeAnon)
+
+  /*
+  // Testcase: anonymizing user twice doesnt add anything new to the table
+  */
 })

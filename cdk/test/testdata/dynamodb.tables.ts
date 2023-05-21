@@ -41,6 +41,27 @@ export default [
         ],
     },
     {
+            "AttributeDefinitions": [
+                {
+                    "AttributeName": "id",
+                    "AttributeType": "S"
+                }
+            ],
+            "TableName": "AnonymizedUser",
+            "KeySchema": [
+                {
+                    "AttributeName": "id",
+                    "KeyType": "HASH"
+                }
+            ],
+            "ProvisionedThroughput": {
+                "ReadCapacityUnits": 1,
+                "WriteCapacityUnits": 1,
+            },
+
+        },
+    
+    {
         "TableName": "UserForm",
         "AttributeDefinitions": [
             {
