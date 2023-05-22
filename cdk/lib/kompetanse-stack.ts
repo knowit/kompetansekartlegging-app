@@ -22,6 +22,7 @@ import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as sns from 'aws-cdk-lib/aws-sns'
+import { RetentionDays } from 'aws-cdk-lib/aws-logs'
 // import * as appsync from 'aws-cdk-lib/aws-appsync';
 import * as gateway from 'aws-cdk-lib/aws-apigateway'
 // import { CfnUserPoolIdentityProvider } from 'aws-cdk-lib/aws-cognito';
@@ -38,6 +39,7 @@ export class KompetanseStack extends Stack {
     const ENV = this.node.tryGetContext('ENV')
     const isProd = ENV === 'prod'
     const isDev = ENV === 'dev'
+    const LOG_RETENTION_THREE_MONTHS = RetentionDays.THREE_MONTHS
 
     // COGNITO SetUp
 
@@ -202,6 +204,7 @@ export class KompetanseStack extends Stack {
         handler: 'index.handler',
         runtime: lambda.Runtime.NODEJS_14_X,
         timeout: Duration.seconds(25),
+        logRetention: LOG_RETENTION_THREE_MONTHS
       }
     )
 
@@ -274,6 +277,7 @@ export class KompetanseStack extends Stack {
         handler: 'index.handler',
         runtime: lambda.Runtime.NODEJS_14_X,
         timeout: Duration.seconds(25),
+        logRetention: LOG_RETENTION_THREE_MONTHS,
         memorySize: 512,
         environment: {
           USERPOOL: pool.userPoolId,
@@ -371,6 +375,7 @@ export class KompetanseStack extends Stack {
         initialPolicy: [externalApiStatement, externalAPICognitoStatement],
         memorySize: 1024,
         timeout: Duration.seconds(25),
+        logRetention: LOG_RETENTION_THREE_MONTHS,
       }
     )
 
@@ -425,6 +430,7 @@ export class KompetanseStack extends Stack {
           },
           initialPolicy: [excelStatement, externalAPICognitoStatement],
           timeout: Duration.seconds(25),
+          logRetention: LOG_RETENTION_THREE_MONTHS,
           memorySize: 2048,
         }
       )
@@ -539,7 +545,8 @@ export class KompetanseStack extends Stack {
     },
     initialPolicy: [copyCatalogStatement, externalAPICognitoStatement],
     timeout: Duration.seconds(25),
-    memorySize:2048
+    logRetention: LOG_RETENTION_THREE_MONTHS,
+    memorySize:2048,
   })
     // CopyCatalog API Setup
 
@@ -643,6 +650,7 @@ export class KompetanseStack extends Stack {
         handler: 'index.handler',
         runtime: lambda.Runtime.NODEJS_14_X,
         timeout: Duration.seconds(batchCreateUserTimeoutSeconds),
+        logRetention: LOG_RETENTION_THREE_MONTHS
       }
     )
     appSync.addLambdaDataSourceAndResolvers(
@@ -708,6 +716,7 @@ export class KompetanseStack extends Stack {
         runtime: lambda.Runtime.PYTHON_3_9,
         initialPolicy: [slackAlarmForwarderPermissions],
         timeout: Duration.seconds(10),
+        logRetention: LOG_RETENTION_THREE_MONTHS,
       }
     )
 
@@ -917,6 +926,7 @@ export class KompetanseStack extends Stack {
         },
         initialPolicy: [configureNewOrganizationStatement],
         timeout: Duration.seconds(25),
+        logRetention: LOG_RETENTION_THREE_MONTHS,
         memorySize: 2048,
       }
     )
