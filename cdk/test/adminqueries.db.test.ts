@@ -1,12 +1,14 @@
 jest.useFakeTimers()
-import { DynamoDB } from "aws-sdk";
+import { DynamoDB } from "aws-sdk"
+import { randomUUID } from "crypto"
 import {
   testUserOla,
   testUserKari,
   testUsers,
   userFormTestData,
   questionAnswerTestData,
-} from "./testdata/adminqueries.db.dynamodb";
+  testUserOlaLastUserFormUpdatedAt
+} from "./testdata/adminqueries.db.dynamodb"
 import dynamoDBTables from "./testdata/dynamodb.tables"
 
 const userTableName = 'User'
@@ -50,10 +52,11 @@ beforeEach(async () => {
 })
 
 const emptyDatabaseTables = async () => {
-  const [ users, userForms, questionAnswers ] = await Promise.all([
+  const [ users, userForms, questionAnswers, anonymizedUsers ] = await Promise.all([
     docClient.scan({ TableName: userTableName }).promise(),
     docClient.scan({ TableName: userFormTableName }).promise(),
-    docClient.scan({ TableName: questionAnswerTableName }).promise()
+    docClient.scan({ TableName: questionAnswerTableName }).promise(),
+    docClient.scan({ TableName: anonymizedUserTableName }).promise()
   ])
 
   await Promise.all([
@@ -65,6 +68,9 @@ const emptyDatabaseTables = async () => {
     }),
     ...questionAnswers.Items!.map(async (qa: any) => {
       return docClient.delete({ TableName: questionAnswerTableName, Key: {id: qa.id} }).promise()
+    }),
+    ...anonymizedUsers.Items!.map(async (qa: any) => {
+      return docClient.delete({ TableName: anonymizedUserTableName, Key: {id: qa.id} }).promise()
     })
   ])
 }
@@ -311,4 +317,20 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
   }).promise()
 
   expect(hashedKariqaidsScanAfterAnon["Count"]).toBe(karinaqaids.length)
+})
+
+test('AnonymizedUserTable lastAnswerAt matches users last UserForm updatedAt', async () => {
+  // Anonymize testUserOla
+  await adminDbQueries.anonymizeUser(testUserOla.id, randomUUID(), testUserOla.organizationID)
+  
+  // Get anonymized user
+  const anonymizedUsersScan = await docClient.scan({
+    TableName: anonymizedUserTableName
+  }).promise()
+  
+  // Assert only one user has been anonymized,
+  // and that anonymizedAt matches testUserOlas last UserForm updatedAt
+  expect(anonymizedUsersScan.Count).toBe(1)
+  expect(anonymizedUsersScan.Items![0].anonymizedAt).toBe(testUserOlaLastUserFormUpdatedAt)
+  // TODO: replace anonymizedAt by lastAnswerAt (on line aboveabove)
 })

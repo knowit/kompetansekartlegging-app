@@ -19,6 +19,7 @@ export const testUserKari = {
 export const testUsers = [ testUserOla, testUserKari ]
 
 // UserForms
+export const testUserOlaLastUserFormUpdatedAt = "2090-02-01T12:00:00.605Z"
 export const userFormTestData = [
     {
         id: '0',
@@ -31,8 +32,8 @@ export const userFormTestData = [
         id: '1',
         owner: testUserOla.id,
         formDefinitionId: '1',
-        createdAt: '2023-02-01T12:00:00.605Z',
-        updatedAt: '2023-02-01T12:00:00.605Z',
+        createdAt: "2090-01-01T12:00:00.605Z",
+        updatedAt: testUserOlaLastUserFormUpdatedAt,
     },
     {
         id: '2',
