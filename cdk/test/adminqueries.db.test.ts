@@ -170,7 +170,6 @@ test('Anonymizing user', async () => {
 
   const userScan = await docClient.scan({ 
     TableName: userTableName,
-    ...olaIdParams,
     Select: "COUNT" 
   }).promise()
   
@@ -209,7 +208,6 @@ test('Anonymizing user', async () => {
   // Check that user with original id is not in users table
   const userScanAfterAnon = await docClient.scan({ 
     TableName: userTableName,
-    ...olaIdParams,
     Select: "COUNT",
   }).promise()
 
