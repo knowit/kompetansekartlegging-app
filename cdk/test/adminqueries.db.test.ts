@@ -5,7 +5,7 @@ import {
   testUserKari,
   testUsers,
   userFormTestData,
-  questionAnswerTestData
+  questionAnswerTestData,
 } from "./testdata/adminqueries.db.dynamodb";
 import dynamoDBTables from "./testdata/dynamodb.tables"
 
@@ -146,7 +146,7 @@ test('getQuestionAnswersByUserFormId returns correct number of items', async () 
     expect(qaCountInDb).toBe(qaCountInTestData)
 })
 
-test('Anonymizing user', async () => {
+test('Anonymizing user completely', async () => {
   const hashedId = createHash('sha256').update(testUserOla.id).digest('hex')
 
   const makeParams = (keyName: string, value: string) => {
@@ -163,7 +163,6 @@ test('Anonymizing user', async () => {
   }
 
   const olaOwnerParams = makeParams("owner", testUserOla.id)
-  const olaIdParams = makeParams("id", testUserOla.id)
 
   const olaHashOwnerParams = makeParams("owner", hashedId)
   const olaHashIdParams = makeParams("id", hashedId)
@@ -241,8 +240,75 @@ test('Anonymizing user', async () => {
   }).promise()
 
   expect(qaHashScan["Count"]).toBe(qaCountBeforeAnon)
+})
 
-  /*
-  // Testcase: anonymizing user twice doesnt add anything new to the table
-  */
+test('Test anonymization on partially completed anonymization of QuestionAnswers', async () => {
+  const hashedKari = createHash('sha256').update(testUserKari.id).digest('hex')
+
+  // Get all ids for Kari's answers
+  const kariqaidsScan = await docClient.scan({
+    TableName: questionAnswerTableName,
+    FilterExpression: '#owner = :karid',
+    ExpressionAttributeNames: {
+      '#owner': 'owner',
+    },
+    ExpressionAttributeValues: {
+      ':karid': testUserKari.id
+    }
+  }).promise()
+
+  const karinaqaids = kariqaidsScan.Items!.map(i => i.id)
+
+  // Mock incomplete anonymization by anonymizing only one row
+  await docClient.update({
+    TableName: questionAnswerTableName,
+    Key: { id: karinaqaids[0] },
+    UpdateExpression: 'SET #owner = :hash',
+    ExpressionAttributeNames: { '#owner': 'owner' },
+    ExpressionAttributeValues: { ':hash': hashedKari }
+  }).promise()
+
+  // Mock incomplete anonymization 
+  const incompleteScan = await docClient.scan({
+    TableName: questionAnswerTableName,
+    FilterExpression: '#owner = :karid',
+    ExpressionAttributeNames: {
+      '#owner': 'owner',
+    },
+    ExpressionAttributeValues: {
+      ':karid': testUserKari.id
+    }
+  }).promise()
+
+  expect(incompleteScan["Count"]).toBe(kariqaidsScan["Count"]! - 1)
+
+  // Anonymize 
+  await adminDbQueries.anonymizeUser(testUserKari.id, hashedKari, testUserKari.organizationID)
+
+  // Check there that id has been replaced with hash
+  const kariqaidsScanAfterAnon = await docClient.scan({
+    TableName: questionAnswerTableName,
+    FilterExpression: '#owner = :karid',
+    ExpressionAttributeNames: {
+      '#owner': 'owner',
+    },
+    ExpressionAttributeValues: {
+      ':karid': testUserKari.id
+    }
+  }).promise()
+
+  expect(kariqaidsScanAfterAnon["Count"]).toBe(0)
+
+  const hashedKariqaidsScanAfterAnon = await docClient.scan({
+    TableName: questionAnswerTableName,
+    FilterExpression: '#owner = :karid',
+    ExpressionAttributeNames: {
+      '#owner': 'owner',
+    },
+    ExpressionAttributeValues: {
+      ':karid': hashedKari
+    }
+  }).promise()
+
+  expect(hashedKariqaidsScanAfterAnon["Count"]).toBe(karinaqaids.length)
 })
