@@ -249,7 +249,7 @@ const getAnonUsers = async (organization_ID) => {
     return []
   })
 
-  //Mock AWS-styled result
+  // Mock AWS-styled result
   const anon_users = anon_users_res.Items.map(anon => {
     return {
       Enabled: true,

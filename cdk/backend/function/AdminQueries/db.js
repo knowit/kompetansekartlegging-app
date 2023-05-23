@@ -22,33 +22,28 @@ const docClient = new DynamoDB.DocumentClient({
 const anonymizeUser = async (username, hashedUsername, orgId) => {
   // Put will overwrite the old item if the key exists
   // That way, the only case where promise throws is on error
-  try {
-    const userFormsForUser = await getUserFormsForUser(username)
-    const sortedByUpdated = userFormsForUser.sort((a, b) => -a.updatedAt.localeCompare(b.updatedAt))
-    const lastUpdated = sortedByUpdated[0]
+  const userFormsForUser = await getUserFormsForUser(username)
+  const sortedByUpdated = userFormsForUser.sort((a, b) => -a.updatedAt.localeCompare(b.updatedAt))
+  const lastUpdated = sortedByUpdated[0]
 
-    console.log('Adding user to AnonymizedUser table')
-    await docClient.put({
-      TableName : ANON_USER_TABLE_NAME,
-      Item: {
-        id: hashedUsername,
-        organizationID: orgId,
-        lastAnswerAt: lastUpdated.updatedAt,
-      },
-    }).promise().catch(e => {throw(e)})
+  console.log('Adding user to AnonymizedUser table')
+  await docClient.put({
+    TableName : ANON_USER_TABLE_NAME,
+    Item: {
+      id: hashedUsername,
+      organizationID: orgId,
+      lastAnswerAt: lastUpdated.updatedAt,
+    },
+  }).promise()
+  
+  await anonymizeQuestionAnswers(userFormsForUser, hashedUsername)
+  await anonymizeUserForms(userFormsForUser, hashedUsername)
 
-    
-    await anonymizeQuestionAnswers(userFormsForUser, hashedUsername)
-    await anonymizeUserForms(userFormsForUser, hashedUsername)
-
-    console.log('Finally deleting user from Users-table')
-    await docClient.delete({
-      TableName: USER_TABLE_NAME,
-      Key: { id: username }
-    }).promise()
-  } catch (e) {
-    throw e
-  }
+  console.log('Finally deleting user from User table')
+  await docClient.delete({
+    TableName: USER_TABLE_NAME,
+    Key: { id: username }
+  }).promise()
 }
 
 const getUserFormsForUser = async (username) => {
