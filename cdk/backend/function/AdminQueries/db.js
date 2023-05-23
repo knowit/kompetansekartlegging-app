@@ -23,17 +23,21 @@ const anonymizeUser = async (username, hashedUsername, orgId) => {
   // Put will overwrite the old item if the key exists
   // That way, the only case where promise throws is on error
   try {
+    const userFormsForUser = await getUserFormsForUser(username)
+    const sortedByUpdated = userFormsForUser.sort((a, b) => -a.updatedAt.localeCompare(b.updatedAt))
+    const lastUpdated = sortedByUpdated[0]
+
     console.log('Adding user to AnonymizedUser table')
     await docClient.put({
       TableName : ANON_USER_TABLE_NAME,
       Item: {
         id: hashedUsername,
         organizationID: orgId,
-        anonymizedAt: new Date().toISOString(),
+        lastAnswerAt: lastUpdated.updatedAt,
       },
     }).promise().catch(e => {throw(e)})
 
-    const userFormsForUser = await getUserFormsForUser(username)
+    
     await anonymizeQuestionAnswers(userFormsForUser, hashedUsername)
     await anonymizeUserForms(userFormsForUser, hashedUsername)
 

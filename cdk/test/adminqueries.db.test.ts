@@ -329,8 +329,8 @@ test('AnonymizedUserTable lastAnswerAt matches users last UserForm updatedAt', a
   }).promise()
   
   // Assert only one user has been anonymized,
-  // and that anonymizedAt matches testUserOlas last UserForm updatedAt
+  // and that lastAnswerAt matches testUserOlas last UserForm updatedAt
   expect(anonymizedUsersScan.Count).toBe(1)
-  expect(anonymizedUsersScan.Items![0].anonymizedAt).toBe(testUserOlaLastUserFormUpdatedAt)
-  // TODO: replace anonymizedAt by lastAnswerAt (on line aboveabove)
+  expect(anonymizedUsersScan.Items![0].lastAnswerAt).toBe(testUserOlaLastUserFormUpdatedAt)
+  // TODO: replace lastAnswerAt by lastAnswerAt (on line aboveabove)
 })

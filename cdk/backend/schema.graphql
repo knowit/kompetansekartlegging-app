@@ -239,7 +239,7 @@ type AnonymizedUser
     ) {
     id: ID!
     organizationID: ID!
-    anonymizedAt: AWSDateTime!
+    lastAnswerAt: AWSDateTime!
 }
 
 type CreateQuestionAnswerResult {
