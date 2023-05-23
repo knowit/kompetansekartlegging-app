@@ -185,22 +185,22 @@ app.post('/anonymizeUser', async (req, res, next) => {
   const orgId = req.body.orgId
   console.log(`Attempting to anonymize user from ${req.body.orgId}`)
 
-  const hashedUsername = createHash('sha256').update(username).digest('hex') // base64 / hex
+  const hashedUsername = createHash('sha256').update(username).digest('hex')
   
   let err = new Error()
   err.statusCode = 500
-  try {
-    await anonymizeUserInCognito(username)
-  } catch (e) {
-    err.message = "Failed to anonymize in Cognito: " + e
-    return next(err)
-  } try {
+ try {
     await anonymizeUserInDb(username, hashedUsername, orgId)
   } catch (e) {
     err.message = "Failed to anonymize in DynamoDB: " + e
     return next(err)
+  } try {
+    await anonymizeUserInCognito(username)
+  } catch (e) {
+    err.message = "Failed to anonymize in Cognito: " + e
+    return next(err)
   }
-  return res.status(200).json({functionalityComplete: false})
+  return res.status(200).json({message: 'User anonymized'})
 })
 
 app.get('/getUser', async (req, res, next) => {

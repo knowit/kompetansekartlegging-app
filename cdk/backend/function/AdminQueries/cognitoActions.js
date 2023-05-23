@@ -130,11 +130,8 @@ async function anonymizeUser(username) {
     UserPoolId: userPoolId,
     Username: username,
   }
-  try {
-    await cognitoIdentityServiceProvider.adminDeleteUser(params).promise()
-  } catch (err) {
-    throw err
-  }
+  console.log('Deleting user from Cognito')
+  await cognitoIdentityServiceProvider.adminDeleteUser(params).promise()
 }
 
 async function getUser(username) {
