@@ -104,7 +104,7 @@ router.get('/answers', async (req, res) => {
   let allUsers = await getAllUsers(organization_ID)
   //console.log('allUsers:',allUsers);
 
-  if (req.query.include_anonymous === "true") {
+  if (req.query.include_anonymous === 'true') {
     const anonUsers = await getAnonUsers(organization_ID)
     allUsers = allUsers.concat(anonUsers)
   }
@@ -176,11 +176,11 @@ router.get('/users', async (req, res) => {
 
   let allUsers = await getAllUsers(organization_ID)
 
-  if (req.query.include_anonymous === "true") {
+  if (req.query.include_anonymous === 'true') {
     const anonUsers = await getAnonUsers(organization_ID)
     allUsers = allUsers.concat(anonUsers)
   }
-  
+
   return res.json(
     allUsers
       .filter(u => u.Enabled)

@@ -189,18 +189,19 @@ app.post('/anonymizeUser', async (req, res, next) => {
 
   let err = new Error()
   err.statusCode = 500
- try {
+  try {
     await anonymizeUserInDb(username, newId, orgId)
   } catch (e) {
-    err.message = "Failed to anonymize in DynamoDB: " + e
-    return next(err)
-  } try {
-    await anonymizeUserInCognito(username)
-  } catch (e) {
-    err.message = "Failed to anonymize in Cognito: " + e
+    err.message = 'Failed to anonymize in DynamoDB: ' + e
     return next(err)
   }
-  return res.status(200).json({message: 'User anonymized'})
+  try {
+    await anonymizeUserInCognito(username)
+  } catch (e) {
+    err.message = 'Failed to anonymize in Cognito: ' + e
+    return next(err)
+  }
+  return res.status(200).json({ message: 'User anonymized' })
 })
 
 app.get('/getUser', async (req, res, next) => {

@@ -235,19 +235,20 @@ const getAllUsers = async organization_ID => {
   return filteredUsersWithoutOrganizationID
 }
 
-const getAnonUsers = async (organization_ID) => {
+const getAnonUsers = async organization_ID => {
   const anon_users_res = await docClient
-  .scan({
-    TableName: ANON_USER_TABLE_NAME ,
-    FilterExpression: organizationFilterExpression,
-    ExpressionAttributeValues: {
-      [organizationFilterParameter]: organization_ID,
-    },
-  })
-  .promise().catch(e => { 
-    console.log("Error fetching anon users: " + e)
-    return []
-  })
+    .scan({
+      TableName: ANON_USER_TABLE_NAME,
+      FilterExpression: organizationFilterExpression,
+      ExpressionAttributeValues: {
+        [organizationFilterParameter]: organization_ID,
+      },
+    })
+    .promise()
+    .catch(e => {
+      console.log('Error fetching anon users: ' + e)
+      return []
+    })
 
   // Mock AWS-styled result
   const anon_users = anon_users_res.Items.map(anon => {
@@ -255,9 +256,9 @@ const getAnonUsers = async (organization_ID) => {
       Enabled: true,
       Username: anon.id,
       Attributes: [
-        { Name: "email", Value: anon.id },
-        { Name: "isAnonymous", Value: true }
-      ]
+        { Name: 'email', Value: anon.id },
+        { Name: 'isAnonymous', Value: true },
+      ],
     }
   })
 

@@ -247,7 +247,14 @@ async function listUsersInGroup(groupname, Limit, NextToken) {
       .promise()
     return result
   } catch (err) {
-    console.log("Error trying to list users in group: " + groupname + " in userpool: " + UserPoolId + "\n" + err)
+    console.log(
+      'Error trying to list users in group: ' +
+        groupname +
+        ' in userpool: ' +
+        UserPoolId +
+        '\n' +
+        err
+    )
     throw err
   }
 }

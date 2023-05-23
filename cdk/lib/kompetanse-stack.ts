@@ -434,7 +434,6 @@ export class KompetanseStack extends Stack {
           `${tableArns['AnonymizedUserTable']}/index/*`,
           excelBucket.bucketArn,
           `${excelBucket.bucketArn}/*`,
-          
         ],
       })
 
