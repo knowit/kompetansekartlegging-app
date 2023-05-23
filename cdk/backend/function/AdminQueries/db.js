@@ -19,7 +19,7 @@ const docClient = new DynamoDB.DocumentClient({
   })
 })
 
-const anonymizeUser = async (username, hashedUsername, orgId) => {
+const anonymizeUser = async (username, newId, orgId) => {
   // Put will overwrite the old item if the key exists
   // That way, the only case where promise throws is on error
   const userFormsForUser = await getUserFormsForUser(username)
@@ -30,14 +30,14 @@ const anonymizeUser = async (username, hashedUsername, orgId) => {
   await docClient.put({
     TableName : ANON_USER_TABLE_NAME,
     Item: {
-      id: hashedUsername,
+      id: newId,
       organizationID: orgId,
       lastAnswerAt: lastUpdated.updatedAt,
     },
   }).promise()
   
-  await anonymizeQuestionAnswers(userFormsForUser, hashedUsername)
-  await anonymizeUserForms(userFormsForUser, hashedUsername)
+  await anonymizeQuestionAnswers(userFormsForUser, newId)
+  await anonymizeUserForms(userFormsForUser, newId)
 
   console.log('Finally deleting user from User table')
   await docClient.delete({
@@ -84,7 +84,7 @@ const getQuestionAnswersByUserFormId = async (userFormId) => {
   return result.Items
 }
 
-const anonymizeQuestionAnswers = async (userForms, hashedUsername) => {
+const anonymizeQuestionAnswers = async (userForms, newId) => {
   await Promise.all(
     userForms.map(async (userForm) => {
       const questionAnswers = await getQuestionAnswersByUserFormId(userForm.id)
@@ -94,25 +94,25 @@ const anonymizeQuestionAnswers = async (userForms, hashedUsername) => {
         docClient.update({
           TableName: QUESTION_ANSWER_TABLE_NAME,
           Key: { id: questionAnswer.id },
-          UpdateExpression: 'SET #owner = :hash',
+          UpdateExpression: 'SET #owner = :newId',
           ExpressionAttributeNames: { '#owner': 'owner' },
-          ExpressionAttributeValues: { ':hash': hashedUsername }
+          ExpressionAttributeValues: { ':newId': newId }
         }).promise()
       )
     })
   )
 }
 
-const anonymizeUserForms = async (userForms, hashedUsername) => {
+const anonymizeUserForms = async (userForms, newId) => {
   await Promise.all(
     userForms.map(async (userForm) => {
       console.log('Anonymizing UserForm with ID: ', userForm.id)
       return docClient.update({
         TableName: USER_FORM_TABLE_NAME,
         Key: { id : userForm.id },
-        UpdateExpression: "SET #owner = :hash",
+        UpdateExpression: "SET #owner = :newId",
         ExpressionAttributeNames: { '#owner': 'owner' },
-        ExpressionAttributeValues: { ':hash': hashedUsername }
+        ExpressionAttributeValues: { ':newId': newId }
       }).promise()
     })
   )
