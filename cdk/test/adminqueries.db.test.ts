@@ -151,7 +151,7 @@ test('getQuestionAnswersByUserFormId returns correct number of items', async () 
     expect(qaCountInDb).toBe(qaCountInTestData)
 })
 
-test('Anonymizing user completely', async () => {
+test('Test Anonymizing user: sunny day scenario', async () => {
   const newId = randomUUID()
 
   const makeParams = (keyName: string, value: string) => {
@@ -168,7 +168,6 @@ test('Anonymizing user completely', async () => {
   }
 
   const olaOwnerParams = makeParams("owner", testUserOla.id)
-
   const anonymizedOlaOwnerParams = makeParams("owner", newId)
   const anonymizedOlaIdParams = makeParams("id", newId)
 
@@ -202,18 +201,18 @@ test('Anonymizing user completely', async () => {
 
   expect(anonWithNewIdScan["Count"]).toBe(1)
 
-  const anonScan = await docClient.scan({ 
+  const anonUserScan = await docClient.scan({ 
     TableName: anonymizedUserTableName, 
     Select: "COUNT" })
   .promise()
 
-  expect(anonScan["Count"]).toBe(1)
+  expect(anonUserScan["Count"]).toBe(1)
 
-  // Check that user with original id is not in users table
+  // Check that user with Ola's original id is not in users table
   const userScanAfterAnon = await docClient.scan({ 
     TableName: userTableName,
-    Select: "COUNT",
-  }).promise()
+    Select: "COUNT" })
+    .promise()
 
   expect(userScanAfterAnon["Count"]).toBe(userCountBeforeAnon - 1)
 
@@ -251,7 +250,7 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
   const newId = randomUUID()
 
   // Get all ids for Kari's answers
-  const kariqaidsScan = await docClient.scan({
+  const kIdQAScan = await docClient.scan({
     TableName: questionAnswerTableName,
     FilterExpression: '#owner = :karid',
     ExpressionAttributeNames: {
@@ -262,18 +261,18 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
     }
   }).promise()
 
-  const karinaqaids = kariqaidsScan.Items!.map(i => i.id)
+  const kIds = kIdQAScan.Items!.map(i => i.id)
 
   // Mock incomplete anonymization by anonymizing only one row
   await docClient.update({
     TableName: questionAnswerTableName,
-    Key: { id: karinaqaids[0] },
+    Key: { id: kIds[0] },
     UpdateExpression: 'SET #owner = :newId',
     ExpressionAttributeNames: { '#owner': 'owner' },
     ExpressionAttributeValues: { ':newId': newId }
   }).promise()
 
-  // Mock incomplete anonymization 
+  // Find matches for Kari's original id after incomplete anonymization
   const incompleteScan = await docClient.scan({
     TableName: questionAnswerTableName,
     FilterExpression: '#owner = :karid',
@@ -285,13 +284,13 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
     }
   }).promise()
 
-  expect(incompleteScan["Count"]).toBe(kariqaidsScan["Count"]! - 1)
+  expect(incompleteScan["Count"]).toBe(kIdQAScan["Count"]! - 1)
 
   // Anonymize 
   await adminDbQueries.anonymizeUser(testUserKari.id, newId, testUserKari.organizationID)
 
   // Check there that id has been replaced with new id
-  const kariqaidsScanAfterAnon = await docClient.scan({
+  const kIdQAScanAfterAnon = await docClient.scan({
     TableName: questionAnswerTableName,
     FilterExpression: '#owner = :karid',
     ExpressionAttributeNames: {
@@ -302,9 +301,9 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
     }
   }).promise()
 
-  expect(kariqaidsScanAfterAnon["Count"]).toBe(0)
+  expect(kIdQAScanAfterAnon["Count"]).toBe(0)
 
-  const anonymizedKariqaidsScanAfterAnon = await docClient.scan({
+  const anonymizedkIdQAScanAfterAnon = await docClient.scan({
     TableName: questionAnswerTableName,
     FilterExpression: '#owner = :newId',
     ExpressionAttributeNames: {
@@ -315,7 +314,7 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
     }
   }).promise()
 
-  expect(anonymizedKariqaidsScanAfterAnon["Count"]).toBe(karinaqaids.length)
+  expect(anonymizedkIdQAScanAfterAnon["Count"]).toBe(kIds.length)
 })
 
 test('AnonymizedUserTable lastAnswerAt matches users last UserForm updatedAt', async () => {
