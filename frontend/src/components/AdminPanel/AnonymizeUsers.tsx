@@ -70,6 +70,7 @@ const AnonymizeUsersTable = ({
   anonymizeUser,
 }: AnonymizeUsersTableProps) => {
   const { t } = useTranslation()
+  const userState = useAppSelector(selectUserState)
 
   return (
     <TableContainer className={commonStyles.tableContainer}>
@@ -83,13 +84,16 @@ const AnonymizeUsersTable = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {users.map((user: any) => (
-            <User
-              key={user.Username}
-              user={user}
-              anonymizeUser={anonymizeUser}
-            />
-          ))}
+          {users.map(
+            (user: any) =>
+              user.Username != userState.userName && (
+                <User
+                  key={user.Username}
+                  user={user}
+                  anonymizeUser={anonymizeUser}
+                />
+              )
+          )}
         </TableBody>
       </Table>
     </TableContainer>
