@@ -23,7 +23,6 @@ process.env['TABLE_MAP'] = JSON.stringify({
 })
 
 const adminDbQueries = require('../backend/function/AdminQueries/db')
-const { createHash } = require('crypto')
 
 const dynamoDbConfig = {
   endpoint: 'http://localhost:8000',
@@ -153,7 +152,7 @@ test('getQuestionAnswersByUserFormId returns correct number of items', async () 
 })
 
 test('Anonymizing user completely', async () => {
-  const hashedId = createHash('sha256').update(testUserOla.id).digest('hex')
+  const newId = randomUUID()
 
   const makeParams = (keyName: string, value: string) => {
     return {
@@ -170,8 +169,8 @@ test('Anonymizing user completely', async () => {
 
   const olaOwnerParams = makeParams("owner", testUserOla.id)
 
-  const olaHashOwnerParams = makeParams("owner", hashedId)
-  const olaHashIdParams = makeParams("id", hashedId)
+  const anonymizedOlaOwnerParams = makeParams("owner", newId)
+  const anonymizedOlaIdParams = makeParams("id", newId)
 
   const userScan = await docClient.scan({ 
     TableName: userTableName,
@@ -193,15 +192,15 @@ test('Anonymizing user completely', async () => {
   const qaCountBeforeAnon = qaScan["Count"]
 
   // Anonymize user
-  await adminDbQueries.anonymizeUser(testUserOla.id, hashedId, testUserOla.organizationID)
+  await adminDbQueries.anonymizeUser(testUserOla.id, newId, testUserOla.organizationID)
 
   // Check user was added to the anonymized table with correct id, and is the only one added
-  const anonWithHashScan = await docClient.scan({ 
+  const anonWithNewIdScan = await docClient.scan({
     TableName: anonymizedUserTableName,
-    ...olaHashIdParams
+    ...anonymizedOlaIdParams
   }).promise()
 
-  expect(anonWithHashScan["Count"]).toBe(1)
+  expect(anonWithNewIdScan["Count"]).toBe(1)
 
   const anonScan = await docClient.scan({ 
     TableName: anonymizedUserTableName, 
@@ -218,7 +217,7 @@ test('Anonymizing user completely', async () => {
 
   expect(userScanAfterAnon["Count"]).toBe(userCountBeforeAnon - 1)
 
-  // Check that the owner id has been replaced with the hash in UserForm-table
+  // Check that the owner id has been replaced with the new id in UserForm-table
   const userformOlaScan = await docClient.scan({ 
     TableName: userFormTableName,
     ...olaOwnerParams,
@@ -226,13 +225,13 @@ test('Anonymizing user completely', async () => {
 
   expect(userformOlaScan["Count"]).toBe(0)
 
-  const userformHashScan = await docClient.scan({
+  const userformNewIdScan = await docClient.scan({
     TableName: userFormTableName, 
-    ...olaHashOwnerParams,
+    ...anonymizedOlaOwnerParams,
   }).promise()
-  expect(userformHashScan["Count"]).toBe(userFormCountBeforeAnon)
+  expect(userformNewIdScan["Count"]).toBe(userFormCountBeforeAnon)
 
-  // Check that the owner id has been replaced with the hash in QuestionAnswer-table
+  // Check that the owner id has been replaced with the new id in QuestionAnswer-table
   const qaOlaScan = await docClient.scan({ 
     TableName: questionAnswerTableName,
     ...olaOwnerParams,
@@ -240,16 +239,16 @@ test('Anonymizing user completely', async () => {
 
   expect(qaOlaScan["Count"]).toBe(0)
 
-  const qaHashScan = await docClient.scan({
+  const qaNewIdScan = await docClient.scan({
     TableName: questionAnswerTableName, 
-    ...olaHashOwnerParams,
+    ...anonymizedOlaOwnerParams,
   }).promise()
 
-  expect(qaHashScan["Count"]).toBe(qaCountBeforeAnon)
+  expect(qaNewIdScan["Count"]).toBe(qaCountBeforeAnon)
 })
 
 test('Test anonymization on partially completed anonymization of QuestionAnswers', async () => {
-  const hashedKari = createHash('sha256').update(testUserKari.id).digest('hex')
+  const newId = randomUUID()
 
   // Get all ids for Kari's answers
   const kariqaidsScan = await docClient.scan({
@@ -269,9 +268,9 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
   await docClient.update({
     TableName: questionAnswerTableName,
     Key: { id: karinaqaids[0] },
-    UpdateExpression: 'SET #owner = :hash',
+    UpdateExpression: 'SET #owner = :newId',
     ExpressionAttributeNames: { '#owner': 'owner' },
-    ExpressionAttributeValues: { ':hash': hashedKari }
+    ExpressionAttributeValues: { ':newId': newId }
   }).promise()
 
   // Mock incomplete anonymization 
@@ -289,9 +288,9 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
   expect(incompleteScan["Count"]).toBe(kariqaidsScan["Count"]! - 1)
 
   // Anonymize 
-  await adminDbQueries.anonymizeUser(testUserKari.id, hashedKari, testUserKari.organizationID)
+  await adminDbQueries.anonymizeUser(testUserKari.id, newId, testUserKari.organizationID)
 
-  // Check there that id has been replaced with hash
+  // Check there that id has been replaced with new id
   const kariqaidsScanAfterAnon = await docClient.scan({
     TableName: questionAnswerTableName,
     FilterExpression: '#owner = :karid',
@@ -305,18 +304,18 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
 
   expect(kariqaidsScanAfterAnon["Count"]).toBe(0)
 
-  const hashedKariqaidsScanAfterAnon = await docClient.scan({
+  const anonymizedKariqaidsScanAfterAnon = await docClient.scan({
     TableName: questionAnswerTableName,
-    FilterExpression: '#owner = :karid',
+    FilterExpression: '#owner = :newId',
     ExpressionAttributeNames: {
       '#owner': 'owner',
     },
     ExpressionAttributeValues: {
-      ':karid': hashedKari
+      ':newId': newId
     }
   }).promise()
 
-  expect(hashedKariqaidsScanAfterAnon["Count"]).toBe(karinaqaids.length)
+  expect(anonymizedKariqaidsScanAfterAnon["Count"]).toBe(karinaqaids.length)
 })
 
 test('AnonymizedUserTable lastAnswerAt matches users last UserForm updatedAt', async () => {
@@ -332,5 +331,4 @@ test('AnonymizedUserTable lastAnswerAt matches users last UserForm updatedAt', a
   // and that lastAnswerAt matches testUserOlas last UserForm updatedAt
   expect(anonymizedUsersScan.Count).toBe(1)
   expect(anonymizedUsersScan.Items![0].lastAnswerAt).toBe(testUserOlaLastUserFormUpdatedAt)
-  // TODO: replace lastAnswerAt by lastAnswerAt (on line aboveabove)
 })

@@ -14,7 +14,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
-const { createHash } = require('crypto')
+const { randomUUID } = require('crypto')
 
 const {
   addUserToGroup,
@@ -185,12 +185,12 @@ app.post('/anonymizeUser', async (req, res, next) => {
   const orgId = req.body.orgId
   console.log(`Attempting to anonymize user from ${req.body.orgId}`)
 
-  const hashedUsername = createHash('sha256').update(username).digest('hex')
-  
+  const newId = randomUUID()
+
   let err = new Error()
   err.statusCode = 500
  try {
-    await anonymizeUserInDb(username, hashedUsername, orgId)
+    await anonymizeUserInDb(username, newId, orgId)
   } catch (e) {
     err.message = "Failed to anonymize in DynamoDB: " + e
     return next(err)
