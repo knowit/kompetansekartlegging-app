@@ -26,7 +26,7 @@ import {
 } from '../../API'
 import {
   categoriesByFormDefinition,
-  formDefinitionByOrganizationId,
+  formDefinitionByOrganizationID,
   questionsByCategory,
 } from '../../graphql/queries'
 import {
@@ -65,7 +65,7 @@ const listAllFormDefinitionsByOrganizationID = async (
   organizationID: string
 ): Promise<ApiResponse<FormDefinition[]>> => {
   try {
-    const gq = await callGraphQL<Query>(formDefinitionByOrganizationId, {
+    const gq = await callGraphQL<Query>(formDefinitionByOrganizationID, {
       organizationID,
     })
     const els = gq?.data?.formDefinitionByOrganizationID?.items?.map(
