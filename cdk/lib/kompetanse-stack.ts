@@ -47,6 +47,7 @@ export class KompetanseStack extends Stack {
       customAttributes: {
         OrganizationID: new cognito.StringAttribute({ mutable: true }),
         company: new cognito.StringAttribute({ mutable: true }),
+        anonymizedID: new cognito.StringAttribute({ mutable: true })
       },
       signInAliases: {
         username: true,
@@ -284,6 +285,7 @@ export class KompetanseStack extends Stack {
           USERPOOL: pool.userPoolId,
           GROUP: 'admin',
           GROUP_LIST_USERS: 'groupLeader',
+          ANONYMIZED_ID_ATTRIBUTE_NAME: 'custom:anonymizedID',
           TABLE_MAP: JSON.stringify(appSync.tableNameMap),
         },
         initialPolicy: [
@@ -299,6 +301,7 @@ export class KompetanseStack extends Stack {
               'cognito-idp:AdminGetUser',
               'cognito-idp:AdminConfirmSignUp',
               'cognito-idp:AdminDeleteUser',
+              'cognito-idp:AdminUpdateUserAttributes',
               'cognito-idp:ListUsers',
               'cognito-idp:ListGroups',
               'dynamodb:Query',

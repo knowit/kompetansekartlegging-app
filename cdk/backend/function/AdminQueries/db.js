@@ -19,7 +19,7 @@ const docClient = new DynamoDB.DocumentClient({
   }),
 })
 
-const anonymizeUser = async (username, newId, orgId) => {
+const anonymizeUser = async (username, anonymizedID, orgId) => {
   // Put will overwrite the old item if the key exists
   // That way, the only case where promise throws is on error
   const userFormsForUser = await getUserFormsForUser(username)
@@ -33,15 +33,15 @@ const anonymizeUser = async (username, newId, orgId) => {
     .put({
       TableName: ANON_USER_TABLE_NAME,
       Item: {
-        id: newId,
+        id: anonymizedID,
         organizationID: orgId,
         lastAnswerAt: lastUpdated.updatedAt,
       },
     })
     .promise()
 
-  await anonymizeQuestionAnswers(userFormsForUser, newId)
-  await anonymizeUserForms(userFormsForUser, newId)
+  await anonymizeQuestionAnswers(userFormsForUser, anonymizedID)
+  await anonymizeUserForms(userFormsForUser, anonymizedID)
 
   console.log('Finally deleting user from User table')
   await docClient
@@ -90,7 +90,7 @@ const getQuestionAnswersByUserFormId = async userFormId => {
   return result.Items
 }
 
-const anonymizeQuestionAnswers = async (userForms, newId) => {
+const anonymizeQuestionAnswers = async (userForms, anonymizedID) => {
   await Promise.all(
     userForms.map(async userForm => {
       const questionAnswers = await getQuestionAnswersByUserFormId(userForm.id)
@@ -104,9 +104,9 @@ const anonymizeQuestionAnswers = async (userForms, newId) => {
           .update({
             TableName: QUESTION_ANSWER_TABLE_NAME,
             Key: { id: questionAnswer.id },
-            UpdateExpression: 'SET #owner = :newId',
+            UpdateExpression: 'SET #owner = :anonymizedID',
             ExpressionAttributeNames: { '#owner': 'owner' },
-            ExpressionAttributeValues: { ':newId': newId },
+            ExpressionAttributeValues: { ':anonymizedID': anonymizedID },
           })
           .promise()
       )
@@ -114,7 +114,7 @@ const anonymizeQuestionAnswers = async (userForms, newId) => {
   )
 }
 
-const anonymizeUserForms = async (userForms, newId) => {
+const anonymizeUserForms = async (userForms, anonymizedID) => {
   await Promise.all(
     userForms.map(async userForm => {
       console.log('Anonymizing UserForm with ID: ', userForm.id)
@@ -122,9 +122,9 @@ const anonymizeUserForms = async (userForms, newId) => {
         .update({
           TableName: USER_FORM_TABLE_NAME,
           Key: { id: userForm.id },
-          UpdateExpression: 'SET #owner = :newId',
+          UpdateExpression: 'SET #owner = :anonymizedID',
           ExpressionAttributeNames: { '#owner': 'owner' },
-          ExpressionAttributeValues: { ':newId': newId },
+          ExpressionAttributeValues: { ':anonymizedID': anonymizedID },
         })
         .promise()
     })

@@ -13,7 +13,6 @@
  */
 
 const { CognitoIdentityServiceProvider } = require('aws-sdk')
-const { createHash } = require('crypto')
 
 const cognitoIdentityServiceProvider = new CognitoIdentityServiceProvider()
 const userPoolId = process.env.USERPOOL
@@ -282,6 +281,25 @@ async function signUserOut(username) {
   }
 }
 
+async function addUserAttributeToUser(username, attributeName, attributeValue) {
+  const params = {
+    UserPoolId: userPoolId,
+    Username: username,
+    UserAttributes: [
+      {
+        Name: attributeName,
+        Value: attributeValue
+      }
+    ]
+  }
+
+  console.log(`Attempting to add attribute ${attributeName} to ${username}`)
+  // TODO: hva om det allerede eksisterer? Catches utenfor sikkert
+  await cognitoIdentityServiceProvider
+    .adminUpdateUserAttributes(params)
+    .promise()
+}
+
 module.exports = {
   addUserToGroup,
   removeUserFromGroup,
@@ -295,4 +313,5 @@ module.exports = {
   listGroupsForUser,
   listUsersInGroup,
   signUserOut,
+  addUserAttributeToUser,
 }

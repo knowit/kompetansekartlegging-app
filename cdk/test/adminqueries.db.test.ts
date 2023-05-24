@@ -1,4 +1,3 @@
-jest.useFakeTimers()
 import { DynamoDB } from 'aws-sdk'
 import { randomUUID } from 'crypto'
 import {
@@ -180,7 +179,7 @@ test('getQuestionAnswersByUserFormId returns correct number of items', async () 
 })
 
 test('Test Anonymizing user: sunny day scenario', async () => {
-  const newId = randomUUID()
+  const anonymizedID = randomUUID()
 
   const makeParams = (keyName: string, value: string) => {
     return {
@@ -196,8 +195,8 @@ test('Test Anonymizing user: sunny day scenario', async () => {
   }
 
   const olaOwnerParams = makeParams('owner', testUserOla.id)
-  const anonymizedOlaOwnerParams = makeParams('owner', newId)
-  const anonymizedOlaIdParams = makeParams('id', newId)
+  const anonymizedOlaOwnerParams = makeParams('owner', anonymizedID)
+  const anonymizedOlaIdParams = makeParams('id', anonymizedID)
 
   const userScan = await docClient
     .scan({
@@ -227,19 +226,19 @@ test('Test Anonymizing user: sunny day scenario', async () => {
   // Anonymize user
   await adminDbQueries.anonymizeUser(
     testUserOla.id,
-    newId,
+    anonymizedID,
     testUserOla.organizationID
   )
 
   // Check user was added to the anonymized table with correct id, and is the only one added
-  const anonWithNewIdScan = await docClient
+  const anonWithanonymizedIDScan = await docClient
     .scan({
       TableName: anonymizedUserTableName,
       ...anonymizedOlaIdParams,
     })
     .promise()
 
-  expect(anonWithNewIdScan['Count']).toBe(1)
+  expect(anonWithanonymizedIDScan['Count']).toBe(1)
 
   const anonUserScan = await docClient
     .scan({
@@ -270,13 +269,13 @@ test('Test Anonymizing user: sunny day scenario', async () => {
 
   expect(userformOlaScan['Count']).toBe(0)
 
-  const userformNewIdScan = await docClient
+  const userformanonymizedIDScan = await docClient
     .scan({
       TableName: userFormTableName,
       ...anonymizedOlaOwnerParams,
     })
     .promise()
-  expect(userformNewIdScan['Count']).toBe(userFormCountBeforeAnon)
+  expect(userformanonymizedIDScan['Count']).toBe(userFormCountBeforeAnon)
 
   // Check that the owner id has been replaced with the new id in QuestionAnswer-table
   const qaOlaScan = await docClient
@@ -288,18 +287,18 @@ test('Test Anonymizing user: sunny day scenario', async () => {
 
   expect(qaOlaScan['Count']).toBe(0)
 
-  const qaNewIdScan = await docClient
+  const qaanonymizedIDScan = await docClient
     .scan({
       TableName: questionAnswerTableName,
       ...anonymizedOlaOwnerParams,
     })
     .promise()
 
-  expect(qaNewIdScan['Count']).toBe(qaCountBeforeAnon)
+  expect(qaanonymizedIDScan['Count']).toBe(qaCountBeforeAnon)
 })
 
 test('Test anonymization on partially completed anonymization of QuestionAnswers', async () => {
-  const newId = randomUUID()
+  const anonymizedID = randomUUID()
 
   // Get all ids for Kari's answers
   const kIdQAScan = await docClient
@@ -322,9 +321,9 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
     .update({
       TableName: questionAnswerTableName,
       Key: { id: kIds[0] },
-      UpdateExpression: 'SET #owner = :newId',
+      UpdateExpression: 'SET #owner = :anonymizedID',
       ExpressionAttributeNames: { '#owner': 'owner' },
-      ExpressionAttributeValues: { ':newId': newId },
+      ExpressionAttributeValues: { ':anonymizedID': anonymizedID },
     })
     .promise()
 
@@ -347,7 +346,7 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
   // Anonymize
   await adminDbQueries.anonymizeUser(
     testUserKari.id,
-    newId,
+    anonymizedID,
     testUserKari.organizationID
   )
 
@@ -370,12 +369,12 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
   const anonymizedkIdQAScanAfterAnon = await docClient
     .scan({
       TableName: questionAnswerTableName,
-      FilterExpression: '#owner = :newId',
+      FilterExpression: '#owner = :anonymizedID',
       ExpressionAttributeNames: {
         '#owner': 'owner',
       },
       ExpressionAttributeValues: {
-        ':newId': newId,
+        ':anonymizedID': anonymizedID,
       },
     })
     .promise()

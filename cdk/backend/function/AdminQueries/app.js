@@ -29,6 +29,7 @@ const {
   listGroupsForUser,
   listUsersInGroup,
   signUserOut,
+  addUserAttributeToUser,
 } = require('./cognitoActions')
 
 const { anonymizeUser: anonymizeUserInDb } = require('./db')
@@ -51,6 +52,8 @@ app.use((req, res, next) => {
 // Only perform tasks if the user is in a specific group
 const allowedGroup = process.env.GROUP
 const allowedListUsersGroup = process.env.GROUP_LIST_USERS
+
+const anonymizedIDAttributeName = process.env.ANONYMIZED_ID_ATTRIBUTE_NAME
 
 const checkGroup = function(req, res, next) {
   if (req.path == '/signUserOut') {
@@ -185,23 +188,27 @@ app.post('/anonymizeUser', async (req, res, next) => {
   const orgId = req.body.orgId
   console.log(`Attempting to anonymize user from ${req.body.orgId}`)
 
-  const newId = randomUUID()
+  // Check if user has been assigned an anonymizedID from a failed anonymization run.
+  // If not, create a new anonymizedID to replace 'owner' values in database
+  const user = await getUser(username)
+  const anonymizedID =
+    user.UserAttributes.find((attr) => attr.Name === anonymizedIDAttributeName).Value ??
+    randomUUID()
 
-  let err = new Error()
-  err.statusCode = 500
   try {
-    await anonymizeUserInDb(username, newId, orgId)
-  } catch (e) {
-    err.message = 'Failed to anonymize in DynamoDB: ' + e
-    return next(err)
-  }
-  try {
+    await anonymizeUserInDb(username, anonymizedID, orgId)
     await anonymizeUserInCognito(username)
-  } catch (e) {
-    err.message = 'Failed to anonymize in Cognito: ' + e
+    return res.status(200).json({ message: 'User anonymized' })
+  } catch (err) {
+    try {
+      // Add anonymizedID attribute to Cognito user in case data was partially anonymized
+      console.log(`User was potentially partially anonymized, adding attribute ${anonymizedIDAttributeName} '${anonymizedID}' to Cognito user`)
+      await addUserAttributeToUser(username, anonymizedIDAttributeName, anonymizedID)
+    } catch (err) {
+      return next(err)
+    }
     return next(err)
   }
-  return res.status(200).json({ message: 'User anonymized' })
 })
 
 app.get('/getUser', async (req, res, next) => {
