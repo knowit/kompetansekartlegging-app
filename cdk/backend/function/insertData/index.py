@@ -17,6 +17,7 @@ dbName = environ.get("DATABASE_NAME")
 env = environ.get("ENV")
 sourceName = environ.get("SOURCE_NAME")
 
+cached_users = []
 
 def getFileName(name):
     return f"transformed-{name}-{sourceName}-{env}.csv"
@@ -40,6 +41,14 @@ def handler(event, context):
 
     executeInsert(remove_temp_column)
 
+
+def executeStatement(sqlStatement):
+    return dbClient.execute_statement(
+            resourceArn=dbARN,
+            secretArn=secretARN,
+            database=dbName,
+            sql=sqlStatement,
+        )
 
 def excuteInsert(sqlTextFunction, fileName):
     skip = 20
@@ -207,27 +216,37 @@ def questionSQL(file, start, end):
 
 def questionAnswerSQL(file, start, end):
     sqlInsertStatment = "INSERT INTO question_answer (id, question_id, knowledge, motivation, custom_scale_value, text_value, user_username)\nSELECT * FROM (\nVALUES"
+    users = []
+    usernames = []
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += f"\n({getValueOnSqlFormat(row.id, isUUID=True)}," \
             f"{getValueOnSqlFormat(row.questionID, isUUID=True)}," \
             f"{getValueOnSqlFormat(row.knowledge, isNumber=True)},{getValueOnSqlFormat(row.motivation, isNumber=True)}," \
             f"{getValueOnSqlFormat(row.customScaleValue, isNumber=True)},{getValueOnSqlFormat(row.textValue)}," \
             f"{getValueOnSqlFormat(row.owner)}),"
+        if not row.owner in users:
+            usernames.append(row.owner)
     sqlInsertStatment = sqlInsertStatment.rstrip(sqlInsertStatment[-1])
     sqlInsertStatment += ") as x (id, question_id, knowledge, motivation, custom_scale_value, text_value, user_username) WHERE EXISTS (SELECT 1 FROM question q WHERE q.id = x.question_id) ON CONFLICT DO NOTHING;"
+    for username in usernames:
+        users.append({"username": username, "organization_id": "knowitobjectnet"})
+    add_nonexisting_users(users)
+
     print(sqlInsertStatment)
     return sqlInsertStatment
 
 
 def userSQL(file, start, end):
+    global cached_users
     sqlInsertStatment = (
-        'INSERT INTO "user" (username, group_id, organization_id)\nVALUES'
+        'INSERT INTO "user" (username, organization_id)\nVALUES'
     )
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += (
-            f"\n({getValueOnSqlFormat(row.id)},{getValueOnSqlFormat(row.groupID)},"
+            f"\n({getValueOnSqlFormat(row.id)},"
             f"(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)})),"
         )
+        cached_users.append(row.id)
     sqlInsertStatment = (
         sqlInsertStatment.rstrip(sqlInsertStatment[-1])
         + " ON CONFLICT (username) DO NOTHING;"
@@ -237,17 +256,44 @@ def userSQL(file, start, end):
 
 
 def groupSQL(file, start, end):
+    group_leaders = []
     sqlInsertStatment = (
         'INSERT INTO "group" (id, organization_id, group_leader_username)\nVALUES'
     )
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += f"\n({getValueOnSqlFormat(row.id, isUUID=True)}," \
             f"(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)}), {getValueOnSqlFormat(row.groupLeaderUsername)}),"
+        group_leaders.append({"username": row.groupLeaderUsername, "organization_id": row.organizationID})
     sqlInsertStatment = sqlInsertStatment.rstrip(
         sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
+    add_nonexisting_users(group_leaders)
     print(sqlInsertStatment)
     return sqlInsertStatment
 
+def add_nonexisting_users(users):
+    global cached_users
+    for user in users:
+        if user["username"] in cached_users:
+            continue
+        statement = f'SELECT username FROM "user" WHERE username = {getValueOnSqlFormat(user["username"])};'
+        res = executeStatement(statement)
+        if res:
+            print(user, len(res["records"]))
+            if len(res["records"]) == 0:
+                sqlInsertStatment = (
+                    'INSERT INTO "user" (username, organization_id)\nVALUES'
+                )
+                sqlInsertStatment += (
+                    f'\n({getValueOnSqlFormat(user["username"])},'
+                    f'(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(user["organization_id"])})),'
+                )
+                sqlInsertStatment = (
+                    sqlInsertStatment.rstrip(sqlInsertStatment[-1])
+                    + " ON CONFLICT (username) DO NOTHING;"
+                )
+                executeStatement(sqlInsertStatment)
+        cached_users.append(user["username"])
+    
 
 def add_group_id_to_user(file, start, end):
     sqlUpdateStatement = ""
