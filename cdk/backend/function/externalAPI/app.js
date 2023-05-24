@@ -15,7 +15,6 @@
 	REGION
 Amplify Params - DO NOT EDIT */
 
-const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
@@ -40,7 +39,7 @@ const {
 } = require('./db')
 
 const getOrganizationID = async () => {
-  const { event, context } = getCurrentInvoke()
+  const { event } = getCurrentInvoke()
   const apiKey = event['requestContext']['identity']['apiKey']
   const hash = crypto.createHash('sha256')
   const apiKey_hashed = hash.update(apiKey).digest('hex')
