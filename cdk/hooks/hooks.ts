@@ -4,9 +4,8 @@ import setAppSyncAuth from './setAppSyncAuth'
 const file = fs.readFileSync('outputs.json', { encoding: 'utf-8' })
 
 const json = JSON.parse(file)
-let stack: any
 
-stack = json[Object.keys(json)[0]]
+const stack = json[Object.keys(json)[0]]
 
 stack.oauth = JSON.parse(stack.oauth)
 stack.functionMap = JSON.parse(stack.functionMap)

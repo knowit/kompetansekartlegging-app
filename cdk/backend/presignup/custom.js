@@ -30,6 +30,7 @@ const getIdentifierValue = event => {
 }
 
 const getOrganizationID = identifierAttributeValue =>
+  // eslint-disable-next-line no-async-promise-executor
   new Promise(async (resolve, reject) => {
     const params = {
       TableName: tableMap[`${OrganizationConstants['TableName']}Table`], //OrganizationConstants["TableName"]+'-'+process.env.API_KOMPETANSEKARTLEGGIN_GRAPHQLAPIIDOUTPUT+"-"+process.env.ENV,
@@ -150,7 +151,7 @@ exports.handler = async (event, context, callback) => {
         providerUserId
       )
     } else {
-      attributes = []
+      let attributes = []
       Object.keys(event.request.userAttributes).forEach(key => {
         if (key === 'identities' || key === 'sub' || key.includes('cognito:'))
           return
