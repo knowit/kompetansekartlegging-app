@@ -12,7 +12,8 @@
     "deploy": "cdk deploy --outputs-file outputs.json  && npx ts-node --prefer-ts-exts hooks/hooks.ts",
     "codegen": "npx amplify-graphql-docs-generator --schema appsync/schema.graphql --output ../frontend/src/graphql --separateFiles true --language typescript && graphql-codegen --config codegen.yml",
     "prettier-check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "prettier-fix": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
+    "prettier-fix": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "lint": "eslint --ext .js,.ts ."
   },
   "devDependencies": {
     "@graphql-codegen/cli": "3.0.0",
@@ -21,7 +22,11 @@
     "@graphql-codegen/typescript-operations": "3.0.0",
     "@types/jest": "^29.4.0",
     "@types/node": "18.11.19",
+    "@typescript-eslint/eslint-plugin": "^5.59.7",
+    "@typescript-eslint/parser": "^5.59.7",
     "aws-cdk": "2.63.2",
+    "eslint": "^8.41.0",
+    "eslint-config-prettier": "^8.8.0",
     "jest": "^29.4.1",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
