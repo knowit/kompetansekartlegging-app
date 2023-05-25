@@ -39,7 +39,7 @@ const app = express()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 // Dont use middleware during tests
-if (!isTest) {
+if (isTest == null) {
   app.use(awsServerlessExpressMiddleware.eventContext())
 }
 

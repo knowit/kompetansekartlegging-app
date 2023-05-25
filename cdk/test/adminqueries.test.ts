@@ -178,14 +178,6 @@ test('Anonymize user happy day scenario', async () => {
 })
 
 test('Anonymize user second attempt (mock failed first anonymization run)', async () => {
-  /*const olaUserFormsInTestData = userFormTestData.filter(
-    userForm => userForm.owner === testUserOla.id
-  )
-  const olaQuestionAnswersInTestData = questionAnswerTestData.filter(
-    qa => qa.owner === testUserOla.id
-  )*/
-
-  // Mock partially completed anonymization of QuestionAnswers
   const olaAnonymizedID = randomUUID()
 
   // Create Cognito user with anonymizedID attribute
