@@ -14,8 +14,19 @@
 
 const { CognitoIdentityServiceProvider } = require('aws-sdk')
 
-const cognitoIdentityServiceProvider = new CognitoIdentityServiceProvider()
+const isTest = process.env.JEST_WORKER_ID
 const userPoolId = process.env.USERPOOL
+const cognitoIdentityServiceProvider = new CognitoIdentityServiceProvider({
+  ...(isTest && {
+    region: 'local',
+    endpoint: 'http://localhost:9229',
+    credentials: {
+      accessKeyId: 'foo',
+      secretAccessKey: 'foo',
+    },
+    UserPoolId: userPoolId,
+  }),
+})
 
 async function addUserToGroup(username, groupname) {
   const params = {
@@ -288,13 +299,13 @@ async function addUserAttributeToUser(username, attributeName, attributeValue) {
     UserAttributes: [
       {
         Name: attributeName,
-        Value: attributeValue
-      }
-    ]
+        Value: attributeValue,
+      },
+    ],
   }
 
   console.log(`Attempting to add attribute ${attributeName} to ${username}`)
-  // TODO: hva om det allerede eksisterer? Catches utenfor sikkert
+
   await cognitoIdentityServiceProvider
     .adminUpdateUserAttributes(params)
     .promise()

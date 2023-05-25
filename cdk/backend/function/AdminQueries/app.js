@@ -33,11 +33,15 @@ const {
 } = require('./cognitoActions')
 
 const { anonymizeUser: anonymizeUserInDb } = require('./db')
+const isTest = process.env.JEST_WORKER_ID
 
 const app = express()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(awsServerlessExpressMiddleware.eventContext())
+// Dont use middleware during tests
+if (!isTest) {
+  app.use(awsServerlessExpressMiddleware.eventContext())
+}
 
 // Enable CORS for all methods
 app.use((req, res, next) => {
@@ -192,8 +196,8 @@ app.post('/anonymizeUser', async (req, res, next) => {
   // If not, create a new anonymizedID to replace 'owner' values in database
   const user = await getUser(username)
   const anonymizedID =
-    user.UserAttributes.find((attr) => attr.Name === anonymizedIDAttributeName).Value ??
-    randomUUID()
+    user.UserAttributes.find(attr => attr.Name === anonymizedIDAttributeName)
+      ?.Value ?? randomUUID()
 
   try {
     await anonymizeUserInDb(username, anonymizedID, orgId)
@@ -202,8 +206,14 @@ app.post('/anonymizeUser', async (req, res, next) => {
   } catch (err) {
     try {
       // Add anonymizedID attribute to Cognito user in case data was partially anonymized
-      console.log(`User was potentially partially anonymized, adding attribute ${anonymizedIDAttributeName} '${anonymizedID}' to Cognito user`)
-      await addUserAttributeToUser(username, anonymizedIDAttributeName, anonymizedID)
+      console.log(
+        `User was potentially partially anonymized, adding attribute ${anonymizedIDAttributeName} '${anonymizedID}' to Cognito user`
+      )
+      await addUserAttributeToUser(
+        username,
+        anonymizedIDAttributeName,
+        anonymizedID
+      )
     } catch (err) {
       return next(err)
     }
@@ -398,8 +408,11 @@ app.use((err, req, res, next) => {
     .end()
 })
 
-app.listen(3000, () => {
+const server = app.listen(3000, () => {
   console.log('App started')
 })
 
-module.exports = app
+module.exports = {
+  app,
+  server,
+}

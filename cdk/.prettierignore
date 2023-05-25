@@ -1,3 +1,5 @@
 cdk.out
 node_modules
 graphql.schema.json
+.pytest*
+cdk.context.json

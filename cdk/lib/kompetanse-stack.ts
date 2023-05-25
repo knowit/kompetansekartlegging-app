@@ -47,7 +47,7 @@ export class KompetanseStack extends Stack {
       customAttributes: {
         OrganizationID: new cognito.StringAttribute({ mutable: true }),
         company: new cognito.StringAttribute({ mutable: true }),
-        anonymizedID: new cognito.StringAttribute({ mutable: true })
+        anonymizedID: new cognito.StringAttribute({ mutable: true }),
       },
       signInAliases: {
         username: true,

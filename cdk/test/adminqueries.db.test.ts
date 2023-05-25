@@ -1,4 +1,3 @@
-import { DynamoDB } from 'aws-sdk'
 import { randomUUID } from 'crypto'
 import {
   testUserOla,
@@ -7,41 +6,32 @@ import {
   userFormTestData,
   questionAnswerTestData,
   testUserOlaLastUserFormUpdatedAt,
+  kariUserFormsInTestData,
+  olaUserFormsInTestData,
+  olaQuestionAnswersInTestData,
 } from './testdata/adminqueries.db.dynamodb'
-import dynamoDBTables from './testdata/dynamodb.tables'
-
-const userTableName = 'User'
-const anonymizedUserTableName = 'AnonymizedUser'
-const userFormTableName = 'UserForm'
-const questionAnswerTableName = 'QuestionAnswer'
-process.env['TABLE_MAP'] = JSON.stringify({
-  UserTable: userTableName,
-  AnonymizedUserTable: anonymizedUserTableName,
-  UserFormTable: userFormTableName,
-  QuestionAnswerTable: questionAnswerTableName,
-})
+import {
+  docClient,
+  createTables,
+  emptyDatabaseTables,
+  userTableName,
+  anonymizedUserTableName,
+  userFormTableName,
+  questionAnswerTableName,
+  fillDatabaseTable,
+  deleteTables,
+  getUserFormsForUser,
+  getQuestionAnswersForUser,
+} from './common'
 
 const adminDbQueries = require('../backend/function/AdminQueries/db')
 
-const dynamoDbConfig = {
-  endpoint: 'http://localhost:8000',
-  region: 'local',
-  credentials: {
-    accessKeyId: 'foo',
-    secretAccessKey: 'foo',
-  },
-}
-
-const docClient = new DynamoDB.DocumentClient(dynamoDbConfig)
-
-// Create tables
 beforeAll(async () => {
-  const dynamoDBClient = new DynamoDB(dynamoDbConfig)
-  await Promise.all(
-    dynamoDBTables.map(async table => {
-      return await dynamoDBClient.createTable(table).promise()
-    })
-  )
+  await createTables()
+})
+
+afterAll(async () => {
+  await deleteTables()
 })
 
 beforeEach(async () => {
@@ -49,60 +39,11 @@ beforeEach(async () => {
   await fillDatabaseTables()
 })
 
-const emptyDatabaseTables = async () => {
-  const [
-    users,
-    userForms,
-    questionAnswers,
-    anonymizedUsers,
-  ] = await Promise.all([
-    docClient.scan({ TableName: userTableName }).promise(),
-    docClient.scan({ TableName: userFormTableName }).promise(),
-    docClient.scan({ TableName: questionAnswerTableName }).promise(),
-    docClient.scan({ TableName: anonymizedUserTableName }).promise(),
-  ])
-
-  await Promise.all([
-    ...users.Items!.map(async (user: any) => {
-      return docClient
-        .delete({ TableName: userTableName, Key: { id: user.id } })
-        .promise()
-    }),
-    ...userForms.Items!.map(async (userForm: any) => {
-      return docClient
-        .delete({ TableName: userFormTableName, Key: { id: userForm.id } })
-        .promise()
-    }),
-    ...questionAnswers.Items!.map(async (qa: any) => {
-      return docClient
-        .delete({ TableName: questionAnswerTableName, Key: { id: qa.id } })
-        .promise()
-    }),
-    ...anonymizedUsers.Items!.map(async (qa: any) => {
-      return docClient
-        .delete({ TableName: anonymizedUserTableName, Key: { id: qa.id } })
-        .promise()
-    }),
-  ])
-}
-
 const fillDatabaseTables = async () => {
   await Promise.all([
-    ...testUsers.map(async testUser => {
-      return docClient
-        .put({ TableName: userTableName, Item: testUser })
-        .promise()
-    }),
-    ...userFormTestData.map(async userForm => {
-      return docClient
-        .put({ TableName: userFormTableName, Item: userForm })
-        .promise()
-    }),
-    ...questionAnswerTestData.map(async questionAnswer => {
-      return docClient
-        .put({ TableName: questionAnswerTableName, Item: questionAnswer })
-        .promise()
-    }),
+    fillDatabaseTable(userTableName, testUsers),
+    fillDatabaseTable(userFormTableName, userFormTestData),
+    fillDatabaseTable(questionAnswerTableName, questionAnswerTestData),
   ])
 }
 
@@ -136,30 +77,13 @@ test('getUserFormsForUser returns correct number of items', async () => {
   ])
 
   // Assert number of UserForms in db matches number of UserForms in testdata
-  expect(userFormsOla.length).toBe(
-    userFormTestData.filter(userForm => userForm.owner == testUserOla.id).length
-  )
-  expect(userFormsKari.length).toBe(
-    userFormTestData.filter(userForm => userForm.owner == testUserKari.id)
-      .length
-  )
+  expect(userFormsOla.length).toBe(olaUserFormsInTestData.length)
+  expect(userFormsKari.length).toBe(kariUserFormsInTestData.length)
 })
 
 test('getQuestionAnswersByUserFormId returns correct number of items', async () => {
   // Get userForms for testUserOla
-  const userForms = await docClient
-    .query({
-      TableName: userFormTableName,
-      IndexName: 'byCreatedAt',
-      KeyConditionExpression: '#owner = :username',
-      ExpressionAttributeNames: {
-        '#owner': 'owner',
-      },
-      ExpressionAttributeValues: {
-        ':username': testUserOla.id,
-      },
-    })
-    .promise()
+  const userForms = await getUserFormsForUser(testUserOla.id)
 
   // Get questionAnswers for testUserOlas UserForms
   const questionAnswers = await Promise.all(
@@ -171,11 +95,8 @@ test('getQuestionAnswersByUserFormId returns correct number of items', async () 
   const qaCountInDb = questionAnswers
     .map(qaList => qaList.length)
     .reduce((partialSum, currentSum) => partialSum + currentSum, 0)
-  const qaCountInTestData = questionAnswerTestData.filter(
-    qa => qa.owner == testUserOla.id
-  ).length
 
-  expect(qaCountInDb).toBe(qaCountInTestData)
+  expect(qaCountInDb).toBe(olaQuestionAnswersInTestData.length)
 })
 
 test('Test Anonymizing user: sunny day scenario', async () => {
@@ -260,39 +181,20 @@ test('Test Anonymizing user: sunny day scenario', async () => {
   expect(userScanAfterAnon['Count']).toBe(userCountBeforeAnon - 1)
 
   // Check that the owner id has been replaced with the new id in UserForm-table
-  const userformOlaScan = await docClient
-    .scan({
-      TableName: userFormTableName,
-      ...olaOwnerParams,
-    })
-    .promise()
+  const userformOlaScan = await getUserFormsForUser(testUserOla.id)
 
   expect(userformOlaScan['Count']).toBe(0)
 
-  const userformanonymizedIDScan = await docClient
-    .scan({
-      TableName: userFormTableName,
-      ...anonymizedOlaOwnerParams,
-    })
-    .promise()
+  const userformanonymizedIDScan = await getUserFormsForUser(anonymizedID)
+
   expect(userformanonymizedIDScan['Count']).toBe(userFormCountBeforeAnon)
 
   // Check that the owner id has been replaced with the new id in QuestionAnswer-table
-  const qaOlaScan = await docClient
-    .scan({
-      TableName: questionAnswerTableName,
-      ...olaOwnerParams,
-    })
-    .promise()
+  const qaOlaScan = await getUserFormsForUser(testUserOla.id)
 
   expect(qaOlaScan['Count']).toBe(0)
 
-  const qaanonymizedIDScan = await docClient
-    .scan({
-      TableName: questionAnswerTableName,
-      ...anonymizedOlaOwnerParams,
-    })
-    .promise()
+  const qaanonymizedIDScan = await getQuestionAnswersForUser(anonymizedID)
 
   expect(qaanonymizedIDScan['Count']).toBe(qaCountBeforeAnon)
 })
