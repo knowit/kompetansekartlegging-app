@@ -132,7 +132,6 @@ const listUsersInGroup = async (
     }
     return { result: Users }
   } catch (e) {
-    console.log(e)
     return {
       error: i18n.t('adminApi.error.couldNotGetAListOfUsersInGroup', {
         groupname: groupname,
