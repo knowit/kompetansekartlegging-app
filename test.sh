@@ -13,5 +13,8 @@ pytest
 
 echo "Installing ./cdk dependencies..."
 cd cdk && npm install -s
+echo "Installing ./cdk/backend/function/AdminQueries dependencies..."
+cd backend/function/AdminQueries && npm install -s
+
 echo "Running ./cdk tests..."
-npm run test
+cd ../../../ && npm run test

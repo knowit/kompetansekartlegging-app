@@ -32,13 +32,11 @@ process.env['TABLE_MAP'] = JSON.stringify({
   QuestionAnswerTable: questionAnswerTableName,
 })
 
+const { server } = require('../backend/function/AdminQueries/app')
+const request = supertest(server)
+
 beforeAll(async () => {
   await createTables()
-  /**const pool = await cognitoIdentityServiceProvider.createUserPool({
-    PoolName: 'poolname',
-    AutoVerifiedAttributes: ['email'],
-  }).promise()*/
-
   await cognitoIdentityServiceProvider
     .addCustomAttributes({
       CustomAttributes: [
@@ -50,9 +48,6 @@ beforeAll(async () => {
     })
     .promise()
 })
-
-const { app, server } = require('../backend/function/AdminQueries/app')
-const request = supertest(app)
 
 afterAll(async () => {
   await deleteTables()
@@ -159,6 +154,8 @@ test('Anonymize user happy day scenario', async () => {
 
   // Assert testUserOlas Cognito user no longer exists
   let userNotFound = false
+
+  // prettier-ignore
   try {
     await cognitoIdentityServiceProvider
       .adminGetUser({
