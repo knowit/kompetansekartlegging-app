@@ -2,41 +2,31 @@ import { randomUUID } from 'crypto'
 import {
   anonymizedIDAttributeName,
   cognitoIdentityServiceProvider,
-  createTables,
-  deleteTables,
+  createAllDatabaseTables,
+  createCognitoUser,
+  deleteAllDatabaseTables,
   docClient,
-  emptyDatabaseTables,
+  emptyAllDatabaseTables,
   fillDatabaseTable,
   getQuestionAnswersForUser,
   getUserFormsForUser,
+  questionAnswerTableName,
+  userFormTableName,
   userPoolID,
+  userTableName,
 } from './common'
 import {
   olaQuestionAnswersInTestData,
   olaUserFormsInTestData,
-  questionAnswerTestData,
   testUserOla,
-  testUsers,
-  userFormTestData,
-} from './testdata/adminqueries.db.dynamodb'
+} from './testdata/dynamodb.items'
 const supertest = require('supertest')
-
-const userTableName = 'User'
-const anonymizedUserTableName = 'AnonymizedUser'
-const userFormTableName = 'UserForm'
-const questionAnswerTableName = 'QuestionAnswer'
-process.env['TABLE_MAP'] = JSON.stringify({
-  UserTable: userTableName,
-  AnonymizedUserTable: anonymizedUserTableName,
-  UserFormTable: userFormTableName,
-  QuestionAnswerTable: questionAnswerTableName,
-})
 
 const { server } = require('../backend/function/AdminQueries/app')
 const request = supertest(server)
 
 beforeAll(async () => {
-  await createTables()
+  await createAllDatabaseTables()
   await cognitoIdentityServiceProvider
     .addCustomAttributes({
       CustomAttributes: [
@@ -50,64 +40,62 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
-  await deleteTables()
+  await deleteAllDatabaseTables()
   await server.close()
 })
 
 beforeEach(async () => {
-  await emptyDatabaseTables()
-  await fillDatabaseTables()
+  await emptyAllDatabaseTables()
+  await Promise.all([
+    fillDatabaseTable(userTableName, [testUserOla]),
+    fillDatabaseTable(userFormTableName, olaUserFormsInTestData),
+    fillDatabaseTable(questionAnswerTableName, olaQuestionAnswersInTestData),
+  ])
 })
 
-const fillDatabaseTables = async () => {
-  await Promise.all([
-    fillDatabaseTable(userTableName, testUsers),
-    fillDatabaseTable(userFormTableName, userFormTestData),
-    fillDatabaseTable(questionAnswerTableName, questionAnswerTestData),
-  ])
-}
-
-const assertZeroQuestionAnswersAndUserFormsInDatabaseForUser = async (
-  username: string
-) => {
-  // Assert no UserForms has username as owner
-  const userForms = await docClient
+const assertUserWasAnonymizedProperly = async (username: string) => {
+  const user = await docClient
     .query({
-      TableName: userFormTableName,
-      IndexName: 'byCreatedAt',
-      KeyConditionExpression: '#owner = :username',
+      TableName: userTableName,
+      KeyConditionExpression: '#id = :username',
       ExpressionAttributeNames: {
-        '#owner': 'owner',
+        '#id': 'id',
       },
       ExpressionAttributeValues: {
         ':username': username,
       },
     })
     .promise()
-  expect(userForms.Count).toBe(0)
+  const userForms = await getUserFormsForUser(username)
+  const questionAnswers = await getQuestionAnswersForUser(username)
 
-  // Assert no QuestionAnswers has username as owner
-  const questionAnswers = await docClient
-    .scan({
-      TableName: questionAnswerTableName,
-      FilterExpression: '#owner = :username',
-      ExpressionAttributeNames: {
-        '#owner': 'owner',
-      },
-      ExpressionAttributeValues: {
-        ':username': username,
-      },
-    })
-    .promise()
+  expect(user.Count).toBe(0)
+  expect(userForms.Count).toBe(0)
   expect(questionAnswers.Count).toBe(0)
+
+  // Assert testUserOlas Cognito user no longer exists
+  let userNotFound = false
+
+  // prettier-ignore
+  try {
+    await cognitoIdentityServiceProvider
+      .adminGetUser({
+        UserPoolId: userPoolID,
+        Username: testUserOla.id,
+      })
+      .promise()
+  } catch (e: any) {
+    if (e.code === 'UserNotFoundException') {
+      userNotFound = true
+    }
+  }
+  expect(userNotFound).toBe(true)
 }
 
-test('DynamoDB has expected number of items', async () => {
+test('DynamoDB has all of testUserOlas items', async () => {
   const userFormsOla = await getUserFormsForUser(testUserOla.id)
 
-  expect(userFormsOla.Count).toBe(
-    userFormTestData.filter(userForm => userForm.owner == testUserOla.id).length
-  )
+  expect(userFormsOla.Count).toBe(olaUserFormsInTestData.length)
 
   const questionAnswersOla = await Promise.all(
     userFormsOla.Items!.map(async (userForm: any) => {
@@ -128,20 +116,12 @@ test('DynamoDB has expected number of items', async () => {
   const qaCountInDb = questionAnswersOla
     .map(qaList => qaList)
     .reduce((partialSum, currentSum) => partialSum + currentSum.Count!, 0)
-  const qaCountInTestData = questionAnswerTestData.filter(
-    qa => qa.owner == testUserOla.id
-  ).length
-  expect(qaCountInDb).toBe(qaCountInTestData)
+
+  expect(qaCountInDb).toBe(olaQuestionAnswersInTestData.length)
 })
 
 test('Anonymize user happy day scenario', async () => {
-  await cognitoIdentityServiceProvider
-    .adminCreateUser({
-      Username: testUserOla.id,
-      UserPoolId: userPoolID,
-      DesiredDeliveryMediums: ['EMAIL'],
-    })
-    .promise()
+  await createCognitoUser(testUserOla.id)
 
   // Anonymize testUserOla
   await request
@@ -152,29 +132,10 @@ test('Anonymize user happy day scenario', async () => {
     })
     .expect(200)
 
-  // Assert testUserOlas Cognito user no longer exists
-  let userNotFound = false
-
-  // prettier-ignore
-  try {
-    await cognitoIdentityServiceProvider
-      .adminGetUser({
-        UserPoolId: userPoolID,
-        Username: testUserOla.id,
-      })
-      .promise()
-  } catch (e: any) {
-    if (e.code === 'UserNotFoundException') {
-      userNotFound = true
-    }
-  }
-  expect(userNotFound).toBe(true)
-
-  // Assert that no UserForms or QuestionAnswers has testUserOla.id as owner
-  await assertZeroQuestionAnswersAndUserFormsInDatabaseForUser(testUserOla.id)
+  await assertUserWasAnonymizedProperly(testUserOla.id)
 })
 
-test('Anonymize user second attempt (mock failed first anonymization run)', async () => {
+test('Anonymize partially anonymized user', async () => {
   const olaAnonymizedID = randomUUID()
 
   // Create Cognito user with anonymizedID attribute
@@ -192,11 +153,9 @@ test('Anonymize user second attempt (mock failed first anonymization run)', asyn
     })
     .promise()
 
-  // Anonymize one of testUserOlas UserForms and its associated QuestionAnswers
-  const singleUserFormOla = userFormTestData.find(
-    userForm => userForm.owner === testUserOla.id
-  )!
-  const questionAnswersForSingleUserForm = questionAnswerTestData.filter(
+  // Anonymize testUserOlas QuestionAnswers for a single UserForm
+  const singleUserFormOla = olaUserFormsInTestData[0]
+  const questionAnswersForSingleUserForm = olaQuestionAnswersInTestData.filter(
     qa => qa.userFormID === singleUserFormOla!.id
   )
 
@@ -214,24 +173,11 @@ test('Anonymize user second attempt (mock failed first anonymization run)', asyn
     )
   )
 
-  await docClient
-    .update({
-      TableName: userFormTableName,
-      Key: { id: singleUserFormOla.id },
-      UpdateExpression: 'SET #owner = :olaAnonymizedID',
-      ExpressionAttributeNames: { '#owner': 'owner' },
-      ExpressionAttributeValues: { ':olaAnonymizedID': olaAnonymizedID },
-    })
-    .promise()
-
-  // Assert that only singleUserForm and associated QuestionAnswers were anonymized
+  // Assert that only QuestionAnswers associated with singleUserForm were anonymized
   const olaUserFormsInDb = await getUserFormsForUser(testUserOla.id)
   const olaQuestionAnswersInDb = await getQuestionAnswersForUser(testUserOla.id)
 
-  const otherUserFormsOla = olaUserFormsInTestData.filter(
-    userForm => userForm != singleUserFormOla
-  )
-  expect(olaUserFormsInDb.Count).toBe(otherUserFormsOla.length)
+  expect(olaUserFormsInDb.Count).toBe(olaUserFormsInTestData.length)
 
   const otherQuestionAnswersOla = olaQuestionAnswersInTestData.filter(
     qa => qa.userFormID != singleUserFormOla.id
@@ -247,8 +193,7 @@ test('Anonymize user second attempt (mock failed first anonymization run)', asyn
     })
     .expect(200)
 
-  // Assert that no UserForms or QuestionAnswers has testUserOla.id as owner
-  await assertZeroQuestionAnswersAndUserFormsInDatabaseForUser(testUserOla.id)
+  await assertUserWasAnonymizedProperly(testUserOla.id)
 
   // Assert that the number of UserForms and QuestionAnswers is equal in db and testdata, for testUserOla
   const olaAnonymizedUserFormsInDb = await getUserFormsForUser(olaAnonymizedID)

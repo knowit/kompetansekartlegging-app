@@ -9,43 +9,35 @@ import {
   kariUserFormsInTestData,
   olaUserFormsInTestData,
   olaQuestionAnswersInTestData,
-} from './testdata/adminqueries.db.dynamodb'
+} from './testdata/dynamodb.items'
 import {
   docClient,
-  createTables,
-  emptyDatabaseTables,
   userTableName,
   anonymizedUserTableName,
   userFormTableName,
   questionAnswerTableName,
-  fillDatabaseTable,
-  deleteTables,
   getUserFormsForUser,
   getQuestionAnswersForUser,
+  fillAllDatabaseTables,
+  createAllDatabaseTables,
+  deleteAllDatabaseTables,
+  emptyAllDatabaseTables,
 } from './common'
 
 const adminDbQueries = require('../backend/function/AdminQueries/db')
 
 beforeAll(async () => {
-  await createTables()
+  await createAllDatabaseTables()
 })
 
 afterAll(async () => {
-  await deleteTables()
+  await deleteAllDatabaseTables()
 })
 
 beforeEach(async () => {
-  await emptyDatabaseTables()
-  await fillDatabaseTables()
+  await emptyAllDatabaseTables()
+  await fillAllDatabaseTables()
 })
-
-const fillDatabaseTables = async () => {
-  await Promise.all([
-    fillDatabaseTable(userTableName, testUsers),
-    fillDatabaseTable(userFormTableName, userFormTestData),
-    fillDatabaseTable(questionAnswerTableName, questionAnswerTestData),
-  ])
-}
 
 test('DynamoDB has correct number of items', async () => {
   // Also validates testdata in case items have the same id
@@ -116,7 +108,6 @@ test('Test Anonymizing user: sunny day scenario', async () => {
   }
 
   const olaOwnerParams = makeParams('owner', testUserOla.id)
-  const anonymizedOlaOwnerParams = makeParams('owner', anonymizedID)
   const anonymizedOlaIdParams = makeParams('id', anonymizedID)
 
   const userScan = await docClient
@@ -140,7 +131,7 @@ test('Test Anonymizing user: sunny day scenario', async () => {
     })
     .promise()
 
-  const userCountBeforeAnon = userScan['Count'] as number
+  const userCountBeforeAnon = userScan['Count']!
   const userFormCountBeforeAnon = userFormScan['Count']
   const qaCountBeforeAnon = qaScan['Count']
 

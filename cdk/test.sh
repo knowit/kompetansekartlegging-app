@@ -3,10 +3,10 @@ dynamo_container_name="dynamodb-local-container"
 cognito_container_name="cognito-local-container"
 
 echo "Pulling amazon/dynamodb-local docker image..."
-docker pull amazon/dynamodb-local
+docker pull amazon/dynamodb-local:latest
 
 echo "Pulling jagregory/cognito-local docker image..."
-docker pull jagregory/cognito-local
+docker pull jagregory/cognito-local:latest
 
 echo "Starting amazon/dynamodb-local-container..."
 docker run --name $dynamo_container_name -p 8000:8000 amazon/dynamodb-local &

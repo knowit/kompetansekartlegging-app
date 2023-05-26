@@ -1,4 +1,9 @@
 import { CognitoIdentityServiceProvider, DynamoDB } from 'aws-sdk'
+import {
+  questionAnswerTestData,
+  testUsers,
+  userFormTestData,
+} from './testdata/dynamodb.items'
 import dynamoDBTables from './testdata/dynamodb.tables'
 
 export const userTableName = 'User'
@@ -40,25 +45,45 @@ export const cognitoIdentityServiceProvider = new CognitoIdentityServiceProvider
   }
 )
 
-export const createTables = async () => {
-  await Promise.all(
-    dynamoDBTables.map(async table => {
-      return await dynamoDBClient.createTable(table).promise()
+export const createCognitoUser = async (username: string) => {
+  await cognitoIdentityServiceProvider
+    .adminCreateUser({
+      Username: username,
+      UserPoolId: userPoolID,
+      DesiredDeliveryMediums: ['EMAIL'],
     })
+    .promise()
+}
+
+export const createAllDatabaseTables = async () => {
+  await Promise.all(
+    dynamoDBTables.map(table => dynamoDBClient.createTable(table).promise())
   )
 }
 
-export const deleteTables = async () => {
+export const deleteAllDatabaseTables = async () => {
   await Promise.all(
-    dynamoDBTables.map(async table => {
-      return await dynamoDBClient
-        .deleteTable({ TableName: table.TableName })
-        .promise()
-    })
+    dynamoDBTables.map(table =>
+      dynamoDBClient.deleteTable({ TableName: table.TableName }).promise()
+    )
   )
 }
 
-export const emptyDatabaseTables = async () => {
+export const emptyDatabaseTable = async (tableName: string) => {
+  const scan = await docClient.scan({ TableName: tableName }).promise()
+
+  if (scan.Items) {
+    await Promise.all(
+      scan.Items.map(item =>
+        docClient
+          .delete({ TableName: tableName, Key: { id: item.id } })
+          .promise()
+      )
+    )
+  }
+}
+
+export const emptyAllDatabaseTables = async () => {
   const [
     users,
     userForms,
@@ -72,35 +97,43 @@ export const emptyDatabaseTables = async () => {
   ])
 
   await Promise.all([
-    ...users.Items!.map(async (user: any) => {
-      return docClient
+    ...users.Items!.map(user =>
+      docClient
         .delete({ TableName: userTableName, Key: { id: user.id } })
         .promise()
-    }),
-    ...userForms.Items!.map(async (userForm: any) => {
-      return docClient
+    ),
+    ...userForms.Items!.map(userForm =>
+      docClient
         .delete({ TableName: userFormTableName, Key: { id: userForm.id } })
         .promise()
-    }),
-    ...questionAnswers.Items!.map(async (qa: any) => {
-      return docClient
+    ),
+    ...questionAnswers.Items!.map(qa =>
+      docClient
         .delete({ TableName: questionAnswerTableName, Key: { id: qa.id } })
         .promise()
-    }),
-    ...anonymizedUsers.Items!.map(async (qa: any) => {
-      return docClient
+    ),
+    ...anonymizedUsers.Items!.map(qa =>
+      docClient
         .delete({ TableName: anonymizedUserTableName, Key: { id: qa.id } })
         .promise()
-    }),
+    ),
   ])
 }
 
 export const fillDatabaseTable = async (tableName: string, items: Object[]) => {
   await Promise.all(
-    items.map(async item =>
+    items.map(item =>
       docClient.put({ TableName: tableName, Item: item }).promise()
     )
   )
+}
+
+export const fillAllDatabaseTables = async () => {
+  await Promise.all([
+    fillDatabaseTable(userTableName, testUsers),
+    fillDatabaseTable(userFormTableName, userFormTestData),
+    fillDatabaseTable(questionAnswerTableName, questionAnswerTestData),
+  ])
 }
 
 export const getUserFormsForUser = async (username: string) => {
