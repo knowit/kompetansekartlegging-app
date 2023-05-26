@@ -91,7 +91,7 @@ test('getQuestionAnswersByUserFormId returns correct number of items', async () 
   expect(qaCountInDb).toBe(olaQuestionAnswersInTestData.length)
 })
 
-test('Test Anonymizing user: sunny day scenario', async () => {
+test('Test Anonymizing user: happy day scenario', async () => {
   const anonymizedID = randomUUID()
 
   const makeParams = (keyName: string, value: string) => {
