@@ -235,8 +235,8 @@ const getAllUsers = async organization_ID => {
   return filteredUsersWithoutOrganizationID
 }
 
-const getAnonUsers = async organization_ID => {
-  const anon_users_res = await docClient
+const getAnonymizedUsers = async organization_ID => {
+  const anonymized_users_res = await docClient
     .scan({
       TableName: ANON_USER_TABLE_NAME,
       FilterExpression: organizationFilterExpression,
@@ -246,23 +246,23 @@ const getAnonUsers = async organization_ID => {
     })
     .promise()
     .catch(e => {
-      console.log('Error fetching anon users: ' + e)
+      console.log('Error fetching anonymized users: ' + e)
       return []
     })
 
   // Mock AWS-styled result
-  const anon_users = anon_users_res.Items.map(anon => {
+  const anonymized_users = anonymized_users_res.Items.map(anon => {
     return {
       Enabled: true,
       Username: anon.id,
       Attributes: [
         { Name: 'email', Value: anon.id },
-        { Name: 'isAnonymous', Value: true },
+        { Name: 'isAnonymized', Value: true },
       ],
     }
   })
 
-  return anon_users
+  return anonymized_users
 }
 
 // Find all form definitions.
@@ -325,7 +325,7 @@ module.exports = {
   getNewestFormDef,
   getAllFormDefs,
   getAllUsers,
-  getAnonUsers,
+  getAnonymizedUsers,
   getAllCategories,
   getAllQuestionForFormDef,
   getAnswersForUserForm,

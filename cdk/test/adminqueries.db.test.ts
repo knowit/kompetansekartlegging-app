@@ -152,14 +152,14 @@ test('Test Anonymizing user: happy day scenario', async () => {
 
   expect(anonWithanonymizedIDScan['Count']).toBe(1)
 
-  const anonUserScan = await docClient
+  const anonymizedUserscan = await docClient
     .scan({
       TableName: anonymizedUserTableName,
       Select: 'COUNT',
     })
     .promise()
 
-  expect(anonUserScan['Count']).toBe(1)
+  expect(anonymizedUserscan['Count']).toBe(1)
 
   // Check that user with Ola's original id is not in users table
   const userScanAfterAnon = await docClient

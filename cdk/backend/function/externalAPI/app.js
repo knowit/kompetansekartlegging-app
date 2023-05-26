@@ -28,7 +28,7 @@ const crypto = require('crypto')
 const {
   getNewestFormDef,
   getAllUsers,
-  getAnonUsers,
+  getAnonymizedUsers,
   getAllCategories,
   getAllQuestionForFormDef,
   getAnswersForUser,
@@ -105,8 +105,8 @@ router.get('/answers', async (req, res) => {
   //console.log('allUsers:',allUsers);
 
   if (req.query.include_anonymous === 'true') {
-    const anonUsers = await getAnonUsers(organization_ID)
-    allUsers = allUsers.concat(anonUsers)
+    const anonymizedUsers = await getAnonymizedUsers(organization_ID)
+    allUsers = allUsers.concat(anonymizedUsers)
   }
 
   // Find answers for the current form definition for each user.
@@ -177,8 +177,8 @@ router.get('/users', async (req, res) => {
   let allUsers = await getAllUsers(organization_ID)
 
   if (req.query.include_anonymous === 'true') {
-    const anonUsers = await getAnonUsers(organization_ID)
-    allUsers = allUsers.concat(anonUsers)
+    const anonymizedUsers = await getAnonymizedUsers(organization_ID)
+    allUsers = allUsers.concat(anonymizedUsers)
   }
 
   return res.json(
