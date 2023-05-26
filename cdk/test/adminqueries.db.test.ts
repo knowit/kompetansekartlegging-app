@@ -194,7 +194,7 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
   const anonymizedID = randomUUID()
 
   // Get all ids for Kari's answers
-  const kIdQAScan = await docClient
+  const kariIDQAScan = await docClient
     .scan({
       TableName: questionAnswerTableName,
       FilterExpression: '#owner = :karid',
@@ -207,7 +207,7 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
     })
     .promise()
 
-  const kIds = kIdQAScan.Items!.map(i => i.id)
+  const kIds = kariIDQAScan.Items!.map(i => i.id)
 
   // Mock incomplete anonymization by anonymizing only one row
   await docClient
@@ -234,7 +234,7 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
     })
     .promise()
 
-  expect(incompleteScan['Count']).toBe(kIdQAScan['Count']! - 1)
+  expect(incompleteScan['Count']).toBe(kariIDQAScan['Count']! - 1)
 
   // Anonymize
   await adminDbQueries.anonymizeUser(
@@ -244,7 +244,7 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
   )
 
   // Check there that id has been replaced with new id
-  const kIdQAScanAfterAnon = await docClient
+  const kariIDQAScanAfterAnon = await docClient
     .scan({
       TableName: questionAnswerTableName,
       FilterExpression: '#owner = :karid',
@@ -257,9 +257,9 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
     })
     .promise()
 
-  expect(kIdQAScanAfterAnon['Count']).toBe(0)
+  expect(kariIDQAScanAfterAnon['Count']).toBe(0)
 
-  const anonymizedkIdQAScanAfterAnon = await docClient
+  const anonymizedkariIDQAScanAfterAnon = await docClient
     .scan({
       TableName: questionAnswerTableName,
       FilterExpression: '#owner = :anonymizedID',
@@ -272,7 +272,7 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
     })
     .promise()
 
-  expect(anonymizedkIdQAScanAfterAnon['Count']).toBe(kIds.length)
+  expect(anonymizedkariIDQAScanAfterAnon['Count']).toBe(kIds.length)
 })
 
 test('AnonymizedUserTable lastAnswerAt matches users last UserForm updatedAt', async () => {
