@@ -404,7 +404,7 @@ app.use((err, req, res, next) => {
   if (!err.statusCode) err.statusCode = 500 // If err has no specified error code, set error code to 'Internal Server Error (500)'
   res
     .status(err.statusCode)
-    .json({ custom_error: err.message })
+    .json({ message: err.message })
     .end()
 })
 
