@@ -197,12 +197,12 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
   const kariIDQAScan = await docClient
     .scan({
       TableName: questionAnswerTableName,
-      FilterExpression: '#owner = :karid',
+      FilterExpression: '#owner = :kariID',
       ExpressionAttributeNames: {
         '#owner': 'owner',
       },
       ExpressionAttributeValues: {
-        ':karid': testUserKari.id,
+        ':kariID': testUserKari.id,
       },
     })
     .promise()
@@ -224,12 +224,12 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
   const incompleteScan = await docClient
     .scan({
       TableName: questionAnswerTableName,
-      FilterExpression: '#owner = :karid',
+      FilterExpression: '#owner = :kariID',
       ExpressionAttributeNames: {
         '#owner': 'owner',
       },
       ExpressionAttributeValues: {
-        ':karid': testUserKari.id,
+        ':kariID': testUserKari.id,
       },
     })
     .promise()
@@ -247,12 +247,12 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
   const kariIDQAScanAfterAnon = await docClient
     .scan({
       TableName: questionAnswerTableName,
-      FilterExpression: '#owner = :karid',
+      FilterExpression: '#owner = :kariID',
       ExpressionAttributeNames: {
         '#owner': 'owner',
       },
       ExpressionAttributeValues: {
-        ':karid': testUserKari.id,
+        ':kariID': testUserKari.id,
       },
     })
     .promise()
