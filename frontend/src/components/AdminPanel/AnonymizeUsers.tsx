@@ -106,7 +106,7 @@ const AnonymizeUsers = () => {
 
   const {
     result: users,
-    error,
+    error: apiError,
     loading,
     refresh,
   } = useApiGet({
@@ -117,10 +117,10 @@ const AnonymizeUsers = () => {
   const [userToAnonymize, setUserToAnonymize] = useState<any>()
   const [showAnonymizeUserDialog, setShowAnonymizeUserDialog] =
     useState<boolean>(false)
-  const [mutationError, setMutationError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   const anonymizeUser = (user: any) => {
-    setMutationError(null)
+    setError(null)
     setShowAnonymizeUserDialog(true)
     setUserToAnonymize(user)
   }
@@ -131,13 +131,13 @@ const AnonymizeUsers = () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await anonymizeUserApiCall(username, orgId!)
       .then(() => {
-        setMutationError(null)
+        setError(null)
         setShowAnonymizeUserDialog(false)
         refresh()
       })
       .catch(() => {
         setShowAnonymizeUserDialog(false)
-        setMutationError(
+        setError(
           t('adminApi.error.couldNotAnonymizeName', {
             name: userToAnonymize.Username,
           })
@@ -147,10 +147,10 @@ const AnonymizeUsers = () => {
 
   return (
     <Container maxWidth="md" className={commonStyles.container}>
+      {apiError && <p>{t('errorOccured') + apiError}</p>}
       {error && <p>{t('errorOccured') + error}</p>}
-      {mutationError && <p>{t('errorOccured') + mutationError}</p>}
       {loading && <CircularProgress />}
-      {!error && !loading && users && (
+      {!apiError && !loading && users && (
         <>
           <Card style={{ marginBottom: '24px' }} variant="outlined">
             <CardContent>
