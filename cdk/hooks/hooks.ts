@@ -24,8 +24,7 @@ setAppSyncAuth(
   stack.awsuserpoolswebclientid,
   stack.outputAppSyncId,
   stack.outputCreateBatch,
-  stack.tablenamemap,
-  stack.tableArns
+  stack.tablenamemap
 )
 
 fs.writeFileSync(

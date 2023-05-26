@@ -5,9 +5,8 @@ export default async (
   userPoolId: string,
   userPoolClientId: string,
   appsyncId: string,
-  batchCreateUserId: any,
-  tableMap: string,
-  tableArns: string
+  batchCreateUserId: string,
+  tableMap: string
 ) => {
   const lambdaClient = new lambda.LambdaClient({ region: 'eu-central-1' })
   const appsyncClient = new appsync.AppSyncClient({ region: 'eu-central-1' })
@@ -21,7 +20,7 @@ export default async (
   await lambdaClient.send(
     new lambda.UpdateFunctionConfigurationCommand({
       ...currentLambdaConfig,
-      FunctionName: batchCreateUserId,
+      FunctionName: batchCreateUserId, //https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-lambda/classes/updatefunctionconfigurationcommand.html
       Environment: {
         Variables: {
           ...currentVariables,
