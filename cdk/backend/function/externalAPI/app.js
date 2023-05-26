@@ -104,7 +104,7 @@ router.get('/answers', async (req, res) => {
   let allUsers = await getAllUsers(organization_ID)
   //console.log('allUsers:',allUsers);
 
-  if (req.query.include_anonymous === 'true') {
+  if (req.query.include_anonymized === 'true') {
     const anonymizedUsers = await getAnonymizedUsers(organization_ID)
     allUsers = allUsers.concat(anonymizedUsers)
   }
@@ -176,7 +176,7 @@ router.get('/users', async (req, res) => {
 
   let allUsers = await getAllUsers(organization_ID)
 
-  if (req.query.include_anonymous === 'true') {
+  if (req.query.include_anonymized === 'true') {
     const anonymizedUsers = await getAnonymizedUsers(organization_ID)
     allUsers = allUsers.concat(anonymizedUsers)
   }
