@@ -23,6 +23,10 @@ const anonymizeUser = async (username, anonymizedID, orgId) => {
   // Put will overwrite the old item if the key exists
   // That way, the only case where promise throws is on error
   const userFormsForUser = await getUserFormsForUser(username)
+
+  /* Find when the most recently updated userform to approximate
+     anonymization date without using personally identifiable data */
+
   const sortedByUpdated = userFormsForUser.sort(
     (a, b) => -a.updatedAt.localeCompare(b.updatedAt)
   )
