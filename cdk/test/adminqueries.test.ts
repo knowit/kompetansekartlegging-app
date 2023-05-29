@@ -2,7 +2,6 @@ import { randomUUID } from 'crypto'
 import {
   anonymizedIDAttributeName,
   cognitoIdentityServiceProvider,
-  createAllDatabaseTables,
   createCognitoUser,
   deleteAllDatabaseTables,
   docClient,
@@ -10,21 +9,22 @@ import {
   fillDatabaseTable,
   getQuestionAnswersForUser,
   getUserFormsForUser,
-  olaQuestionAnswersInTestData,
-  olaUserFormsInTestData,
   questionAnswerTableName,
   userFormTableName,
   userPoolID,
   userTableName,
 } from './common'
-import { testUserOla } from './testdata/dynamodb.items'
+import {
+  olaQuestionAnswersInTestData,
+  olaUserFormsInTestData,
+  testUserOla,
+} from './testdata/dynamodb.items'
 const supertest = require('supertest')
 
 const { server } = require('../backend/function/AdminQueries/app')
 const request = supertest(server)
 
 beforeAll(async () => {
-  await createAllDatabaseTables()
   await cognitoIdentityServiceProvider
     .addCustomAttributes({
       CustomAttributes: [

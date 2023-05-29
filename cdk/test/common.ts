@@ -47,18 +47,6 @@ export const cognitoIdentityServiceProvider = new CognitoIdentityServiceProvider
   }
 )
 
-export const olaUserFormsInTestData = userFormTestData.filter(
-  userForm => userForm.owner === testUserOla.id
-)
-
-export const kariUserFormsInTestData = userFormTestData.filter(
-  userForm => userForm.owner === testUserKari.id
-)
-
-export const olaQuestionAnswersInTestData = questionAnswerTestData.filter(
-  qa => qa.owner === testUserOla.id
-)
-
 export const createCognitoUser = async (username: string) => {
   await cognitoIdentityServiceProvider
     .adminCreateUser({
@@ -76,11 +64,14 @@ export const createAllDatabaseTables = async () => {
 }
 
 export const deleteAllDatabaseTables = async () => {
-  await Promise.all(
-    dynamoDBTables.map(table =>
-      dynamoDBClient.deleteTable({ TableName: table.TableName }).promise()
+  const tables = await dynamoDBClient.listTables().promise()
+  if (tables.TableNames) {
+    await Promise.all(
+      tables.TableNames.map(tableName =>
+        dynamoDBClient.deleteTable({ TableName: tableName }).promise()
+      )
     )
-  )
+  }
 }
 
 export const emptyDatabaseTable = async (tableName: string) => {
@@ -98,40 +89,9 @@ export const emptyDatabaseTable = async (tableName: string) => {
 }
 
 export const emptyAllDatabaseTables = async () => {
-  const [
-    users,
-    userForms,
-    questionAnswers,
-    anonymizedUsers,
-  ] = await Promise.all([
-    docClient.scan({ TableName: userTableName }).promise(),
-    docClient.scan({ TableName: userFormTableName }).promise(),
-    docClient.scan({ TableName: questionAnswerTableName }).promise(),
-    docClient.scan({ TableName: anonymizedUserTableName }).promise(),
-  ])
-
-  await Promise.all([
-    ...users.Items!.map(user =>
-      docClient
-        .delete({ TableName: userTableName, Key: { id: user.id } })
-        .promise()
-    ),
-    ...userForms.Items!.map(userForm =>
-      docClient
-        .delete({ TableName: userFormTableName, Key: { id: userForm.id } })
-        .promise()
-    ),
-    ...questionAnswers.Items!.map(qa =>
-      docClient
-        .delete({ TableName: questionAnswerTableName, Key: { id: qa.id } })
-        .promise()
-    ),
-    ...anonymizedUsers.Items!.map(qa =>
-      docClient
-        .delete({ TableName: anonymizedUserTableName, Key: { id: qa.id } })
-        .promise()
-    ),
-  ])
+  // Delete and recreate tables (cleaner than scanning each table and then deleting items)
+  await deleteAllDatabaseTables()
+  await createAllDatabaseTables()
 }
 
 export const fillDatabaseTable = async (tableName: string, items: Object[]) => {

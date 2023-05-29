@@ -6,6 +6,9 @@ import {
   userFormTestData,
   questionAnswerTestData,
   testUserOlaLastUserFormUpdatedAt,
+  olaUserFormsInTestData,
+  kariUserFormsInTestData,
+  olaQuestionAnswersInTestData,
 } from './testdata/dynamodb.items'
 import {
   docClient,
@@ -16,19 +19,11 @@ import {
   getUserFormsForUser,
   getQuestionAnswersForUser,
   fillAllDatabaseTables,
-  createAllDatabaseTables,
   deleteAllDatabaseTables,
   emptyAllDatabaseTables,
-  olaUserFormsInTestData,
-  kariUserFormsInTestData,
-  olaQuestionAnswersInTestData,
 } from './common'
 
 const adminDbQueries = require('../backend/function/AdminQueries/db')
-
-beforeAll(async () => {
-  await createAllDatabaseTables()
-})
 
 afterAll(async () => {
   await deleteAllDatabaseTables()

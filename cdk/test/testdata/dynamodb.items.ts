@@ -19,7 +19,8 @@ export const testUsers = [testUserOla, testUserKari]
 
 // UserForms
 export const testUserOlaLastUserFormUpdatedAt = '2090-02-01T12:00:00.605Z'
-export const userFormTestData = [
+
+export const olaUserFormsInTestData = [
   {
     id: '0',
     owner: testUserOla.id,
@@ -34,6 +35,9 @@ export const userFormTestData = [
     createdAt: '2090-01-01T12:00:00.605Z',
     updatedAt: testUserOlaLastUserFormUpdatedAt,
   },
+]
+
+export const kariUserFormsInTestData = [
   {
     id: '2',
     owner: testUserKari.id,
@@ -50,8 +54,14 @@ export const userFormTestData = [
   },
 ]
 
+export const userFormTestData = [
+  ...olaUserFormsInTestData,
+  ...kariUserFormsInTestData,
+]
+
 // QuestionAnswers
-export const questionAnswerTestData = [
+
+export const olaQuestionAnswersInTestData = [
   {
     id: '0',
     owner: testUserOla.id,
@@ -82,6 +92,9 @@ export const questionAnswerTestData = [
     createdAt: '2023-02-01T12:10:00.605Z',
     updatedAt: '2023-02-01T12:10:00.605Z',
   },
+]
+
+export const kariQuestionAnswersInTestData = [
   {
     id: '3',
     owner: testUserKari.id,
@@ -112,4 +125,9 @@ export const questionAnswerTestData = [
     createdAt: '2023-01-01T12:00:00.605Z',
     updatedAt: '2023-01-02T13:00:00.605Z',
   },
+]
+
+export const questionAnswerTestData = [
+  ...olaQuestionAnswersInTestData,
+  ...kariQuestionAnswersInTestData,
 ]
