@@ -1,6 +1,8 @@
 import { CognitoIdentityServiceProvider, DynamoDB } from 'aws-sdk'
 import {
   questionAnswerTestData,
+  testUserKari,
+  testUserOla,
   testUsers,
   userFormTestData,
 } from './testdata/dynamodb.items'
@@ -43,6 +45,18 @@ export const cognitoIdentityServiceProvider = new CognitoIdentityServiceProvider
       secretAccessKey: 'foo',
     },
   }
+)
+
+export const olaUserFormsInTestData = userFormTestData.filter(
+  userForm => userForm.owner === testUserOla.id
+)
+
+export const kariUserFormsInTestData = userFormTestData.filter(
+  userForm => userForm.owner === testUserKari.id
+)
+
+export const olaQuestionAnswersInTestData = questionAnswerTestData.filter(
+  qa => qa.owner === testUserOla.id
 )
 
 export const createCognitoUser = async (username: string) => {

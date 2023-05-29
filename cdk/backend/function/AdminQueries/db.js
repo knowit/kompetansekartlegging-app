@@ -87,7 +87,6 @@ const getQuestionAnswersByUserFormId = async userFormId => {
       ExpressionAttributeValues: {
         ':userFormId': userFormId,
       },
-      ConsistentRead: false,
     })
     .promise()
 

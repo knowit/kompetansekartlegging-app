@@ -113,15 +113,3 @@ export const questionAnswerTestData = [
     updatedAt: '2023-01-02T13:00:00.605Z',
   },
 ]
-
-export const olaUserFormsInTestData = userFormTestData.filter(
-  userForm => userForm.owner === testUserOla.id
-)
-
-export const kariUserFormsInTestData = userFormTestData.filter(
-  userForm => userForm.owner === testUserKari.id
-)
-
-export const olaQuestionAnswersInTestData = questionAnswerTestData.filter(
-  qa => qa.owner === testUserOla.id
-)

@@ -144,13 +144,15 @@ async function anonymizeUser(username) {
   await cognitoIdentityServiceProvider.adminDeleteUser(params).promise()
 }
 
-async function getUser(username) {
+async function getUser(username, logUsername = true) {
   const params = {
     UserPoolId: userPoolId,
     Username: username,
   }
 
-  console.log(`Attempting to retrieve information for ${username}`)
+  console.log(
+    `Attempting to retrieve information for ${logUsername ? username : 'user'}`
+  )
 
   try {
     const result = await cognitoIdentityServiceProvider

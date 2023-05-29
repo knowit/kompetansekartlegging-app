@@ -10,16 +10,14 @@ import {
   fillDatabaseTable,
   getQuestionAnswersForUser,
   getUserFormsForUser,
+  olaQuestionAnswersInTestData,
+  olaUserFormsInTestData,
   questionAnswerTableName,
   userFormTableName,
   userPoolID,
   userTableName,
 } from './common'
-import {
-  olaQuestionAnswersInTestData,
-  olaUserFormsInTestData,
-  testUserOla,
-} from './testdata/dynamodb.items'
+import { testUserOla } from './testdata/dynamodb.items'
 const supertest = require('supertest')
 
 const { server } = require('../backend/function/AdminQueries/app')
@@ -31,7 +29,8 @@ beforeAll(async () => {
     .addCustomAttributes({
       CustomAttributes: [
         {
-          Name: 'anonymizedID',
+          Name: anonymizedIDAttributeName.replace('custom:', ''),
+          Mutable: true,
         },
       ],
       UserPoolId: userPoolID,
@@ -107,7 +106,6 @@ test('DynamoDB has all of testUserOlas items', async () => {
           ExpressionAttributeValues: {
             ':userFormId': userForm.id,
           },
-          ConsistentRead: false,
         })
         .promise()
     })

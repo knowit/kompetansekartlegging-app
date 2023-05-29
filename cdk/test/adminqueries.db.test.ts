@@ -6,9 +6,6 @@ import {
   userFormTestData,
   questionAnswerTestData,
   testUserOlaLastUserFormUpdatedAt,
-  kariUserFormsInTestData,
-  olaUserFormsInTestData,
-  olaQuestionAnswersInTestData,
 } from './testdata/dynamodb.items'
 import {
   docClient,
@@ -22,6 +19,9 @@ import {
   createAllDatabaseTables,
   deleteAllDatabaseTables,
   emptyAllDatabaseTables,
+  olaUserFormsInTestData,
+  kariUserFormsInTestData,
+  olaQuestionAnswersInTestData,
 } from './common'
 
 const adminDbQueries = require('../backend/function/AdminQueries/db')

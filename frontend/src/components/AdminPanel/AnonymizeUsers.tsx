@@ -117,10 +117,12 @@ const AnonymizeUsers = () => {
   const [userToAnonymize, setUserToAnonymize] = useState<any>()
   const [showAnonymizeUserDialog, setShowAnonymizeUserDialog] =
     useState<boolean>(false)
-  const [error, setError] = useState<string | null>(null)
+  const [anonymizationError, setAnonymizationError] = useState<string | null>(
+    null
+  )
 
   const anonymizeUser = (user: any) => {
-    setError(null)
+    setAnonymizationError(null)
     setShowAnonymizeUserDialog(true)
     setUserToAnonymize(user)
   }
@@ -131,13 +133,13 @@ const AnonymizeUsers = () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await anonymizeUserApiCall(username, orgId!)
       .then(() => {
-        setError(null)
+        setAnonymizationError(null)
         setShowAnonymizeUserDialog(false)
         refresh()
       })
       .catch(() => {
         setShowAnonymizeUserDialog(false)
-        setError(
+        setAnonymizationError(
           t('adminApi.error.couldNotAnonymizeName', {
             name: userToAnonymize.Username,
           })
@@ -148,7 +150,7 @@ const AnonymizeUsers = () => {
   return (
     <Container maxWidth="md" className={commonStyles.container}>
       {apiError && <p>{t('errorOccured') + apiError}</p>}
-      {error && <p>{t('errorOccured') + error}</p>}
+      {anonymizationError && <p>{t('errorOccured') + anonymizationError}</p>}
       {loading && <CircularProgress />}
       {!apiError && !loading && users && (
         <>
