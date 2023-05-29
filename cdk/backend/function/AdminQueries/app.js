@@ -182,6 +182,22 @@ app.post('/enableUser', async (req, res, next) => {
   }
 })
 
+/*
+User data is anonymized mainly by replacing email with a random UUID.
+The anonymization steps are:
+
+1 - Add user to AnonymizedUser table
+2 - Anonymize QuestionAnswers
+3 - Anonymize UserForms
+4 - Delete user from User table
+5 - Delete Cognito user
+
+What if something goes wrong and user data is partially anonymized?
+If something goes wrong, the new UUID is added as an attribute on the Cognito user.
+Along with the order of the anonymization steps, this enables the anonymization
+process to be retriggered by the frontend. If retriggering does not succeed,
+a system admin can finish the process manually.
+*/
 app.post('/anonymizeUser', async (req, res, next) => {
   if (!req.body.username || !req.body.orgId) {
     const err = new Error('username and orgId is required')
