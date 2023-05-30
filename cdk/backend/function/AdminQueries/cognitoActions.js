@@ -252,23 +252,10 @@ async function listUsersInGroup(groupname, Limit, NextToken) {
   }
 
   console.log(`Attempting to list users in group ${groupname}`)
-
-  try {
-    const result = await cognitoIdentityServiceProvider
-      .listUsersInGroup(params)
-      .promise()
-    return result
-  } catch (err) {
-    console.log(
-      'Error trying to list users in group: ' +
-        groupname +
-        ' in userpool: ' +
-        UserPoolId +
-        '\n' +
-        err
-    )
-    throw err
-  }
+  const result = await cognitoIdentityServiceProvider
+    .listUsersInGroup(params)
+    .promise()
+  return result
 }
 
 // Signs out from all devices, as an administrator.
