@@ -20,7 +20,8 @@ export class KompetanseFrontendStack extends Stack {
         blockPublicPolicy: false,
         ignorePublicAcls: false,
         restrictPublicBuckets: false
-      }
+      },
+      objectOwnership: s3.ObjectOwnership.OBJECT_WRITER
     });
 
     const s3Origin = new origins.S3Origin(websiteBucket);
