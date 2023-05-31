@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - github-actions-deploy-with-role # TODO: remove
   workflow_dispatch:
     inputs:
       aws_environment:
@@ -54,7 +53,7 @@ jobs:
 
   deploy_dev_on_push_main:
     needs: check_files
-    if: github.event_name == 'push' # && needs.check_files.outputs.any_modified == 'true' TODO: remove #
+    if: github.event_name == 'push' && needs.check_files.outputs.any_modified == 'true'
     name: Deploy dev on push to main
     permissions: # Needed to interact with GitHub's OIDC Token endpoint
       id-token: write
