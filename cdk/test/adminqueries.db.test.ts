@@ -94,15 +94,15 @@ test('Test Anonymizing user: happy day scenario', async () => {
   const anonymizedOlaIdParams = { keyName: 'id', value: anonymizedID }
 
   // Count items before anonymizing for comparison
-  const userCountBeforeAnon = await countItems(userTableName)
-  const userFormCountBeforeAnon = await countItems(
-    userFormTableName,
-    olaOwnerParams
-  )
-  const qaCountBeforeAnon = await countItems(
-    questionAnswerTableName,
-    olaOwnerParams
-  )
+  const [
+    userCountBeforeAnon,
+    userFormCountBeforeAnon,
+    qaCountBeforeAnon,
+  ] = await Promise.all([
+    countItems(userTableName),
+    await countItems(userFormTableName, olaOwnerParams),
+    countItems(questionAnswerTableName, olaOwnerParams),
+  ])
 
   // Anonymize user
   await adminDbQueries.anonymizeUser(
