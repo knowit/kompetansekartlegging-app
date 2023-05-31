@@ -16,11 +16,9 @@ on:
         type: boolean
         default: true
     secrets:
-      aws_access_key_id:
+      AWS_DEPLOY_ROLE:
         required: true
-      aws_secret_access_key:
-        required: true
-      azure:
+      AZURE:
         required: true
       SLACK_DEPLOY_WEBHOOK_URL:
         required: true
@@ -29,6 +27,9 @@ jobs:
   deploy:
     name: Deploy ${{ inputs.aws_environment }}
     runs-on: ubuntu-latest
+    permissions: # Needed to interact with GitHub's OIDC Token endpoint
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -38,8 +39,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id: ${{ secrets.aws_access_key_id }}
-          aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE }}
           aws-region: ${{ inputs.aws_region }}
 
       - name: Install packages
@@ -54,7 +54,7 @@ jobs:
           --require-approval never \
           --outputs-file outputs.json \
           --context ENV=${{ inputs.aws_environment }} \
-          --context AZURE=${{ secrets.azure }} \
+          --context AZURE=${{ secrets.AZURE }} \
           --context EXCEL=${{ inputs.excel }}
 
       - name: Prepare frontend ${{ inputs.aws_environment }} deployment
