@@ -213,7 +213,7 @@ const getAllUsers = async organization_ID => {
     PaginationToken = res.PaginationToken
   } while (PaginationToken)
 
-  filteredUsers = allUsers.filter(user => {
+  const filteredUsers = allUsers.filter(user => {
     const organizationAttribute = user['Attributes'].filter(
       attribute => attribute['Name'] === 'custom:OrganizationID'
     )[0]
@@ -224,7 +224,7 @@ const getAllUsers = async organization_ID => {
     )
   })
 
-  filteredUsersWithoutOrganizationID = filteredUsers.map(user => {
+  const filteredUsersWithoutOrganizationID = filteredUsers.map(user => {
     return {
       ...user,
       Attributes: user['Attributes'].filter(

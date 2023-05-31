@@ -151,7 +151,8 @@ export class KompetanseStack extends Stack {
         ),
       })
 
-      const roleAttachment = new cognito.CfnIdentityPoolRoleAttachment(
+      // roleAttachment
+      new cognito.CfnIdentityPoolRoleAttachment(
         this,
         'IdentityPoolRoleAttachment',
         {
@@ -164,13 +165,10 @@ export class KompetanseStack extends Stack {
       )
 
       // Conditional output
-      const identityPoolIdOutput = new CfnOutput(
-        this,
-        'aws_cognito_identity_pool_id',
-        {
-          value: identityPool.ref, // "eu-central-1:ed60ff7c-18dc-49e6-a8cf-aa7a068fa2a5",
-        }
-      )
+      // identityPoolIdOutput
+      new CfnOutput(this, 'aws_cognito_identity_pool_id', {
+        value: identityPool.ref, // "eu-central-1:ed60ff7c-18dc-49e6-a8cf-aa7a068fa2a5",
+      })
     }
 
     // PreSignUp Trigger Setup
@@ -253,7 +251,7 @@ export class KompetanseStack extends Stack {
       tableNames: tableNames,
     })
 
-    const tableArns: any = {}
+    const tableArns: { [key: string]: string } = {}
 
     Object.keys(appSync.tableMap).forEach(table => {
       tableArns[table] = appSync.tableMap[table].tableArn
@@ -880,7 +878,8 @@ export class KompetanseStack extends Stack {
       },
     })
 
-    const externalApiAnyMethod = externalApiProxy.addMethod(
+    // externalApiAnyMethod
+    externalApiProxy.addMethod(
       'ANY',
       new gateway.LambdaIntegration(externalAPILambda),
       {
@@ -1065,7 +1064,8 @@ export class KompetanseStack extends Stack {
 
     // ExternalAPI Usage plan setup
 
-    const extUsagePlan = externalApi.addUsagePlan('externalApiUsagePlan', {
+    // extUsagePlan
+    externalApi.addUsagePlan('externalApiUsagePlan', {
       name: 'standard',
       apiStages: [
         {
@@ -1085,46 +1085,47 @@ export class KompetanseStack extends Stack {
       })
     }
     // Outputs
-    const userPoolIdOutput = new CfnOutput(this, 'aws_user_pools_id', {
+    // userPoolIdOutput
+    new CfnOutput(this, 'aws_user_pools_id', {
       value: pool.userPoolId,
     })
-    const userPoolWebClientIdOutput = new CfnOutput(
-      this,
-      'aws_user_pools_web_client_id',
-      {
-        value: appClient.userPoolClientId,
-      }
-    )
-    const tableMapOutput = new CfnOutput(this, 'tablename_map', {
+    // userPoolWebClientIdOutput
+    new CfnOutput(this, 'aws_user_pools_web_client_id', {
+      value: appClient.userPoolClientId,
+    })
+    // tableMapOutput
+    new CfnOutput(this, 'tablename_map', {
       value: JSON.stringify(appSync.tableNameMap),
     })
-    const tableArnMapOutput = new CfnOutput(this, 'tableArns', {
+    // tableArnMapOutput
+    new CfnOutput(this, 'tableArns', {
       value: JSON.stringify(tableArns),
     })
 
-    const createUserFormRoleNameOutput = new CfnOutput(
-      this,
-      'userFormRoleNameOutput',
-      {
-        value: batchCreateUser.role?.roleName || '',
-      }
-    )
+    // createUserFormRoleNameOutput
+    new CfnOutput(this, 'userFormRoleNameOutput', {
+      value: batchCreateUser.role?.roleName || '',
+    })
 
-    const oauthOutput = new CfnOutput(this, 'oauth', {
+    // oauthOutput
+    new CfnOutput(this, 'oauth', {
       value: JSON.stringify({
         domain: `${domainSettings.cognitoDomain?.domainPrefix}.auth.eu-central-1.amazoncognito.com`, //"komptest.auth.eu-central-1.amazoncognito.com"
       }),
     })
 
-    const functionMapOutput = new CfnOutput(this, 'functionMap', {
+    // functionMapOutput
+    new CfnOutput(this, 'functionMap', {
       value: JSON.stringify(ApiMap),
     })
 
-    const userCreateBatchOutput = new CfnOutput(this, 'outputCreateBatch', {
+    // userCreateBatchOutput
+    new CfnOutput(this, 'outputCreateBatch', {
       value: batchCreateUser.functionName,
     })
 
-    const apiId = new CfnOutput(this, 'outputAppSyncId', {
+    // apiId
+    new CfnOutput(this, 'outputAppSyncId', {
       value: appSync.appsyncAPI.apiId,
     })
   }
