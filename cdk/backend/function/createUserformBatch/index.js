@@ -15,8 +15,6 @@ Amplify Params - DO NOT EDIT */
 // extract environment variables
 const REGION = process.env.REGION
 const TABLEMAP = JSON.parse(process.env.TABLEMAP)
-
-const QUESTIONTABLE_NAME = TABLEMAP['QuestionTable']
 //process.env.API_KOMPETANSEKARTLEGGIN_QUESTIONTABLE_NAME;
 const USERFORMTABLE_NAME = TABLEMAP['UserFormTable']
 // process.env.API_KOMPETANSEKARTLEGGIN_USERFORMTABLE_NAME;
@@ -371,42 +369,58 @@ async function insertQuestionAnswers(answerArray, userformId) {
 
 //Return the id of the new userform
 async function createUserform(formDefinitionId) {
-  try {
-    const userformId = uuidv4()
-    let result = await docClient
-      .put({
-        TableName: USERFORMTABLE_NAME,
-        Item: {
-          id: userformId,
-          formDefinitionID: formDefinitionId,
-          owner: ownerId,
-          createdAt: new Date(millisecToday).toISOString(),
-          updatedAt: new Date(millisecToday).toISOString(),
-          orgAdmins: `${orgId}0admin`,
-          orgGroupLeaders: `${orgId}0groupLeader`,
-          __typename: 'UserForm',
-        },
-      })
-      .promise()
-    console.log('Create userform result: ', {
-      userform: userformId,
-      result: result,
+  const userformId = uuidv4()
+  let result = await docClient
+    .put({
+      TableName: USERFORMTABLE_NAME,
+      Item: {
+        id: userformId,
+        formDefinitionID: formDefinitionId,
+        owner: ownerId,
+        createdAt: new Date(millisecToday).toISOString(),
+        updatedAt: new Date(millisecToday).toISOString(),
+        orgAdmins: `${orgId}0admin`,
+        orgGroupLeaders: `${orgId}0groupLeader`,
+        __typename: 'UserForm',
+      },
     })
-    return userformId
-  } catch (err) {
-    throw err
-  }
+    .promise()
+  console.log('Create userform result: ', {
+    userform: userformId,
+    result: result,
+  })
+  return userformId
 }
 
 //Returns the X newest userforms by ownerId
 async function getUserformByOwnerWithLimit(formDefID = undefined, limit = 1) {
-  try {
-    let result = await docClient
+  let result = await docClient
+    .query({
+      TableName: USERFORMTABLE_NAME,
+      IndexName: 'byCreatedAt',
+      KeyConditionExpression: '#o = :ownerValue',
+      FilterExpression: '#formdefid = :formdefValue',
+      ExpressionAttributeNames: {
+        '#o': 'owner',
+        '#formdefid': 'formDefinitionID',
+      },
+      ExpressionAttributeValues: {
+        ':ownerValue': ownerId,
+        ':formdefValue': formDefID,
+      },
+      ScanIndexForward: false, //Sort direction: true (default) = ASC, false = DESC
+      ConsistentRead: false,
+      Limit: limit,
+    })
+    .promise()
+  let lastEvaluatedKey = result.LastEvaluatedKey
+  while (lastEvaluatedKey && !(result.Items.length > 0)) {
+    result = await docClient
       .query({
         TableName: USERFORMTABLE_NAME,
         IndexName: 'byCreatedAt',
         KeyConditionExpression: '#o = :ownerValue',
-        FilterExpression: '#formdefid = :formdefValue',
+        FilterExpression: '#formdefid = :formdefValue', // Make sure we fetch the newest UserForm related to current active form definition
         ExpressionAttributeNames: {
           '#o': 'owner',
           '#formdefid': 'formDefinitionID',
@@ -415,62 +429,34 @@ async function getUserformByOwnerWithLimit(formDefID = undefined, limit = 1) {
           ':ownerValue': ownerId,
           ':formdefValue': formDefID,
         },
+        ExclusiveStartKey: lastEvaluatedKey,
         ScanIndexForward: false, //Sort direction: true (default) = ASC, false = DESC
         ConsistentRead: false,
         Limit: limit,
       })
       .promise()
-    let lastEvaluatedKey = result.LastEvaluatedKey
-    while (lastEvaluatedKey && !(result.Items.length > 0)) {
-      result = await docClient
-        .query({
-          TableName: USERFORMTABLE_NAME,
-          IndexName: 'byCreatedAt',
-          KeyConditionExpression: '#o = :ownerValue',
-          FilterExpression: '#formdefid = :formdefValue', // Make sure we fetch the newest UserForm related to current active form definition
-          ExpressionAttributeNames: {
-            '#o': 'owner',
-            '#formdefid': 'formDefinitionID',
-          },
-          ExpressionAttributeValues: {
-            ':ownerValue': ownerId,
-            ':formdefValue': formDefID,
-          },
-          ExclusiveStartKey: lastEvaluatedKey,
-          ScanIndexForward: false, //Sort direction: true (default) = ASC, false = DESC
-          ConsistentRead: false,
-          Limit: limit,
-        })
-        .promise()
-      lastEvaluatedKey = result.LastEvaluatedKey
-    }
-    console.log('Limited userform querry result: ', result)
-    return result.Items
-  } catch (err) {
-    throw err
+    lastEvaluatedKey = result.LastEvaluatedKey
   }
+  console.log('Limited userform querry result: ', result)
+  return result.Items
 }
 
 //Returns all questions connected to a specific userform
 async function getQuestionAnswersByUserformId(userformId) {
   console.log('Getting question answers for ', userformId)
-  try {
-    let result = await docClient
-      .query({
-        TableName: QUESTIONANSWERTABLE_NAME,
-        IndexName: 'byUserForm',
-        KeyConditionExpression: 'userFormID = :userFormId',
-        ExpressionAttributeValues: {
-          ':userFormId': userformId,
-        },
-        ConsistentRead: false,
-      })
-      .promise()
-    console.log('QuestionAnswer query result: ', result)
-    return result.Items
-  } catch (err) {
-    throw err
-  }
+  let result = await docClient
+    .query({
+      TableName: QUESTIONANSWERTABLE_NAME,
+      IndexName: 'byUserForm',
+      KeyConditionExpression: 'userFormID = :userFormId',
+      ExpressionAttributeValues: {
+        ':userFormId': userformId,
+      },
+      ConsistentRead: false,
+    })
+    .promise()
+  console.log('QuestionAnswer query result: ', result)
+  return result.Items
 }
 
 //Input array gets split into arrays of size 25.
