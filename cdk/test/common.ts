@@ -1,8 +1,6 @@
 import { CognitoIdentityServiceProvider, DynamoDB } from 'aws-sdk'
 import {
   questionAnswerTestData,
-  testUserKari,
-  testUserOla,
   testUsers,
   userFormTestData,
 } from './testdata/dynamodb.items'
@@ -139,4 +137,34 @@ export const getQuestionAnswersForUser = async (username: string) => {
       },
     })
     .promise()
+}
+
+export const countItems = async (
+  tableName: string,
+  params?: { [key: string]: string | { [key: string]: string } } 
+) => {
+
+  if (params) {
+    params = {
+      ...params,
+      FilterExpression: `#${params.keyName} = :value`,
+      ExpressionAttributeNames: {
+        [`#${params.keyName}`]: `${params.keyName}`,
+      },
+      ExpressionAttributeValues: {
+        ':value': `${params.value}`
+      },
+    
+    }
+  } else {
+    params = {}
+  }
+
+  const scan = await docClient.scan({
+    TableName: tableName,
+    Select: 'COUNT',
+    ...params
+  }).promise()
+
+  return scan["Count"] as number
 }
