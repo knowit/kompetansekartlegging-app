@@ -75,7 +75,7 @@ test('getQuestionAnswersByUserFormId returns correct number of items', async () 
 
   // Get questionAnswers for testUserOlas UserForms
   const questionAnswers = await Promise.all(
-    userForms.Items!.map(async (userForm: any) => {
+    userForms.Items!.map(async userForm => {
       return await adminDbQueries.getQuestionAnswersByUserFormId(userForm.id)
     })
   )

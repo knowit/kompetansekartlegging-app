@@ -83,6 +83,7 @@ const assertUserWasAnonymizedProperly = async (username: string) => {
         Username: testUserOla.id,
       })
       .promise()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     if (e.code === 'UserNotFoundException') {
       userNotFound = true
@@ -93,11 +94,10 @@ const assertUserWasAnonymizedProperly = async (username: string) => {
 
 test('DynamoDB has all of testUserOlas items', async () => {
   const userFormsOla = await getUserFormsForUser(testUserOla.id)
-
   expect(userFormsOla.Count).toBe(olaUserFormsInTestData.length)
 
   const questionAnswersOla = await Promise.all(
-    userFormsOla.Items!.map(async (userForm: any) => {
+    userFormsOla.Items!.map(async userForm => {
       return await docClient
         .query({
           TableName: questionAnswerTableName,

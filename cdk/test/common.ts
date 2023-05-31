@@ -92,7 +92,7 @@ export const emptyAllDatabaseTables = async () => {
   await createAllDatabaseTables()
 }
 
-export const fillDatabaseTable = async (tableName: string, items: Object[]) => {
+export const fillDatabaseTable = async (tableName: string, items: object[]) => {
   await Promise.all(
     items.map(item =>
       docClient.put({ TableName: tableName, Item: item }).promise()
