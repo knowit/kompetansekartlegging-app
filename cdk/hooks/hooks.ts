@@ -21,7 +21,6 @@ const functionMap = Object.keys(stack.functionMap).map(key => {
 
 setAppSyncAuth(
   stack.awsuserpoolsid,
-  stack.awsuserpoolswebclientid,
   stack.outputAppSyncId,
   stack.outputCreateBatch,
   stack.tablenamemap

@@ -3,7 +3,6 @@ import * as lambda from '@aws-sdk/client-lambda'
 
 export default async (
   userPoolId: string,
-  userPoolClientId: string,
   appsyncId: string,
   batchCreateUserId: string,
   tableMap: string
