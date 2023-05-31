@@ -141,9 +141,8 @@ export const getQuestionAnswersForUser = async (username: string) => {
 
 export const countItems = async (
   tableName: string,
-  params?: { [key: string]: string | { [key: string]: string } } 
+  params?: { [key: string]: string | { [key: string]: string } }
 ) => {
-
   if (params) {
     params = {
       ...params,
@@ -152,19 +151,20 @@ export const countItems = async (
         [`#${params.keyName}`]: `${params.keyName}`,
       },
       ExpressionAttributeValues: {
-        ':value': `${params.value}`
+        ':value': `${params.value}`,
       },
-    
     }
   } else {
     params = {}
   }
 
-  const scan = await docClient.scan({
-    TableName: tableName,
-    Select: 'COUNT',
-    ...params
-  }).promise()
+  const scan = await docClient
+    .scan({
+      TableName: tableName,
+      Select: 'COUNT',
+      ...params,
+    })
+    .promise()
 
-  return scan["Count"] as number
+  return scan['Count'] as number
 }
