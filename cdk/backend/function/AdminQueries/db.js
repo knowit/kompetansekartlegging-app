@@ -20,8 +20,6 @@ const docClient = new DynamoDB.DocumentClient({
 })
 
 const anonymizeUser = async (username, anonymizedID, orgId) => {
-  // Put will overwrite the old item if the key exists
-  // That way, the only case where promise throws is on error
   const userFormsForUser = await getUserFormsForUser(username)
 
   /* Find when the most recently updated userform to approximate
@@ -33,6 +31,8 @@ const anonymizeUser = async (username, anonymizedID, orgId) => {
   const lastUpdated = sortedByUpdated[0]
 
   console.log('Adding user to AnonymizedUser table')
+  // Put will overwrite the old item if the key exists
+  // That way, the only case where promise throws is on error
   await docClient
     .put({
       TableName: ANON_USER_TABLE_NAME,
