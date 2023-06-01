@@ -354,10 +354,6 @@ const Content = ({ ...props }: ContentProps) => {
     props.isMobile,
   ])
 
-  useEffect(() => {
-    setAnswersBeforeSubmitted(new Map(questionAnswers))
-  }, [questionAnswers])
-
   const { answerHistoryOpen, setAnswerHistoryOpen } = props
   useEffect(() => {
     const fetchUserFormsAndOpenView = async () => {
