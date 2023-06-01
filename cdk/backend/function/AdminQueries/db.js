@@ -94,27 +94,47 @@ const getQuestionAnswersByUserFormId = async userFormId => {
 }
 
 const anonymizeQuestionAnswers = async (userForms, anonymizedID) => {
-  await Promise.all(
-    userForms.map(async userForm => {
-      const questionAnswers = await getQuestionAnswersByUserFormId(userForm.id)
+  // We want to update all UserForm-items
+  // To do this, we need to update the set of questionAnswers per UserForm
+  const userFormUpdates = userForms.map(async userForm => {
+    const questionAnswers = await getQuestionAnswersByUserFormId(userForm.id)
+    console.log(
+      'Anonymizing QuestionAnswers for UserForm with ID: ',
+      userForm.id
+    )
 
-      console.log(
-        'Anonymizing QuestionAnswers for UserForm with ID: ',
-        userForm.id
-      )
-      return questionAnswers.map(async questionAnswer =>
-        docClient
-          .update({
+    // There are multiple questionAnswers per UserForm
+    // However, transactWrite() handles items in batches of 25 at most
+    let qaTransactionItems = []
+
+    for (let i = 0; i < questionAnswers.length; i += 25) {
+      const qaPartition = questionAnswers.slice(i, i + 25)
+
+      const updateItems = qaPartition.map(questionAnswer => {
+        return {
+          Update: {
             TableName: QUESTION_ANSWER_TABLE_NAME,
             Key: { id: questionAnswer.id },
             UpdateExpression: 'SET #owner = :anonymizedID',
             ExpressionAttributeNames: { '#owner': 'owner' },
             ExpressionAttributeValues: { ':anonymizedID': anonymizedID },
-          })
-          .promise()
-      )
-    })
-  )
+          },
+        }
+      })
+
+      const qaPartitionTransaction = docClient
+        .transactWrite({ TransactItems: updateItems })
+        .promise()
+
+      qaTransactionItems.push(qaPartitionTransaction)
+    }
+    /* Promise.all() takes iterable list of promises and returns a single promise
+      of all transactionWrite()-operations related to one userForm */
+    return Promise.all(qaTransactionItems)
+  })
+
+  // Finally, we wait till all userForm updates have completed
+  await Promise.all(userFormUpdates)
 }
 
 const anonymizeUserForms = async (userForms, anonymizedID) => {
