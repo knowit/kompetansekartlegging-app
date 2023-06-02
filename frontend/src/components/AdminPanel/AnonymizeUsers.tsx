@@ -28,10 +28,10 @@ import { ORGANIZATION_ID_ATTRIBUTE } from '../../constants'
 
 type UserProps = {
   user: any
-  anonymizeUser: (user: any) => void
+  showAnonymizeUserDialog: (user: any) => void
 }
 
-const User = ({ user, anonymizeUser }: UserProps) => {
+const User = ({ user, showAnonymizeUserDialog }: UserProps) => {
   const { t } = useTranslation()
 
   const username = user.Username
@@ -50,7 +50,7 @@ const User = ({ user, anonymizeUser }: UserProps) => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => anonymizeUser(user)}
+          onClick={() => showAnonymizeUserDialog(user)}
           style={{ margin: '0 auto' }}
         >
           {t('admin.anonymizeUsers.anonymize')}
@@ -62,12 +62,12 @@ const User = ({ user, anonymizeUser }: UserProps) => {
 
 type AnonymizeUsersTableProps = {
   users: any[]
-  anonymizeUser: (user: any) => void
+  showAnonymizeUserDialog: (user: any) => void
 }
 
 const AnonymizeUsersTable = ({
   users,
-  anonymizeUser,
+  showAnonymizeUserDialog,
 }: AnonymizeUsersTableProps) => {
   const { t } = useTranslation()
   const userState = useAppSelector(selectUserState)
@@ -90,7 +90,7 @@ const AnonymizeUsersTable = ({
                 <User
                   key={user.Username}
                   user={user}
-                  anonymizeUser={anonymizeUser}
+                  showAnonymizeUserDialog={showAnonymizeUserDialog}
                 />
               )
           )}
@@ -115,15 +115,15 @@ const AnonymizeUsers = () => {
   })
 
   const [userToAnonymize, setUserToAnonymize] = useState<any>()
-  const [showAnonymizeUserDialog, setShowAnonymizeUserDialog] =
+  const [isAnonymizeUserDialogOpen, setIsAnonymizeUserDialogOpen] =
     useState<boolean>(false)
   const [anonymizationError, setAnonymizationError] = useState<string | null>(
     null
   )
 
-  const anonymizeUser = (user: any) => {
+  const showAnonymizeUserDialog = (user: any) => {
     setAnonymizationError(null)
-    setShowAnonymizeUserDialog(true)
+    setIsAnonymizeUserDialogOpen(true)
     setUserToAnonymize(user)
   }
 
@@ -134,11 +134,11 @@ const AnonymizeUsers = () => {
     await anonymizeUserApiCall(username, orgId!)
       .then(() => {
         setAnonymizationError(null)
-        setShowAnonymizeUserDialog(false)
+        setIsAnonymizeUserDialogOpen(false)
         refresh()
       })
       .catch(() => {
-        setShowAnonymizeUserDialog(false)
+        setIsAnonymizeUserDialogOpen(false)
         setAnonymizationError(
           t('adminApi.error.couldNotAnonymizeName', {
             name: userToAnonymize.Username,
@@ -162,12 +162,15 @@ const AnonymizeUsers = () => {
               {t('admin.anonymizeUsers.description')}
             </CardContent>
           </Card>
-          <AnonymizeUsersTable users={users} anonymizeUser={anonymizeUser} />
+          <AnonymizeUsersTable
+            users={users}
+            showAnonymizeUserDialog={showAnonymizeUserDialog}
+          />
         </>
       )}
       <AnonymizeUserDialog
-        open={showAnonymizeUserDialog}
-        onCancel={() => setShowAnonymizeUserDialog(false)}
+        open={isAnonymizeUserDialogOpen}
+        onCancel={() => setIsAnonymizeUserDialogOpen(false)}
         onExited={() => setUserToAnonymize(null)}
         onConfirm={anonymizeUserConfirm}
         user={userToAnonymize}

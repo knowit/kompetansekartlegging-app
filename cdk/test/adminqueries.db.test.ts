@@ -112,11 +112,11 @@ test('Test Anonymizing user: happy day scenario', async () => {
   )
 
   // Check that we now have one anonymized user (Ola) and one less in Users table
-  const anonWithanonymizedIDCount = await countItems(
+  const anonWithAnonymizedIDCount = await countItems(
     anonymizedUserTableName,
     anonymizedOlaIdParams
   )
-  expect(anonWithanonymizedIDCount).toBe(1)
+  expect(anonWithAnonymizedIDCount).toBe(1)
 
   const anonymizedUserCount = await countItems(anonymizedUserTableName)
   expect(anonymizedUserCount).toBe(1)
@@ -128,8 +128,8 @@ test('Test Anonymizing user: happy day scenario', async () => {
   const userformOlaScan = await getUserFormsForUser(testUserOla.id)
   expect(userformOlaScan['Count']).toBe(0)
 
-  const userformanonymizedIDScan = await getUserFormsForUser(anonymizedID)
-  expect(userformanonymizedIDScan['Count']).toBe(userFormCountBeforeAnon)
+  const userformAnonymizedIDScan = await getUserFormsForUser(anonymizedID)
+  expect(userformAnonymizedIDScan['Count']).toBe(userFormCountBeforeAnon)
 
   // Check that the owner id has been replaced with the new id in QuestionAnswer-table
   const qaOlaScan = await getUserFormsForUser(testUserOla.id)

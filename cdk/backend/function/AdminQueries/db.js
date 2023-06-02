@@ -47,7 +47,7 @@ const anonymizeUser = async (username, anonymizedID, orgId) => {
   await anonymizeQuestionAnswers(userFormsForUser, anonymizedID)
   await anonymizeUserForms(userFormsForUser, anonymizedID)
 
-  console.log('Finally deleting user from User table')
+  console.log('Deleting user from User table')
   await docClient
     .delete({
       TableName: USER_TABLE_NAME,

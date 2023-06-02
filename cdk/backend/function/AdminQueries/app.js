@@ -211,9 +211,18 @@ app.post('/anonymizeUser', async (req, res, next) => {
   // Check if user has been assigned an anonymizedID from a failed anonymization run.
   // If not, create a new anonymizedID to replace 'owner' values in database
   const user = await getUser(username, false)
-  const anonymizedID =
-    user.UserAttributes.find(attr => attr.Name === anonymizedIDAttributeName)
-      ?.Value ?? randomUUID()
+  const existingAnonymizedID = user.UserAttributes.find(
+    attr => attr.Name === anonymizedIDAttributeName
+  )?.Value
+
+  let anonymizedID
+  if (existingAnonymizedID) {
+    console.log('Existing anonymized ID found')
+    anonymizedID = existingAnonymizedID
+  } else {
+    console.log('Existing anonymized ID not found, generating new ID')
+    anonymizedID = randomUUID()
+  }
 
   try {
     await anonymizeUserInDb(username, anonymizedID, orgId)

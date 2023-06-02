@@ -247,7 +247,7 @@ export const English: LanguageSchema = {
         description: 'On this page you can anonymize all data associated with a person.',
         anonymize: 'Anonymize',
         anonymizeNameQuestion: 'Anonymize {{name}}?',
-        areYouSureYouWantToAnonymizeName: 'Are you sure you want to anonymize {{name}}? It will no longer be possible to connect the person to their answers.',
+        areYouSureYouWantToAnonymizeName: 'This is a non-reversible action! Are you sure you want to anonymize {{name}}? It will no longer be possible to connect the person to their answers.',
       },
     },
     superAdmin: {

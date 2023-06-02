@@ -247,7 +247,7 @@ export const Norwegian: LanguageSchema = {
         description: 'På denne siden kan du anonymisere all data tilknyttet en person.',
         anonymize: 'Anonymiser',
         anonymizeNameQuestion: 'Anonymiser {{name}}?',
-        areYouSureYouWantToAnonymizeName: 'Er du sikker på at du har lyst til å anonymisere {{name}}? Personen vil ikke lengre kunne knyttes opp mot sine svar.',
+        areYouSureYouWantToAnonymizeName: 'Dette er en ikke-reverserbar handling! Er du sikker på at du har lyst til å anonymisere {{name}}? Personen vil ikke lengre kunne knyttes opp mot sine svar.',
       },
     },
     superAdmin: {
