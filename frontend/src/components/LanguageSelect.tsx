@@ -14,6 +14,10 @@ const StyledContainer = styled.div`
     > * {
       border: 0;
     }
+
+    .MuiSelect-select {
+      display: flex;
+    }
   }
 `
 
