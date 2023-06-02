@@ -93,65 +93,59 @@ const getQuestionAnswersByUserFormId = async userFormId => {
   return result.Items
 }
 
+// ANONYMIZATION
+
+/* Since transactWrite() only does it in batches of 25 
+this helper function anonymizes the owner by taking in a list
+and partitioning it into 25 item batches. Each batch is then made into a Promise
+and then returned with all other batches in a Promise.all()
+reducing it into a single then-able Promise
+*/
+const batchAnonymizeOwner = (list, tableName, anonymizedID) => {
+  let transactionItems = []
+
+  for (let i = 0; i < list.length; i += 25) {
+    const partition = list.slice(i, i + 25)
+
+    const updateItems = partition.map(item => {
+      return {
+        Update: {
+          TableName: tableName,
+          Key: { id: item.id },
+          UpdateExpression: 'SET #owner = :anonymizedID',
+          ExpressionAttributeNames: { '#owner': 'owner' },
+          ExpressionAttributeValues: { ':anonymizedID': anonymizedID },
+        },
+      }
+    })
+
+    const partitionTransaction = docClient
+      .transactWrite({ TransactItems: updateItems })
+      .promise()
+
+    transactionItems.push(partitionTransaction)
+  }
+  return Promise.all(transactionItems)
+}
+
 const anonymizeQuestionAnswers = async (userForms, anonymizedID) => {
-  // We want to update all UserForm-items
-  // To do this, we need to update the set of questionAnswers per UserForm
   const userFormUpdates = userForms.map(async userForm => {
     const questionAnswers = await getQuestionAnswersByUserFormId(userForm.id)
     console.log(
       'Anonymizing QuestionAnswers for UserForm with ID: ',
       userForm.id
     )
-
-    // There are multiple questionAnswers per UserForm
-    // However, transactWrite() handles items in batches of 25 at most
-    let qaTransactionItems = []
-
-    for (let i = 0; i < questionAnswers.length; i += 25) {
-      const qaPartition = questionAnswers.slice(i, i + 25)
-
-      const updateItems = qaPartition.map(questionAnswer => {
-        return {
-          Update: {
-            TableName: QUESTION_ANSWER_TABLE_NAME,
-            Key: { id: questionAnswer.id },
-            UpdateExpression: 'SET #owner = :anonymizedID',
-            ExpressionAttributeNames: { '#owner': 'owner' },
-            ExpressionAttributeValues: { ':anonymizedID': anonymizedID },
-          },
-        }
-      })
-
-      const qaPartitionTransaction = docClient
-        .transactWrite({ TransactItems: updateItems })
-        .promise()
-
-      qaTransactionItems.push(qaPartitionTransaction)
-    }
-    /* Promise.all() takes iterable list of promises and returns a single promise
-      of all transactionWrite()-operations related to one userForm */
-    return Promise.all(qaTransactionItems)
+    return batchAnonymizeOwner(
+      questionAnswers,
+      QUESTION_ANSWER_TABLE_NAME,
+      anonymizedID
+    )
   })
-
-  // Finally, we wait till all userForm updates have completed
   await Promise.all(userFormUpdates)
 }
 
 const anonymizeUserForms = async (userForms, anonymizedID) => {
-  await Promise.all(
-    userForms.map(async userForm => {
-      console.log('Anonymizing UserForm with ID: ', userForm.id)
-      return docClient
-        .update({
-          TableName: USER_FORM_TABLE_NAME,
-          Key: { id: userForm.id },
-          UpdateExpression: 'SET #owner = :anonymizedID',
-          ExpressionAttributeNames: { '#owner': 'owner' },
-          ExpressionAttributeValues: { ':anonymizedID': anonymizedID },
-        })
-        .promise()
-    })
-  )
+  await batchAnonymizeOwner(userForms, USER_FORM_TABLE_NAME, anonymizedID)
 }
 
 module.exports = {

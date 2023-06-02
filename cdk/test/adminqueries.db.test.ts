@@ -2,6 +2,7 @@ import { randomUUID } from 'crypto'
 import {
   testUserOla,
   testUserKari,
+  testUserAlex,
   testUsers,
   userFormTestData,
   questionAnswerTestData,
@@ -135,8 +136,8 @@ test('Test Anonymizing user: happy day scenario', async () => {
   const qaOlaScan = await getUserFormsForUser(testUserOla.id)
   expect(qaOlaScan['Count']).toBe(0)
 
-  const qaanonymizedIDScan = await getQuestionAnswersForUser(anonymizedID)
-  expect(qaanonymizedIDScan['Count']).toBe(qaCountBeforeAnon)
+  const qaAnonymizedIDScan = await getQuestionAnswersForUser(anonymizedID)
+  expect(qaAnonymizedIDScan['Count']).toBe(qaCountBeforeAnon)
 })
 
 test('Test anonymization on partially completed anonymization of QuestionAnswers', async () => {
@@ -190,7 +191,7 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
     testUserKari.organizationID
   )
 
-  // Check there that id has been replaced with new id
+  // Check that id has been replaced with randomized value
   // First check instances of original id
   const kariIDQACountAfterAnon = await countItems(
     questionAnswerTableName,
@@ -198,7 +199,7 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
   )
   expect(kariIDQACountAfterAnon).toBe(0)
 
-  // Then check instances of anonymized id
+  // Then check instances of anonymized-id
   const kariAnonymizedIDQACountAfterAnon = await countItems(
     questionAnswerTableName,
     kariAnonymizedParams
@@ -226,5 +227,13 @@ test('AnonymizedUserTable lastAnswerAt matches users last UserForm updatedAt', a
   expect(anonymizedUsersScan.Count).toBe(1)
   expect(anonymizedUsersScan.Items![0].lastAnswerAt).toBe(
     testUserOlaLastUserFormUpdatedAt
+  )
+})
+
+test('Stress-test when testuser Alex has >25 question-answers and userforms', async () => {
+  await adminDbQueries.anonymizeUser(
+    testUserAlex.id,
+    randomUUID(),
+    testUserAlex.organizationID
   )
 })

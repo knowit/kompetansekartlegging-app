@@ -15,7 +15,15 @@ export const testUserKari = {
   updatedAt: '2022-03-01T08:00:00.605Z',
 }
 
-export const testUsers = [testUserOla, testUserKari]
+export const testUserAlex = {
+  id: 'alex.nordperson@knowit.no',
+  groupID: '789',
+  organizationID: 'myOrganization',
+  createdAt: '2021-03-01T08:00:00.605Z',
+  updatedAt: '2021-03-01T08:00:00.605Z',
+}
+
+export const testUsers = [testUserOla, testUserKari, testUserAlex]
 
 // UserForms
 export const testUserOlaLastUserFormUpdatedAt = '2090-02-01T12:00:00.605Z'
@@ -54,9 +62,26 @@ export const kariUserFormsInTestData = [
   },
 ]
 
+const alexUserForms = []
+const idStart = olaUserFormsInTestData.length + kariUserFormsInTestData.length
+// Generate 25 forms and add them to the list
+for (let i = 0; i < 51; i++) {
+  const object = {
+    id: String(i + idStart),
+    owner: testUserAlex.id,
+    formDefinitionId: '2',
+    createdAt: '2023-02-18T11:00:00.605Z',
+    updatedAt: '2023-02-19T05:00:00.605Z',
+  }
+  alexUserForms.push(object)
+}
+
+export const alexUserFormsInTestData = alexUserForms
+
 export const userFormTestData = [
   ...olaUserFormsInTestData,
   ...kariUserFormsInTestData,
+  ...alexUserFormsInTestData,
 ]
 
 // QuestionAnswers
@@ -127,7 +152,28 @@ export const kariQuestionAnswersInTestData = [
   },
 ]
 
+const alexQuestionAnswers = []
+const idStart2 =
+  olaQuestionAnswersInTestData.length + kariQuestionAnswersInTestData.length
+// Generate 25 forms and add them to the list
+for (let i = 0; i < 51; i++) {
+  const object = {
+    id: String(i + idStart2),
+    owner: testUserAlex.id,
+    userFormID: String(idStart + 25),
+    questionID: String(i),
+    knowledge: '1',
+    motivation: '1',
+    createdAt: '2023-02-18T11:00:00.605Z',
+    updatedAt: '2023-02-19T05:00:00.605Z',
+  }
+  alexQuestionAnswers.push(object)
+}
+
+const alexQuestionAnswersInTestData = alexQuestionAnswers
+
 export const questionAnswerTestData = [
   ...olaQuestionAnswersInTestData,
   ...kariQuestionAnswersInTestData,
+  ...alexQuestionAnswersInTestData,
 ]
