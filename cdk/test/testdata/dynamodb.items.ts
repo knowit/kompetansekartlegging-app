@@ -153,7 +153,8 @@ export const kariQuestionAnswersInTestData = [
 ]
 
 const alexQuestionAnswers = []
-const idStart2 = olaQuestionAnswersInTestData.length + kariQuestionAnswersInTestData.length
+const idStart2 =
+  olaQuestionAnswersInTestData.length + kariQuestionAnswersInTestData.length
 // Generate 25 forms and add them to the list
 for (let i = 0; i < 51; i++) {
   const object = {
@@ -174,5 +175,5 @@ const alexQuestionAnswersInTestData = alexQuestionAnswers
 export const questionAnswerTestData = [
   ...olaQuestionAnswersInTestData,
   ...kariQuestionAnswersInTestData,
-  ...alexQuestionAnswersInTestData
+  ...alexQuestionAnswersInTestData,
 ]
