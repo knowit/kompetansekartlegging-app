@@ -2,6 +2,7 @@ import { randomUUID } from 'crypto'
 import {
   testUserOla,
   testUserKari,
+  testUserAlex,
   testUsers,
   userFormTestData,
   questionAnswerTestData,
@@ -226,5 +227,13 @@ test('AnonymizedUserTable lastAnswerAt matches users last UserForm updatedAt', a
   expect(anonymizedUsersScan.Count).toBe(1)
   expect(anonymizedUsersScan.Items![0].lastAnswerAt).toBe(
     testUserOlaLastUserFormUpdatedAt
+  )
+})
+
+test('Stress-test when testuser Alex has >25 question-answers and userforms', async () => {
+  await adminDbQueries.anonymizeUser(
+    testUserAlex.id,
+    randomUUID(),
+    testUserAlex.organizationID
   )
 })
