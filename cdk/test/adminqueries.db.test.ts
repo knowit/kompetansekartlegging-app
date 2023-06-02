@@ -190,7 +190,7 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
     testUserKari.organizationID
   )
 
-  // Check there that id has been replaced with new id
+  // Check that id has been replaced with randomized value
   // First check instances of original id
   const kariIDQACountAfterAnon = await countItems(
     questionAnswerTableName,
@@ -198,7 +198,7 @@ test('Test anonymization on partially completed anonymization of QuestionAnswers
   )
   expect(kariIDQACountAfterAnon).toBe(0)
 
-  // Then check instances of anonymized id
+  // Then check instances of anonymized-id
   const kariAnonymizedIDQACountAfterAnon = await countItems(
     questionAnswerTableName,
     kariAnonymizedParams
