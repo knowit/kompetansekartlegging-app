@@ -136,8 +136,8 @@ test('Test Anonymizing user: happy day scenario', async () => {
   const qaOlaScan = await getUserFormsForUser(testUserOla.id)
   expect(qaOlaScan['Count']).toBe(0)
 
-  const qaanonymizedIDScan = await getQuestionAnswersForUser(anonymizedID)
-  expect(qaanonymizedIDScan['Count']).toBe(qaCountBeforeAnon)
+  const qaAnonymizedIDScan = await getQuestionAnswersForUser(anonymizedID)
+  expect(qaAnonymizedIDScan['Count']).toBe(qaCountBeforeAnon)
 })
 
 test('Test anonymization on partially completed anonymization of QuestionAnswers', async () => {
