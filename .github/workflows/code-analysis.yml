@@ -1,0 +1,38 @@
+name: Code analysis
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install packages
+        run: npm install
+
+      - name: ESLint & Prettier check
+        run: npm run lint
+
+  cdk:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cdk
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install packages
+        run: npm install
+
+      - name: Prettier check
+        run: npm run prettier-check
+
+      - name: ESLint check
+        run: npm run lint

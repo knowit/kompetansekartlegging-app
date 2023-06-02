@@ -35,7 +35,7 @@ def create_payload(msg):
         'color': colors.get(msg['NewStateValue'], '#bfbfbf'),
     }
 
-def get_slack_webhook_url():
+def get_slack_webhook_url(secrets_manager_client=secrets_manager_client):
     get_secret_value_response = secrets_manager_client.get_secret_value(
         SecretId="slack_webhook_url")
     response = get_secret_value_response['SecretString']

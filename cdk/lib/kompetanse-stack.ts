@@ -22,6 +22,7 @@ import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as sns from 'aws-cdk-lib/aws-sns'
+import { RetentionDays } from 'aws-cdk-lib/aws-logs'
 // import * as appsync from 'aws-cdk-lib/aws-appsync';
 import * as gateway from 'aws-cdk-lib/aws-apigateway'
 // import { CfnUserPoolIdentityProvider } from 'aws-cdk-lib/aws-cognito';
@@ -38,6 +39,7 @@ export class KompetanseStack extends Stack {
     const ENV = this.node.tryGetContext('ENV')
     const isProd = ENV === 'prod'
     const isDev = ENV === 'dev'
+    const LOG_RETENTION_THREE_MONTHS = RetentionDays.THREE_MONTHS
 
     // COGNITO SetUp
 
@@ -148,7 +150,8 @@ export class KompetanseStack extends Stack {
         ),
       })
 
-      const roleAttachment = new cognito.CfnIdentityPoolRoleAttachment(
+      // roleAttachment
+      new cognito.CfnIdentityPoolRoleAttachment(
         this,
         'IdentityPoolRoleAttachment',
         {
@@ -161,13 +164,10 @@ export class KompetanseStack extends Stack {
       )
 
       // Conditional output
-      const identityPoolIdOutput = new CfnOutput(
-        this,
-        'aws_cognito_identity_pool_id',
-        {
-          value: identityPool.ref, // "eu-central-1:ed60ff7c-18dc-49e6-a8cf-aa7a068fa2a5",
-        }
-      )
+      // identityPoolIdOutput
+      new CfnOutput(this, 'aws_cognito_identity_pool_id', {
+        value: identityPool.ref, // "eu-central-1:ed60ff7c-18dc-49e6-a8cf-aa7a068fa2a5",
+      })
     }
 
     // PreSignUp Trigger Setup
@@ -202,6 +202,7 @@ export class KompetanseStack extends Stack {
         handler: 'index.handler',
         runtime: lambda.Runtime.NODEJS_14_X,
         timeout: Duration.seconds(25),
+        logRetention: LOG_RETENTION_THREE_MONTHS,
       }
     )
 
@@ -248,7 +249,7 @@ export class KompetanseStack extends Stack {
       tableNames: tableNames,
     })
 
-    const tableArns: any = {}
+    const tableArns: { [key: string]: string } = {}
 
     Object.keys(appSync.tableMap).forEach(table => {
       tableArns[table] = appSync.tableMap[table].tableArn
@@ -274,6 +275,7 @@ export class KompetanseStack extends Stack {
         handler: 'index.handler',
         runtime: lambda.Runtime.NODEJS_14_X,
         timeout: Duration.seconds(25),
+        logRetention: LOG_RETENTION_THREE_MONTHS,
         memorySize: 512,
         environment: {
           USERPOOL: pool.userPoolId,
@@ -371,6 +373,7 @@ export class KompetanseStack extends Stack {
         initialPolicy: [externalApiStatement, externalAPICognitoStatement],
         memorySize: 1024,
         timeout: Duration.seconds(25),
+        logRetention: LOG_RETENTION_THREE_MONTHS,
       }
     )
 
@@ -425,6 +428,7 @@ export class KompetanseStack extends Stack {
           },
           initialPolicy: [excelStatement, externalAPICognitoStatement],
           timeout: Duration.seconds(25),
+          logRetention: LOG_RETENTION_THREE_MONTHS,
           memorySize: 2048,
         }
       )
@@ -502,95 +506,121 @@ export class KompetanseStack extends Stack {
       }
     }
 
-// CopyCatalog Setup
+    // CopyCatalog Setup
 
-  const copyCatalogStatement = new iam.PolicyStatement({
-    actions: [
-      "dynamodb:Get*",
-      "dynamodb:BatchGetItem",
-      "dynamodb:List*",
-      "dynamodb:Scan",
-      "dynamodb:Query",
-      "dynamodb:PutItem",
-    ],
-    effect: iam.Effect.ALLOW,
-    resources: [
-      tableArns["UserFormTable"],
-      `${tableArns["UserFormTable"]}/index/*`,
-      tableArns["QuestionTable"], 
-      `${tableArns["QuestionTable"]}/index/*`,
-      tableArns["QuestionAnswerTable"],
-      `${tableArns["QuestionAnswerTable"]}/index/*`,
-      tableArns["CategoryTable"],
-      `${tableArns["CategoryTable"]}/index/*`,
-      tableArns["FormDefinitionTable"],
-      `${tableArns["FormDefinitionTable"]}/index/*`
-    ]
-  })
+    const copyCatalogStatement = new iam.PolicyStatement({
+      actions: [
+        'dynamodb:Get*',
+        'dynamodb:BatchGetItem',
+        'dynamodb:List*',
+        'dynamodb:Scan',
+        'dynamodb:Query',
+        'dynamodb:PutItem',
+      ],
+      effect: iam.Effect.ALLOW,
+      resources: [
+        tableArns['UserFormTable'],
+        `${tableArns['UserFormTable']}/index/*`,
+        tableArns['QuestionTable'],
+        `${tableArns['QuestionTable']}/index/*`,
+        tableArns['QuestionAnswerTable'],
+        `${tableArns['QuestionAnswerTable']}/index/*`,
+        tableArns['CategoryTable'],
+        `${tableArns['CategoryTable']}/index/*`,
+        tableArns['FormDefinitionTable'],
+        `${tableArns['FormDefinitionTable']}/index/*`,
+      ],
+    })
 
+    const createCopyCatalogLambda = new python.PythonFunction(
+      this,
+      'kompetanseCopyCatalogLambda',
+      {
+        entry: path.join(__dirname, '/../backend/function/copyCatalog'),
+        runtime: lambda.Runtime.PYTHON_3_9,
+        environment: {
+          SOURCE_NAME: 'KompetanseStack',
+          ENV: ENV,
+          USER_POOL_ID: pool.userPoolId,
+        },
+        initialPolicy: [copyCatalogStatement, externalAPICognitoStatement],
+        timeout: Duration.seconds(25),
+        logRetention: LOG_RETENTION_THREE_MONTHS,
+        memorySize: 2048,
+      }
+    )
 
-  const createCopyCatalogLambda = new python.PythonFunction(this, "kompetanseCopyCatalogLambda", {
-    entry: path.join(__dirname, "/../backend/function/copyCatalog"),
-    runtime: lambda.Runtime.PYTHON_3_9,
-    environment: {
-      SOURCE_NAME: "KompetanseStack",
-      ENV: ENV,
-      USER_POOL_ID: pool.userPoolId,
-    },
-    initialPolicy: [copyCatalogStatement, externalAPICognitoStatement],
-    timeout: Duration.seconds(25),
-    memorySize:2048
-  })
     // CopyCatalog API Setup
 
-    const copyCatalogApi = new gateway.RestApi(this, "kompetanseRestApi", {
-      restApiName: "CreateCopyCatalogAPI",
+    const copyCatalogApi = new gateway.RestApi(this, 'kompetanseRestApi', {
+      restApiName: 'CreateCopyCatalogAPI',
       deployOptions: {
-        stageName: "dev"
+        stageName: 'dev',
       },
     })
 
     const copyCatalogProxy = copyCatalogApi.root.addProxy({
-      anyMethod: false
+      anyMethod: false,
     })
-    copyCatalogProxy.addMethod("ANY", new gateway.LambdaIntegration(createCopyCatalogLambda), {
-      authorizer: new gateway.CognitoUserPoolsAuthorizer(this, "CognitoCopyCatalogAPI", {
-        authorizerName: "COGNITO",
-        cognitoUserPools: [pool],
-      }),
-      authorizationScopes: ["aws.cognito.signin.user.admin"],
-    })
+    copyCatalogProxy.addMethod(
+      'ANY',
+      new gateway.LambdaIntegration(createCopyCatalogLambda),
+      {
+        authorizer: new gateway.CognitoUserPoolsAuthorizer(
+          this,
+          'CognitoCopyCatalogAPI',
+          {
+            authorizerName: 'COGNITO',
+            cognitoUserPools: [pool],
+          }
+        ),
+        authorizationScopes: ['aws.cognito.signin.user.admin'],
+      }
+    )
 
-    copyCatalogProxy.addMethod("OPTIONS", new gateway.MockIntegration({
-      passthroughBehavior: gateway.PassthroughBehavior.WHEN_NO_MATCH,
-      requestTemplates: {
-        "application/json" : JSON.stringify({statusCode: 200})
-      },
-      integrationResponses: [{
-        statusCode: "200",
-        responseParameters:{
-          "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT'",
-          "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-          "method.response.header.Access-Control-Allow-Origin": "'*'"
-        }
-      }],
-    }), {
-      methodResponses: [{
-        statusCode: "200",
-        responseParameters: {
-          'method.response.header.Content-Type': true,
-          "method.response.header.Access-Control-Allow-Headers": true,
-          'method.response.header.Access-Control-Allow-Origin': true,
-          'method.response.header.Access-Control-Allow-Credentials': true,
-          'method.response.header.Access-Control-Allow-Methods': true
+    copyCatalogProxy.addMethod(
+      'OPTIONS',
+      new gateway.MockIntegration({
+        passthroughBehavior: gateway.PassthroughBehavior.WHEN_NO_MATCH,
+        requestTemplates: {
+          'application/json': JSON.stringify({ statusCode: 200 }),
         },
-        responseModels: {"application/json": gateway.Model.EMPTY_MODEL, "application/vnd.ms-excel": gateway.Model.EMPTY_MODEL}
-      }],
-    })
-    ApiMap["copyCatalogApi"] = {
+        integrationResponses: [
+          {
+            statusCode: '200',
+            responseParameters: {
+              'method.response.header.Access-Control-Allow-Methods':
+                "'GET,POST,PUT'",
+              'method.response.header.Access-Control-Allow-Headers':
+                "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+              'method.response.header.Access-Control-Allow-Origin': "'*'",
+            },
+          },
+        ],
+      }),
+      {
+        methodResponses: [
+          {
+            statusCode: '200',
+            responseParameters: {
+              'method.response.header.Content-Type': true,
+              'method.response.header.Access-Control-Allow-Headers': true,
+              'method.response.header.Access-Control-Allow-Origin': true,
+              'method.response.header.Access-Control-Allow-Credentials': true,
+              'method.response.header.Access-Control-Allow-Methods': true,
+            },
+            responseModels: {
+              'application/json': gateway.Model.EMPTY_MODEL,
+              'application/vnd.ms-excel': gateway.Model.EMPTY_MODEL,
+            },
+          },
+        ],
+      }
+    )
+    ApiMap['copyCatalogApi'] = {
       name: copyCatalogApi.restApiName,
       endpoint: copyCatalogApi.url,
-      region: this.region
+      region: this.region,
     }
 
     // CreateUserformBatch setup
@@ -643,6 +673,7 @@ export class KompetanseStack extends Stack {
         handler: 'index.handler',
         runtime: lambda.Runtime.NODEJS_14_X,
         timeout: Duration.seconds(batchCreateUserTimeoutSeconds),
+        logRetention: LOG_RETENTION_THREE_MONTHS,
       }
     )
     appSync.addLambdaDataSourceAndResolvers(
@@ -666,7 +697,9 @@ export class KompetanseStack extends Stack {
       {
         alarmName: `${ENV}-lambda-createUserFormBatch-timeout-alarm`,
         metric: batchCreateUserMetric,
-        threshold: Duration.seconds(batchCreateUserTimeoutSeconds).toMilliseconds(),
+        threshold: Duration.seconds(
+          batchCreateUserTimeoutSeconds
+        ).toMilliseconds(),
         comparisonOperator:
           ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
         treatMissingData: TreatMissingData.NOT_BREACHING,
@@ -684,20 +717,22 @@ export class KompetanseStack extends Stack {
     batchCreateUserAlarm.addOkAction(new SnsAction(systemAdminTopic))
 
     // SlackAlarmForwarder setup
-    const slackWebhookSecret = new aws_secretsmanager.Secret(this, 'slack_webhook_url', {
-      secretName: 'slack_webhook_url',
-      generateSecretString: {
-        secretStringTemplate:
-          '{"url": "value must be set using AWS Console or CLI"}',
-        generateStringKey: 'url',
-      },
-    })
+    const slackWebhookSecret = new aws_secretsmanager.Secret(
+      this,
+      'slack_webhook_url',
+      {
+        secretName: 'slack_webhook_url',
+        generateSecretString: {
+          secretStringTemplate:
+            '{"url": "value must be set using AWS Console or CLI"}',
+          generateStringKey: 'url',
+        },
+      }
+    )
 
     const slackAlarmForwarderPermissions = new iam.PolicyStatement({
       actions: ['secretsmanager:GetSecretValue'],
-      resources: [
-        slackWebhookSecret.secretArn,
-      ],
+      resources: [slackWebhookSecret.secretArn],
     })
 
     const slackAlarmForwarder = new python.PythonFunction(
@@ -708,6 +743,7 @@ export class KompetanseStack extends Stack {
         runtime: lambda.Runtime.PYTHON_3_9,
         initialPolicy: [slackAlarmForwarderPermissions],
         timeout: Duration.seconds(10),
+        logRetention: LOG_RETENTION_THREE_MONTHS,
       }
     )
 
@@ -818,7 +854,8 @@ export class KompetanseStack extends Stack {
       },
     })
 
-    const externalApiAnyMethod = externalApiProxy.addMethod(
+    // externalApiAnyMethod
+    externalApiProxy.addMethod(
       'ANY',
       new gateway.LambdaIntegration(externalAPILambda),
       {
@@ -889,7 +926,7 @@ export class KompetanseStack extends Stack {
         'cognito-idp:AdminGetUser',
         'dynamodb:Scan',
         'dynamodb:Query',
-        'dynamodb:PutItem'
+        'dynamodb:PutItem',
       ],
       effect: iam.Effect.ALLOW,
       resources: [
@@ -899,7 +936,7 @@ export class KompetanseStack extends Stack {
         tableArns['CategoryTable'],
         `${tableArns['CategoryTable']}/index/*`,
         tableArns['QuestionTable'],
-        `${tableArns['QuestionTable']}/index/*`
+        `${tableArns['QuestionTable']}/index/*`,
       ],
     })
 
@@ -907,7 +944,10 @@ export class KompetanseStack extends Stack {
       this,
       'configureNewOrganizationLambda',
       {
-        entry: path.join(__dirname, '/../backend/function/configureNewOrganization'),
+        entry: path.join(
+          __dirname,
+          '/../backend/function/configureNewOrganization'
+        ),
         runtime: lambda.Runtime.PYTHON_3_9,
         environment: {
           GROUP: 'admin',
@@ -917,22 +957,29 @@ export class KompetanseStack extends Stack {
         },
         initialPolicy: [configureNewOrganizationStatement],
         timeout: Duration.seconds(25),
+        logRetention: LOG_RETENTION_THREE_MONTHS,
         memorySize: 2048,
       }
     )
 
     // configureNewOrganization API Setup
 
-    const configureNewOrganizationApi = new gateway.RestApi(this, "kompetanseConfigureNewOrganizationRestApi", {
-      restApiName: "configureNewOrganizationAPI",
-      deployOptions: {
-        stageName: "dev"
-      },
-    })
+    const configureNewOrganizationApi = new gateway.RestApi(
+      this,
+      'kompetanseConfigureNewOrganizationRestApi',
+      {
+        restApiName: 'configureNewOrganizationAPI',
+        deployOptions: {
+          stageName: 'dev',
+        },
+      }
+    )
 
-    const configureNewOrganizationProxy = configureNewOrganizationApi.root.addProxy({
-      anyMethod: false,
-    })
+    const configureNewOrganizationProxy = configureNewOrganizationApi.root.addProxy(
+      {
+        anyMethod: false,
+      }
+    )
     configureNewOrganizationProxy.addMethod(
       'ANY',
       new gateway.LambdaIntegration(configureNewOrganizationLambda),
@@ -949,42 +996,52 @@ export class KompetanseStack extends Stack {
       }
     )
 
-    configureNewOrganizationProxy.addMethod("OPTIONS", new gateway.MockIntegration({
-      passthroughBehavior: gateway.PassthroughBehavior.WHEN_NO_MATCH,
-      requestTemplates: {
-        "application/json" : JSON.stringify({statusCode: 200})
-      },
-      integrationResponses: [{
-        statusCode: "200",
-        responseParameters:{
-          "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT'",
-          "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-          "method.response.header.Access-Control-Allow-Origin": "'*'"
-        }
-      }],
-    }), {
-      methodResponses: [{
-        statusCode: "200",
-        responseParameters: {
-          'method.response.header.Content-Type': true,
-          "method.response.header.Access-Control-Allow-Headers": true,
-          'method.response.header.Access-Control-Allow-Origin': true,
-          'method.response.header.Access-Control-Allow-Credentials': true,
-          'method.response.header.Access-Control-Allow-Methods': true
+    configureNewOrganizationProxy.addMethod(
+      'OPTIONS',
+      new gateway.MockIntegration({
+        passthroughBehavior: gateway.PassthroughBehavior.WHEN_NO_MATCH,
+        requestTemplates: {
+          'application/json': JSON.stringify({ statusCode: 200 }),
         },
-        responseModels: {"application/json": gateway.Model.EMPTY_MODEL}
-      }],
-    })
-    ApiMap["configureNewOrganizationApi"] = {
+        integrationResponses: [
+          {
+            statusCode: '200',
+            responseParameters: {
+              'method.response.header.Access-Control-Allow-Methods':
+                "'GET,POST,PUT'",
+              'method.response.header.Access-Control-Allow-Headers':
+                "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+              'method.response.header.Access-Control-Allow-Origin': "'*'",
+            },
+          },
+        ],
+      }),
+      {
+        methodResponses: [
+          {
+            statusCode: '200',
+            responseParameters: {
+              'method.response.header.Content-Type': true,
+              'method.response.header.Access-Control-Allow-Headers': true,
+              'method.response.header.Access-Control-Allow-Origin': true,
+              'method.response.header.Access-Control-Allow-Credentials': true,
+              'method.response.header.Access-Control-Allow-Methods': true,
+            },
+            responseModels: { 'application/json': gateway.Model.EMPTY_MODEL },
+          },
+        ],
+      }
+    )
+    ApiMap['configureNewOrganizationApi'] = {
       name: configureNewOrganizationApi.restApiName,
       endpoint: configureNewOrganizationApi.url,
-      region: this.region
+      region: this.region,
     }
-
 
     // ExternalAPI Usage plan setup
 
-    const extUsagePlan = externalApi.addUsagePlan('externalApiUsagePlan', {
+    // extUsagePlan
+    externalApi.addUsagePlan('externalApiUsagePlan', {
       name: 'standard',
       apiStages: [
         {
@@ -1004,46 +1061,47 @@ export class KompetanseStack extends Stack {
       })
     }
     // Outputs
-    const userPoolIdOutput = new CfnOutput(this, 'aws_user_pools_id', {
+    // userPoolIdOutput
+    new CfnOutput(this, 'aws_user_pools_id', {
       value: pool.userPoolId,
     })
-    const userPoolWebClientIdOutput = new CfnOutput(
-      this,
-      'aws_user_pools_web_client_id',
-      {
-        value: appClient.userPoolClientId,
-      }
-    )
-    const tableMapOutput = new CfnOutput(this, 'tablename_map', {
+    // userPoolWebClientIdOutput
+    new CfnOutput(this, 'aws_user_pools_web_client_id', {
+      value: appClient.userPoolClientId,
+    })
+    // tableMapOutput
+    new CfnOutput(this, 'tablename_map', {
       value: JSON.stringify(appSync.tableNameMap),
     })
-    const tableArnMapOutput = new CfnOutput(this, 'tableArns', {
+    // tableArnMapOutput
+    new CfnOutput(this, 'tableArns', {
       value: JSON.stringify(tableArns),
     })
 
-    const createUserFormRoleNameOutput = new CfnOutput(
-      this,
-      'userFormRoleNameOutput',
-      {
-        value: batchCreateUser.role?.roleName || '',
-      }
-    )
+    // createUserFormRoleNameOutput
+    new CfnOutput(this, 'userFormRoleNameOutput', {
+      value: batchCreateUser.role?.roleName || '',
+    })
 
-    const oauthOutput = new CfnOutput(this, 'oauth', {
+    // oauthOutput
+    new CfnOutput(this, 'oauth', {
       value: JSON.stringify({
         domain: `${domainSettings.cognitoDomain?.domainPrefix}.auth.eu-central-1.amazoncognito.com`, //"komptest.auth.eu-central-1.amazoncognito.com"
       }),
     })
 
-    const functionMapOutput = new CfnOutput(this, 'functionMap', {
+    // functionMapOutput
+    new CfnOutput(this, 'functionMap', {
       value: JSON.stringify(ApiMap),
     })
 
-    const userCreateBatchOutput = new CfnOutput(this, 'outputCreateBatch', {
+    // userCreateBatchOutput
+    new CfnOutput(this, 'outputCreateBatch', {
       value: batchCreateUser.functionName,
     })
 
-    const apiId = new CfnOutput(this, 'outputAppSyncId', {
+    // apiId
+    new CfnOutput(this, 'outputAppSyncId', {
       value: appSync.appsyncAPI.apiId,
     })
   }

@@ -17,19 +17,8 @@ const OrganizationConstants = {
   IdentifierAttribute: 'identifierAttribute',
 }
 
-const isDeveloperLogin = event => {
-  return event['request']['userAttributes']['identities'] === undefined
-}
-
-const getIdentifierValue = event => {
-  const identities = JSON.parse(
-    event['request']['userAttributes']['identities']
-  )
-  const providerName = identities[0]['providerName']
-  return providerName
-}
-
 const getOrganizationID = identifierAttributeValue =>
+  // eslint-disable-next-line no-async-promise-executor
   new Promise(async (resolve, reject) => {
     const params = {
       TableName: tableMap[`${OrganizationConstants['TableName']}Table`], //OrganizationConstants["TableName"]+'-'+process.env.API_KOMPETANSEKARTLEGGIN_GRAPHQLAPIIDOUTPUT+"-"+process.env.ENV,
@@ -66,21 +55,6 @@ const getUserByEmail = async (userPoolId, email) => {
     Filter: `email = "${email}"`,
   }
   return cognitoIdp.listUsers(params).promise()
-}
-
-const adminConfirmUserEmail = async (userPoolId, email) => {
-  return cognitoIdp
-    .adminUpdateUserAttributes({
-      UserAttributes: [
-        {
-          Name: 'email_verified',
-          Value: 'true',
-        },
-      ],
-      UserPoolId: userPoolId,
-      Username: email,
-    })
-    .promise()
 }
 
 const adminSetUserPassword = async (userPoolId, email) => {
@@ -150,7 +124,7 @@ exports.handler = async (event, context, callback) => {
         providerUserId
       )
     } else {
-      attributes = []
+      let attributes = []
       Object.keys(event.request.userAttributes).forEach(key => {
         if (key === 'identities' || key === 'sub' || key.includes('cognito:'))
           return
