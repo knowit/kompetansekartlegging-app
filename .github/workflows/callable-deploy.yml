@@ -86,6 +86,6 @@ jobs:
           SLACK_COLOR: ${{ needs.deploy.result }}
           SLACK_USERNAME: Kompetansekartlegging deploy bot
           SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOY_WEBHOOK_URL }}
-          SLACK_MESSAGE: "[Deploy to ${{inputs.aws_environment}}] - ${{ github.event.head_commit.message }}"
+          SLACK_MESSAGE: ":${{inputs.aws_environment}}: [Deploy to ${{inputs.aws_environment}}] ${{ github.event.head_commit.message }}"
           MSG_MINIMAL: event,commit
           SLACK_FOOTER:
