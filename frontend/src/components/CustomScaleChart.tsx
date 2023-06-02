@@ -77,6 +77,7 @@ export const CustomScaleChart = ({ chartData }: CustomScaleChartProps) => {
           maxBarSize={15}
           layout="vertical"
           data={chartData}
+          margin={{ top: 50, right: 10, left: labelwidth + 1 }}
         >
           <CartesianGrid
             horizontal={true}
