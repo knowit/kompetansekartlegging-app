@@ -1,5 +1,6 @@
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -18,6 +19,7 @@ type AnonymizeUserDialogProps = {
   onExited: () => void
   user: any
   open: boolean
+  isAnonymizationInProgress: boolean
 }
 
 const AnonymizeUserDialog = ({
@@ -26,6 +28,7 @@ const AnonymizeUserDialog = ({
   onExited,
   user,
   open,
+  isAnonymizationInProgress,
 }: AnonymizeUserDialogProps) => {
   const { t } = useTranslation()
   const style = dialogStyles()
@@ -55,16 +58,22 @@ const AnonymizeUserDialog = ({
           })}
         </DialogContentText>
       </DialogContent>
-      <DialogActions className={style.alertButtons}>
-        <Button onClick={onConfirm} className={style.cancelButton}>
-          <span className={style.buttonText}>
-            {t('admin.anonymizeUsers.anonymize')}
-          </span>
-        </Button>
-        <Button onClick={onCancel} className={style.confirmButton}>
-          <span className={style.buttonText}>{t('abort')}</span>
-        </Button>
-      </DialogActions>
+      {isAnonymizationInProgress ? (
+        <div style={{ height: 65, alignSelf: 'center' }}>
+          <CircularProgress />
+        </div>
+      ) : (
+        <DialogActions className={style.alertButtons}>
+          <Button onClick={onConfirm} className={style.cancelButton}>
+            <span className={style.buttonText}>
+              {t('admin.anonymizeUsers.anonymize')}
+            </span>
+          </Button>
+          <Button onClick={onCancel} className={style.confirmButton}>
+            <span className={style.buttonText}>{t('abort')}</span>
+          </Button>
+        </DialogActions>
+      )}
     </Dialog>
   )
 }

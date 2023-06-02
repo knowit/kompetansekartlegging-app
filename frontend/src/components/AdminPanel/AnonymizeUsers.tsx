@@ -120,25 +120,30 @@ const AnonymizeUsers = () => {
   const [anonymizationError, setAnonymizationError] = useState<string | null>(
     null
   )
+  const [isAnonymizationInProgress, setIsAnonymizationInProgress] =
+    useState<boolean>(false)
 
   const showAnonymizeUserDialog = (user: any) => {
     setAnonymizationError(null)
-    setIsAnonymizeUserDialogOpen(true)
     setUserToAnonymize(user)
+    setIsAnonymizeUserDialogOpen(true)
   }
 
   const anonymizeUserConfirm = async () => {
     const username = userToAnonymize.Username
     const orgId = getAttribute(userToAnonymize, ORGANIZATION_ID_ATTRIBUTE)
+    setIsAnonymizationInProgress(true)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await anonymizeUserApiCall(username, orgId!)
       .then(() => {
-        setAnonymizationError(null)
         setIsAnonymizeUserDialogOpen(false)
+        setAnonymizationError(null)
+        setIsAnonymizationInProgress(false)
         refresh()
       })
       .catch(() => {
         setIsAnonymizeUserDialogOpen(false)
+        setIsAnonymizationInProgress(false)
         setAnonymizationError(
           t('adminApi.error.couldNotAnonymizeName', {
             name: userToAnonymize.Username,
@@ -174,6 +179,7 @@ const AnonymizeUsers = () => {
         onExited={() => setUserToAnonymize(null)}
         onConfirm={anonymizeUserConfirm}
         user={userToAnonymize}
+        isAnonymizationInProgress={isAnonymizationInProgress}
       />
     </Container>
   )
