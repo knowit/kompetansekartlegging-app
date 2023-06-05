@@ -175,19 +175,23 @@ router.get('/users', async (req, res) => {
 
   let allUsers = await getAllUsers(organization_ID)
 
+  allUsers = allUsers
+    .filter(u => u.Enabled)
+    .map(u => ({
+      username: u.Username,
+      attributes: [{ Name: 'isAnonymized', Value: false }, ...u.Attributes],
+    }))
+
   if (req.query.include_anonymized === 'true') {
-    const anonymizedUsers = await getAnonymizedUsers(organization_ID)
+    let anonymizedUsers = await getAnonymizedUsers(organization_ID)
+    anonymizedUsers = anonymizedUsers.map(u => ({
+      username: u.Username,
+      attributes: u.Attributes,
+    }))
     allUsers = allUsers.concat(anonymizedUsers)
   }
 
-  return res.json(
-    allUsers
-      .filter(u => u.Enabled)
-      .map(u => ({
-        username: u.Username,
-        attributes: u.Attributes,
-      }))
-  )
+  return res.json(allUsers)
 })
 
 // returns: list of all form definitions

@@ -66,7 +66,7 @@ const getAnswersForUserForm = async userFormID => {
 // Get answers for a user given a form definition id.
 const getAnswersForUser = async (user, formDefinitionID, questionMap) => {
   const email = getUserAttribute(user, 'email')
-  const isAnonymized = getUserAttribute(user, 'isAnonymized')
+  const isAnonymized = getUserAttribute(user, 'isAnonymized') != null
 
   const username = user.Username
 
@@ -93,7 +93,7 @@ const getAnswersForUser = async (user, formDefinitionID, questionMap) => {
       username,
       email,
       answers: [],
-      isAnonymized: isAnonymized
+      isAnonymized: isAnonymized,
     }
   }
 
@@ -111,7 +111,7 @@ const getAnswersForUser = async (user, formDefinitionID, questionMap) => {
     formDefinitionID,
     updatedAt: lastUserForm.updatedAt,
     answers: answersWithQuestions,
-    isAnonymized: isAnonymized
+    isAnonymized: isAnonymized,
   }
 }
 
