@@ -66,6 +66,8 @@ const getAnswersForUserForm = async userFormID => {
 // Get answers for a user given a form definition id.
 const getAnswersForUser = async (user, formDefinitionID, questionMap) => {
   const email = getUserAttribute(user, 'email')
+  const isAnonymized = getUserAttribute(user, 'isAnonymized')
+
   const username = user.Username
 
   let allUserForms = await docClient
@@ -91,6 +93,7 @@ const getAnswersForUser = async (user, formDefinitionID, questionMap) => {
       username,
       email,
       answers: [],
+      isAnonymized: isAnonymized
     }
   }
 
@@ -108,6 +111,7 @@ const getAnswersForUser = async (user, formDefinitionID, questionMap) => {
     formDefinitionID,
     updatedAt: lastUserForm.updatedAt,
     answers: answersWithQuestions,
+    isAnonymized: isAnonymized
   }
 }
 
