@@ -1,21 +1,53 @@
 import { FC, useState } from 'react'
 
 import Button from '@mui/material/Button'
-
 import Box from '@mui/material/Box'
-import { CircularProgress, Tooltip } from '@mui/material'
+import { Tooltip } from '@mui/material'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogTitle from '@mui/material/DialogTitle'
 import HelpIcon from '@mui/icons-material/Help'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
-
-import { dialogStyles, KnowitColors } from '../../styles'
-import { CloseIcon } from '../DescriptionTable'
+import CloseIcon from '@mui/icons-material/Close'
 import { OrganizationInfo } from './SuperAdminTypes'
 import { useTranslation } from 'react-i18next'
+import CenteredCircularProgress from '../CenteredCircularProgress'
+import { KnowitColors } from '../../styleconstants'
 import { getUserExists } from '../AdminPanel/adminApi'
+import styled from '@emotion/styled'
+
+const StyledContainer = styled.div`
+  display: grid;
+  grid-template-columns: auto 30px;
+  grid-template-areas:
+    'textfield1 .'
+    'textfield2 .'
+    'textfield3 .'
+    'textfield4 tooltip4';
+
+  .textfield1 {
+    grid-area: textfield1;
+  }
+
+  .textfield2 {
+    grid-area: textfield2;
+  }
+
+  .textfield3 {
+    grid-area: textfield3;
+  }
+
+  .textfield4 {
+    grid-area: textfield4;
+  }
+
+  .tooltip4 {
+    grid-area: tooltip4;
+    place-self: center;
+    margin-left: 10px;
+  }
+`
 
 interface AddOrganizationDialogProps {
   onCancel: () => void
@@ -29,7 +61,7 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
   open,
 }) => {
   const { t } = useTranslation()
-  const style = dialogStyles()
+
   const [organizationName, setOrganizationName] = useState('')
   const [organizationID, setOrganizationID] = useState('')
   const [organizationIdentifierAttribute, setOrganizationIdentifierAttribute] =
@@ -80,7 +112,6 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
       open={open}
       onClose={onCancel}
       fullWidth
-      maxWidth="sm"
       PaperProps={{
         style: { borderRadius: 30 },
       }}
@@ -92,29 +123,12 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
           display="flex"
           justifyContent="space-between"
         >
-          <span className={style.dialogTitleText}>
-            {t('superAdmin.editOrganizations.addNewOrganization')}
-          </span>
-          <IconButton
-            className={style.closeButton}
-            onClick={onCancel}
-            size="large"
-          >
+          <span>{t('superAdmin.editOrganizations.addNewOrganization')}</span>
+          <IconButton onClick={onCancel} size="large">
             <CloseIcon />
           </IconButton>
         </Box>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'auto 30px',
-            gridTemplateAreas: `
-                                'textfield1 .'
-                                'textfield2 .'
-                                'textfield3 .'
-                                'textfield4 tooltip4'
-                              `,
-          }}
-        >
+        <StyledContainer>
           <TextField
             required
             autoFocus
@@ -124,8 +138,7 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
             error={organizationName === ''}
             helperText={organizationName === '' && t('nameCantBeEmpty')}
             value={organizationName}
-            className={style.textField}
-            style={{ gridArea: 'textfield1' }}
+            className="textfield1"
             onChange={(e: any) => setOrganizationName(e.target.value)}
           />
           <TextField
@@ -139,8 +152,7 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
               t('superAdmin.editOrganizations.idCantBeEmptyOrContainZero')
             }
             value={organizationID}
-            className={style.textField}
-            style={{ gridArea: 'textfield2' }}
+            className="textfield2"
             onChange={(e: any) => setOrganizationID(e.target.value)}
           />
           <TextField
@@ -154,8 +166,7 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
               t('superAdmin.editOrganizations.identifierAttributeCantBeEmpty')
             }
             value={organizationIdentifierAttribute}
-            className={style.textField}
-            style={{ gridArea: 'textfield3' }}
+            className="textfield3"
             onChange={(e: any) =>
               setOrganizationIdentifierAttribute(e.target.value)
             }
@@ -175,8 +186,7 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
                 ))
             }
             value={organizationAdminEmail}
-            className={style.textField}
-            style={{ gridArea: 'textfield4' }}
+            className="textfield4"
             onChange={(e: any) => {
               setOrganizationAdminEmail(e.target.value)
               setEmailAlreadyExists(false)
@@ -185,21 +195,19 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
           />
           <Tooltip
             arrow
+            className="tooltip4"
             title={
               <div style={{ fontSize: '1.2em', whiteSpace: 'pre-line' }}>
                 {t('superAdmin.editOrganizations.adminEmailTooltip')}
               </div>
             }
             style={{
-              gridArea: 'tooltip4',
-              placeSelf: 'center',
-              marginLeft: '10px',
-              marginBottom: isOrganizationAdminEmailValid ? '8px' : '30px',
+              marginBottom: isOrganizationAdminEmailValid ? '0' : '22px',
             }}
           >
             <HelpIcon htmlColor={KnowitColors.darkBrown} fontSize={'medium'} />
           </Tooltip>
-        </div>
+        </StyledContainer>
       </DialogTitle>
       {emailExistsValidationError && (
         <p style={{ textAlign: 'center' }}>
@@ -211,12 +219,12 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
       )}
       {isAddingOrganization ? (
         <div style={{ height: 65, display: 'flex', justifyContent: 'center' }}>
-          <CircularProgress />
+          <CenteredCircularProgress />
         </div>
       ) : (
-        <DialogActions className={style.alertButtons}>
-          <Button onClick={onCancel} className={style.cancelButton}>
-            <span className={style.buttonText}>{t('abort')}</span>
+        <DialogActions>
+          <Button onClick={onCancel}>
+            <span>{t('abort')}</span>
           </Button>
           <Button
             disabled={
@@ -231,9 +239,8 @@ const AddOrganizationDialog: FC<AddOrganizationDialogProps> = ({
                 ? addOrganization
                 : addOrganizationIfEmailDoesNotExist
             }
-            className={style.confirmButton}
           >
-            <span className={style.buttonText}>{t('add')}</span>
+            <span>{t('add')}</span>
           </Button>
         </DialogActions>
       )}

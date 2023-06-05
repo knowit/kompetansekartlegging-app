@@ -1,21 +1,14 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-
-import Container from '@mui/material/Container'
-import CircularProgress from '@mui/material/CircularProgress'
+import CenteredCircularProgress from '../../CenteredCircularProgress'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
 import DeleteIcon from '@mui/icons-material/Delete'
 import BookmarkIcon from '@mui/icons-material/Bookmark'
-import EditIcon from '@mui/icons-material/Edit'
+import { Edit as EditIcon } from '@mui/icons-material'
 import AddIcon from '@mui/icons-material/Add'
-import Typography from '@mui/material/Typography'
-
-import commonStyles from '../common.module.css'
 import useApiGet from '../useApiGet'
 import { compareByCreatedAt } from '../helpers'
 import {
@@ -25,16 +18,16 @@ import {
   createFormDefinition,
   copyFormDefinition,
 } from '../catalogApi'
-import Button from '../../mui/Button'
-import Table from '../../mui/Table'
-import TableRow from '../../mui/TableRow'
+import { Table, Button } from '@mui/material'
+import TableRow from '@mui/material/TableRow'
 import ActivateCatalogDialog from './ActivateCatalogDialog'
 import DeleteCatalogDialog from './DeleteCatalogDialog'
 import AddCatalogDialog from './AddCatalogDialog'
 import { useTranslation } from 'react-i18next'
 import { i18nDateToLocaleString } from '../../../i18n/i18n'
 import CopyCatalogDialog from './CopyCatalogDialog'
-import { KnowitColors } from '../../../styles'
+import InfoCard from '../../InfoCard'
+import { KnowitColors } from '../../../styleconstants'
 
 const Catalog = ({
   catalog,
@@ -108,7 +101,7 @@ const CatalogTable = ({
   const { t } = useTranslation()
 
   return (
-    <TableContainer className={commonStyles.tableContainer}>
+    <TableContainer>
       <Table stickyHeader>
         <TableHead>
           <TableRow>
@@ -200,19 +193,15 @@ const Root = () => {
   }
 
   return (
-    <Container maxWidth="md" className={commonStyles.container}>
+    <>
       {error && <p>{t('errorOccured') + error}</p>}
-      {loading && <CircularProgress />}
+      {loading && <CenteredCircularProgress />}
       {!error && !loading && catalogs && (
         <>
-          <Card style={{ marginBottom: '24px' }} variant="outlined">
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                {t('menu.submenu.editCatalogs')}
-              </Typography>
-              {t('admin.editCatalogs.description')}
-            </CardContent>
-          </Card>
+          <InfoCard
+            title="menu.submenu.editCatalogs"
+            description="admin.editCatalogs.description"
+          />
           <CatalogTable
             catalogs={catalogs}
             deleteCatalog={deleteCatalog}
@@ -221,9 +210,7 @@ const Root = () => {
           />
           <Button
             variant="contained"
-            color="primary"
             startIcon={<AddIcon />}
-            style={{ marginTop: '24px' }}
             onClick={() => setShowAddCatalogDialog(true)}
           >
             {t('admin.editCatalogs.createNewCatalog')}
@@ -257,7 +244,7 @@ const Root = () => {
           onConfirm={copyCatalogConfirm}
         />
       )}
-    </Container>
+    </>
   )
 }
 

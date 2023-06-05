@@ -5,69 +5,36 @@ import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormLabel from '@mui/material/FormLabel'
 import ListItem from '@mui/material/ListItem'
-import ListItemText from '@mui/material/ListItemText'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
-import { createStyles, makeStyles } from '@mui/styles'
-import TextField from '@mui/material/TextField'
 
 import { QuestionType } from '../../../API'
-import { KnowitColors } from '../../../styles'
 import CategoriesSelect from './CategoriesSelect'
 import { useTranslation } from 'react-i18next'
 import EditActionButtons from './EditActionButtons'
+import TextField from '@mui/material/TextField'
+import styled from '@emotion/styled'
+import { Card, CardContent } from '@mui/material'
 
-const useQuestionListStyles = makeStyles(() =>
-  createStyles({
-    listItemEdit: {
-      backgroundColor: KnowitColors.darkBrown,
-      padding: '16px',
-      borderRadius: '16px',
-      marginBottom: '10px',
-      flexWrap: 'wrap',
-    },
-    listItemEditText: {
-      color: KnowitColors.darkBrown,
-      '& span': {
-        fontWeight: 'bold',
-      },
-    },
-    textField: {
-      marginBottom: '16px',
-      marginRight: '8px',
-      '& input': {
-        color: KnowitColors.white,
-      },
-      '& textarea': {
-        color: KnowitColors.white,
-      },
-      '& label': {
-        color: KnowitColors.white,
-      },
-      '& fieldset': {
-        color: KnowitColors.white,
-        border: '2px solid #F3C8BA',
-        borderRadius: '15px',
-        transition: 'border 100ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-      },
-    },
-    questionType: {
-      paddingLeft: '4px',
-      marginBottom: '8px',
-      '& legend': {
-        color: KnowitColors.white,
-        opacity: '38%',
-        fontSize: '0.75rem',
-      },
-      '& span': {
-        color: `${KnowitColors.white} !important`,
-        fontSize: '0.75rem',
-        opacity: '38%',
-        fontWeight: 'normal',
-      },
-    },
-  })
-)
+const StyledItemEdit = styled.div`
+  display: flex;
+  flex-direction: column;
+
+    .subjectCategory {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+
+      .questionSubject {
+        flex-grow: 4;
+      }
+
+      .questionCategory {
+        flex-grow: 1;
+      }
+    }
+  }
+`
 
 const initialConfig = (q: any) => {
   if (q.type === QuestionType.CustomScaleLabels) {
@@ -93,7 +60,6 @@ const QuestionListItemEdit = ({
   const [text, setText] = useState<string>(q.text)
   const [categoryID, setCategoryID] = useState<string>(q.categoryID)
   const [questionConfig, setQuestionConfig] = useState<any>(initialConfig(q))
-  const classes = useQuestionListStyles()
 
   const questionType = q.type || QuestionType.KnowledgeMotivation
   const isCustomScaleLabels = questionType === QuestionType.CustomScaleLabels
@@ -127,17 +93,15 @@ const QuestionListItemEdit = ({
   }
 
   return (
-    <ListItem className={classes.listItemEdit}>
-      <ListItemText
-        primary={
-          <>
-            <Box display="flex" alignItems="center">
+    <ListItem>
+      <StyledItemEdit>
+        <Card>
+          <CardContent className="questionContent">
+            <div className="subjectCategory">
               <TextField
-                fullWidth
+                className="questionSubject"
                 label={t('admin.editCatalogs.subject')}
-                variant="outlined"
                 value={topic}
-                className={classes.textField}
                 onChange={(e: any) => setTopic(e.target.value)}
                 error={topic.length === 0}
                 helperText={
@@ -146,27 +110,27 @@ const QuestionListItemEdit = ({
                 }
               />
               <CategoriesSelect
+                className="questionCategory"
                 categoryID={categoryID}
                 setCategoryID={setCategoryID}
                 categories={categories}
               />
-            </Box>
+            </div>
+
             <TextField
               fullWidth
               multiline
               minRows={4}
               maxRows={6}
               label={t('description')}
-              variant="outlined"
               error={text === ''}
               helperText={
                 text === '' && t('admin.editCatalogs.descriptionCantBeEmpty')
               }
               value={text}
-              className={classes.textField}
               onChange={(e: any) => setText(e.target.value)}
             />
-            <FormControl component="fieldset" className={classes.questionType}>
+            <FormControl component="fieldset">
               <FormLabel component="legend">
                 {t('admin.editCatalogs.typeOfQuestion')}
               </FormLabel>
@@ -190,37 +154,30 @@ const QuestionListItemEdit = ({
                 <Box display="flex" justifyContent="space-between">
                   <TextField
                     label={t('admin.editCatalogs.start')}
-                    variant="outlined"
                     value={questionConfig.scaleStart}
-                    className={classes.textField}
                     onChange={onQuestionConfigChange('scaleStart')}
                   />
                   <TextField
                     label={t('admin.editCatalogs.middle')}
-                    variant="outlined"
                     value={questionConfig.scaleMiddle}
-                    className={classes.textField}
                     onChange={onQuestionConfigChange('scaleMiddle')}
                   />
                   <TextField
                     label={t('admin.editCatalogs.end')}
-                    variant="outlined"
                     value={questionConfig.scaleEnd}
-                    className={classes.textField}
                     onChange={onQuestionConfigChange('scaleEnd')}
                   />
                 </Box>
               </FormControl>
             )}
-          </>
-        }
-        className={classes.listItemEditText}
-      />
-      <EditActionButtons
-        disabled={!isCompleted}
-        onSave={onSave}
-        onCancel={onCancel}
-      />
+            <EditActionButtons
+              disabled={!isCompleted}
+              onSave={onSave}
+              onCancel={onCancel}
+            />
+          </CardContent>
+        </Card>
+      </StyledItemEdit>
     </ListItem>
   )
 }

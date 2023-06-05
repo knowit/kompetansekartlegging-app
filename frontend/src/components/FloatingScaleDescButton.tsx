@@ -1,209 +1,215 @@
-import { Fab, Modal, Tooltip } from '@mui/material'
-import { makeStyles } from '@mui/styles'
+import { Fab, Tooltip } from '@mui/material'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { KnowitColors } from '../styles'
-import DescriptionTable from './DescriptionTable'
+import React from 'react'
+import * as Icon from '../icons/iconController'
+import i18n from '../i18n/i18n'
 import { useTranslation } from 'react-i18next'
+import styled from '@emotion/styled'
+import { TipsAndUpdates } from '@mui/icons-material'
+import Modal from './Modal'
 
-const floatingScaleDescButtonStyleDesktop = makeStyles({
-  fab: {
-    alignSelf: 'flex-end',
-    width: 'fit-content',
-    marginRight: '20px',
-    marginBottom: '20px',
-    backgroundColor: KnowitColors.lightGreen,
-    color: KnowitColors.darkBrown,
-    position: 'fixed',
-    bottom: '0px',
-    right: '0px',
-    fontFamily: 'Arial',
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    fontSize: '11px',
-    lineHeight: '13px',
-    height: '35px',
-    zIndex: 1301, // modal backdrop z-index + 1
-  },
-  fabMenu: {
-    position: 'absolute',
-    alignSelf: 'flex-end',
-    marginRight: '20px',
-    marginBottom: '10px',
-    bottom: '55px',
-    right: '0px',
-    borderRadius: '50px 50px 0px 50px',
-    backgroundColor: KnowitColors.lightGreen,
-    width: '400px',
-    // viewport height - headerbar height - bottom margin height - other spacing
-    maxHeight: 'calc(100vh - 66px - 55px - 20px)',
-    boxShadow:
-      '0px 3px 5px -1px rgba(0,0,0,0.2), 0px 6px 10px 0px rgba(0,0,0,0.14), 0px 1px 18px 0px rgba(0,0,0,0.12)',
-    '&:focus': {
-      outline: 'none',
-    },
-  },
-  closeButton: {
-    marginTop: '15px',
-    marginRight: '20px',
-    '&:hover': {
-      color: KnowitColors.darkGreen,
-    },
-    float: 'right',
-    position: 'absolute',
-    right: '0px',
-    top: '0px',
-  },
-  arrow: {
-    width: '25px',
-    height: '12.5px',
-    position: 'absolute',
-    top: '100%',
-    right: '5%',
-    transform: 'translateX(-50%)',
-    overflow: 'hidden',
-    '&:after': {
-      content: '""',
-      position: 'absolute',
-      width: '10px',
-      height: '10px',
-      background: KnowitColors.lightGreen,
-      transform: 'translateX(-50%) translateY(-50%) rotate(45deg)',
-      top: '0',
-      left: '50%',
-      boxShadow: '0px 0px 5px 0px rgba(0, 0, 0, 0.50)',
-    },
-  },
-})
+const FabContainer = styled.div`
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+`
 
-const floatingScaleDescButtonStyleMobile = makeStyles({
-  arrow: {},
-  fab: {
-    alignSelf: 'flex-end',
-    marginRight: '10px',
-    marginBottom: '10px',
-    backgroundColor: KnowitColors.lightGreen,
-    position: 'fixed',
-    bottom: '0px',
-    right: '0px',
-    fontFamily: 'Arial',
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    fontSize: '18px',
-    lineHeight: '16px',
+type ScaleContainerProps = {
+  icon: JSX.Element
+  heading: string
+  text: string
+}
+
+type ScaleContainerObject = {
+  icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>
+  heading: string
+  text: string
+}
+
+// Possibly a better way to do this...
+// Function > variable to support i18n language change
+const getCompetence = (): ScaleContainerObject[] => [
+  {
+    icon: Icon.K5,
+    heading: i18n.t('competenceScale.superstar'),
+    text: i18n.t('competenceScale.description.superstar'),
   },
-  fabMenu: {
-    position: 'fixed',
-    bottom: '0px',
-    right: '0px',
-    width: '100%',
-    height: '100%',
-    zIndex: 101,
-    backgroundColor: KnowitColors.lightGreen,
-    color: KnowitColors.darkBrown,
-    boxShadow: '0px -4px 4px rgba(0, 0, 0, 0.15)',
-    borderRadius: '50px 50px 0px 0px',
+  {
+    icon: Icon.K4,
+    heading: i18n.t('competenceScale.expert'),
+    text: i18n.t('competenceScale.description.expert'),
   },
-  closeButton: {
-    marginTop: '10px',
-    marginRight: '15px',
-    '&:hover': {
-      color: KnowitColors.darkGreen,
-    },
-    float: 'right',
-    position: 'absolute',
-    right: '0px',
-    top: '0px',
+  {
+    icon: Icon.K3,
+    heading: i18n.t('competenceScale.professional'),
+    text: i18n.t('competenceScale.description.professional'),
   },
-})
+  {
+    icon: Icon.K2,
+    heading: i18n.t('competenceScale.potentiallyUsable'),
+    text: i18n.t('competenceScale.description.potentiallyUsable'),
+  },
+
+  {
+    icon: Icon.K1,
+    heading: i18n.t('competenceScale.someInsight'),
+    text: i18n.t('competenceScale.description.someInsight'),
+  },
+  {
+    icon: Icon.K0,
+    heading: i18n.t('competenceScale.unfamiliar'),
+    text: '',
+  },
+]
+
+const getMotivation = (): ScaleContainerObject[] => [
+  {
+    icon: Icon.M5,
+    heading: i18n.t('motivationScale.enthusiast'),
+    text: '',
+  },
+  {
+    icon: Icon.M4,
+    heading: i18n.t('motivationScale.good'),
+    text: '',
+  },
+  {
+    icon: Icon.M3,
+    heading: i18n.t('motivationScale.curious'),
+    text: '',
+  },
+  {
+    icon: Icon.M2,
+    heading: i18n.t('motivationScale.ish'),
+    text: '',
+  },
+  {
+    icon: Icon.M1,
+    heading: i18n.t('motivationScale.neutral'),
+    text: '',
+  },
+  {
+    icon: Icon.M0,
+    heading: i18n.t('motivationScale.no'),
+    text: '',
+  },
+]
+
+const StyledDescriptiontable = styled.div`
+  .scaleItem {
+    margin-bottom: 1vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .scaleIcon {
+    min-width: 25px;
+    margin-right: 10px;
+  }
+`
+
+const DescriptionTable = () => {
+  const { t } = useTranslation()
+
+  const ScaleContainer = ({ icon, heading, text }: ScaleContainerProps) => (
+    <div className="scaleItem">
+      <div className="scaleIcon">{icon}</div>
+      <div>
+        <h3>{heading}</h3>
+        <div>{text}</div>
+      </div>
+    </div>
+  )
+
+  return (
+    <StyledDescriptiontable>
+      <h1>{t('scaleDescription')}</h1>
+      <div>
+        <section>
+          <header>
+            <h2>{t('competenceScale.competenceScale')}</h2>
+          </header>
+          {getCompetence().map((obj, i) => {
+            const Icon = obj.icon
+            return (
+              <ScaleContainer
+                key={`competence-${i}`}
+                icon={<Icon />}
+                heading={obj.heading}
+                text={obj.text}
+              />
+            )
+          })}
+        </section>
+
+        <section>
+          <header>
+            <h2>{i18n.t('motivationScale.motivationScale')}</h2>
+          </header>
+          {getMotivation().map((obj, i) => {
+            const Icon = obj.icon
+            return (
+              <ScaleContainer
+                key={`motivation-${i}`}
+                icon={<Icon />}
+                heading={obj.heading}
+                text={obj.text}
+              />
+            )
+          })}
+        </section>
+      </div>
+    </StyledDescriptiontable>
+  )
+}
 
 type FloatingScaleDescButtonProps = {
-  isMobile: boolean
+  isSmall: boolean
   scaleDescOpen: boolean
   setScaleDescOpen: Dispatch<SetStateAction<boolean>>
   firstTimeLogin: boolean
 }
 
-type ConditionalWrapProps = {
-  condition: boolean
-  wrap: (children: JSX.Element) => JSX.Element
-  children: JSX.Element
-}
-
-const ConditionalWrap = ({ condition, wrap, children }: ConditionalWrapProps) =>
-  condition ? wrap(children) : children
-
 const FloatingScaleDescButton = ({
-  isMobile,
+  isSmall,
   scaleDescOpen,
   setScaleDescOpen,
   firstTimeLogin,
 }: FloatingScaleDescButtonProps) => {
   const { t } = useTranslation()
 
-  const style = isMobile
-    ? floatingScaleDescButtonStyleMobile()
-    : floatingScaleDescButtonStyleDesktop()
+  const [showTooltip, setShowTooltip] = useState(true)
 
-  const [showTooltip, setShowTooltip] = useState(firstTimeLogin)
   useEffect(() => {
     if (firstTimeLogin) {
       setTimeout(() => setShowTooltip(false), 5000)
     }
   }, [firstTimeLogin])
 
-  const handleMobileFabClick = () => {
-    setShowTooltip(false)
-    setScaleDescOpen((scaleDescOpen) => !scaleDescOpen)
-  }
-
   return (
-    <>
+    <FabContainer>
       {scaleDescOpen && (
         <Modal
-          open={scaleDescOpen}
-          onClose={() => setScaleDescOpen((scaleDescOpen) => !scaleDescOpen)}
+          isSmall={isSmall}
+          isOpen={scaleDescOpen}
+          setIsOpen={setScaleDescOpen}
         >
-          <div className={style.fabMenu}>
-            <DescriptionTable
-              onClose={() => setScaleDescOpen(false)}
-              isMobile={isMobile}
-            />
-            <div className={style.arrow}></div>
-          </div>
+          <DescriptionTable />
         </Modal>
       )}
-      {isMobile ? (
-        <ConditionalWrap
-          condition={firstTimeLogin}
-          wrap={(children) => (
-            <Tooltip
-              title={t('pressHereToSeeWhatTheIconsMean') as string}
-              open={showTooltip}
-              arrow
-            >
-              {children}
-            </Tooltip>
-          )}
-        >
-          <Fab
-            size="medium"
-            variant="circular"
-            className={style.fab}
-            onClick={handleMobileFabClick}
-          >
-            ?
-          </Fab>
-        </ConditionalWrap>
-      ) : (
+      <Tooltip title={t('scaleDescription')} open={showTooltip} arrow>
         <Fab
           variant="extended"
-          className={style.fab}
-          onClick={() => setScaleDescOpen((scaleDescOpen) => !scaleDescOpen)}
+          onClick={() => {
+            setScaleDescOpen((scaleDescOpen) => !scaleDescOpen)
+            setShowTooltip(false)
+          }}
         >
-          {t('scaleDescription').toUpperCase()}
+          <TipsAndUpdates />
         </Fab>
-      )}
-    </>
+      </Tooltip>
+    </FabContainer>
   )
 }
 

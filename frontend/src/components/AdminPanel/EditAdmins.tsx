@@ -1,26 +1,20 @@
 import { useState } from 'react'
-
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CircularProgress from '@mui/material/CircularProgress'
-import Container from '@mui/material/Container'
-import Typography from '@mui/material/Typography'
+import CenteredCircularProgress from '../CenteredCircularProgress'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
-
 import { useAppSelector } from '../../redux/hooks'
 import { selectAdminCognitoGroupName, selectUserState } from '../../redux/User'
 import { useTranslation } from 'react-i18next'
-import Button from '../mui/Button'
+import { Button } from '@mui/material'
 import AddUserToGroupDialog from './AddUserToGroupDialog'
 import {
   addUserToGroup,
   listAllUsersInOrganization,
   removeUserFromGroup,
 } from './adminApi'
-import commonStyles from './common.module.css'
 import DeleteUserFromGroupDialog from './DeleteUserFromGroupDialog'
 import useApiGet from './useApiGet'
 import AdminTable from './AdminTable'
+import InfoCard from '../InfoCard'
 
 const EditAdmins = () => {
   const { t } = useTranslation()
@@ -60,25 +54,19 @@ const EditAdmins = () => {
   }
 
   return (
-    <Container maxWidth="md" className={commonStyles.container}>
+    <>
       {error && <p>{t('errorOccured') + error}</p>}
-      {loading && <CircularProgress />}
+      {loading && <CenteredCircularProgress />}
       {!error && !loading && admins && (
         <>
-          <Card style={{ marginBottom: '24px' }} variant="outlined">
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                {t('admin.editAdmins.editAdministrators')}
-              </Typography>
-              {t('admin.editAdmins.description')}
-            </CardContent>
-          </Card>
+          <InfoCard
+            title="admin.editAdmins.editAdministrators"
+            description="admin.editAdmins.description"
+          />
           <AdminTable admins={admins} deleteAdmin={deleteAdmin} />
           <Button
             variant="contained"
-            color="primary"
             startIcon={<PersonAddIcon />}
-            style={{ marginTop: '24px' }}
             onClick={() => setShowAddAdmin(true)}
           >
             {t('addAdministrator')}
@@ -109,7 +97,7 @@ const EditAdmins = () => {
           })}
         />
       )}
-    </Container>
+    </>
   )
 }
 

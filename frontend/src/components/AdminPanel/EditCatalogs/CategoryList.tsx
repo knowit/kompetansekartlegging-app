@@ -13,6 +13,15 @@ import {
 import CategoryListItem from './CategoryListItem'
 import DeleteCategoryDialog from './DeleteCategoryDialog'
 import { useTranslation } from 'react-i18next'
+import styled from '@emotion/styled'
+import { KnowitColors } from '../../../styleconstants'
+
+const StyledCategoryList = styled.div`
+  .categoryCard {
+    margin: 2px;
+    background: ${KnowitColors.beige};
+  }
+`
 
 const CategoryList = ({
   categories,
@@ -72,7 +81,7 @@ const CategoryList = ({
   }
 
   return (
-    <>
+    <StyledCategoryList>
       {categories.length === 0 && (
         <p>{t('admin.editCatalogs.noCategoriesInThisCatalogYet')}</p>
       )}
@@ -106,7 +115,7 @@ const CategoryList = ({
           categoryContainsQuestions={categoryToDeleteContainsQuestions}
         />
       )}
-    </>
+    </StyledCategoryList>
   )
 }
 

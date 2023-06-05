@@ -1,51 +1,23 @@
 import { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
-
-import Box from '@mui/material/Box'
-import CircularProgress from '@mui/material/CircularProgress'
-import Container from '@mui/material/Container'
-import { createStyles, makeStyles } from '@mui/styles'
-import AddIcon from '@mui/icons-material/Add'
-
+import CenteredCircularProgress from '../../CenteredCircularProgress'
 import { Auth } from 'aws-amplify'
 import { useTranslation } from 'react-i18next'
 import { QuestionType } from '../../../API'
 import { ORGANIZATION_ID_ATTRIBUTE } from '../../../constants'
-import Button from '../../mui/Button'
+import { Button } from '@mui/material'
 import {
   createQuestion,
   listCategoriesByFormDefinitionID,
   listQuestionsByCategoryID,
 } from '../catalogApi'
+import { Add as AddIcon } from '@mui/icons-material'
 import { compareByIndex } from '../helpers'
 import useApiGet from '../useApiGet'
 import AddQuestionDialog from './AddQuestionDialog'
 import RouterBreadcrumbs from './Breadcrumbs'
 import QuestionList from './QuestionList'
 import useQuery from './useQuery'
-
-const useStyles = makeStyles(() =>
-  createStyles({
-    container: {
-      marginLeft: '0 !important',
-      display: 'flex',
-      flexWrap: 'wrap',
-    },
-    questionList: {
-      marginLeft: '0',
-      marginRight: '0',
-    },
-    floatingMenu: {
-      padding: '8px 0 0 48px',
-      width: '250px',
-    },
-    addQuestionButton: {
-      borderRadius: '30px',
-      width: '20ch',
-      marginTop: 0,
-    },
-  })
-)
 
 const EditCategory = () => {
   const { t } = useTranslation()
@@ -55,7 +27,6 @@ const EditCategory = () => {
     Auth.currentAuthenticatedUser().then(setUser)
   }
 
-  const classes = useStyles()
   const { id, formDefinitionID } = useParams<Record<string, string>>()
 
   const memoizedCallback = useCallback(
@@ -126,48 +97,43 @@ const EditCategory = () => {
 
   return (
     <>
-      <Container maxWidth="lg" className={classes.container}>
-        {error && <p>{t('errorOccured') + error}</p>}
-        {loading && <CircularProgress />}
-        {!error && !loading && categories && (
+      {error && <p>{t('errorOccured') + error}</p>}
+      {loading && <CenteredCircularProgress />}
+      {!error && !loading && categories && (
+        <>
+          <RouterBreadcrumbs
+            extraCrumbsMap={breadCrumbs}
+            urlOverrides={breadCrumbsUrlOverrides}
+          />
+
           <>
-            <Box flexBasis="100%">
-              <RouterBreadcrumbs
-                extraCrumbsMap={breadCrumbs}
-                urlOverrides={breadCrumbsUrlOverrides}
-              />
-            </Box>
-            <Container maxWidth="sm" className={classes.questionList}>
-              <QuestionList
-                id={id}
-                categories={categories}
-                questions={questions}
-                formDefinitionID={formDefinitionID}
-                formDefinitionLabel={formDefinitionLabel}
-                refreshQuestions={refreshQuestions}
-              />
-            </Container>
-            <div className={classes.floatingMenu}>
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<AddIcon />}
-                className={classes.addQuestionButton}
-                onClick={() => setShowAddQuestionDialog(true)}
-              >
-                {t('admin.editCatalogs.addNewQuestion')}
-              </Button>
-            </div>
-            {showAddQuestionDialog && (
-              <AddQuestionDialog
-                open={showAddQuestionDialog}
-                onCancel={() => setShowAddQuestionDialog(false)}
-                onConfirm={addQuestionConfirm}
-              />
-            )}
+            <QuestionList
+              id={id}
+              categories={categories}
+              questions={questions}
+              formDefinitionID={formDefinitionID}
+              formDefinitionLabel={formDefinitionLabel}
+              refreshQuestions={refreshQuestions}
+            />
           </>
-        )}
-      </Container>
+          <div>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => setShowAddQuestionDialog(true)}
+            >
+              {t('admin.editCatalogs.addNewQuestion')}
+            </Button>
+          </div>
+          {showAddQuestionDialog && (
+            <AddQuestionDialog
+              open={showAddQuestionDialog}
+              onCancel={() => setShowAddQuestionDialog(false)}
+              onConfirm={addQuestionConfirm}
+            />
+          )}
+        </>
+      )}
     </>
   )
 }

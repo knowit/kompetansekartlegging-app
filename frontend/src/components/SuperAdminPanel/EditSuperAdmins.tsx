@@ -1,12 +1,6 @@
 import { useState } from 'react'
-
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CircularProgress from '@mui/material/CircularProgress'
-import Container from '@mui/material/Container'
-import Typography from '@mui/material/Typography'
+import CenteredCircularProgress from '../CenteredCircularProgress'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
-
 import { useTranslation } from 'react-i18next'
 import AddUserToGroupDialog from '../AdminPanel/AddUserToGroupDialog'
 import {
@@ -15,11 +9,12 @@ import {
   listAllUsers,
   removeUserFromGroup,
 } from '../AdminPanel/adminApi'
-import commonStyles from '../AdminPanel/common.module.css'
 import DeleteUserFromGroupDialog from '../AdminPanel/DeleteUserFromGroupDialog'
 import useApiGet from '../AdminPanel/useApiGet'
-import Button from '../mui/Button'
+import { Button } from '@mui/material'
 import AdminTable from '../AdminPanel/AdminTable'
+import InfoCard from '../InfoCard'
+
 import { SUPER_ADMIN_COGNITO_GROUP } from '../../constants'
 
 const EditSuperAdmins = () => {
@@ -56,19 +51,15 @@ const EditSuperAdmins = () => {
   }
 
   return (
-    <Container maxWidth="md" className={commonStyles.container}>
+    <div>
       {error && <p>{t('errorOccured') + error}</p>}
-      {loading && <CircularProgress />}
+      {loading && <CenteredCircularProgress />}
       {!error && !loading && admins && (
         <>
-          <Card style={{ marginBottom: '24px' }} variant="outlined">
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                {t('menu.submenu.editSuperAdministrators')}
-              </Typography>
-              {t('superAdmin.editSuperAdministrators.description')}
-            </CardContent>
-          </Card>
+          <InfoCard
+            title="menu.submenu.editSuperAdministrators"
+            description="superAdmin.editSuperAdministrators.description"
+          />
           <AdminTable
             admins={admins}
             deleteAdmin={deleteAdmin}
@@ -76,9 +67,7 @@ const EditSuperAdmins = () => {
           />
           <Button
             variant="contained"
-            color="primary"
             startIcon={<PersonAddIcon />}
-            style={{ marginTop: '24px' }}
             onClick={() => setShowAddAdmin(true)}
           >
             {t('superAdmin.editSuperAdministrators.addSuperAdministrator')}
@@ -109,7 +98,7 @@ const EditSuperAdmins = () => {
           searchFieldPlaceholder={t('searchForEmployeeAcrossOrganizations')}
         />
       )}
-    </Container>
+    </div>
   )
 }
 

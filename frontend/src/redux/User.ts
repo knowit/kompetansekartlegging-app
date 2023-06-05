@@ -41,6 +41,7 @@ const hasRole = (role: string, cognitoGroups: Array<string>) => {
   }
   return false
 }
+
 const isAdmin = (cognitoGroups: Array<string>) =>
   hasRole('admin', cognitoGroups)
 const isGroupLeader = (cognitoGroups: Array<string>) =>

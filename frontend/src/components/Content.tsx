@@ -1,7 +1,4 @@
-import { Button, ListItem } from '@mui/material'
-import { makeStyles } from '@mui/styles'
-import clsx from 'clsx'
-import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { CreateQuestionAnswerInput, QuestionType } from '../API'
 import * as customQueries from '../graphql/custom-queries'
 import * as helper from '../helperFunctions'
@@ -9,12 +6,8 @@ import { useAppSelector } from '../redux/hooks'
 import {
   selectAdminCognitoGroupName,
   selectGroupLeaderCognitoGroupName,
-  selectIsAdmin,
-  selectIsGroupLeader,
-  selectIsSuperAdmin,
   selectUserState,
 } from '../redux/User'
-import { KnowitColors } from '../styles'
 import {
   Alert,
   AlertState,
@@ -27,13 +20,9 @@ import {
   UserAnswer,
   UserFormWithAnswers,
 } from '../types'
-import { AdminMenu, AdminPanel } from './AdminPanel/'
+import { AdminPanel } from './AdminPanel/'
 import { AlertDialog } from './AlertDialog'
-import {
-  AlertNotification,
-  AlertType,
-  staleAnswersLimit,
-} from './AlertNotification'
+import { AlertType, staleAnswersLimit } from './Question'
 import { AnswerHistory } from './AnswerHistory'
 import {
   createQuestionAnswers,
@@ -41,106 +30,62 @@ import {
   getUserAnswers,
   setFirstAnswers,
 } from './answersApi'
-import { Overview } from './cards/Overview'
-import { YourAnswers } from './cards/YourAnswers'
-import { GroupLeaderMenu, GroupLeaderPanel } from './GroupLeaderPanel/'
-import NavBarMobile from './NavBarMobile'
-import { SuperAdminMenu } from './SuperAdminPanel/SuperAdminMenu'
+import { Overview } from './Overview'
+import { YourAnswers } from './YourAnswers'
+import { GroupLeaderPanel } from './GroupLeaderPanel/'
 import { SuperAdminPanel } from './SuperAdminPanel/SuperAdminPanel'
 import { useTranslation } from 'react-i18next'
 import { TFunction } from 'i18next'
 
-const cardCornerRadius = 40
+import NavBar from './NavBar'
+import styled from '@emotion/styled'
 
-export enum MenuButton {
-  Overview,
-  MyAnswers,
-  Category,
-  GroupLeader,
-  LeaderCategory,
-  Other,
+import {
+  navbarHeight,
+  minPanelWidth,
+  maxPanelWidth,
+  menuWidth,
+} from '../styleconstants'
+import SideMenu from './SideMenu'
+
+type StylingProps = {
+  isSmall: boolean
 }
 
-export const contentStyleDesktop = makeStyles({
-  cardHolder: {
-    display: 'flex',
-    flexDirection: 'column',
-    // overflow: 'hidden',
-    height: '100%',
-  },
-})
+const ContentContainer = styled.div`
+  padding-bottom: 20px;
+  #header {
+    max-height: ${navbarHeight}px;
+  }
 
-export const contentStyleMobile = makeStyles({
-  contentContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    // overflowY: 'scroll',
-    overflowX: 'hidden',
-    height: '100%',
-  },
-  panel: {
-    background: KnowitColors.white,
-    height: '100%',
-    width: '100%',
-    marginTop: 56,
-  },
-})
+  #panelContainer {
+    padding-top: ${navbarHeight}px;
+    display: grid;
+    grid-template-columns:
+      minmax(10px, auto) minmax(${minPanelWidth}px, ${maxPanelWidth}px)
+      minmax(10px, auto);
+    margin-left: ${(props: StylingProps) =>
+      props.isSmall ? '0px' : `${menuWidth}px`};
+  }
 
-const contentStyle = makeStyles({
-  contentContainer: {
-    height: '100%',
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    overflow: 'scroll',
-  },
-  menu: {
-    background: KnowitColors.beige,
-    width: '20%',
-    height: 'max-content',
-    paddingLeft: 10,
-    paddingTop: 10,
-    paddingBottom: 20,
-    display: 'flex',
-    flexDirection: 'column',
-    borderRadius: '0px 0px 30px 0px',
-    boxShadow: '0px 4px 4px rgb(0 0 0 / 15%)',
-    zIndex: 1,
-  },
-  MenuButton: {
-    borderRadius: `${cardCornerRadius}px 0 0 ${cardCornerRadius}px`,
-    '&:hover': {
-      background: KnowitColors.white,
-    },
-    textTransform: 'none',
-  },
-  menuButtonActive: {
-    background: KnowitColors.white,
-    marginRight: -2,
-  },
-  menuButtonText: {
-    fontSize: 15,
-    textAlign: 'left',
-    width: '100%',
-    marginLeft: 10,
-    fontWeight: 'bold',
-    display: 'flex',
-    color: KnowitColors.darkBrown,
-  },
-  menuButtonCategoryText: {
-    fontSize: 12,
-    marginLeft: 20,
-    display: 'flex',
-  },
-  hideCategoryButtons: {
-    display: 'none',
-  },
-  panel: {
-    background: KnowitColors.white,
-    height: '100%',
-    width: '80%',
-  },
-})
+  #panel {
+    grid-column: 2;
+  }
+
+  #menu {
+    .MuiPaper-root {
+      width: ${(props: StylingProps) =>
+        props.isSmall ? '100vw' : `${menuWidth}px`};
+    }
+  }
+
+  ${(props: StylingProps) =>
+    !props.isSmall &&
+    `#header {
+        width: calc(100% - ${menuWidth}px)
+      }
+    `}
+`
 
 const updateCategoryAlerts = (
   questionAnswers: Map<string, QuestionAnswer[]>,
@@ -184,7 +129,18 @@ const updateCategoryAlerts = (
   setAlerts({ qidMap: alerts, categoryMap: catAlerts })
 }
 
-const Content = ({ ...props }: ContentProps) => {
+const Content = ({
+  setAnswerHistoryOpen,
+  answerHistoryOpen,
+  isSmall,
+  signout,
+  collapseMobileCategories,
+  categoryNavRef,
+  scrollToTop,
+  setCollapseMobileCategories,
+  setFirstTimeLogin,
+  setShowFab,
+}: ContentProps) => {
   const { t } = useTranslation()
 
   const userState = useAppSelector(selectUserState)
@@ -198,24 +154,27 @@ const Content = ({ ...props }: ContentProps) => {
   )
   const [, setUserAnswers] = useState<UserAnswer[]>([]) //Used only for getting data on load
   const [userAnswersLoaded, setUserAnswersLoaded] = useState(false)
-  // const [submitFeedback, setSubmitFeedback] = useState<string>("");
   const [categories, setCategories] = useState<string[]>([])
   const [questionAnswers, setQuestionAnswers] = useState<
     Map<string, QuestionAnswer[]>
   >(new Map())
-  // const [answersBeforeSubmitted, setAnswersBeforeSubmitted] = useState<AnswerData[]>([]);
   const [answersBeforeSubmitted, setAnswersBeforeSubmitted] = useState<
     Map<string, QuestionAnswer[]>
   >(new Map())
-  // const [historyViewOpen, setHistoryViewOpen] = useState<boolean>(false);
   const [answerLog, setAnswerLog] = useState<UserFormWithAnswers[]>([])
   const [alertDialogOpen, setAlertDialogOpen] = useState<boolean>(false)
   const [isCategorySubmitted, setIsCategorySubmitted] = useState<boolean>(true)
   const [activePanel, setActivePanel] = useState<Panel>(Panel.Overview)
-  const [activeCategory, setActiveCategory] = useState<string>('dkjfgdrjkg')
+  const [activeCategory, setActiveCategory] = useState<string>('MAIN')
   const [answerEditMode, setAnswerEditMode] = useState<boolean>(false)
   const [alerts, setAlerts] = useState<AlertState>()
   const [activeSubmenuItem, setActiveSubmenuItem] = useState<string>('')
+
+  const [lastClickedPanel, setlastClickedPanel] = useState<Panel>(
+    Panel.Overview
+  )
+  const [lastClickedCategory, setLastClickedCategory] = useState<string>('MAIN')
+  const [lastClickedSubmenu, setLastClickedSubmenu] = useState<string>('')
 
   const updateAnswer = (
     category: string,
@@ -288,7 +247,6 @@ const Content = ({ ...props }: ContentProps) => {
         { input: quAnsInput, organizationID: userState.organizationID }
       )
     ).map((result) => result.data?.batchCreateQuestionAnswer)
-    // console.log("Result: ", result);
     if (!result || result.length === 0) {
       return
     }
@@ -297,11 +255,6 @@ const Content = ({ ...props }: ContentProps) => {
   const changeActiveCategory = (newActiveCategory: string) => {
     setActiveCategory(newActiveCategory)
     setAnswerEditMode(false)
-  }
-
-  const resetAnswers = () => {
-    // setAnswers(JSON.parse(JSON.stringify(answersBeforeSubmitted))) // json.parse to deep copy
-    setQuestionAnswers(new Map(answersBeforeSubmitted))
   }
 
   const submitAndProceed = () => {
@@ -314,16 +267,10 @@ const Content = ({ ...props }: ContentProps) => {
   }
 
   useEffect(() => {
-    setActiveCategory(categories[0])
-    // setAnswerEditMode(false);
-  }, [categories])
-
-  useEffect(() => {
     updateCategoryAlerts(questionAnswers, setAlerts, t)
   }, [questionAnswers, t])
 
   useEffect(() => {
-    // console.log('fetchLastFormDefitniio');
     fetchLastFormDefinition(
       setFormDefinition,
       (formDef) => createQuestionAnswers(formDef, setCategories),
@@ -335,9 +282,7 @@ const Content = ({ ...props }: ContentProps) => {
           setActivePanel,
           setUserAnswersLoaded,
           setAnswerEditMode,
-          props.setFirstTimeLogin,
-          props.setScaleDescOpen,
-          props.isMobile
+          setFirstTimeLogin
         ),
       (quAns, newUserAnswers) =>
         setFirstAnswers(
@@ -347,17 +292,10 @@ const Content = ({ ...props }: ContentProps) => {
           setAnswersBeforeSubmitted
         )
     )
-  }, [
-    userState,
-    props.setFirstTimeLogin,
-    props.setScaleDescOpen,
-    props.isMobile,
-  ])
+  }, [userState, setFirstTimeLogin])
 
-  const { answerHistoryOpen, setAnswerHistoryOpen } = props
   useEffect(() => {
     const fetchUserFormsAndOpenView = async () => {
-      // debugger
       const allUserForms = await helper.listUserForms()
       setAnswerLog(allUserForms)
       setAnswerHistoryOpen(true)
@@ -379,243 +317,34 @@ const Content = ({ ...props }: ContentProps) => {
     }
   }, [isCategorySubmitted])
 
-  const [lastButtonClicked, setLastButtonClicked] = useState<{
-    buttonType: MenuButton
-    category?: string
-  }>({
-    //Custom type might better be moved to type variable
-    buttonType: MenuButton.Overview,
-    category: undefined,
-  })
-
-  const style = contentStyle()
-  const mobileStyle = contentStyleMobile()
-
-  //TODO: Remove this function when refactor is done. Needed to not change mobile too much for now
-  const dummyFunctionForRefactor = () => {
-    return
-  }
-
-  const checkIfCategoryIsSubmitted = (
-    buttonType: MenuButton,
-    category?: string
-  ) => {
-    if (isCategorySubmitted) {
-      menuButtonClicked(buttonType, category)
-    } else {
-      setLastButtonClicked({
-        buttonType: buttonType,
-        category: category,
-      })
-      setAlertDialogOpen(true)
-    }
-  }
-
-  const leaveFormButtonClicked = () => {
-    setAnswerEditMode(false)
-    setAlertDialogOpen(false)
-    setIsCategorySubmitted(true)
-    resetAnswers()
-    menuButtonClicked(lastButtonClicked.buttonType, lastButtonClicked.category)
-  }
-
-  const menuButtonClicked = (buttonType: MenuButton, category?: string) => {
-    props.setShowFab(true)
-    switch (buttonType) {
-      case MenuButton.Overview:
-        setActivePanel(Panel.Overview)
-        break
-      case MenuButton.MyAnswers:
-        setActivePanel(Panel.MyAnswers)
-        if (category) setActiveCategory(category)
-        break
-      case MenuButton.Category:
-        setActiveCategory(category || '')
-        setAnswerEditMode(false)
-        break
-      case MenuButton.Other:
-        setActivePanel(Panel.Other)
-        console.log('Other button pressed', category)
-        break
-    }
-  }
-
-  const keepButtonActive = (buttonType: MenuButton): string => {
-    switch (buttonType) {
-      case MenuButton.Overview:
-        return activePanel === Panel.Overview ? style.menuButtonActive : ''
-      case MenuButton.MyAnswers:
-        return activePanel === Panel.MyAnswers ? style.menuButtonActive : ''
-      case MenuButton.GroupLeader:
-        return activePanel === Panel.GroupLeader ? style.menuButtonActive : ''
-    }
-    return ''
-  }
-
-  const getMainMenuAlertElement = (): JSX.Element => {
-    const totalAlerts = alerts?.qidMap.size ?? 0
-    if (totalAlerts > 0)
-      return (
-        <AlertNotification
-          type={AlertType.Multiple}
-          message={t('content.answerOutdatedOrIncomplete')}
-          size={0}
-        />
-      )
-    else return <Fragment />
-  }
-
-  ;<AlertNotification
-    type={AlertType.Multiple}
-    message={t('content.answerOutdatedOrIncomplete')}
-    size={0}
-  />
-
-  /**
-   *  Setup for the button array structure:
-   *
-   *  text: string - The text on the button
-   *  buttonType: MenuButton - The type of button it is
-   *  subButtons: Array of Objects - Only define if having sub buttons (like categories for answers)
-   *      subButton's Objects: text: string - The tet of the button (index is added in front automaticly)
-   *                           buttonType: MenuButton - The type of button it is, not same as 'parent'
-   *                           activePanel: Panel - What panel is needed to be active for this button to show up
-   *
-   *  NOTE: Active panel should be changed somehow to instead check if parent button is active or not
-   */
-  const isSuperAdmin = useAppSelector(selectIsSuperAdmin)
-  const isAdmin = useAppSelector(selectIsAdmin)
-  const isGroupLeader = useAppSelector(selectIsGroupLeader)
-
-  const buttonSetup = [
-    {
-      text: t('menu.overview').toUpperCase(),
-      buttonType: MenuButton.Overview,
-      show: true,
-    },
-    {
-      text: t('menu.myAnswers').toUpperCase(),
-      buttonType: MenuButton.MyAnswers,
-      subButtons: categories.map((cat) => {
-        return {
-          text: cat,
-          buttonType: MenuButton.Category,
-          activePanel: Panel.MyAnswers,
-        }
-      }),
-      show: true,
-    },
-  ]
-
-  const setupDesktopMenu = (): JSX.Element[] => {
-    const buttons: JSX.Element[] = []
-    buttonSetup
-      .filter((b) => b.show)
-      .forEach((butt) => {
-        buttons.push(
-          <Button
-            key={butt.text}
-            className={clsx(
-              style.MenuButton,
-              keepButtonActive(butt.buttonType)
-            )}
-            onClick={() => {
-              checkIfCategoryIsSubmitted(butt.buttonType, undefined)
-            }}
-          >
-            <div className={clsx(style.menuButtonText)}>
-              {butt.text}
-              {butt.buttonType === MenuButton.MyAnswers
-                ? getMainMenuAlertElement()
-                : ''}
-            </div>
-          </Button>
-        )
-        if (butt.subButtons) {
-          butt.subButtons.forEach((butt, index) => {
-            buttons.push(
-              <Button
-                key={butt.text}
-                className={clsx(
-                  style.MenuButton,
-                  activeCategory === butt.text ? style.menuButtonActive : '',
-                  activePanel === butt.activePanel
-                    ? ''
-                    : style.hideCategoryButtons
-                )}
-                onClick={() => {
-                  checkIfCategoryIsSubmitted(butt.buttonType, butt.text)
-                }}
-              >
-                <div
-                  className={clsx(
-                    style.menuButtonText,
-                    style.menuButtonCategoryText
-                  )}
-                >
-                  {index + 1}. {butt.text}
-                  {alerts?.categoryMap.has(butt.text) ? (
-                    <AlertNotification
-                      type={AlertType.Multiple}
-                      message={t(
-                        'content.unansweredOrOutdatedQuestionsInCategory'
-                      )}
-                      size={alerts.categoryMap.get(butt.text)}
-                    />
-                  ) : (
-                    ''
-                  )}
-                </div>
-              </Button>
-            )
-          })
-        }
-      })
-
-    return buttons
-  }
-
-  const setUpMobileMenu = () => {
-    const listItems: JSX.Element[] = []
-
-    buttonSetup.forEach((butt) => {
-      listItems.push(
-        <ListItem
-          key={butt.text}
-          onClick={() => {
-            checkIfCategoryIsSubmitted(butt.buttonType, undefined)
-          }}
-        >
-          {butt.text}
-          {butt.buttonType === MenuButton.MyAnswers
-            ? getMainMenuAlertElement()
-            : ''}
-        </ListItem>
-      )
-    })
-
-    return listItems
-  }
-
   const enableAnswerEditMode = () => {
     setAnswersBeforeSubmitted(new Map(questionAnswers))
     setAnswerEditMode(true)
   }
 
+  const showFabPanels = [Panel.Overview, Panel.MyAnswers, Panel.GroupLeader]
+  useEffect(() => {
+    setShowFab(activePanel in showFabPanels)
+  }, [activePanel])
+
+  const resetAnswers = () => {
+    setQuestionAnswers(new Map(answersBeforeSubmitted))
+  }
   const [groupMembers, setGroupMembers] = useState<any>([])
   const setupPanel = (): JSX.Element => {
     switch (activePanel) {
       case Panel.Overview:
         return (
           <Overview
-            activePanel={activePanel}
             questionAnswers={questionAnswers}
-            categories={categories}
-            isMobile={props.isMobile}
+            isSmall={isSmall}
             userAnswersLoaded={userAnswersLoaded}
           />
         )
       case Panel.MyAnswers:
+        if (activeCategory === 'MAIN') {
+          setActiveCategory(categories[0])
+        }
         return (
           <YourAnswers
             activePanel={activePanel}
@@ -630,13 +359,12 @@ const Content = ({ ...props }: ContentProps) => {
             activeCategory={activeCategory}
             enableAnswerEditMode={enableAnswerEditMode}
             answerEditMode={answerEditMode}
-            isMobile={props.isMobile}
+            isSmall={isSmall}
             alerts={alerts}
-            checkIfCategoryIsSubmitted={checkIfCategoryIsSubmitted}
-            collapseMobileCategories={props.collapseMobileCategories}
-            categoryNavRef={props.categoryNavRef}
-            scrollToTop={props.scrollToTop}
-            setCollapseMobileCategories={props.setCollapseMobileCategories}
+            collapseMobileCategories={collapseMobileCategories}
+            categoryNavRef={categoryNavRef}
+            scrollToTop={scrollToTop}
+            setCollapseMobileCategories={setCollapseMobileCategories}
           />
         )
       case Panel.GroupLeader:
@@ -646,84 +374,95 @@ const Content = ({ ...props }: ContentProps) => {
             activeSubmenuItem={activeSubmenuItem}
             members={groupMembers}
             setMembers={setGroupMembers}
+            isSmall={isSmall}
           />
         )
       case Panel.Admin:
         return <AdminPanel activeSubmenuItem={activeSubmenuItem} />
       case Panel.SuperAdmin:
         return <SuperAdminPanel activeSubmenuItem={activeSubmenuItem} />
-      case Panel.Other:
-        return <div>Hello! This is the "Other" panel :D</div>
     }
     return <div>Not implemented</div>
   }
 
-  return (
-    <div
-      className={
-        props.isMobile ? mobileStyle.contentContainer : style.contentContainer
+  const [menuOpen, toggleMenuOpen] = useState(false)
+
+  const handleMenuClick = (panelSource: Panel, itemSource: string) => {
+    if (answerEditMode) {
+      setlastClickedPanel(panelSource)
+      if (panelSource != Panel.MyAnswers) {
+        setLastClickedSubmenu(itemSource)
+      } else {
+        setLastClickedCategory(itemSource)
       }
-      ref={props.mobileNavRef}
-    >
-      {props.isMobile ? (
-        <NavBarMobile
-          menuButtons={setUpMobileMenu()}
-          activePanel={activePanel}
-          signout={props.signout}
-        />
-      ) : (
-        <div className={style.menu}>
-          {setupDesktopMenu()}
-          <GroupLeaderMenu
-            members={groupMembers}
-            show={isGroupLeader}
-            selected={activePanel === Panel.GroupLeader}
-            setActivePanel={setActivePanel}
-            setActiveSubmenuItem={setActiveSubmenuItem}
-            activeSubmenuItem={activeSubmenuItem}
-            setShowFab={props.setShowFab}
-            style={style}
-          />
-          <AdminMenu
-            show={isAdmin}
-            selected={activePanel === Panel.Admin}
-            setShowFab={props.setShowFab}
-            setActivePanel={setActivePanel}
-            setActiveSubmenuItem={setActiveSubmenuItem}
-            activeSubmenuItem={activeSubmenuItem}
-            style={style}
-          />
-          <SuperAdminMenu
-            show={isSuperAdmin}
-            selected={activePanel === Panel.SuperAdmin}
-            setShowFab={props.setShowFab}
-            setActivePanel={setActivePanel}
-            setActiveSubmenuItem={setActiveSubmenuItem}
-            activeSubmenuItem={activeSubmenuItem}
-            style={style}
-          />
-        </div>
-      )}
-      <div className={props.isMobile ? mobileStyle.panel : style.panel}>
-        {setupPanel()}
+      setAlertDialogOpen(true)
+    } else {
+      setActivePanel(panelSource)
+      if (panelSource === Panel.MyAnswers) {
+        setActiveCategory(itemSource)
+        setActiveSubmenuItem('NONE')
+      } else {
+        setActiveCategory('NONE')
+        setActiveSubmenuItem(itemSource)
+      }
+    }
+    if (panelSource === Panel.Overview || itemSource !== 'MAIN') {
+      isSmall && toggleMenuOpen(!open)
+    }
+  }
+
+  const leaveFormButtonClicked = () => {
+    resetAnswers()
+    setAnswerEditMode(false)
+    setActivePanel(lastClickedPanel)
+
+    if (lastClickedPanel === Panel.MyAnswers) {
+      setActiveCategory(lastClickedCategory)
+      setActiveSubmenuItem('NONE')
+    } else {
+      setActiveSubmenuItem(lastClickedSubmenu)
+      setActiveCategory('NONE')
+    }
+    setAlertDialogOpen(false)
+    setShowFab(activePanel in showFabPanels)
+  }
+
+  return (
+    <ContentContainer isSmall={isSmall}>
+      <SideMenu
+        isSmall={isSmall}
+        activePanel={activePanel}
+        categories={categories}
+        menuOpen={menuOpen}
+        toggleMenuOpen={toggleMenuOpen}
+        alerts={alerts}
+        activeCategory={activeCategory}
+        activeSubmenuItem={activeSubmenuItem}
+        groupMembers={groupMembers}
+        handleMenuClick={handleMenuClick}
+      />
+      <NavBar
+        toggleMenuOpen={toggleMenuOpen}
+        isSmall={isSmall}
+        signout={signout}
+        isOpen={menuOpen}
+      />
+
+      <div id="panelContainer">
+        <div id="panel">{setupPanel()}</div>
       </div>
+
       <AlertDialog
         setAlertDialogOpen={setAlertDialogOpen}
         alertDialogOpen={alertDialogOpen}
-        changeActiveCategory={dummyFunctionForRefactor} //setActiveCategory}
-        clickedCategory={activeCategory}
-        setIsCategorySubmitted={setIsCategorySubmitted}
-        resetAnswers={resetAnswers}
-        leaveFormButtonClicked={leaveFormButtonClicked} //Temp added here, replace changeActiveCategory
-        isMobile={props.isMobile}
+        leaveFormButtonClicked={leaveFormButtonClicked}
       />
       <AnswerHistory
         history={answerLog}
-        historyViewOpen={props.answerHistoryOpen}
-        setHistoryViewOpen={props.setAnswerHistoryOpen}
-        isMobile={props.isMobile}
+        historyViewOpen={answerHistoryOpen}
+        setHistoryViewOpen={setAnswerHistoryOpen}
       />
-    </div>
+    </ContentContainer>
   )
 }
 

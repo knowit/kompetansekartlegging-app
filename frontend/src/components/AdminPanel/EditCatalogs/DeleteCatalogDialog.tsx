@@ -5,13 +5,10 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import Button from '@mui/material/Button'
 import ErrorIcon from '@mui/icons-material/Error'
-
-import { dialogStyles } from '../../../styles'
 import { useTranslation } from 'react-i18next'
 
 const DeleteCatalogDialog = ({ onCancel, onConfirm, onExited, open }: any) => {
   const { t } = useTranslation()
-  const style = dialogStyles()
 
   return (
     <Dialog
@@ -24,23 +21,21 @@ const DeleteCatalogDialog = ({ onCancel, onConfirm, onExited, open }: any) => {
         onExited,
       }}
     >
-      <DialogTitle className={style.dialogTitle}>
-        <ErrorIcon fontSize="large" className={style.errorIcon}></ErrorIcon>
-        <span className={style.dialogTitleText}>
-          {t('admin.editCatalogs.removeCatalogQuestion')}
-        </span>
+      <DialogTitle>
+        <ErrorIcon fontSize="large"></ErrorIcon>
+        <span>{t('admin.editCatalogs.removeCatalogQuestion')}</span>
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
           {t('admin.editCatalogs.areYouSureYouWantToRemoveThisCatalog')}
         </DialogContentText>
       </DialogContent>
-      <DialogActions className={style.alertButtons}>
-        <Button onClick={onConfirm} className={style.cancelButton}>
-          <span className={style.buttonText}>{t('remove')}</span>
+      <DialogActions>
+        <Button onClick={onConfirm}>
+          <span>{t('remove')}</span>
         </Button>
-        <Button onClick={onCancel} className={style.confirmButton}>
-          <span className={style.buttonText}>{t('abort')}</span>
+        <Button onClick={onCancel}>
+          <span>{t('abort')}</span>
         </Button>
       </DialogActions>
     </Dialog>

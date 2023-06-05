@@ -1,4 +1,3 @@
-import style from './AdminPanel.module.css'
 import DownloadExcel from './DownloadExcel'
 import EditAdmins from './EditAdmins'
 import EditCatalogsRouter from './EditCatalogsRouter'
@@ -20,7 +19,7 @@ enum SubmenuCategory {
 
 const AdminPanel = ({ activeSubmenuItem }: AdminPanelProps) => {
   return (
-    <div className={style.container}>
+    <div>
       {activeSubmenuItem === SubmenuCategory.EDIT_GROUP_LEADERS && (
         <EditGroupLeaders />
       )}

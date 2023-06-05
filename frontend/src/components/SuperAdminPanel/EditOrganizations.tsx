@@ -1,21 +1,14 @@
 import { FC, useState } from 'react'
-
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CircularProgress from '@mui/material/CircularProgress'
-import Container from '@mui/material/Container'
+import CenteredCircularProgress from '../CenteredCircularProgress'
 import IconButton from '@mui/material/IconButton'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import Typography from '@mui/material/Typography'
 import DeleteIcon from '@mui/icons-material/Delete'
-import commonStyles from '../AdminPanel/common.module.css'
-import Button from '../mui/Button'
-import Table from '../mui/Table'
-
+import { Button } from '@mui/material'
+import { Table } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import useApiGet from '../AdminPanel/useApiGet'
 import AddOrganizationDialog from './AddOrganizationDialog'
@@ -28,6 +21,7 @@ import {
   removeOrganization,
 } from './SuperAdminAPI'
 import { OrganizationInfo } from './SuperAdminTypes'
+import InfoCard from '../InfoCard'
 
 interface OrganizationProps {
   organization: OrganizationInfo
@@ -70,7 +64,7 @@ const OrganizationTable: FC<OrganizationTableProps> = ({
   const { t } = useTranslation()
 
   return (
-    <TableContainer className={commonStyles.tableContainer}>
+    <TableContainer>
       <Table stickyHeader>
         <TableHead>
           <TableRow>
@@ -148,33 +142,27 @@ const EditOrganizations = () => {
   }
 
   return (
-    <Container maxWidth="md" className={commonStyles.container}>
+    <>
       {error && <p>{t('errorOccured') + error}</p>}
       {mutationError && (
         <>
           <p>{t('errorOccured') + mutationError}</p>
         </>
       )}
-      {loading && <CircularProgress />}
+      {loading && <CenteredCircularProgress />}
       {!error && !loading && (
         <>
-          <Card style={{ marginBottom: '24px' }} variant="outlined">
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                {t('menu.submenu.editOrganizations')}
-              </Typography>
-              {t('superAdmin.editOrganizations.description')}
-            </CardContent>
-          </Card>
+          <InfoCard
+            title="menu.submenu.editOrganizations"
+            description="superAdmin.editOrganizations.description"
+          />
           <OrganizationTable
             organizations={organizations}
             deleteOrganization={openDeleteOrganizationDialog}
           />
           <Button
             variant="contained"
-            color="primary"
             startIcon={<AddIcon />}
-            style={{ marginTop: '24px' }}
             onClick={() => setShowAddOrganization(true)}
           >
             {t('superAdmin.editOrganizations.addOrganization')}
@@ -205,7 +193,7 @@ const EditOrganizations = () => {
           organization={organizationToBeDeleted}
         />
       )}
-    </Container>
+    </>
   )
 }
 

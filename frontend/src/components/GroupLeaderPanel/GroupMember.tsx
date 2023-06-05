@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react'
-
-import CircularProgress from '@mui/material/CircularProgress'
-
+import CenteredCircularProgress from '../CenteredCircularProgress'
 import {
   fetchLastFormDefinition,
   createQuestionAnswers,
@@ -9,15 +7,15 @@ import {
   setFirstAnswers,
 } from '../answersApi'
 import { getAttribute } from '../AdminPanel/helpers'
-import { Panel, UserAnswer, QuestionAnswer } from '../../types'
-import { Overview } from '../cards/Overview'
+import { UserAnswer, QuestionAnswer } from '../../types'
+import { Overview } from '../Overview'
 import AnswerDiagram from '../AnswerDiagram'
 import Nav from './Nav'
 import { t } from 'i18next'
 
 const voidFn = () => 1
 
-const GroupMember = ({ members, userId, isMobile = false }: any) => {
+const GroupMember = ({ members, userId, isSmall }: any) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
   const [categories, setCategories] = useState<string[]>([])
@@ -49,9 +47,7 @@ const GroupMember = ({ members, userId, isMobile = false }: any) => {
               voidFn,
               setUserAnswersLoaded,
               voidFn,
-              voidFn,
-              voidFn,
-              isMobile
+              voidFn
             ),
           (quAns, newUserAnswers) =>
             setFirstAnswers(
@@ -67,7 +63,7 @@ const GroupMember = ({ members, userId, isMobile = false }: any) => {
       setLoading(false)
     }
     fn()
-  }, [userId, isMobile, member])
+  }, [userId, isSmall, member])
 
   const isLoading = loading
   const isError = error
@@ -75,7 +71,7 @@ const GroupMember = ({ members, userId, isMobile = false }: any) => {
   return (
     <>
       {isError && <p>{t('errorOccured') + isError}</p>}
-      {isLoading && <CircularProgress />}
+      {isLoading && <CenteredCircularProgress />}
       {!isError && !isLoading && questionAnswers && (
         <>
           <Nav
@@ -86,16 +82,14 @@ const GroupMember = ({ members, userId, isMobile = false }: any) => {
           />
           {category === 'Oversikt' ? (
             <Overview
-              activePanel={Panel.Overview}
               questionAnswers={questionAnswers}
-              categories={categories}
-              isMobile={isMobile}
+              isSmall={isSmall}
               userAnswersLoaded={userAnswersLoaded}
             />
           ) : (
             <AnswerDiagram
               activeCategory={category}
-              isMobile={isMobile}
+              isSmall={isSmall}
               questionAnswers={questionAnswers}
             />
           )}

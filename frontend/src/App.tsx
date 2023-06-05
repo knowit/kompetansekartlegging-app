@@ -1,20 +1,13 @@
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import { API, Auth, Hub } from 'aws-amplify'
-// import awsconfig from "./aws-exports";
 import awsconfig from './exports'
 import Content from './components/Content'
 import Login from './components/Login'
-import {
-  ThemeProvider,
-  Theme,
-  StyledEngineProvider,
-} from '@mui/material/styles'
-import { Button, debounce, Snackbar } from '@mui/material'
-import { makeStyles } from '@mui/styles'
-import { isMobile } from 'react-device-detect'
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
+import { Button, debounce, Snackbar, Alert } from '@mui/material'
+import { useWindowDimensions } from './helperFunctions'
 import FloatingScaleDescButton from './components/FloatingScaleDescButton'
-import NavBarDesktop from './components/NavBarDesktop'
 import theme from './theme'
 import {
   setUserInfo,
@@ -25,16 +18,8 @@ import {
 import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth'
 import { useAppSelector, useAppDispatch } from './redux/hooks'
 import { useTranslation } from 'react-i18next'
-import { KnowitColors } from './styles'
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
 
 const userBranch = import.meta.env.VITE_USER_BRANCH
-
-// console.log("Hosted branch: ", userBranch);
 
 switch (userBranch) {
   case 'master':
@@ -50,7 +35,6 @@ switch (userBranch) {
 awsconfig.oauth.redirectSignIn = `${window.location.origin}/`
 awsconfig.oauth.redirectSignOut = `${window.location.origin}/`
 
-// let config = Amplify.configure(awsconfig);
 API.configure(awsconfig)
 Auth.configure(awsconfig)
 
@@ -66,26 +50,11 @@ Hub.listen(/.*/, (data) => {
       message.includes('AzureAD') &&
       !message.includes('organization')
     ) {
-      // console.log("Failure in the membrane");
       Auth.federatedSignIn({
         customProvider: 'AzureAD',
       })
     }
-    // Auth.federatedSignIn();
   }
-})
-
-const appStyle = makeStyles({
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: isMobile ? 'auto' : '100vh',
-    overflowY: isMobile ? 'hidden' : 'visible',
-  },
-  content: {
-    height: '100%',
-    flexGrow: 1,
-  },
 })
 
 // Sometimes the cognito-object does not contain attributes. Not sure why
@@ -98,7 +67,6 @@ const App = () => {
   const userState = useAppSelector(selectUserState)
 
   const { t } = useTranslation()
-  const style = appStyle()
   const [showFab, setShowFab] = useState<boolean>(true)
   const [answerHistoryOpen, setAnswerHistoryOpen] = useState<boolean>(false)
   const [scaleDescOpen, setScaleDescOpen] = useState(false)
@@ -150,16 +118,8 @@ const App = () => {
       })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => {
-    if (isMobile) {
-      // hide body overflow to avoid doublescroll
-      if (scaleDescOpen) {
-        document.body.style.overflow = 'hidden'
-      } else {
-        document.body.style.overflow = ''
-      }
-    }
-  }, [scaleDescOpen])
+  const { width } = useWindowDimensions()
+  const isSmall = width < 700
 
   const signout = () => {
     Auth.signOut()
@@ -206,66 +166,47 @@ const App = () => {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <div className={style.root}>
-          {userBranch !== 'master' ? (
-            <Snackbar
-              open={bannerOpen}
-              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-            >
-              <div
-                style={{
-                  background: 'rgba(0,255,0, 255)',
-                  borderRadius: 5,
-                  padding: 4,
-                  textAlign: 'center',
-                }}
-              >
-                {t('thisIsATestEnvironment') + ' '}
-                <Button
-                  onClick={() => setBannerOpen(false)}
-                  style={{ color: KnowitColors.black }}
-                >
-                  {t('close').toUpperCase()}
-                </Button>
-              </div>
-            </Snackbar>
-          ) : null}
-          {userState.isSignedIn ? (
-            <Fragment>
-              {isMobile ? null : (
-                <NavBarDesktop
-                  displayAnswers={displayAnswers}
-                  signout={signout}
-                />
-              )}
+        {userBranch !== 'master' ? (
+          <Snackbar
+            open={bannerOpen}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          >
+            <Alert severity="warning">
+              {t('thisIsATestEnvironment') + ' '}
+              <Button onClick={() => setBannerOpen(false)}>{t('close')}</Button>
+            </Alert>
+          </Snackbar>
+        ) : null}
 
-              <Content
-                setAnswerHistoryOpen={setAnswerHistoryOpen}
-                answerHistoryOpen={answerHistoryOpen}
-                isMobile={isMobile}
-                signout={signout}
-                collapseMobileCategories={collapseMobileCategories}
-                categoryNavRef={categoryNavRef}
-                mobileNavRef={mobileNavRef}
-                scrollToTop={scrollToTopMobile}
-                setCollapseMobileCategories={setCollapseMobileCategories}
+        {userState.isSignedIn ? (
+          <>
+            <Content
+              signout={signout}
+              displayAnswers={displayAnswers}
+              setAnswerHistoryOpen={setAnswerHistoryOpen}
+              answerHistoryOpen={answerHistoryOpen}
+              isSmall={isSmall}
+              collapseMobileCategories={collapseMobileCategories}
+              categoryNavRef={categoryNavRef}
+              mobileNavRef={mobileNavRef}
+              scrollToTop={scrollToTopMobile}
+              setCollapseMobileCategories={setCollapseMobileCategories}
+              setFirstTimeLogin={setFirstTimeLogin}
+              firstTimeLogin={firstTimeLogin}
+              setShowFab={setShowFab}
+            />
+            {showFab && (
+              <FloatingScaleDescButton
+                scaleDescOpen={scaleDescOpen}
                 setScaleDescOpen={setScaleDescOpen}
-                setFirstTimeLogin={setFirstTimeLogin}
-                setShowFab={setShowFab}
+                firstTimeLogin={firstTimeLogin}
+                isSmall={isSmall}
               />
-              {showFab && (
-                <FloatingScaleDescButton
-                  scaleDescOpen={scaleDescOpen}
-                  setScaleDescOpen={setScaleDescOpen}
-                  firstTimeLogin={firstTimeLogin}
-                  isMobile={isMobile}
-                />
-              )}
-            </Fragment>
-          ) : (
-            <Login isMobile={isMobile} />
-          )}
-        </div>
+            )}
+          </>
+        ) : (
+          <Login isSmall={isSmall} />
+        )}
       </ThemeProvider>
     </StyledEngineProvider>
   )

@@ -1,79 +1,20 @@
 import Button from '@mui/material/Button'
-import { makeStyles } from '@mui/styles'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { roundDecimals } from '../helperFunctions'
-import { KnowitColors } from '../styles'
 import { ChartData, ResultData, ResultDiagramProps } from '../types'
 import { CombinedChart } from './CombinedChart'
-import { CombinedChartMobile } from './CombinedChartMobile'
+import { CombinedChartSmall } from './CombinedChartSmall'
 import { useTranslation } from 'react-i18next'
+import styled from '@emotion/styled'
+import { ToggleButton, ToggleButtonGroup } from '@mui/material'
 
-const graphStyle = makeStyles({
-  resultDiagramContainer: {
-    width: '100%',
-    paddingTop: 20,
-  },
-  resultDiagramContainerMobile: {
-    width: '90%',
-  },
-  chartButtonMobile: {
-    position: 'fixed',
-    zIndex: 101, //Navbar has very high z-index
-    height: '30px',
-    borderRadius: '15px',
-    top: '15px',
-    right: '30px',
-    padding: '10px',
-    backgroundColor: KnowitColors.white,
-    color: KnowitColors.darkBrown,
-    fontWeight: 'bold',
-    fontSize: '14px',
-    '&:hover': {
-      backgroundColor: KnowitColors.white,
-    },
-  },
-  chartButton: {
-    margin: '0px 20px 0px 20px',
-    width: '90px',
-    height: '30px',
-    borderRadius: '15px',
-    backgroundColor: KnowitColors.white,
-    color: KnowitColors.darkBrown,
-    fontWeight: 'normal',
-    fontSize: '14px',
-    border: 2,
-    borderStyle: 'solid',
-    borderColor: KnowitColors.lightGreen,
-  },
-  chartButtonActive: {
-    margin: '0px 20px 0px 20px',
-    width: '90px',
-    height: '30px',
-    borderRadius: '15px',
-    backgroundColor: KnowitColors.lightGreen,
-    color: KnowitColors.darkBrown,
-    fontWeight: 'bold',
-    fontSize: '14px',
-    '&:hover': {
-      backgroundColor: KnowitColors.lightGreen,
-    },
-  },
-  header: {
-    padding: '0px 0px 20px 30px',
-    display: 'flex',
-    alignItems: 'center',
-    maxWidth: 1200,
-    fontFamily: 'Arial',
-    fontSize: '22px',
-    fontWeight: 'bold',
-  },
-  buttonGroup: {
-    display: 'flex',
-    flexGrow: 1,
-    maxWidth: 900,
-    justifyContent: 'center',
-  },
-})
+const StyledOverviewContainer = styled.div`
+  #buttonContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+`
 
 export enum OverviewType {
   AVERAGE,
@@ -87,7 +28,7 @@ const recalculate = (
   createMedianData: () => ResultData[],
   createHighestData: () => ResultData[],
   setChartData: Dispatch<SetStateAction<ChartData[]>>,
-  isMobile: boolean
+  isSmall: boolean
 ) => {
   let answerData: ResultData[] = []
   switch (currentType) {
@@ -100,8 +41,8 @@ const recalculate = (
     case OverviewType.HIGHEST:
       answerData = createHighestData()
   }
-  const knowledgeStart = isMobile ? 7 : 0
-  const motivationStart = isMobile ? 0 : 7
+  const knowledgeStart = isSmall ? 7 : 0
+  const motivationStart = isSmall ? 0 : 7
   const data: ChartData[] = answerData.map((answer) => {
     if (answer.aggCustomScale > 0) {
       return {
@@ -135,9 +76,11 @@ const recalculate = (
   setChartData(data)
 }
 
-export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
+export default function TypedOverviewChart({
+  questionAnswers,
+  isSmall,
+}: ResultDiagramProps) {
   const { t } = useTranslation()
-  const style = graphStyle()
 
   const [chartData, setChartData] = useState<ChartData[]>([])
   const [currentType, setOverviewType] = useState<OverviewType>(
@@ -163,7 +106,7 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
     const createAverageData = (): ResultData[] => {
       //data: ResultData[]
       const ansData: ResultData[] = []
-      props.questionAnswers.forEach((questionAnswers, category) => {
+      questionAnswers.forEach((questionAnswers, category) => {
         const reduced = questionAnswers.reduce<ReduceValue>(
           (acc, cur): ReduceValue => {
             if (cur.customScaleValue && cur.customScaleValue >= 0) {
@@ -216,7 +159,7 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
           ? numbers[mid]
           : (numbers[mid - 1] + numbers[mid]) / 2
       }
-      props.questionAnswers.forEach((questionAnswers, category) => {
+      questionAnswers.forEach((questionAnswers, category) => {
         if (questionAnswers.length > 0) {
           const medianKnowledge = getMedian(
             questionAnswers.map((qa) => qa.knowledge).filter((n) => n >= 0)
@@ -251,7 +194,7 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
       const ansData: ResultData[] = []
       const newTopSubjects: Map<string, { kTop: string; mTop: string }> =
         new Map()
-      props.questionAnswers.forEach((questionAnswers, category) => {
+      questionAnswers.forEach((questionAnswers, category) => {
         let kTop = ''
         let mTop = ''
         const reduced = questionAnswers.reduce<{
@@ -304,9 +247,9 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
       createMedianData,
       createHighestData,
       setChartData,
-      props.isMobile
+      isSmall
     )
-  }, [props.isMobile, props.questionAnswers, currentType, setChartData])
+  }, [isSmall, questionAnswers, currentType, setChartData])
 
   const cycleChartType = () => {
     switch (currentType) {
@@ -321,67 +264,67 @@ export default function TypedOverviewChart({ ...props }: ResultDiagramProps) {
     }
   }
 
-  const selectChartType = (type: OverviewType) => {
-    setOverviewType(type)
+  const selectChartType = (
+    event: React.MouseEvent<HTMLElement>,
+    type: OverviewType
+  ) => {
+    // returns null if same clicked twice
+    if (type !== null) {
+      setOverviewType(type)
+    }
   }
 
   const translateOverviewType = (type: OverviewType) => {
     switch (type) {
       case OverviewType.AVERAGE:
-        return t('overview.overviewType.average').toUpperCase()
+        return t('overview.overviewType.average')
       case OverviewType.MEDIAN:
-        return t('overview.overviewType.median').toUpperCase()
+        return t('overview.overviewType.median')
       case OverviewType.HIGHEST:
-        return t('overview.overviewType.highest').toUpperCase()
+        return t('overview.overviewType.highest')
     }
   }
 
   const getButton = (type: OverviewType): JSX.Element => {
     return (
-      <Button
-        className={
-          currentType === type ? style.chartButtonActive : style.chartButton
-        }
-        onClick={() => {
-          selectChartType(type)
-        }}
-      >
-        {translateOverviewType(type)}
-      </Button>
+      <ToggleButton value={type}>{translateOverviewType(type)}</ToggleButton>
     )
   }
 
-  return props.isMobile ? (
-    <div className={style.resultDiagramContainerMobile}>
-      <Button
-        className={style.chartButtonMobile}
-        onClick={() => {
-          cycleChartType()
-        }}
-      >
-        {translateOverviewType(currentType)}
-      </Button>
-      <CombinedChartMobile
-        chartData={chartData}
-        type={currentType}
-        topSubjects={topSubjects}
-      />
-    </div>
-  ) : (
-    <div className={style.resultDiagramContainer}>
-      <div className={style.header}>
-        {t('menu.overview').toUpperCase()}
-        <div className={style.buttonGroup}>
-          {getButton(OverviewType.HIGHEST)}
-          {getButton(OverviewType.AVERAGE)}
-          {getButton(OverviewType.MEDIAN)}
-        </div>
+  return (
+    <StyledOverviewContainer>
+      <div id="buttonContainer">
+        {isSmall ? (
+          <Button variant="contained" onClick={() => cycleChartType()}>
+            {translateOverviewType(currentType)}
+          </Button>
+        ) : (
+          <ToggleButtonGroup
+            value={currentType}
+            exclusive={true}
+            onChange={selectChartType}
+          >
+            {getButton(OverviewType.HIGHEST)}
+            {getButton(OverviewType.AVERAGE)}
+            {getButton(OverviewType.MEDIAN)}
+          </ToggleButtonGroup>
+        )}
       </div>
-      <CombinedChart
-        chartData={chartData}
-        type={currentType}
-        topSubjects={topSubjects}
-      />
-    </div>
+      <div>
+        {isSmall ? (
+          <CombinedChartSmall
+            chartData={chartData}
+            type={currentType}
+            topSubjects={topSubjects}
+          />
+        ) : (
+          <CombinedChart
+            chartData={chartData}
+            type={currentType}
+            topSubjects={topSubjects}
+          />
+        )}
+      </div>
+    </StyledOverviewContainer>
   )
 }

@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react'
-import style from './GroupLeaderPanel.module.css'
-
 import { Group } from '../../API'
 import {
   listAllUsersInOrganization as listAllAvailableUsersInOrganization,
@@ -23,12 +21,21 @@ import { compareByCreatedAt } from '../AdminPanel/helpers'
 import GroupMember from './GroupMember'
 import Main from './Main'
 
+export type GroupLeaderProps = {
+  members: any
+  setMembers: any
+  activeSubmenuItem: any
+  setActiveSubmenuItem: any
+  isSmall: boolean
+}
+
 const GroupLeaderPanel = ({
   members,
   setMembers,
   activeSubmenuItem,
   setActiveSubmenuItem,
-}: any) => {
+  isSmall,
+}: GroupLeaderProps) => {
   const userState = useAppSelector(selectUserState)
 
   const {
@@ -186,7 +193,7 @@ const GroupLeaderPanel = ({
   }, [allAvailableUsersAnnotated, setMembers, groupId])
 
   return (
-    <div className={style.container}>
+    <div>
       {activeSubmenuItem === 'MAIN' ? (
         <Main
           allAvailableUsersAnnotated={allAvailableUsersAnnotated}
@@ -204,7 +211,11 @@ const GroupLeaderPanel = ({
           viewMember={(id: string) => setActiveSubmenuItem(id)}
         />
       ) : (
-        <GroupMember members={members} userId={activeSubmenuItem} />
+        <GroupMember
+          isSmall={isSmall}
+          members={members}
+          userId={activeSubmenuItem}
+        />
       )}
     </div>
   )

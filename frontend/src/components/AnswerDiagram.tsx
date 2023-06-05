@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import { QuestionType } from '../API'
 import {
   AnswerDiagramProps,
@@ -8,13 +7,7 @@ import {
 } from '../types'
 import { CustomScaleChart } from './CustomScaleChart'
 import { CombinedChart } from './CombinedChart'
-import { CombinedChartMobile } from './CombinedChartMobile'
-
-const answerDiagramStyle = makeStyles({
-  answerDiagramContainer: {
-    paddingBottom: 50,
-  },
-})
+import { CombinedChartSmall } from './CombinedChartSmall'
 
 interface Scores {
   valueKnowledge: number[]
@@ -50,22 +43,23 @@ const scoresCustomScaleLabels = (
   }
 }
 
-export default function AnswerDiagram({ ...props }: AnswerDiagramProps) {
-  const styles = answerDiagramStyle()
-
-  const activeCategory = props.activeCategory
-  const questionAnswers = props.questionAnswers.get(activeCategory)
-  const knowledgeMotivationQuAns = questionAnswers?.filter(
+export default function AnswerDiagram({
+  questionAnswers,
+  activeCategory,
+  isSmall,
+}: AnswerDiagramProps) {
+  const questionAnswersForCat = questionAnswers.get(activeCategory)
+  const knowledgeMotivationQuAns = questionAnswersForCat?.filter(
     (quAns) =>
       quAns.question.type === null ||
       quAns.question.type === QuestionType.KnowledgeMotivation
   )
-  const customScaleLabelsQuAns = questionAnswers?.filter(
+  const customScaleLabelsQuAns = questionAnswersForCat?.filter(
     (quAns) => quAns.question.type === QuestionType.CustomScaleLabels
   )
 
-  const knowledgeStart = props.isMobile ? 7 : 0
-  const motivationStart = props.isMobile ? 0 : 7
+  const knowledgeStart = isSmall ? 7 : 0
+  const motivationStart = isSmall ? 0 : 7
   const knowledgeMotivationChartData: ChartData[] =
     knowledgeMotivationQuAns?.map((quAns) => {
       return {
@@ -85,10 +79,10 @@ export default function AnswerDiagram({ ...props }: AnswerDiagramProps) {
       }
     }) || []
 
-  return props.isMobile ? (
-    <CombinedChartMobile chartData={knowledgeMotivationChartData} />
+  return isSmall ? (
+    <CombinedChartSmall chartData={knowledgeMotivationChartData} />
   ) : (
-    <div className={styles.answerDiagramContainer}>
+    <div>
       <CombinedChart chartData={knowledgeMotivationChartData} />
       <CustomScaleChart chartData={customScaleLabelsChartData} />
     </div>

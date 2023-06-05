@@ -1,3 +1,4 @@
+import { Table } from '@mui/material'
 import {
   IconButton,
   TableBody,
@@ -8,8 +9,6 @@ import {
 } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { ORGANIZATION_ID_ATTRIBUTE } from '../../constants'
-import Table from '../mui/Table'
-import commonStyles from './common.module.css'
 import { getAttribute } from './helpers'
 import PictureAndNameCell from './PictureAndNameCell'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -49,7 +48,7 @@ const AdminTable = ({ admins, deleteAdmin, showOrgId }: AdminTableProps) => {
   const { t } = useTranslation()
 
   return (
-    <TableContainer className={commonStyles.tableContainer}>
+    <TableContainer>
       <Table stickyHeader>
         <TableHead>
           <TableRow>

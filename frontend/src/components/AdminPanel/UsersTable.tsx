@@ -1,4 +1,3 @@
-import commonStyles from './common.module.css'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
@@ -6,8 +5,8 @@ import TableHead from '@mui/material/TableHead'
 import Paper from '@mui/material/Paper'
 
 import { getAttribute } from './helpers'
-import Table from '../mui/Table'
-import TableRow from '../mui/TableRow'
+import { Table } from '@mui/material'
+import TableRow from '@mui/material/TableRow'
 import PictureAndNameCell from './PictureAndNameCell'
 import { useTranslation } from 'react-i18next'
 import { ORGANIZATION_ID_ATTRIBUTE } from '../../constants'
@@ -42,10 +41,7 @@ const UsersTable = ({
     selectedUser && user.Username === selectedUser.Username
 
   return (
-    <TableContainer
-      component={Paper}
-      className={commonStyles.usersTableContainer}
-    >
+    <TableContainer component={Paper}>
       <Table stickyHeader>
         <TableHead>
           <TableRow>

@@ -7,16 +7,14 @@ import TableHead from '@mui/material/TableHead'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import DeleteIcon from '@mui/icons-material/Delete'
 
-import Button from '../mui/Button'
-import Table from '../mui/Table'
-import TableRow from '../mui/TableRow'
+import { Button } from '@mui/material'
+import { Table } from '@mui/material'
+import TableRow from '@mui/material/TableRow'
 import { useTranslation } from 'react-i18next'
 import { i18nDateToLocaleDateString } from '../../i18n/i18n'
 import AddMemberToGroupDialog from './AddMemberToGroupDialog'
 import { getAttribute } from './helpers'
 import PictureAndNameCell from './PictureAndNameCell'
-import { KnowitColors } from '../../styles'
-
 const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
   const { t } = useTranslation()
 
@@ -40,11 +38,7 @@ const User = ({ user, deleteMember, viewMember, showLastAnsweredAt }: any) => {
       <TableCell onClick={onClick}>{email}</TableCell>
       {showLastAnsweredAt && <TableCell>{formLastAnsweredAt}</TableCell>}
       <TableCell>
-        <Button
-          endIcon={<DeleteIcon />}
-          onClick={() => deleteMember(user)}
-          style={{ fontStyle: 'italic', color: KnowitColors.black }}
-        >
+        <Button endIcon={<DeleteIcon />} onClick={() => deleteMember(user)}>
           {t('myGroup.removeFromGroup')}
         </Button>
       </TableCell>
@@ -97,7 +91,6 @@ const GroupMembers = ({
       </TableContainer>
       <Button
         variant="contained"
-        color="primary"
         startIcon={<PersonAddIcon />}
         onClick={() => setOpen(true)}
       >

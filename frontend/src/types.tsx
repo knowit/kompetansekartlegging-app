@@ -1,6 +1,5 @@
 import { QuestionType } from './API'
-import { MenuButton } from './components/Content'
-import { AlertType } from './components/AlertNotification'
+import { AlertType } from './components/Question'
 import { Dispatch, MutableRefObject, SetStateAction } from 'react'
 import { OverviewType } from './components/TypedOverviewChart'
 
@@ -267,7 +266,7 @@ export type FormProps = {
   categories: string[]
   activeCategory: string
   setIsCategorySubmitted: (categorySubmitted: boolean) => void
-  isMobile: boolean
+  isSmall: boolean
   alerts: AlertState | undefined
   scrollToTop: () => void
 }
@@ -275,7 +274,7 @@ export type FormProps = {
 export type CategoryProps = {
   name: string
   children: JSX.Element[]
-  isMobile: boolean
+  isSmall: boolean
 }
 
 export type UserProps = {
@@ -297,16 +296,13 @@ export type SliderProps = {
   sliderChanged: (newValue: number, motivation: boolean) => void
   motivation: boolean
   value: number
-  isMobile: boolean
 }
 
 export type QuestionProps = {
   updateAnswer: (category: string, sliderMap: Map<string, SliderValues>) => void
   questionAnswer: QuestionAnswer
-  knowledgeDefaultValue: number
-  motivationDefaultValue: number
   setIsCategorySubmitted: (categorySubmitted: boolean) => void
-  isMobile: boolean
+  isSmall: boolean
   alerts: AlertState | undefined
   sliderValues: Map<string, SliderValues>
   setSliderValues: (questionId: string, values: SliderValues) => void
@@ -329,16 +325,14 @@ export type BatchCreatedQuestionAnswer = {
 }
 
 export type OverviewProps = {
-  activePanel: Panel
   questionAnswers: Map<string, QuestionAnswer[]>
-  categories: string[]
-  isMobile: boolean
+  isSmall: boolean
   userAnswersLoaded: boolean
 }
 
 export type ScaleDescriptionProps = {
   activePanel: Panel
-  isMobile: boolean
+  isSmall: boolean
 }
 
 export type YourAnswerProps = {
@@ -354,12 +348,8 @@ export type YourAnswerProps = {
   activeCategory: string
   enableAnswerEditMode: () => void
   answerEditMode: boolean
-  isMobile: boolean
+  isSmall: boolean
   alerts: AlertState | undefined
-  checkIfCategoryIsSubmitted: (
-    buttonType: MenuButton,
-    category?: string | undefined
-  ) => void
   collapseMobileCategories: boolean
   categoryNavRef: MutableRefObject<HTMLInputElement | null>
   scrollToTop: () => void
@@ -378,48 +368,39 @@ export interface Alert {
 
 export type HighlightsProps = {
   questionAnswers: Map<string, QuestionAnswer[]>
-  isMobile: boolean
+  isSmall: boolean
 }
 
 export type ResultDiagramProps = {
   questionAnswers: Map<string, QuestionAnswer[]>
-  categories: string[]
-  isMobile: boolean
+  categories?: string[]
+  isSmall: boolean
 }
 
 export type AnswerDiagramProps = {
   questionAnswers: Map<string, QuestionAnswer[]>
   activeCategory: string
-  isMobile: boolean
+  isSmall: boolean
 }
 
 export type NavBarProps = {
   user: any
   callbackDelete: () => void
   setAnswerHistoryOpen: (answerHistoryOpen: boolean) => void
-  isMobile: boolean
+  isSmall: boolean
 }
 
 export type NavBarPropsDesktop = {
-  displayAnswers: () => void
   signout: () => void
-}
-
-export type NavBarPropsMobile = {
-  menuButtons: JSX.Element[]
-  activePanel: Panel
-  signout: () => void
+  toggleMenuOpen: any
+  isOpen: boolean
+  isSmall: boolean
 }
 
 export type AlertDialogProps = {
   setAlertDialogOpen: (alertDialogOpen: boolean) => void
   alertDialogOpen: boolean
-  changeActiveCategory: (newCategoryIndex: string) => void
-  clickedCategory: string
-  setIsCategorySubmitted: (categorySubmitted: boolean) => void
-  resetAnswers: () => void
-  isMobile: boolean
-  leaveFormButtonClicked?: () => void
+  leaveFormButtonClicked: any
 }
 
 export type AnswerHistoryProps = {
@@ -427,7 +408,6 @@ export type AnswerHistoryProps = {
   historyViewOpen: boolean
   history: UserFormWithAnswers[]
   formDefinition?: FormDefinition
-  isMobile: boolean
 }
 
 export type HistoryTreeViewProps = {
@@ -442,17 +422,18 @@ export enum UserRole {
 }
 
 export type ContentProps = {
+  displayAnswers: () => void
   setAnswerHistoryOpen: (historyViewOpen: boolean) => void
   answerHistoryOpen: boolean
-  isMobile: boolean
+  isSmall: boolean
   signout: () => void
   collapseMobileCategories: boolean
   categoryNavRef: MutableRefObject<HTMLInputElement | null>
   scrollToTop: () => void
   mobileNavRef: MutableRefObject<HTMLInputElement | null>
   setCollapseMobileCategories: (collapseMobileCategories: boolean) => void
-  setScaleDescOpen: Dispatch<SetStateAction<boolean>>
   setFirstTimeLogin: Dispatch<SetStateAction<boolean>>
+  firstTimeLogin: boolean
   setShowFab: Dispatch<SetStateAction<boolean>>
 }
 
@@ -474,7 +455,6 @@ export type CombinedChartProps = {
   chartData: ChartData[]
   type?: OverviewType
   topSubjects?: Map<string, { kTop: string; mTop: string }>
-  className?: string
 }
 
 export type CustomScaleChartProps = {

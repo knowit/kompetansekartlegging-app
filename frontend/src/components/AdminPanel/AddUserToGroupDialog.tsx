@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import Button from '@mui/material/Button'
-import CircularProgress from '@mui/material/CircularProgress'
+import CenteredCircularProgress from '../CenteredCircularProgress'
 
 import Box from '@mui/material/Box'
 import Dialog from '@mui/material/Dialog'
@@ -12,8 +12,7 @@ import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 
 import { useTranslation } from 'react-i18next'
-import { dialogStyles } from '../../styles'
-import { CloseIcon } from '../DescriptionTable'
+import CloseIcon from '@mui/icons-material/Close'
 import { getAttribute, not } from './helpers'
 import useApiGet from './useApiGet'
 import UsersTable from './UsersTable'
@@ -33,7 +32,6 @@ const AddUserToGroupDialog = ({
   showOrgId,
 }: any) => {
   const { t } = useTranslation()
-  const style = dialogStyles()
 
   const {
     result: users,
@@ -68,7 +66,6 @@ const AddUserToGroupDialog = ({
       open={open}
       onClose={onCancel}
       fullWidth
-      maxWidth="sm"
       PaperProps={{
         style: { borderRadius: 30 },
       }}
@@ -80,29 +77,21 @@ const AddUserToGroupDialog = ({
           display="flex"
           justifyContent="space-between"
         >
-          <span className={style.dialogTitleText}>
-            {title || t('add') + ' ' + roleName}
-          </span>
-          <IconButton
-            className={style.closeButton}
-            onClick={onCancel}
-            size="large"
-          >
+          <span>{title || t('add') + ' ' + roleName}</span>
+          <IconButton onClick={onCancel} size="large">
             <CloseIcon />
           </IconButton>
         </Box>
         <TextField
           fullWidth
           placeholder={searchFieldPlaceholder}
-          variant="outlined"
           value={nameFilter}
-          className={style.searchField}
           onChange={(e: any) => setNameFilter(e.target.value)}
         />
       </DialogTitle>
       <DialogContent>
         {error && <p>{t('errorOccured') + error}</p>}
-        {loading && <CircularProgress />}
+        {loading && <CenteredCircularProgress />}
         {!error && !loading && users && (
           <UsersTable
             users={usersInList}
@@ -112,18 +101,15 @@ const AddUserToGroupDialog = ({
           />
         )}
       </DialogContent>
-      <DialogActions className={style.alertButtons}>
-        <Button onClick={onCancel} className={style.cancelButton}>
-          <span className={style.buttonText}>{t('abort')}</span>
+      <DialogActions>
+        <Button onClick={onCancel}>
+          <span>{t('abort')}</span>
         </Button>
         <Button
           onClick={() => onConfirm(selectedUser)}
           disabled={!selectedUser}
-          className={style.confirmButton}
         >
-          <span className={style.buttonText}>
-            {confirmButtonText || t('add')}
-          </span>
+          <span>{confirmButtonText || t('add')}</span>
         </Button>
       </DialogActions>
     </Dialog>

@@ -13,19 +13,9 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import TreeItem from '@mui/lab/TreeItem'
-import { makeStyles } from '@mui/styles'
+
 import { useTranslation } from 'react-i18next'
 import { TFunction } from 'i18next'
-
-const answerHistoryStyles = makeStyles({
-  historyView: {
-    height: '100%',
-    widht: '100%',
-  },
-  content: {
-    maxHeight: '70vh',
-  },
-})
 
 function* generator() {
   let i = 0
@@ -46,15 +36,19 @@ const parseScore = (
   return score < 0 ? t('content.notAnswered') : score
 }
 
-export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
+export const AnswerHistory = ({
+  setHistoryViewOpen,
+  historyViewOpen,
+  history,
+  formDefinition,
+}: AnswerHistoryProps) => {
   const { t } = useTranslation()
-  const style = answerHistoryStyles()
 
   const handleClose = () => {
-    props.setHistoryViewOpen(false)
+    setHistoryViewOpen(false)
   }
 
-  const HistoryTreeView = ({ ...props }: HistoryTreeViewProps) => {
+  const HistoryTreeView = ({ data }: HistoryTreeViewProps) => {
     const g = generator()
 
     const renderEntry = (entry: UserFormWithAnswers) => {
@@ -86,13 +80,12 @@ export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
       )
     }
 
-    const sortedData = props.data.sort(
+    const sortedData = data.sort(
       (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
     )
 
     return (
       <TreeView
-        className={style.historyView}
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpanded={['root']}
         defaultExpandIcon={<ChevronRightIcon />}
@@ -103,7 +96,7 @@ export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
   }
 
   const findQuestion = (questionId: string): string => {
-    const question = props.formDefinition?.questions.items.find(
+    const question = formDefinition?.questions.items.find(
       (q) => q.id === questionId
     )
     return question
@@ -114,7 +107,7 @@ export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
   return (
     <div>
       <Dialog
-        open={props.historyViewOpen}
+        open={historyViewOpen}
         onClose={handleClose}
         scroll={'body'}
         aria-labelledby="scroll-dialog-title"
@@ -123,13 +116,11 @@ export const AnswerHistory = ({ ...props }: AnswerHistoryProps) => {
         <DialogTitle id="scroll-dialog-title">
           {t('content.answerHistory')}
         </DialogTitle>
-        <DialogContent dividers={true} className={style.content}>
-          <HistoryTreeView data={props.history} />
+        <DialogContent dividers={true}>
+          <HistoryTreeView data={history} />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            {t('close')}
-          </Button>
+          <Button onClick={handleClose}>{t('close')}</Button>
         </DialogActions>
       </Dialog>
     </div>

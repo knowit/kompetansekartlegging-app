@@ -1,24 +1,19 @@
 import { useState } from 'react'
-
-import { CardContent, Typography } from '@mui/material'
 import { listAllFormDefinitionsForLoggedInUser } from './catalogApi'
 import useApiGet from './useApiGet'
 import { API, Auth } from 'aws-amplify'
-
-import Container from '@mui/material/Container'
-import Card from '@mui/material/Card'
 import GetAppIcon from '@mui/icons-material/GetApp'
-import CircularProgress from '@mui/material/CircularProgress'
+import CenteredCircularProgress from '../CenteredCircularProgress'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import Button from '../mui/Button'
-import Table from '../mui/Table'
-import commonStyles from './common.module.css'
+import { Button } from '@mui/material'
+import { Table } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { i18nDateToLocaleDateString } from '../../i18n/i18n'
+import InfoCard from '../InfoCard'
 
 type FormDefinition = {
   id: string
@@ -43,21 +38,17 @@ const DownloadExcel = () => {
   })
 
   return (
-    <Container maxWidth="md" className={commonStyles.container}>
-      <Card style={{ marginBottom: '24px' }} variant="outlined">
-        <CardContent>
-          <Typography color="textSecondary" gutterBottom>
-            {t('menu.submenu.downloadCatalogs')}
-          </Typography>
-          {t('admin.downloadCatalogs.description')}
-        </CardContent>
-      </Card>
+    <>
+      <InfoCard
+        title="menu.submenu.downloadCatalogs"
+        description="admin.downloadCatalogs.description"
+      />
       {error && <p>{t('errorOccured') + error}</p>}
-      {loading && <CircularProgress />}
+      {loading && <CenteredCircularProgress />}
       {!error && !loading && formDefinitions && (
         <DownloadExcelTable formDefinitions={formDefinitions} />
       )}
-    </Container>
+    </>
   )
 }
 
@@ -123,35 +114,21 @@ const DownloadExcelTable = ({ formDefinitions }: FormDefinitions) => {
                 {i18nDateToLocaleDateString(new Date(formDef.createdAt))}
               </TableCell>
               <TableCell align="center">
-                <div
-                  style={{
-                    height: '5.65rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
-                >
+                <div>
                   {formDef.id === idOfDownloadingForm ? (
                     <>
                       {isExcelError ? (
-                        <p
-                          style={{
-                            whiteSpace: 'pre-wrap',
-                            margin: '0 auto',
-                          }}
-                        >
+                        <p>
                           {t(
                             'admin.downloadCatalogs.downloadFailedIsTheCatalogEmpty'
                           )}
                         </p>
                       ) : (
-                        <CircularProgress style={{ margin: '0 auto' }} />
+                        <CenteredCircularProgress />
                       )}
                     </>
                   ) : (
                     <Button
-                      style={{ margin: '0 auto' }}
-                      variant="contained"
-                      color="primary"
                       endIcon={<GetAppIcon />}
                       onClick={() => {
                         downloadExcel(formDef.id, formDef.label)

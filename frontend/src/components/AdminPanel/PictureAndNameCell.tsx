@@ -1,19 +1,8 @@
 import Avatar from '@mui/material/Avatar'
-import { makeStyles } from '@mui/styles'
-
-const useStyles = makeStyles({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-})
 
 const PictureAndNameCell = ({ name, picture }: any) => {
-  const classes = useStyles()
-
   return (
-    <span className={classes.root}>
+    <span>
       <Avatar alt={name} src={picture} />
       {name}
     </span>

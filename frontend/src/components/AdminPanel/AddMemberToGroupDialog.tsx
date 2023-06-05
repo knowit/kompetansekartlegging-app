@@ -7,7 +7,8 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import FormGroup from '@mui/material/FormGroup'
 import IconButton from '@mui/material/IconButton'
 import Paper from '@mui/material/Paper'
-import { makeStyles } from '@mui/styles'
+import { TableRow } from '@mui/material'
+
 import Switch from '@mui/material/Switch'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -23,10 +24,10 @@ import DialogTitle from '@mui/material/DialogTitle'
 import { useAppSelector } from '../../redux/hooks'
 import { selectUserState } from '../../redux/User'
 import { useTranslation } from 'react-i18next'
-import { dialogStyles } from '../../styles'
-import { CloseIcon } from '../DescriptionTable'
-import Table from '../mui/Table'
-import TableRow from '../mui/TableRow'
+
+import CloseIcon from '@mui/icons-material/Close'
+import { Table } from '@mui/material'
+
 import { getAttribute, not } from './helpers'
 import PictureAndNameCell from './PictureAndNameCell'
 
@@ -43,7 +44,7 @@ const AddMemberToGroupDialog = ({
   members,
 }: any) => {
   const { t } = useTranslation()
-  const style = dialogStyles()
+
   const userState = useAppSelector(selectUserState)
 
   const [showOnlyUnset, setShowOnlyUnset] = useState<boolean>(true)
@@ -84,7 +85,6 @@ const AddMemberToGroupDialog = ({
       open={open}
       onClose={onClose}
       fullWidth
-      maxWidth="sm"
       PaperProps={{
         style: { borderRadius: 30 },
       }}
@@ -96,14 +96,8 @@ const AddMemberToGroupDialog = ({
           display="flex"
           justifyContent="space-between"
         >
-          <span className={style.dialogTitleText}>
-            {t('myGroup.addMembers')}
-          </span>
-          <IconButton
-            className={style.closeButton}
-            onClick={onCancel}
-            size="large"
-          >
+          <span>{t('myGroup.addMembers')}</span>
+          <IconButton onClick={onCancel} size="large">
             <CloseIcon />
           </IconButton>
         </Box>
@@ -115,19 +109,13 @@ const AddMemberToGroupDialog = ({
                 organization: userState.organizationName,
               }) as string
             }
-            variant="outlined"
             value={nameFilter}
-            className={style.searchField}
             onChange={(e: any) => setNameFilter(e.target.value)}
             helperText={t('myGroup.theEmployeeMustHaveSignedInOnce')}
           />
           <FormControlLabel
             control={
-              <Switch
-                checked={showOnlyUnset}
-                onChange={toggleShowOnlyUnset}
-                color="primary"
-              />
+              <Switch checked={showOnlyUnset} onChange={toggleShowOnlyUnset} />
             }
             label={t('myGroup.showOnlyEmployeesWithoutGroupLeader')}
           />
@@ -139,16 +127,16 @@ const AddMemberToGroupDialog = ({
           />
         )}
       </DialogTitle>
-      <DialogContent style={{ maxHeight: '512px' }}>
+      <DialogContent>
         <UsersTable
           users={usersInList}
           selectedUsers={selectedUsers}
           setSelectedUser={onSelect}
         />
       </DialogContent>
-      <DialogActions className={style.alertButtons}>
-        <Button onClick={onClose} className={style.cancelButton}>
-          <span className={style.buttonText}>{t('abort')}</span>
+      <DialogActions>
+        <Button onClick={onClose}>
+          <span>{t('abort')}</span>
         </Button>
         <Button
           onClick={() => {
@@ -156,33 +144,17 @@ const AddMemberToGroupDialog = ({
             onClose()
           }}
           disabled={selectedUsers.length === 0}
-          className={style.confirmButton}
         >
-          <span className={style.buttonText}>{t('add')}</span>
+          <span>{t('add')}</span>
         </Button>
       </DialogActions>
     </Dialog>
   )
 }
 
-const useStylesSelectedUsers = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    listStyle: 'none',
-    padding: theme.spacing(0.5),
-    margin: 0,
-  },
-  chip: {
-    margin: theme.spacing(0.5),
-  },
-}))
-
 const SelectedUsers = ({ selectedUsers, setSelectedUser }: any) => {
-  const classes = useStylesSelectedUsers()
   return (
-    <Paper component="ul" className={classes.root}>
+    <Paper component="ul">
       {selectedUsers.map((user: any) => {
         const nameOrUsername = getNameOrUsername(user)
         return (
@@ -190,7 +162,6 @@ const SelectedUsers = ({ selectedUsers, setSelectedUser }: any) => {
             <Chip
               label={nameOrUsername}
               onDelete={() => setSelectedUser(user)}
-              className={classes.chip}
             />
           </li>
         )
@@ -224,8 +195,8 @@ const UsersTable = ({ users, selectedUsers, setSelectedUser }: any) => {
     selectedUsers.some((u: any) => u.Username === user.Username)
 
   return (
-    <TableContainer component={Paper} style={{ height: '100%' }}>
-      <Table stickyHeader style={{ maxHeight: '100%' }}>
+    <TableContainer component={Paper}>
+      <Table stickyHeader>
         <TableHead>
           <TableRow>
             <TableCell>{t('employee')}</TableCell>

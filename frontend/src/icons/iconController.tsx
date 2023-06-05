@@ -4,14 +4,12 @@ import { ReactComponent as K4 } from '../icons/K - jordber.svg'
 import { ReactComponent as K2 } from '../icons/K - knopp.svg'
 import { ReactComponent as K5 } from '../icons/K - matrixjordber.svg'
 import { ReactComponent as K1 } from '../icons/K - spire.svg'
-
 import { ReactComponent as M4 } from '../icons/M - godt.svg'
 import { ReactComponent as M0 } from '../icons/M - nei.svg'
 import { ReactComponent as M1 } from '../icons/M - nja.svg'
 import { ReactComponent as M3 } from '../icons/M - onsker erfaring.svg'
 import { ReactComponent as M5 } from '../icons/M - perfekt.svg'
 import { ReactComponent as M2 } from '../icons/M - vedbehov.svg'
-
 import { Tooltip } from '@mui/material'
 import i18n from '../i18n/i18n'
 import { Fragment } from 'react'
@@ -108,7 +106,7 @@ const CreateHover = (
       key={key ? key : null}
       title={getIconDescription(knowledge, level)}
     >
-      <div> {element} </div>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>{element}</div>
     </Tooltip>
   )
 }

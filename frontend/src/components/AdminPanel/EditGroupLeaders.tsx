@@ -1,16 +1,11 @@
 import { useState } from 'react'
-
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CircularProgress from '@mui/material/CircularProgress'
-import Container from '@mui/material/Container'
+import CenteredCircularProgress from '../CenteredCircularProgress'
 import IconButton from '@mui/material/IconButton'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import Typography from '@mui/material/Typography'
 import DeleteIcon from '@mui/icons-material/Delete'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { useAppSelector } from '../../redux/hooks'
@@ -19,8 +14,8 @@ import {
   selectUserState,
 } from '../../redux/User'
 import { useTranslation } from 'react-i18next'
-import Button from '../mui/Button'
-import Table from '../mui/Table'
+import { Button } from '@mui/material'
+import { Table } from '@mui/material'
 import AddUserToGroupDialog from './AddUserToGroupDialog'
 import {
   addUserToGroup,
@@ -28,11 +23,11 @@ import {
   listGroupLeadersInOrganization,
   removeUserFromGroup,
 } from './adminApi'
-import commonStyles from './common.module.css'
 import DeleteUserFromGroupDialog from './DeleteUserFromGroupDialog'
 import { getAttribute } from './helpers'
 import PictureAndNameCell from './PictureAndNameCell'
 import useApiGet from './useApiGet'
+import InfoCard from '../InfoCard'
 
 const GroupLeader = (props: any) => {
   const { groupLeader, deleteGroupLeader } = props
@@ -67,7 +62,7 @@ const GroupLeaderTable = ({ groupLeaders, deleteGroupLeader }: any) => {
   const { t } = useTranslation()
 
   return (
-    <TableContainer className={commonStyles.tableContainer}>
+    <TableContainer>
       <Table stickyHeader>
         <TableHead>
           <TableRow>
@@ -137,26 +132,22 @@ const EditGroupLeaders = () => {
   }
 
   return (
-    <Container maxWidth="md" className={commonStyles.container}>
+    <>
       {error && <p>{t('errorOccured') + error}</p>}
-      {loading && <CircularProgress />}
+      {loading && <CenteredCircularProgress />}
       {!error && !loading && groupLeaders && (
         <>
-          <Card style={{ marginBottom: '24px' }} variant="outlined">
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                {t('menu.submenu.editGroupLeaders')}
-              </Typography>
-              {t('admin.editGroupLeaders.description')}
-            </CardContent>
-          </Card>
+          <InfoCard
+            title="menu.submenu.editGroupLeaders"
+            description="admin.editGroupLeaders.description"
+          />
+
           <GroupLeaderTable
             groupLeaders={groupLeaders}
             deleteGroupLeader={deleteGroupLeader}
           />
           <Button
             variant="contained"
-            color="primary"
             startIcon={<PersonAddIcon />}
             onClick={() => setShowAddGroupLeader(true)}
           >
@@ -190,7 +181,7 @@ const EditGroupLeaders = () => {
           onConfirm={addGroupLeaderConfirm}
         />
       )}
-    </Container>
+    </>
   )
 }
 

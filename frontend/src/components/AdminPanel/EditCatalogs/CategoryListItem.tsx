@@ -1,81 +1,18 @@
 import { useState } from 'react'
-
 import Button from '@mui/material/Button'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
 import ListItemText from '@mui/material/ListItemText'
-import { createStyles, makeStyles } from '@mui/styles'
-import TextField from '@mui/material/TextField'
+import { ListItemButton, TextField } from '@mui/material'
+import {
+  Edit as EditIcon,
+  KeyboardArrowUp as KeyboardArrowUpIcon,
+  KeyboardArrowDown as KeyboardArrowDownIcon,
+} from '@mui/icons-material'
 import DeleteIcon from '@mui/icons-material/Delete'
-import EditIcon from '@mui/icons-material/Edit'
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
-
-import { KnowitColors } from '../../../styles'
 import EditActionButtons from './EditActionButtons'
 import { useTranslation } from 'react-i18next'
-
-const useCategoryListItemStyles = makeStyles(() =>
-  createStyles({
-    button: {
-      color: KnowitColors.darkBrown,
-      marginLeft: '16px',
-    },
-    // orderButton: {
-    //     marginLeft: "16px",
-    //     color: "white",
-    // },
-    listItem: {
-      transition: '150ms',
-      cursor: 'pointer',
-      backgroundColor: KnowitColors.beige,
-      padding: '16px',
-      borderRadius: '16px',
-      marginBottom: '10px',
-      '&:hover': {
-        background: KnowitColors.greyGreen,
-      },
-    },
-    listItemEdit: {
-      backgroundColor: KnowitColors.darkBrown,
-      color: 'white',
-      padding: '16px',
-      borderRadius: '16px',
-      marginBottom: '10px',
-      flexWrap: 'wrap',
-    },
-    listItemText: {
-      color: KnowitColors.darkBrown,
-      '& span': {
-        fontWeight: 'bold',
-      },
-    },
-    actions: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    textField: {
-      marginBottom: '16px',
-      '& input': {
-        color: KnowitColors.white,
-      },
-      '& textarea': {
-        color: KnowitColors.white,
-      },
-      '& label': {
-        color: KnowitColors.white,
-      },
-      '& fieldset': {
-        color: KnowitColors.white,
-        border: '2px solid #F3C8BA',
-        borderRadius: '15px',
-        transition: 'border 100ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-      },
-    },
-  })
-)
 
 const CategoryListItem = ({
   category: c,
@@ -92,7 +29,6 @@ const CategoryListItem = ({
   const [editMode, setEditMode] = useState<boolean>(false)
   const [text, setText] = useState<string>(c.text)
   const [description, setDescription] = useState<string>(c.description || '')
-  const classes = useCategoryListItemStyles()
 
   const onSave = async () => {
     try {
@@ -108,16 +44,14 @@ const CategoryListItem = ({
   }
 
   return editMode ? (
-    <ListItem className={classes.listItemEdit}>
+    <ListItem>
       <ListItemText
         primary={
           <>
             <TextField
               fullWidth
               label={t('name')}
-              variant="outlined"
               value={text}
-              className={classes.textField}
               onChange={(e: any) => setText(e.target.value)}
               error={text.length === 0}
               helperText={
@@ -131,14 +65,11 @@ const CategoryListItem = ({
               minRows={4}
               maxRows={6}
               label={t('description')}
-              variant="outlined"
               value={description}
-              className={classes.textField}
               onChange={(e: any) => setDescription(e.target.value)}
             />
           </>
         }
-        className={classes.listItemText}
       />
       <EditActionButtons
         disabled={text.length === 0}
@@ -147,36 +78,21 @@ const CategoryListItem = ({
       />
     </ListItem>
   ) : (
-    <ListItem className={classes.listItem} onClick={onClick}>
-      <ListItemText
-        primary={`${ind + 1}. ${c.text}`}
-        className={classes.listItemText}
-      />
-      <ListItemSecondaryAction className={classes.actions}>
-        <IconButton
-          onClick={() => setEditMode(true)}
-          className={classes.button}
-          size="large"
-        >
+    <ListItem divider>
+      <ButtonGroup fullWidth>
+        <ListItemButton onClick={() => onClick()}>
+          <ListItemText primary={`${ind + 1}. ${c.text}`} />
+        </ListItemButton>
+        <IconButton onClick={() => setEditMode(true)}>
           <EditIcon />
         </IconButton>
-        <IconButton
-          onClick={() => deleteCategory(c)}
-          className={classes.button}
-          size="large"
-        >
+        <IconButton onClick={() => deleteCategory(c)}>
           <DeleteIcon />
         </IconButton>
-        <ButtonGroup
-          disableElevation
-          variant="text"
-          size="small"
-          orientation="vertical"
-        >
+        <ButtonGroup variant="text" orientation="vertical">
           <Button
             size="small"
             onClick={() => moveCategory(c, 1)}
-            className={classes.button}
             disabled={!enableUpdates || ind === 0}
           >
             <KeyboardArrowUpIcon fontSize="small" />
@@ -184,13 +100,12 @@ const CategoryListItem = ({
           <Button
             size="small"
             onClick={() => moveCategory(c, -1)}
-            className={classes.button}
             disabled={!enableUpdates || ind === categories.length - 1}
           >
             <KeyboardArrowDownIcon fontSize="small" />
           </Button>
         </ButtonGroup>
-      </ListItemSecondaryAction>
+      </ButtonGroup>
     </ListItem>
   )
 }

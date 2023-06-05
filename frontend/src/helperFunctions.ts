@@ -5,6 +5,7 @@ import * as customQueries from './graphql/custom-queries'
 import { Query } from './API'
 import { getOrganization } from './graphql/queries'
 import i18n from './i18n/i18n'
+import { useState, useEffect } from 'react'
 
 /*
     Used to call graphql queries and mutations.
@@ -213,3 +214,28 @@ export const getLatestUserFormUpdatedAtForUser = (
       reject(i18n.t('errorWhileFetchingUpdatedAtFromLatestUserForm'))
     }
   })
+
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window
+  return {
+    width,
+    height,
+  }
+}
+
+export function useWindowDimensions() {
+  const [windowDimensions, setWindowDimensions] = useState(
+    getWindowDimensions()
+  )
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions())
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  return windowDimensions
+}

@@ -1,278 +1,244 @@
-import clsx from 'clsx'
 import { QuestionType } from '../API'
 import { QuestionProps, SliderKnowledgeMotivationValues } from '../types'
 import Slider from './Slider'
-import { makeStyles } from '@mui/styles'
-import { KnowitColors } from '../styles'
 import * as Icon from '../icons/iconController'
-import { AlertNotification } from './AlertNotification'
 import { useTranslation } from 'react-i18next'
+import styled from '@emotion/styled'
+import { Tooltip } from '@mui/material'
+import {
+  NotificationsActiveOutlined,
+  PriorityHigh,
+  Update,
+} from '@mui/icons-material'
+import { Millisecs } from '../helperFunctions'
 
-const questionStyleDesktop = makeStyles({
-  root: {
-    marginTop: 10,
-    marginLeft: 10,
-    marginRight: 10,
-    paddingLeft: 20,
-    paddingTop: 5,
-    paddingBottom: 5,
-    paddingRight: 5,
-    backgroundColor: KnowitColors.white,
-    borderRadius: 10,
-    width: '90%',
-    maxWidth: 1200,
-  },
-  topic: {
-    display: 'flex',
-    alignItems: 'center',
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
-  topicText: {},
-  text: {
-    fontSize: 14,
-    paddingTop: 5,
-    paddingBottom: 10,
-  },
-  answerArea: {
-    display: 'grid',
-    gridTemplateColumns: 'max-content auto',
-    width: '92%',
-    marginLeft: '4%',
-    alignItems: 'center',
-  },
-  sliderArea: {
-    marginLeft: 25,
-    padding: 20,
-    width: '90%',
-  },
-  slider: {
-    marginRight: 9,
-    marginLeft: 10,
-  },
-  iconArea: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    height: 30,
-    paddingBottom: 10,
-  },
-  icon: {
-    height: '100%',
-    fill: KnowitColors.darkBrown,
-  },
-  smallBold: {
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  largeBold: {
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
-})
+// Time passed before answers are flagged a's stale and alerts are displayed
+export const staleAnswersLimit: number = Millisecs.THREEMONTHS
 
-const questionStyleMobile = makeStyles({
-  root: {
-    margin: 5,
-    paddingTop: 5,
-    paddingBottom: 20,
-    backgroundColor: KnowitColors.white,
-    borderRadius: 10,
-    width: '100%',
-  },
-  topic: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    display: 'flex',
-  },
-  topicText: {
-    maxWidth: '80%',
-  },
-  text: {
-    fontSize: 14,
-    paddingTop: 5,
-    paddingBottom: 10,
-  },
-  answerArea: {
-    // display: 'flex',
-    // flexWrap: "nowrap",
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  sliderArea: {
-    marginTop: 20,
-    // marginLeft: 30,
-    // marginRight: 20,
-    // padding: 20,
-    width: '100%',
-  },
-  slider: {
-    marginRight: 15,
-    marginLeft: 15,
-  },
-  iconArea: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    height: 30,
-  },
-  icon: {
-    height: '100%',
-    fill: KnowitColors.darkBrown,
-  },
-  smallBold: {
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  largeBold: {
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
-})
+export enum AlertType {
+  Incomplete,
+  Outdated,
+  Multiple,
+}
 
-const Question = ({ ...props }: QuestionProps) => {
-  const question = props.questionAnswer.question
+type StylingProps = {
+  isSmall: boolean
+}
+
+const StyledQuestion = styled.div`
+  .questionInfo {
+    margin-bottom: 10px;
+  }
+
+  h2 {
+    font-size: 1em;
+  }
+  h3 {
+    font-size: 0.8em;
+  }
+  margin-top: 5vh;
+  .questionTopic {
+    display: inline;
+  }
+
+  .sliderContainer {
+    display: grid;
+    ${(props: StylingProps) =>
+      props.isSmall
+        ? 'grid-template-rows: 1fr 1fr'
+        : 'grid-template-columns: 1fr 4fr'};
+    flex-wrap: wrap;
+    align-items: center;
+  }
+`
+
+const Question = ({
+  questionAnswer,
+  setIsCategorySubmitted,
+  isSmall,
+  alerts,
+  sliderValues,
+  setSliderValues,
+}: QuestionProps) => {
+  const question = questionAnswer.question
   const questionId = question.id
   const questionType = question.type || QuestionType.KnowledgeMotivation
   const questionTopic = question.topic
   const questionText = question.text
-  const sliderValues = props.sliderValues.get(questionId)
-
-  const style = props.isMobile ? questionStyleMobile() : questionStyleDesktop()
+  const questionSliderValues = sliderValues.get(questionId)
 
   const sliderChanged = (newValue: number, motivation: boolean) => {
-    props.setIsCategorySubmitted(false)
-    if (sliderValues) {
+    setIsCategorySubmitted(false)
+    if (questionSliderValues) {
       if (questionType === QuestionType.KnowledgeMotivation) {
-        const sv = sliderValues as SliderKnowledgeMotivationValues
+        const sv = questionSliderValues as SliderKnowledgeMotivationValues
         if (motivation) {
-          props.setSliderValues(questionId, {
+          setSliderValues(questionId, {
             knowledge: sv.knowledge || 0,
             motivation: newValue,
           })
         } else {
-          props.setSliderValues(questionId, {
+          setSliderValues(questionId, {
             knowledge: newValue,
             motivation: sv.motivation || 0,
           })
         }
       } else if (questionType === QuestionType.CustomScaleLabels) {
-        props.setSliderValues(questionId, {
+        setSliderValues(questionId, {
           customScaleValue: newValue,
         })
       }
     }
   }
 
-  return (
-    <div className={style.root}>
-      <div className={style.topic}>
-        <div className={style.topicText}>{questionTopic}</div>
-        {props.alerts?.qidMap.has(questionId) && (
-          <AlertNotification
-            /* eslint-disable @typescript-eslint/no-non-null-assertion */
-            type={props.alerts?.qidMap.get(questionId)!.type}
-            message={props.alerts?.qidMap.get(questionId)!.message}
-            /* eslint-enable @typescript-eslint/no-non-null-assertion */
+  const hasAlerts = alerts?.qidMap.has(questionId)
+  let alertType = alerts?.qidMap.get(questionId)?.type
+  let alertMessage = alerts?.qidMap.get(questionId)?.message
+  let badgeContent = <></>
+  if (hasAlerts) {
+    alertType = alerts?.qidMap.get(questionId)?.type
+    alertMessage = alerts?.qidMap.get(questionId)?.message
+    switch (alertType) {
+      case AlertType.Incomplete:
+        badgeContent = (
+          <PriorityHigh
+            color="warning"
+            aria-label={alertMessage}
+            fontSize="inherit"
           />
-        )}
+        )
+        break
+      case AlertType.Outdated:
+        badgeContent = (
+          <Update color="warning" aria-label={alertMessage} fontSize="small" />
+        )
+        break
+      case AlertType.Multiple:
+        badgeContent = (
+          <NotificationsActiveOutlined color="warning" fontSize="small" />
+        )
+        break
+    }
+  }
+
+  return (
+    <StyledQuestion isSmall={isSmall}>
+      <div className="questionInfo">
+        <h2 className="questionTopic">{questionTopic}</h2>
+        {hasAlerts && <Tooltip title={alertMessage}>{badgeContent}</Tooltip>}
+        <div>{questionText}</div>
       </div>
       {questionType === QuestionType.KnowledgeMotivation && (
         <KnowledgeMotivationSliders
-          style={style}
-          sliderValues={sliderValues}
+          sliderValues={questionSliderValues}
           sliderChanged={sliderChanged}
-          isMobile={props.isMobile}
+          isSmall={isSmall}
         />
       )}
       {questionType === QuestionType.CustomScaleLabels && (
         <CustomLabelSlider
           question={question}
-          style={style}
-          sliderValues={sliderValues}
+          sliderValues={questionSliderValues}
           sliderChanged={sliderChanged}
-          isMobile={props.isMobile}
+          isSmall={isSmall}
         />
       )}
-      <div className={style.text}>{questionText}</div>
-    </div>
+    </StyledQuestion>
   )
 }
 
-const KnowledgeMotivationSliders = ({
-  style,
-  sliderValues,
-  sliderChanged,
-  isMobile,
-}: any) => {
+const StyledQuestionContainer = styled.div`
+  .iconContainer {
+    width: 100%;
+    height: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    svg {
+      height: 100%;
+    }
+  }
+
+  .customLabels {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: end;
+
+    [class*='scale'] {
+      max-width: 200px;
+      word-wrap: break-word;
+    }
+
+    .scaleStart {
+      grid-column: 1;
+    }
+    .scaleMiddle {
+      grid-column: 2;
+      text-align: center;
+      justify-self: center;
+    }
+    .scaleEnd {
+      grid-column: 3;
+      text-align: right;
+      justify-self: end;
+    }
+  }
+`
+
+const KnowledgeMotivationSliders = ({ sliderValues, sliderChanged }: any) => {
   const { t } = useTranslation()
 
   return (
-    <div className={style.answerArea}>
-      <div className={clsx(style.largeBold)}>
-        {t('competence').toUpperCase()}
-      </div>
-      <div className={style.sliderArea}>
-        <div className={style.iconArea}>{Icon.GetIcons(true, style.icon)}</div>
-        <div className={style.slider}>
+    <StyledQuestionContainer>
+      <div className="sliderContainer">
+        <h3>{t('competence')}</h3>
+        <div>
+          <div className="iconContainer">{Icon.GetIcons(true)}</div>
           <Slider
             value={sliderValues?.knowledge || -2}
             motivation={false}
             sliderChanged={sliderChanged}
-            isMobile={isMobile}
           />
         </div>
       </div>
-      <div className={clsx(style.largeBold)}>
-        {t('motivation').toUpperCase()}
-      </div>
-      <div className={style.sliderArea}>
-        <div className={style.iconArea}>{Icon.GetIcons(false, style.icon)}</div>
-        <div className={style.slider}>
+      <div className="sliderContainer">
+        <h3>{t('motivation')}</h3>
+        <div>
+          <div className="iconContainer">{Icon.GetIcons(false)}</div>
           <Slider
             value={sliderValues?.motivation || -2}
             motivation={true}
             sliderChanged={sliderChanged}
-            isMobile={isMobile}
           />
         </div>
       </div>
-    </div>
+    </StyledQuestionContainer>
   )
 }
 
 const CustomLabelSlider = ({
-  style,
   sliderValues,
   sliderChanged,
   question,
-  isMobile,
+  isSmall,
 }: any) => {
-  const { t } = useTranslation()
-  const labels = [question.scaleStart, question.scaleEnd].filter((l) => !!l)
   return (
-    <div>
-      <div className={style.answerArea}>
-        <div className={clsx(style.largeBold)}>{t('answer').toUpperCase()}</div>
-        <div className={style.sliderArea}>
-          <div className={style.iconArea}>
-            {labels?.map((l: string) => (
-              <span key={l}>{l}</span>
-            ))}
-          </div>
-          <div className={style.slider}>
-            <Slider
-              value={sliderValues.customScaleValue || -2}
-              motivation={false}
-              sliderChanged={sliderChanged}
-              isMobile={isMobile}
-            />
-          </div>
+    <StyledQuestionContainer>
+      <div>
+        <div className="customLabels">
+          <div className="scaleStart">{question.scaleStart}</div>
+          {!isSmall && (
+            <div className="scaleMiddle">{question.scaleMiddle}</div>
+          )}
+          <div className="scaleEnd">{question.scaleEnd}</div>
         </div>
+        <Slider
+          value={sliderValues.customScaleValue || -2}
+          motivation={false}
+          sliderChanged={sliderChanged}
+        />
       </div>
-    </div>
+    </StyledQuestionContainer>
   )
 }
 

@@ -1,18 +1,13 @@
 import { useEffect, useState } from 'react'
 
 import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CircularProgress from '@mui/material/CircularProgress'
+import CenteredCircularProgress from '../CenteredCircularProgress'
 import Collapse from '@mui/material/Collapse'
-import Container from '@mui/material/Container'
 import IconButton from '@mui/material/IconButton'
-import { makeStyles } from '@mui/styles'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
-import Typography from '@mui/material/Typography'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -21,9 +16,9 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import { getLatestUserFormUpdatedAtForUser } from '../../helperFunctions'
 import { useAppSelector } from '../../redux/hooks'
 import { selectUserState } from '../../redux/User'
-import Button from '../mui/Button'
-import Table from '../mui/Table'
-import TableRow from '../mui/TableRow'
+import { Button } from '@mui/material'
+import { Table } from '@mui/material'
+import TableRow from '@mui/material/TableRow'
 import AddUserToGroupDialog from './AddUserToGroupDialog'
 import {
   listAllUsersInOrganization as listAllAvailableUsersInOrganization,
@@ -31,7 +26,7 @@ import {
   listGroupLeadersInOrganization,
 } from './adminApi'
 import { listAllFormDefinitionsForLoggedInUser } from './catalogApi'
-import commonStyles from './common.module.css'
+
 import DeleteGroupDialog from './DeleteGroupDialog'
 import DeleteUserFromGroupDialog from './DeleteUserFromGroupDialog'
 import GroupMembers from './GroupMembers'
@@ -49,16 +44,8 @@ import { compareByCreatedAt, compareByName, getAttribute } from './helpers'
 import PictureAndNameEditCell from './PictureAndNameEditCell'
 import { useTranslation } from 'react-i18next'
 import useApiGet from './useApiGet'
-import { KnowitColors } from '../../styles'
-
-const useRowStyles = makeStyles({
-  root: {
-    '& > *': {
-      borderBottom: 'unset',
-    },
-  },
-  editIcon: {},
-})
+import InfoCard from '../InfoCard'
+import { KnowitColors } from '../../styleconstants'
 
 const Group = ({
   addMembersToGroup,
@@ -80,17 +67,16 @@ const Group = ({
   const picture = hasGroupLeader
     ? getAttribute(group.groupLeader, 'picture')
     : undefined
-  const classes = useRowStyles()
 
   return (
     <>
-      <TableRow className={classes.root} selected={open}>
+      <TableRow selected={open}>
         <TableCell>
           <IconButton size="small" onClick={() => setOpenId(group.id)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell align="right">
+        <TableCell>
           <PictureAndNameEditCell
             name={name}
             picture={picture}
@@ -98,7 +84,7 @@ const Group = ({
           />
         </TableCell>
         <TableCell>{group.members.length}</TableCell>
-        <TableCell align="right">
+        <TableCell>
           <Button
             endIcon={<DeleteIcon />}
             onClick={() => deleteGroup(group)}
@@ -109,12 +95,11 @@ const Group = ({
         </TableCell>
       </TableRow>
       <TableRow selected={open}>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={5}>
+        <TableCell colSpan={5}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
-              <Typography variant="h6" gutterBottom>
-                {t('admin.editGroups.members')}
-              </Typography>
+              {t('admin.editGroups.members')}
+
               <GroupMembers
                 allUsers={users}
                 members={group.members}
@@ -166,10 +151,7 @@ const GroupsTable = ({
     .sort((g1: any, g2: any) => compareByName(g1?.groupLeader, g2?.groupLeader))
 
   return (
-    <TableContainer
-      className={commonStyles.tableContainer}
-      style={{ overflowX: 'hidden' }}
-    >
+    <TableContainer style={{ overflowX: 'hidden' }}>
       <Table>
         <TableHead>
           <TableRow>
@@ -383,19 +365,15 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
   ])
 
   return (
-    <Container maxWidth="md" className={commonStyles.container}>
+    <>
       {isError && <p>{t('errorOccured') + isError}</p>}
-      {isLoading && <CircularProgress />}
+      {isLoading && <CenteredCircularProgress />}
       {!isError && !isLoading && groups && (
         <>
-          <Card style={{ marginBottom: '24px' }} variant="outlined">
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                {t('menu.submenu.editGroups')}
-              </Typography>
-              {t('admin.editGroups.description')}
-            </CardContent>
-          </Card>
+          <InfoCard
+            title="menu.submenu.editGroups"
+            description="admin.editGroups.description"
+          />
           <GroupsTable
             groups={groups}
             deleteGroup={deleteGroup}
@@ -409,9 +387,7 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
           />
           <Button
             variant="contained"
-            color="primary"
             startIcon={<AddIcon />}
-            style={{ marginTop: '48px' }}
             onClick={() => setShowAddGroup(true)}
           >
             {t('admin.editGroups.createNewGroup')}
@@ -464,7 +440,7 @@ const EditGroups = ({ showLastAnsweredAt }: any) => {
           onConfirm={addGroupConfirm}
         />
       )}
-    </Container>
+    </>
   )
 }
 
