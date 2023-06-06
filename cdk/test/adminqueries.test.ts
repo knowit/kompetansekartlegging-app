@@ -18,6 +18,7 @@ import {
   olaQuestionAnswersInTestData,
   olaUserFormsInTestData,
   testUserOla,
+  testUserWithoutAnswers,
 } from './testdata/dynamodb.items'
 const supertest = require('supertest')
 
@@ -46,7 +47,7 @@ afterAll(async () => {
 beforeEach(async () => {
   await emptyAllDatabaseTables()
   await Promise.all([
-    fillDatabaseTable(userTableName, [testUserOla]),
+    fillDatabaseTable(userTableName, [testUserOla, testUserWithoutAnswers]),
     fillDatabaseTable(userFormTableName, olaUserFormsInTestData),
     fillDatabaseTable(questionAnswerTableName, olaQuestionAnswersInTestData),
   ])
@@ -92,9 +93,14 @@ const assertUserWasAnonymizedProperly = async (username: string) => {
   expect(userNotFound).toBe(true)
 }
 
-test('DynamoDB has all of testUserOlas items', async () => {
-  const userFormsOla = await getUserFormsForUser(testUserOla.id)
+test('DynamoDB has expected items', async () => {
+  const [userFormsOla, userFormsForUserWithoutAnswers] = await Promise.all([
+    getUserFormsForUser(testUserOla.id),
+    getUserFormsForUser(testUserWithoutAnswers.id),
+  ])
+
   expect(userFormsOla.Count).toBe(olaUserFormsInTestData.length)
+  expect(userFormsForUserWithoutAnswers.Count).toBe(0)
 
   const questionAnswersOla = await Promise.all(
     userFormsOla.Items!.map(async userForm => {
@@ -203,4 +209,19 @@ test('Anonymize partially anonymized user', async () => {
   expect(olaAnonymizedQuestionAnswersInDb.Count).toBe(
     olaQuestionAnswersInTestData.length
   )
+})
+
+test('Anonymize user without any answers', async () => {
+  await createCognitoUser(testUserWithoutAnswers.id)
+
+  // Anonymize testUserWithoutAnswers
+  await request
+    .post('/anonymizeUser')
+    .send({
+      username: testUserWithoutAnswers.id,
+      orgId: testUserWithoutAnswers.organizationID,
+    })
+    .expect(200)
+
+  await assertUserWasAnonymizedProperly(testUserWithoutAnswers.id)
 })

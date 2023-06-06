@@ -23,7 +23,20 @@ export const testUserAlex = {
   updatedAt: '2021-03-01T08:00:00.605Z',
 }
 
-export const testUsers = [testUserOla, testUserKari, testUserAlex]
+export const testUserWithoutAnswers = {
+  id: 'withoutanswers@knowit.no',
+  groupID: '999',
+  organizationID: 'myOrganization',
+  createdAt: '2020-03-01T08:00:00.605Z',
+  updatedAt: '2020-03-01T08:00:00.605Z',
+}
+
+export const testUsers = [
+  testUserOla,
+  testUserKari,
+  testUserAlex,
+  testUserWithoutAnswers,
+]
 
 // UserForms
 export const testUserOlaLastUserFormUpdatedAt = '2090-02-01T12:00:00.605Z'
