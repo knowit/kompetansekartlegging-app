@@ -48,6 +48,10 @@ const AdminMenu = ({
       key: SubmenuCategory.DOWNLOAD_CATALOGS,
       text: t('menu.submenu.downloadCatalogs'),
     },
+    {
+      key: SubmenuCategory.ANONYMIZE_USERS,
+      text: t('menu.submenu.anonymizeUsers'),
+    },
     // refactor this one out once the whole app uses routing
     {
       key: SubmenuCategory.HIDDEN,

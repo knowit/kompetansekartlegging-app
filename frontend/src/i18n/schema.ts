@@ -82,6 +82,7 @@ export type LanguageSchema = {
         editAdministrators: string
         editCatalogs: string
         downloadCatalogs: string
+        anonymizeUsers: string
         editOrganizations: string
         editSuperAdministrators: string
       }
@@ -240,6 +241,12 @@ export type LanguageSchema = {
         downloadFailedIsTheCatalogEmpty: string
         download: string
       }
+      anonymizeUsers: {
+        description: string
+        anonymize: string
+        anonymizeNameQuestion: string
+        areYouSureYouWantToAnonymizeName: string
+      }
     }
     superAdmin: {
       identifierAttribute: string
@@ -279,6 +286,7 @@ export type LanguageSchema = {
         couldNotAddUserToGroup: string
         couldNotGetAListOfUsersInGroup: string
         couldNotGetAListOfAllUsers: string
+        couldNotAnonymizeName: string
       }
     }
     catalogApi: {

@@ -10,3 +10,11 @@ done
 
 echo "Running python tests..."
 pytest
+
+echo "Installing ./cdk dependencies..."
+cd cdk && npm install -s
+echo "Installing ./cdk/backend/function/AdminQueries dependencies..."
+cd backend/function/AdminQueries && npm install -s
+
+echo "Running ./cdk tests..."
+cd ../../../ && npm run test

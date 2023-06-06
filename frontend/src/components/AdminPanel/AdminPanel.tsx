@@ -4,6 +4,7 @@ import EditAdmins from './EditAdmins'
 import EditCatalogsRouter from './EditCatalogsRouter'
 import EditGroupLeaders from './EditGroupLeaders'
 import EditGroups from './EditGroups'
+import AnonymizeUsers from './AnonymizeUsers'
 
 type AdminPanelProps = {
   activeSubmenuItem: string
@@ -16,6 +17,7 @@ enum SubmenuCategory {
   EDIT_ADMINS = 'editAdmins',
   EDIT_CATALOGS = 'editCatalogs',
   DOWNLOAD_CATALOGS = 'downloadCatalogs',
+  ANONYMIZE_USERS = 'anonymizeUsers',
 }
 
 const AdminPanel = ({ activeSubmenuItem }: AdminPanelProps) => {
@@ -33,6 +35,9 @@ const AdminPanel = ({ activeSubmenuItem }: AdminPanelProps) => {
       )}
       {activeSubmenuItem === SubmenuCategory.DOWNLOAD_CATALOGS && (
         <DownloadExcel />
+      )}
+      {activeSubmenuItem === SubmenuCategory.ANONYMIZE_USERS && (
+        <AnonymizeUsers />
       )}
     </div>
   )

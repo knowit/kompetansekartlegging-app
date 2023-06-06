@@ -84,6 +84,7 @@ export const Norwegian: LanguageSchema = {
         editAdministrators: 'Rediger administratorer',
         editCatalogs: 'Rediger kataloger',
         downloadCatalogs: 'Last ned kataloger',
+        anonymizeUsers: 'Anonymiser brukere',
         editOrganizations: 'Rediger organisasjoner',
         editSuperAdministrators: 'Rediger super-administratorer',
       },
@@ -241,7 +242,13 @@ export const Norwegian: LanguageSchema = {
         created: 'Opprettet',
         downloadFailedIsTheCatalogEmpty: 'Nedlasting feilet.\nEr katalogen tom?',
         download: 'Last ned'
-      }
+      },
+      anonymizeUsers: {
+        description: 'På denne siden kan du anonymisere all data tilknyttet en person.',
+        anonymize: 'Anonymiser',
+        anonymizeNameQuestion: 'Anonymiser {{name}}?',
+        areYouSureYouWantToAnonymizeName: 'Dette er en ikke-reverserbar handling! Er du sikker på at du har lyst til å anonymisere {{name}}? Personen vil ikke lengre kunne knyttes opp mot sine svar.',
+      },
     },
     superAdmin: {
       identifierAttribute: 'Identifikatorattributt',
@@ -280,7 +287,8 @@ export const Norwegian: LanguageSchema = {
         couldNotRemoveUserFromGroup: "Kunne ikke fjerne brukeren '{{username}}' fra gruppen '{{groupname}}'.",
         couldNotAddUserToGroup: "Kunne ikke legge til brukeren '{{username}}' i gruppen '{{groupname}}'.",
         couldNotGetAListOfUsersInGroup: "Kunne ikke hente liste over medlemmer i gruppen '{{groupname}}'.",
-        couldNotGetAListOfAllUsers: 'Kunne ikke hente liste over alle brukere.'
+        couldNotGetAListOfAllUsers: 'Kunne ikke hente liste over alle brukere.',
+        couldNotAnonymizeName: 'Kunne ikke anonymisere {{name}}.',
       }
     },
     catalogApi: {

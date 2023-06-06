@@ -230,6 +230,18 @@ type User
     orgGroupLeaders: String!
 }
 
+type AnonymizedUser
+    @model
+    @auth(
+        rules: [
+            { allow: groups, groupsField: "orgAdmins" }
+        ]
+    ) {
+    id: ID!
+    organizationID: ID!
+    lastAnswerAt: AWSDateTime!
+}
+
 type CreateQuestionAnswerResult {
     status: Int!
     error: String

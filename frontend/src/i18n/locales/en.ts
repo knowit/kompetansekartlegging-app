@@ -84,6 +84,7 @@ export const English: LanguageSchema = {
         editAdministrators: 'Edit administrators',
         editCatalogs: 'Edit catalogs',
         downloadCatalogs: 'Download catalogs',
+        anonymizeUsers: 'Anonymize users',
         editOrganizations: 'Edit organizations',
         editSuperAdministrators: 'Edit super-administrators',
       },
@@ -241,7 +242,13 @@ export const English: LanguageSchema = {
         created: 'Created',
         downloadFailedIsTheCatalogEmpty: 'Download failed.\nIs the catalog empty?',
         download: 'Download'
-      }
+      },
+      anonymizeUsers: {
+        description: 'On this page you can anonymize all data associated with a person.',
+        anonymize: 'Anonymize',
+        anonymizeNameQuestion: 'Anonymize {{name}}?',
+        areYouSureYouWantToAnonymizeName: 'This is a non-reversible action! Are you sure you want to anonymize {{name}}? It will no longer be possible to connect the person to their answers.',
+      },
     },
     superAdmin: {
       identifierAttribute: 'Identifier Attribute',
@@ -280,7 +287,8 @@ export const English: LanguageSchema = {
         couldNotRemoveUserFromGroup: "Could not remove user '{{username}}' from group '{{groupname}}'.",
         couldNotAddUserToGroup: "Could not add user '{{username}}' to group '{{groupname}}'.",
         couldNotGetAListOfUsersInGroup: "Could not get a list of users in group '{{groupname}}'.",
-        couldNotGetAListOfAllUsers: 'Could not get a list of all users.'
+        couldNotGetAListOfAllUsers: 'Could not get a list of all users.',
+        couldNotAnonymizeName: 'Could not anonymize {{name}}.',
       }
     },
     catalogApi: {

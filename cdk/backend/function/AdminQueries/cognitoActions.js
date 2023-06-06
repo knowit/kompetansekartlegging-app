@@ -14,8 +14,19 @@
 
 const { CognitoIdentityServiceProvider } = require('aws-sdk')
 
-const cognitoIdentityServiceProvider = new CognitoIdentityServiceProvider()
+const isTest = process.env.JEST_WORKER_ID
 const userPoolId = process.env.USERPOOL
+const cognitoIdentityServiceProvider = new CognitoIdentityServiceProvider({
+  ...(isTest && {
+    region: 'local',
+    endpoint: 'http://localhost:9229',
+    credentials: {
+      accessKeyId: 'foo',
+      secretAccessKey: 'foo',
+    },
+    UserPoolId: userPoolId,
+  }),
+})
 
 async function addUserToGroup(username, groupname) {
   const params = {
@@ -124,13 +135,24 @@ async function enableUser(username) {
   }
 }
 
-async function getUser(username) {
+async function anonymizeUser(username) {
+  const params = {
+    UserPoolId: userPoolId,
+    Username: username,
+  }
+  console.log('Finally deleting user from Cognito')
+  await cognitoIdentityServiceProvider.adminDeleteUser(params).promise()
+}
+
+async function getUser(username, isLoggingEnabled = true) {
   const params = {
     UserPoolId: userPoolId,
     Username: username,
   }
 
-  console.log(`Attempting to retrieve information for ${username}`)
+  if (isLoggingEnabled) {
+    console.log(`Attempting to retrieve information for ${username}`)
+  }
 
   try {
     const result = await cognitoIdentityServiceProvider
@@ -217,7 +239,6 @@ async function listGroupsForUser(username, Limit, NextToken) {
 
     return result
   } catch (err) {
-    console.log(err)
     throw err
   }
 }
@@ -231,16 +252,10 @@ async function listUsersInGroup(groupname, Limit, NextToken) {
   }
 
   console.log(`Attempting to list users in group ${groupname}`)
-
-  try {
-    const result = await cognitoIdentityServiceProvider
-      .listUsersInGroup(params)
-      .promise()
-    return result
-  } catch (err) {
-    console.log(err)
-    throw err
-  }
+  const result = await cognitoIdentityServiceProvider
+    .listUsersInGroup(params)
+    .promise()
+  return result
 }
 
 // Signs out from all devices, as an administrator.
@@ -266,16 +281,37 @@ async function signUserOut(username) {
   }
 }
 
+async function addUserAttributeToUser(username, attributeName, attributeValue) {
+  const params = {
+    UserPoolId: userPoolId,
+    Username: username,
+    UserAttributes: [
+      {
+        Name: attributeName,
+        Value: attributeValue,
+      },
+    ],
+  }
+
+  console.log(`Attempting to add attribute ${attributeName} to ${username}`)
+
+  await cognitoIdentityServiceProvider
+    .adminUpdateUserAttributes(params)
+    .promise()
+}
+
 module.exports = {
   addUserToGroup,
   removeUserFromGroup,
   confirmUserSignUp,
   disableUser,
   enableUser,
+  anonymizeUser,
   getUser,
   listUsers,
   listGroups,
   listGroupsForUser,
   listUsersInGroup,
   signUserOut,
+  addUserAttributeToUser,
 }

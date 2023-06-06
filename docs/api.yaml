@@ -36,6 +36,14 @@ paths:
                 - bruker
             summary: Returner en liste av brukere
             operationId: getUsers
+            description: Numeric ID of the user to get
+            parameters:
+                - name: is_anonymized
+                  in: query
+                  description: Om listen av brukere skal inkludere anonymiserte brukere.
+                  schema:
+                      type: string
+                      example: true
             responses:
                 "200":
                     description: OK
@@ -240,6 +248,13 @@ paths:
                 - svar
             summary: Returner de nyeste svarene til alle ansatte for nyeste katalog.
             operationId: getAnswers
+            parameters:
+                - name: is_anonymized
+                  in: query
+                  description: Om listen av svar skal inkludere de fra anonymiserte brukere.
+                  schema:
+                      type: string
+                      example: true
             responses:
                 "200":
                     description: OK

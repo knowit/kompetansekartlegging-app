@@ -27,6 +27,7 @@ const crypto = require('crypto')
 const {
   getNewestFormDef,
   getAllUsers,
+  getAnonymizedUsers,
   getAllCategories,
   getAllQuestionForFormDef,
   getAnswersForUser,
@@ -99,8 +100,13 @@ router.get('/answers', async (req, res) => {
   const questionMap = mapFromArray(allQuestionsWithCategory, 'id')
 
   // Find all users.
-  const allUsers = await getAllUsers(organization_ID)
+  let allUsers = await getAllUsers(organization_ID)
   //console.log('allUsers:',allUsers);
+
+  if (req.query.include_anonymized === 'true') {
+    const anonymizedUsers = await getAnonymizedUsers(organization_ID)
+    allUsers = allUsers.concat(anonymizedUsers)
+  }
 
   // Find answers for the current form definition for each user.
   const userAnswers = await Promise.all(
@@ -167,15 +173,25 @@ router.get('/answers/:username/newest', async (req, res) => {
 router.get('/users', async (req, res) => {
   const organization_ID = await getOrganizationID()
 
-  const allUsers = await getAllUsers(organization_ID)
-  return res.json(
-    allUsers
-      .filter(u => u.Enabled)
-      .map(u => ({
-        username: u.Username,
-        attributes: u.Attributes,
-      }))
-  )
+  let allUsers = await getAllUsers(organization_ID)
+
+  allUsers = allUsers
+    .filter(u => u.Enabled)
+    .map(u => ({
+      username: u.Username,
+      attributes: [{ Name: 'isAnonymized', Value: false }, ...u.Attributes],
+    }))
+
+  if (req.query.include_anonymized === 'true') {
+    let anonymizedUsers = await getAnonymizedUsers(organization_ID)
+    anonymizedUsers = anonymizedUsers.map(u => ({
+      username: u.Username,
+      attributes: u.Attributes,
+    }))
+    allUsers = allUsers.concat(anonymizedUsers)
+  }
+
+  return res.json(allUsers)
 })
 
 // returns: list of all form definitions

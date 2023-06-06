@@ -27,6 +27,7 @@ const GROUP_TABLE_NAME = TableMap['GroupTable']
 // process.env.API_KOMPETANSEKARTLEGGIN_GROUPTABLE_NAME;
 const USER_TABLE_NAME = TableMap['UserTable']
 // process.env.API_KOMPETANSEKARTLEGGIN_GROUPTABLE_NAME;
+const ANON_USER_TABLE_NAME = TableMap['AnonymizedUserTable']
 
 const organizationFilterParameter = ':oid'
 const organizationFilterExpression =
@@ -65,6 +66,8 @@ const getAnswersForUserForm = async userFormID => {
 // Get answers for a user given a form definition id.
 const getAnswersForUser = async (user, formDefinitionID, questionMap) => {
   const email = getUserAttribute(user, 'email')
+  const isAnonymized = getUserAttribute(user, 'isAnonymized') != null
+
   const username = user.Username
 
   let allUserForms = await docClient
@@ -90,6 +93,7 @@ const getAnswersForUser = async (user, formDefinitionID, questionMap) => {
       username,
       email,
       answers: [],
+      isAnonymized: isAnonymized,
     }
   }
 
@@ -107,6 +111,7 @@ const getAnswersForUser = async (user, formDefinitionID, questionMap) => {
     formDefinitionID,
     updatedAt: lastUserForm.updatedAt,
     answers: answersWithQuestions,
+    isAnonymized: isAnonymized,
   }
 }
 
@@ -231,8 +236,37 @@ const getAllUsers = async organization_ID => {
       ),
     }
   })
-
   return filteredUsersWithoutOrganizationID
+}
+
+const getAnonymizedUsers = async organization_ID => {
+  const anonymized_users_res = await docClient
+    .scan({
+      TableName: ANON_USER_TABLE_NAME,
+      FilterExpression: organizationFilterExpression,
+      ExpressionAttributeValues: {
+        [organizationFilterParameter]: organization_ID,
+      },
+    })
+    .promise()
+    .catch(e => {
+      console.log('Error fetching anonymized users: ' + e)
+      return []
+    })
+
+  // Mock AWS-styled result
+  const anonymized_users = anonymized_users_res.Items.map(anon => {
+    return {
+      Enabled: true,
+      Username: anon.id,
+      Attributes: [
+        { Name: 'email', Value: anon.id },
+        { Name: 'isAnonymized', Value: true },
+      ],
+    }
+  })
+
+  return anonymized_users
 }
 
 // Find all form definitions.
@@ -295,6 +329,7 @@ module.exports = {
   getNewestFormDef,
   getAllFormDefs,
   getAllUsers,
+  getAnonymizedUsers,
   getAllCategories,
   getAllQuestionForFormDef,
   getAnswersForUserForm,
