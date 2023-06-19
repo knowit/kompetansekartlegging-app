@@ -82,3 +82,7 @@ When deploying to both the dev and production environments, a bot will post to a
 # API docs
 
 Documentation for the external API can be found at this projects Github Pages (`kompetansekartlegging-app/docs`) or at this URL: https://apidocs.kompetanse.knowit.no
+
+## Testing With Postman
+
+Look at [POSTMAN.md](https://github.com/knowit/kompetansekartlegging-app/blob/main/postman/POSTMAN.md) for instructions.

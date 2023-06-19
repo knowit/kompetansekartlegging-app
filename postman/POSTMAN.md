@@ -19,7 +19,7 @@ The `env-app-client-id` can be found in the AWS Management Console under:
 
 At the bottom you will see the app client list where the `Client ID` will be listed.
 
-For the sandbox name, that is the one created when setting up the project locally. This should have been stored as an env variable in `cdk/cdk.context.json`
+For the `env-sandbox-name`, that is the one created when setting up the project locally, - the environment name. This should have been stored as an env variable in `cdk/cdk.context.json`
 
 The `env-gateway-id` can be found under API Gateway in the AWS Management Console. It is the `id` of the ExpressLambda API.
 
