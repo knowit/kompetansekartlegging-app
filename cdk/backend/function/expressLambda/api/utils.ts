@@ -37,6 +37,7 @@ export const getRoles = (req: Request): string[] =>
         return role[1].toLocaleLowerCase()
       }
     })
+    .filter((r: string | undefined) => r !== undefined)
 
 /**
  * Returns the organization for the user based on the request object provided.

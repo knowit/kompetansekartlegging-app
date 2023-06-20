@@ -1,9 +1,12 @@
 import express from 'express'
+import { Roles, requireRoles } from '../../middlewares/roles'
 import { getUser } from '../cognito/cognitoActions'
 import { getUserOnRequest } from '../utils'
 import GroupLeader from './queries'
 import { GetByUsername } from './types'
 const router = express.Router()
+
+router.use(requireRoles([Roles.GROUP_LEADER]))
 
 router.get('/mygroup', async (req, res, next) => {
   try {
