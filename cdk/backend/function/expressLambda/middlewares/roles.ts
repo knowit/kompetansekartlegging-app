@@ -27,7 +27,7 @@ export const requireRoles = (roles: Roles[], requireAll: boolean = false) => {
       }
     }
 
-    console.log('🚫 Access denied')
-    res.status(403).send(`🚫 Access Denied: ${roles} required`)
+    console.log('🚫 Access denied.')
+    res.status(403).send(`🚫 Access Denied: ${roles} required.`)
   }
 }
