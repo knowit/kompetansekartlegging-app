@@ -2,7 +2,7 @@ import express from 'express'
 import { getUser } from '../cognito/cognitoActions'
 import { getUserOnRequest } from '../utils'
 import GroupLeader from './queries'
-import { GetByUsername, GetByUsernameAndOrganizationId } from './types'
+import { GetByUsername } from './types'
 const router = express.Router()
 
 router.get('/mygroup', async (req, res, next) => {
@@ -46,7 +46,7 @@ router.get('/mygroup', async (req, res, next) => {
 })
 
 router.get<unknown, unknown, unknown, GetByUsername>(
-  '/lastanswerat/:username',
+  '/last-answer-at',
   async (req, res, next) => {
     try {
       const { username } = req.query
