@@ -4,3 +4,4 @@ numpy
 math
 uuid
 re
+botocore
