@@ -1,19 +1,33 @@
 import { NextFunction, Request, Response } from 'express'
 import { getRoles } from '../api/utils'
 
-export enum Role {
+export enum Roles {
   ADMIN = 'admin',
   GROUP_LEADER = 'groupleader',
 }
 
-export const requireRole = (role: Role) => {
+export const requireRole = (roles: Roles[], requireAll: boolean = false) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    const userRoles = getRoles(req)
+    console.log('🔒 Protected. Required roles: ', roles.join(', '))
 
-    if (userRoles.includes(role)) {
-      next()
-    } else {
-      res.status(403).send(`Access Denied: ${role} required`)
+    const userRoles = getRoles(req)
+    console.log(
+      '🔑 User roles: ',
+      userRoles.length >= 1 ? userRoles.join(', ') : 'No roles.'
+    )
+
+    if (userRoles) {
+      const hasRoles = requireAll
+        ? roles.every(r => userRoles.includes(r))
+        : roles.some(r => userRoles.includes(r))
+
+      if (hasRoles) {
+        next()
+        return
+      }
     }
+
+    console.log('🚫 Access denied')
+    res.status(403).send(`🚫 Access Denied: ${roles} required`)
   }
 }
