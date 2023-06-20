@@ -156,8 +156,8 @@ async function getUser(username: UsernameType) {
 }
 
 async function listUsers(
-  Limit: QueryLimitType,
-  PaginationToken: SearchPaginationTokenType
+  Limit?: QueryLimitType,
+  PaginationToken?: SearchPaginationTokenType
 ) {
   const params = {
     UserPoolId: userPoolId!,

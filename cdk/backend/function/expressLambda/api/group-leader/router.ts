@@ -3,6 +3,7 @@ import { Roles, requireRoles } from '../../middlewares/roles'
 import {
   addGroupIdToUserAttributes,
   getUser,
+  listUsers,
   removeGroupIdFromUserAttributes,
 } from '../cognito/cognitoActions'
 import Group from '../groups/queries'
@@ -22,26 +23,48 @@ router.get('/mygroup', async (req, res, next) => {
       throw new Error('No username found on request')
     }
 
-    const membersInMyGroup = await GroupLeader.myGroupMembers({ username })
+    const myGroupId = await GroupLeader.myGroup({ username })
 
-    if (membersInMyGroup.status !== 'ok') {
+    if (myGroupId.status !== 'ok' && !myGroupId.data?.id) {
       throw new Error('Could not fetch group members')
     }
 
-    // Annotate the members with Cognito User Pool data
-    const annotatedMembers = await Promise.all(
-      membersInMyGroup.data.map(
-        async (member: {
-          username: string
-          group_id: string
-          group_leader_username: string
-        }) => {
-          const { username } = member
-          const { UserAttributes } = await getUser(username)
-          return { ...member, cognitoAttributes: UserAttributes }
-        }
-      )
+    console.log('My group id: ', myGroupId.data?.id)
+
+    const allUsers = await listUsers()
+    console.log('All users: ', allUsers)
+    const members = allUsers.Users?.filter(
+      user =>
+        user.Attributes?.find(attribute => attribute.Name === 'custom:groupId')
+          ?.Value == myGroupId!.data!.id
     )
+
+    console.log('Members: ', members)
+
+    const annotatedMembers = members?.map(member => {
+      const { Username, Attributes, ...rest } = member
+      return { ...rest, username: Username, cognitoAttributes: Attributes }
+    })
+
+    // .then(response =>
+    //   response.Users?.filter(
+    //     user =>
+    //       user.Attributes?.find(
+    //         attribute =>
+    //           attribute.Name === 'custom:groupId' &&
+    //           attribute.Value === myGroupId.data
+    //       ) !== undefined
+    //   )
+    // )
+    // .then(groupMembers =>
+    //   groupMembers?.map(member => {
+    //     const username = member.Username
+    //     const cognitoAttributes = member.Attributes
+    //     return { ...member, username, cognitoAttributes }
+    //   })
+    // )
+
+    console.log('Annotated members: ', annotatedMembers)
 
     res.status(200).json({
       status: 'ok',

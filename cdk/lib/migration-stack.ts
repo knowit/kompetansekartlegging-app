@@ -62,7 +62,7 @@ export class MigrationStack extends Stack {
         SOURCE_NAME: 'KompetanseStack',
         USERPOOL: props.userPoolId,
       },
-      timeout: Duration.seconds(25),
+      timeout: Duration.seconds(500),
       layers: [pandasLayer],
       memorySize: 2048,
     })

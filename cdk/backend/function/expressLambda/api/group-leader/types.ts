@@ -9,3 +9,7 @@ export interface GetByUsernameAndOrganizationId extends GetByUsername {
 export interface IUsername {
   username: string
 }
+
+export interface IMyGroupId {
+  id: string
+}
