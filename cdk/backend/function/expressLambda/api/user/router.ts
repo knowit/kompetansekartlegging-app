@@ -63,7 +63,18 @@ router.get('/answers-by-categories', async (req, res, next) => {
     res.status(200).json({
       status: 'ok',
       message: `🚀 ~ > All question answers by categories.`,
-      data: output,
+      data: output.sort((a, b) => {
+        if (a.index === null && b.index === null) {
+          return 0
+        }
+        if (a.index === null) {
+          return -1
+        }
+        if (b.index === null) {
+          return 1
+        }
+        return a.index - b.index
+      }),
     })
   } catch (err) {
     console.error(err)
