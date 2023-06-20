@@ -4,6 +4,7 @@ import { sqlQuery } from '../../utils/sql'
 import { createTimestampNow } from '../utils'
 import {
   DeleteQuestionAnswerInput,
+  GetQuestionAnswerByUserAndQuestionInput,
   GetQuestionAnswerInput,
   QuestionAnswer,
   QuestionAnswerInput,
@@ -33,6 +34,35 @@ const getQuestionAnswer = async ({ id }: GetQuestionAnswerInput) => {
 
   return await sqlQuery<QuestionAnswer>({
     message: `🚀 ~ > Question Answer with id: ${id}`,
+    query,
+    parameters,
+  })
+}
+
+const getQuestionAnswerByUserAndQuestion = async ({
+  user_username,
+  question_id,
+}: GetQuestionAnswerByUserAndQuestionInput) => {
+  const parameters: SqlParameter[] = [
+    {
+      name: 'user_username',
+      value: {
+        stringValue: user_username,
+      },
+    },
+    {
+      name: 'questionid',
+      value: {
+        stringValue: question_id,
+      },
+      typeHint: TypeHint.UUID,
+    },
+  ]
+  console.log('🚀 ~ parameters:', parameters)
+  const query = `SELECT * FROM question_answer WHERE user_username = :user_username AND question_id = :questionid`
+
+  return await sqlQuery<QuestionAnswer>({
+    message: `🚀 ~ > Question Answer with user_username: ${user_username} and question_id: ${question_id}`,
     query,
     parameters,
   })
@@ -290,6 +320,7 @@ const createQuestionAnswerFromBatch = async ({
 export default {
   listQuestionAnswers,
   getQuestionAnswer,
+  getQuestionAnswerByUserAndQuestion,
   createQuestionAnswer,
   updateQuestionAnswer,
   deleteQuestionAnswer,
