@@ -56,13 +56,13 @@ CREATE TABLE IF NOT EXISTS question_answer(
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ,
     question_id UUID NOT NULL references question(id),
-    user_username VARCHAR(255) NOT NULL references "user"(username)
+    username VARCHAR(255) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS "group"(
     id UUID PRIMARY KEY NOT NULL,
     organization_id UUID NOT NULL references organization(id)
 );
 ALTER TABLE "group"
-ADD IF NOT EXISTS group_leader_username VARCHAR(255) NOT NULL references "user"(username);
+ADD IF NOT EXISTS group_leader_username VARCHAR(255) NOT NULL;
 ALTER TABLE organization
 ADD IF NOT EXISTS active_catalog_id UUID references "catalog"(id)

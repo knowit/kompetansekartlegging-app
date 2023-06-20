@@ -404,6 +404,7 @@ export class KompetanseStack extends Stack {
         'cognito-idp:AdminListGroupsForUser',
         'cognito-idp:AdminGetUser',
         'cognito-idp:AdminConfirmSignUp',
+        'cognito-idp:AdminUpdateUserAttributes',
         'cognito-idp:ListUsers',
         'cognito-idp:ListGroups',
       ],

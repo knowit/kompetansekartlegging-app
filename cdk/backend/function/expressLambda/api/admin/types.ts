@@ -5,3 +5,11 @@ export interface GetGroupQuery {
 }
 
 export type UserAnnotated = User | Omit<AdminGetUserResponse, 'Username'>
+
+export interface AddUserToGroupBody {
+  group_id: string
+}
+
+export interface IUsername {
+  username: string
+}

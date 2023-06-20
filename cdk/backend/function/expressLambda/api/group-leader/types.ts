@@ -5,3 +5,7 @@ export interface GetByUsername {
 export interface GetByUsernameAndOrganizationId extends GetByUsername {
   organizationId: string
 }
+
+export interface IUsername {
+  username: string
+}
