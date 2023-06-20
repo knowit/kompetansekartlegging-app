@@ -6,7 +6,7 @@ export enum Roles {
   GROUP_LEADER = 'groupleader',
 }
 
-export const requireRole = (roles: Roles[], requireAll: boolean = false) => {
+export const requireRoles = (roles: Roles[], requireAll: boolean = false) => {
   return (req: Request, res: Response, next: NextFunction) => {
     console.log('🔒 Protected. Required roles: ', roles.join(', '))
 

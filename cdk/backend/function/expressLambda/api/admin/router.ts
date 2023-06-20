@@ -1,6 +1,6 @@
 import { AdminGetUserResponse } from 'aws-sdk/clients/cognitoidentityserviceprovider'
 import express from 'express'
-import { Roles, requireRole } from '../../middlewares/roles'
+import { Roles, requireRoles } from '../../middlewares/roles'
 import { getUser } from '../cognito/cognitoActions'
 import Group from '../groups/queries'
 import { User } from '../groups/types'
@@ -8,7 +8,7 @@ import { GetGroupQuery, UserAnnotated } from './types'
 
 const router = express.Router()
 
-router.use(requireRole([Roles.ADMIN]))
+router.use(requireRoles([Roles.ADMIN]))
 
 router.get<unknown, unknown, unknown, GetGroupQuery>(
   '/get-group',
