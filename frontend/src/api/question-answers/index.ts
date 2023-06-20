@@ -11,7 +11,7 @@ const path = '/question-answers'
 export const getAllQuestionAnswers = async () => apiGET<QuestionAnswer[]>(path)
 
 export const getQuestionAnswerById = async (id: GetQuestionAnswerInput) =>
-  apiGET<QuestionAnswer>(`${path}/:id`, {
+  apiGET<QuestionAnswer>(`${path}`, {
     queryStringParameters: id,
   })
 
@@ -24,7 +24,7 @@ export const updateQuestionAnswer = async (
   id: GetQuestionAnswerInput,
   data: QuestionAnswerInput
 ) =>
-  apiPATCH<QuestionAnswer>(`${path}/:id`, {
+  apiPATCH<QuestionAnswer>(`${path}`, {
     queryStringParameters: id,
     body: data,
   })

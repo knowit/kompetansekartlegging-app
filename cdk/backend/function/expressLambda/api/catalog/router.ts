@@ -1,12 +1,12 @@
 import express from 'express'
+import { GetOrganizationInput } from '../organizations/types'
 import Catalog from './queries'
 import {
-  DeleteCatalogInput,
   CatalogInput,
+  DeleteCatalogInput,
   GetCatalogInput,
   UpdateCatalogInput,
 } from './types'
-import { GetOrganizationInput } from '../organizations/types'
 
 const router = express.Router()
 
@@ -69,7 +69,7 @@ router.delete<unknown, unknown, DeleteCatalogInput>(
 
 // Update
 router.patch<unknown, unknown, UpdateCatalogInput, GetCatalogInput>(
-  '/:id',
+  '/',
   async (req, res, next) => {
     try {
       const updateResponse = await Catalog.updateCatalog(req.query, req.body)

@@ -1,4 +1,4 @@
-export interface Category {
+export interface ICategory {
   id: string
   text: string
   description: string | null
@@ -6,7 +6,7 @@ export interface Category {
   catalog_id: string
 }
 
-export type CategoryInput = Omit<Category, 'id'>
+export type CategoryInput = Omit<ICategory, 'id'>
 
-export type GetCategoryInput = Pick<Category, 'id'>
-export type DeleteCategoryInput = Pick<Category, 'id'>
+export type GetCategoryInput = Pick<ICategory, 'id'>
+export type DeleteCategoryInput = Pick<ICategory, 'id'>

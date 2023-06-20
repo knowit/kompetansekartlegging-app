@@ -6,14 +6,14 @@ import {
   DeleteQuestionInput,
   GetQuestionInput,
   GetQuestionsByCategoryInput,
-  Question,
+  IQuestion,
   QuestionInput,
 } from './types'
 
 const listQuestions = async () => {
   const query = `SELECT * FROM question`
 
-  return await sqlQuery<Question[]>({
+  return await sqlQuery<IQuestion[]>({
     message: '🚀 ~ > All questions',
     query,
     isArray: true,
@@ -33,7 +33,7 @@ const getQuestion = async ({ id }: GetQuestionInput) => {
 
   const query = `SELECT * FROM question WHERE id = :id`
 
-  return await sqlQuery<Question>({
+  return await sqlQuery<IQuestion>({
     message: `🚀 ~ > Question with id: ${id}`,
     query,
     parameters,
@@ -55,7 +55,7 @@ const getQuestionsInCategory = async ({
 
   const query = `SELECT * FROM question WHERE category_id = :categoryid`
 
-  return await sqlQuery<Question[]>({
+  return await sqlQuery<IQuestion[]>({
     message: `🚀 ~ > All questions with categoryid: ${category_id}`,
     query,
     parameters,
@@ -112,7 +112,7 @@ const createQuestion = async ({
     VALUES(:id, :categoryid, :index, :scalestart, :scalemiddle, :scaleend, :text, :topic, '${type}')
     RETURNING *`
 
-  return await sqlQuery<Question>({
+  return await sqlQuery<IQuestion>({
     message: `🚀 ~ > Question with id: ${id} was successfully created`,
     query,
     parameters,
@@ -171,7 +171,7 @@ const updateQuestion = async (
     WHERE id=:id
     RETURNING *`
 
-  return await sqlQuery<Question>({
+  return await sqlQuery<IQuestion>({
     message: `🚀 ~ > Question with id: ${id} was updated`,
     query,
     parameters,
@@ -189,7 +189,7 @@ const deleteQuestion = async ({ id }: DeleteQuestionInput) => {
 
   const query = `DELETE FROM "question" WHERE id=:id RETURNING *`
 
-  return await sqlQuery<Question>({
+  return await sqlQuery<IQuestion>({
     message: `🚀 ~ > Question with id: ${id} was successfully deleted`,
     query,
     parameters,

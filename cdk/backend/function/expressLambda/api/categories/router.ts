@@ -35,7 +35,7 @@ router.get('/', async (req, res, next) => {
 
 // Update category with given id
 router.patch<unknown, unknown, CategoryInput, GetCategoryInput>(
-  '/:id',
+  '/',
   async (req, res, next) => {
     const { id } = req.query
     try {

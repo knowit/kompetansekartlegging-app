@@ -1,4 +1,5 @@
 import express from 'express'
+import { getUserOnRequest } from '../utils'
 import QuestionAnswer from './queries'
 import {
   DeleteQuestionAnswerInput,
@@ -10,13 +11,34 @@ import {
 
 const router = express.Router()
 
+// GET QuestionAnswer
 router.get('/', async (req, res, next) => {
   try {
+    // Get by id
     if (req.query.id) {
       const getQuestionAnswerResponse = await QuestionAnswer.getQuestionAnswer(
         req.query as GetQuestionAnswerInput
       )
       res.status(200).json(getQuestionAnswerResponse)
+
+      // Get by user and question
+    } else if (req.query.question_id) {
+      const { username } = getUserOnRequest(req)
+
+      if (!username) {
+        throw new Error('No username found on request')
+      }
+
+      const getQuestionAnswerResponse = await QuestionAnswer.getQuestionAnswerByUserAndQuestion(
+        {
+          question_id: req.query.question_id as IQuestionAnswer['question_id'],
+          user_username: username,
+        }
+      )
+
+      res.status(200).json(getQuestionAnswerResponse)
+
+      // Get all
     } else {
       const listQuestionAnswerResponse = await QuestionAnswer.listQuestionAnswers()
       res.status(200).json(listQuestionAnswerResponse)

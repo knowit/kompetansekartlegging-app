@@ -21,6 +21,10 @@ export interface IQuestionAnswer {
 export type QuestionAnswerInput = Omit<QuestionAnswer, 'id'>
 
 export type GetQuestionAnswerInput = Pick<QuestionAnswer, 'id'>
+export type GetQuestionAnswerByUserAndQuestionInput = Pick<
+  QuestionAnswer,
+  'user_username' | 'question_id'
+>
 export type DeleteQuestionAnswerInput = Pick<QuestionAnswer, 'id'>
 
 export interface QuestionAnswerResponse {
