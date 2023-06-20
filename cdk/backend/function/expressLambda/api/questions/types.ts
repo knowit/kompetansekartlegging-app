@@ -1,7 +1,7 @@
 // TODO: Fix this endpoint
 // ! Validate that question and questionAnswer
 
-export interface Question {
+export interface IQuestion {
   id: string
   text: string | null
   topic: string
@@ -18,8 +18,8 @@ export interface GetQuestionReqQuery {
   category_id: string | undefined
 }
 
-export type QuestionInput = Omit<Question, 'id'>
+export type QuestionInput = Omit<IQuestion, 'id'>
 
-export type GetQuestionInput = Pick<Question, 'id'>
-export type DeleteQuestionInput = Pick<Question, 'id'>
-export type GetQuestionsByCategoryInput = Pick<Question, 'category_id'>
+export type GetQuestionInput = Pick<IQuestion, 'id'>
+export type DeleteQuestionInput = Pick<IQuestion, 'id'>
+export type GetQuestionsByCategoryInput = Pick<IQuestion, 'category_id'>
