@@ -33,13 +33,11 @@ def handler(event, context):
     excuteInsert(apiKeyPermissionSQL, getFileName("APIKeyPermission"))
     excuteInsert(formDefinitionSQL, getFileName("FormDefinition"))
     excuteInsert(categorySQL, getFileName("Category"))
-    excuteInsert(userSQL, getFileName("User"))
     add_groupId_to_cognito_user(getFileName("User"))
     excuteInsert(groupSQL, getFileName("Group"))
     excuteInsert(questionSQL, getFileName("Question"))
     excuteInsert(questionAnswerSQL, getFileName("QuestionAnswer"))
 
-    excuteInsert(add_group_id_to_user, getFileName("User"))
     executeInsert(add_active_catalog_to_organization)
 
     executeInsert(remove_temp_column)
@@ -117,11 +115,6 @@ def create_dummy_data():
     sqlInsertStatement = (
         f"INSERT INTO organization (id, organization_name, identifier_attribute, temp_org_id)\nVALUES "
         f"({getValueOnSqlFormat(organization_id)}, 'dummy', 'dummy', 'dummy') ON CONFLICT (organization_name) DO NOTHING;\n"
-    )
-    sqlInsertStatement += (
-        'INSERT INTO "user" (username, group_id, organization_id)\nVALUES '
-        f"('dummyUser@dummy', NULL, {getValueOnSqlFormat(organization_id)}) "
-        "ON CONFLICT (username) DO NOTHING;"
     )
     return sqlInsertStatement
 
@@ -213,7 +206,7 @@ def questionSQL(file, start, end):
 
 
 def questionAnswerSQL(file, start, end):
-    sqlInsertStatment = "INSERT INTO question_answer (id, question_id, knowledge, motivation, custom_scale_value, text_value, user_username)\nSELECT * FROM (\nVALUES"
+    sqlInsertStatment = "INSERT INTO question_answer (id, question_id, knowledge, motivation, custom_scale_value, text_value, username)\nSELECT * FROM (\nVALUES"
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += f"\n({getValueOnSqlFormat(row.id, isUUID=True)}," \
             f"{getValueOnSqlFormat(row.questionID, isUUID=True)}," \
@@ -221,24 +214,7 @@ def questionAnswerSQL(file, start, end):
             f"{getValueOnSqlFormat(row.customScaleValue, isNumber=True)},{getValueOnSqlFormat(row.textValue)}," \
             f"{getValueOnSqlFormat(row.owner)}),"
     sqlInsertStatment = sqlInsertStatment.rstrip(sqlInsertStatment[-1])
-    sqlInsertStatment += ") as x (id, question_id, knowledge, motivation, custom_scale_value, text_value, user_username) WHERE EXISTS (SELECT 1 FROM question q WHERE q.id = x.question_id) ON CONFLICT DO NOTHING;"
-    print(sqlInsertStatment)
-    return sqlInsertStatment
-
-
-def userSQL(file, start, end):
-    sqlInsertStatment = (
-        'INSERT INTO "user" (username, group_id, organization_id)\nVALUES'
-    )
-    for row in file.loc[start:end].itertuples():
-        sqlInsertStatment += (
-            f"\n({getValueOnSqlFormat(row.id)},NULL,"
-            f"(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)})),"
-        )
-    sqlInsertStatment = (
-        sqlInsertStatment.rstrip(sqlInsertStatment[-1])
-        + " ON CONFLICT (username) DO NOTHING;"
-    )
+    sqlInsertStatment += ") as x (id, question_id, knowledge, motivation, custom_scale_value, text_value, username) WHERE EXISTS (SELECT 1 FROM question q WHERE q.id = x.question_id) ON CONFLICT DO NOTHING;"
     print(sqlInsertStatment)
     return sqlInsertStatment
 
@@ -254,14 +230,6 @@ def groupSQL(file, start, end):
         sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
     print(sqlInsertStatment)
     return sqlInsertStatment
-
-
-def add_group_id_to_user(file, start, end):
-    sqlUpdateStatement = ""
-    for row in file.loc[start:end].itertuples():
-        sqlUpdateStatement += f'UPDATE "user"\n SET group_id = {getValueOnSqlFormat(row.groupID)}\nWHERE username = {getValueOnSqlFormat(row.id)};'
-    print(sqlUpdateStatement)
-    return sqlUpdateStatement
 
 
 def add_active_catalog_to_organization():

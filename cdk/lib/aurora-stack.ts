@@ -1,7 +1,7 @@
-import { CfnOutput, Stack, StackProps, Duration, Fn } from 'aws-cdk-lib'
-import { Construct } from 'constructs'
-import * as rds from 'aws-cdk-lib/aws-rds'
+import { CfnOutput, Duration, Stack, StackProps } from 'aws-cdk-lib'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
+import * as rds from 'aws-cdk-lib/aws-rds'
+import { Construct } from 'constructs'
 import * as path from 'path'
 
 export class AuroraStack extends Stack {
@@ -15,11 +15,13 @@ export class AuroraStack extends Stack {
     // Split to remove - from db-name
     this.defaultDatabaseName = `kompetanseDB${ENV.split('-').join('')}`
     this.auroraCluster = new rds.ServerlessCluster(this, 'AuroraCluster', {
-      engine: rds.DatabaseClusterEngine.AURORA_POSTGRESQL,
+      engine: rds.DatabaseClusterEngine.auroraPostgres({
+        version: rds.AuroraPostgresEngineVersion.VER_11_16,
+      }),
       parameterGroup: rds.ParameterGroup.fromParameterGroupName(
         this,
         'ParameterGroup',
-        'default.aurora-postgresql10'
+        'default.aurora-postgresql11'
       ),
       credentials: { username: 'clusteradmin' },
       clusterIdentifier: `aurora-cluster-${ENV}`,

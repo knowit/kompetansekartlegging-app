@@ -65,4 +65,18 @@ CREATE TABLE IF NOT EXISTS "group"(
 ALTER TABLE "group"
 ADD IF NOT EXISTS group_leader_username VARCHAR(255) NOT NULL;
 ALTER TABLE organization
-ADD IF NOT EXISTS active_catalog_id UUID references "catalog"(id)
+ADD IF NOT EXISTS active_catalog_id UUID references "catalog"(id);
+CREATE OR REPLACE FUNCTION update_active() RETURNS TRIGGER AS $$ BEGIN IF NEW.active IS TRUE THEN
+UPDATE "catalog"
+SET active = NULL
+WHERE id != NEW.id
+    AND active IS TRUE;
+UPDATE organization
+SET active_catalog_id = NEW.id
+WHERE id = NEW.organization_id;
+END IF;
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+CREATE TRIGGER catalogBeforeUpdate BEFORE
+UPDATE ON "catalog" FOR EACH ROW EXECUTE FUNCTION update_active();
