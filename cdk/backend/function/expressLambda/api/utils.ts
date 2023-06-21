@@ -14,7 +14,7 @@ export const createTimestampNow = () =>
  * @returns {{sub: string | undefined, username: string | undefined}} - An object containing the user's sub and username, both of which are optional.
  */
 export const getUserOnRequest = (
-  req: Request
+  req: any
 ): { sub: string | undefined; username: string | undefined } => {
   const sub = req.apiGateway.event.requestContext.authorizer?.claims['sub']
   const username =

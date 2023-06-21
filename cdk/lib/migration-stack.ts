@@ -1,21 +1,22 @@
 import { Duration, Stack, StackProps } from 'aws-cdk-lib'
-import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as iam from 'aws-cdk-lib/aws-iam'
+import * as lambda from 'aws-cdk-lib/aws-lambda'
+import * as rds from 'aws-cdk-lib/aws-rds'
 import * as s3 from 'aws-cdk-lib/aws-s3'
-import { Construct } from 'constructs'
-import * as path from 'path'
 import { BlockPublicAccess } from 'aws-cdk-lib/aws-s3'
 import {
   AwsCustomResource,
   AwsCustomResourcePolicy,
   PhysicalResourceId,
 } from 'aws-cdk-lib/custom-resources'
-import * as rds from 'aws-cdk-lib/aws-rds'
+import { Construct } from 'constructs'
+import * as path from 'path'
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 interface MigrationStackProps extends StackProps {
   cluster: rds.ServerlessCluster
   databaseName: string
+  userPoolId: string
 }
 
 export class MigrationStack extends Stack {
@@ -59,17 +60,19 @@ export class MigrationStack extends Stack {
         SECRET_ARN: cluster.secret!.secretArn,
         DATABASE_NAME: props.databaseName,
         SOURCE_NAME: 'KompetanseStack',
+        USERPOOL: props.userPoolId,
       },
-      timeout: Duration.seconds(25),
+      timeout: Duration.seconds(500),
       layers: [pandasLayer],
       memorySize: 2048,
     })
 
     const insertDataPolicyStatment = new iam.PolicyStatement({
-      actions: ['s3:*', 'rds:*'],
+      actions: ['s3:*', 'rds:*', 'cognito-idp:AdminUpdateUserAttributes'],
       effect: iam.Effect.ALLOW,
       resources: [
         'arn:aws:s3:::*',
+        'arn:aws:cognito-idp:*:*:userpool/*',
         transformedDataBucket.bucketArn,
         `${transformedDataBucket.bucketArn}/*`,
       ],

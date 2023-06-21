@@ -1,9 +1,16 @@
 import express from 'express'
 import { Roles, requireRoles } from '../../middlewares/roles'
-import { getUser } from '../cognito/cognitoActions'
+import {
+  addGroupIdToUserAttributes,
+  getUser,
+  listUsers,
+  removeGroupIdFromUserAttributes,
+} from '../cognito/cognitoActions'
+import Group from '../groups/queries'
 import { getUserOnRequest } from '../utils'
 import GroupLeader from './queries'
-import { GetByUsername } from './types'
+import { GetByUsername, IUsername } from './types'
+
 const router = express.Router()
 
 router.use(requireRoles([Roles.GROUP_LEADER]))
@@ -16,26 +23,48 @@ router.get('/mygroup', async (req, res, next) => {
       throw new Error('No username found on request')
     }
 
-    const membersInMyGroup = await GroupLeader.myGroupMembers({ username })
+    const myGroupId = await GroupLeader.myGroup({ username })
 
-    if (membersInMyGroup.status !== 'ok') {
+    if (myGroupId.status !== 'ok' && !myGroupId.data?.id) {
       throw new Error('Could not fetch group members')
     }
 
-    // Annotate the members with Cognito User Pool data
-    const annotatedMembers = await Promise.all(
-      membersInMyGroup.data.map(
-        async (member: {
-          username: string
-          group_id: string
-          group_leader_username: string
-        }) => {
-          const { username } = member
-          const { UserAttributes } = await getUser(username)
-          return { ...member, cognitoAttributes: UserAttributes }
-        }
-      )
+    console.log('My group id: ', myGroupId.data?.id)
+
+    const allUsers = await listUsers()
+    console.log('All users: ', allUsers)
+    const members = allUsers.Users?.filter(
+      user =>
+        user.Attributes?.find(attribute => attribute.Name === 'custom:groupId')
+          ?.Value == myGroupId!.data!.id
     )
+
+    console.log('Members: ', members)
+
+    const annotatedMembers = members?.map(member => {
+      const { Username, Attributes, ...rest } = member
+      return { ...rest, username: Username, cognitoAttributes: Attributes }
+    })
+
+    // .then(response =>
+    //   response.Users?.filter(
+    //     user =>
+    //       user.Attributes?.find(
+    //         attribute =>
+    //           attribute.Name === 'custom:groupId' &&
+    //           attribute.Value === myGroupId.data
+    //       ) !== undefined
+    //   )
+    // )
+    // .then(groupMembers =>
+    //   groupMembers?.map(member => {
+    //     const username = member.Username
+    //     const cognitoAttributes = member.Attributes
+    //     return { ...member, username, cognitoAttributes }
+    //   })
+    // )
+
+    console.log('Annotated members: ', annotatedMembers)
 
     res.status(200).json({
       status: 'ok',
@@ -56,6 +85,67 @@ router.get<unknown, unknown, unknown, GetByUsername>(
 
       const response = await GroupLeader.getLatestAnswerTimestamp({ username })
 
+      res.status(200).json(response)
+    } catch (error) {
+      console.error(error)
+      next(error)
+    }
+  }
+)
+
+router.post<unknown, unknown, unknown, IUsername>(
+  '/group/remove-user',
+  async (req, res, next) => {
+    try {
+      const { username } = req.query
+      const requestingUser = getUserOnRequest(req)
+      const cognitoUserGroupId = await getUser(username).then(
+        response =>
+          response.UserAttributes?.find(
+            attribute => attribute.Name === 'custom:groupId'
+          )?.Value
+      )
+      let groupLeader
+      if (cognitoUserGroupId) {
+        const groupData = await Group.getGroup({ id: cognitoUserGroupId })
+        groupLeader = groupData.data?.group_leader_username
+      }
+
+      if (requestingUser.username !== groupLeader) {
+        throw new Error(
+          'Cannot remove user from group, user is not in your group'
+        )
+      }
+      const response = await removeGroupIdFromUserAttributes(username)
+      res.status(200).json(response)
+    } catch (error) {
+      console.error(error)
+      next(error)
+    }
+  }
+)
+
+router.post<unknown, unknown, unknown, IUsername>(
+  '/group/add-user',
+  async (req, res, next) => {
+    try {
+      const { username } = req.query
+      const requestingUser = getUserOnRequest(req)
+      const requestingUserGroupId = requestingUser.username
+        ? await getUser(requestingUser.username).then(
+            response =>
+              response.UserAttributes?.find(
+                attribute => attribute.Name === 'custom:groupId'
+              )?.Value
+          )
+        : undefined
+      if (requestingUserGroupId === undefined) {
+        throw new Error('Not authorized to add user to group')
+      }
+      const response = await addGroupIdToUserAttributes({
+        username,
+        groupId: requestingUserGroupId,
+      })
       res.status(200).json(response)
     } catch (error) {
       console.error(error)

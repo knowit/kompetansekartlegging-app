@@ -47,17 +47,12 @@ export class KompetanseStack extends Stack {
       stackName: `AuroraStack-${ENV}`,
     })
 
-    new MigrationStack(this, `MigrationStack-${ENV}`, {
-      cluster: auroraStack.auroraCluster,
-      stackName: `MigrationStack-${ENV}`,
-      databaseName: auroraStack.defaultDatabaseName,
-    })
-
     // COGNITO SetUp
     const pool = new cognito.UserPool(this, 'Kompetansekartlegging', {
       customAttributes: {
         OrganizationID: new cognito.StringAttribute({ mutable: true }),
         company: new cognito.StringAttribute({ mutable: true }),
+        groupId: new cognito.StringAttribute({ mutable: true }),
       },
       signInAliases: {
         username: true,
@@ -70,6 +65,13 @@ export class KompetanseStack extends Stack {
       },
       selfSignUpEnabled: !isProd,
       autoVerify: { email: !isProd },
+    })
+
+    new MigrationStack(this, `MigrationStack-${ENV}`, {
+      cluster: auroraStack.auroraCluster,
+      stackName: `MigrationStack-${ENV}`,
+      databaseName: auroraStack.defaultDatabaseName,
+      userPoolId: pool.userPoolId,
     })
 
     const supportedProviders = []
@@ -402,6 +404,7 @@ export class KompetanseStack extends Stack {
         'cognito-idp:AdminListGroupsForUser',
         'cognito-idp:AdminGetUser',
         'cognito-idp:AdminConfirmSignUp',
+        'cognito-idp:AdminUpdateUserAttributes',
         'cognito-idp:ListUsers',
         'cognito-idp:ListGroups',
       ],

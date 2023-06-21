@@ -2,7 +2,7 @@ import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
 import { sqlQuery } from '../../utils/sql'
 import { GetByUsername, GetByUsernameAndOrganizationId } from './types'
 
-const myGroupMembers = async ({ username }: GetByUsername) => {
+const myGroup = async ({ username }: GetByUsername) => {
   const parameters: SqlParameter[] = [
     {
       name: 'username',
@@ -13,13 +13,10 @@ const myGroupMembers = async ({ username }: GetByUsername) => {
   ]
 
   const query = `
-    SELECT group_id, username, group_leader_username 
-    FROM "user" u
-    JOIN "group" g ON u.group_id = g.id
-    WHERE g.group_leader_username = :username
+    SELECT id FROM "group" WHERE group_leader_username = :username
   `
 
-  return await sqlQuery({
+  return await sqlQuery<{ id: string }>({
     message: `🚀 ~ > Group members for '${username}'`,
     query,
     parameters,
@@ -89,7 +86,7 @@ const getLatestAnswerTimestamp = async ({ username }: GetByUsername) => {
 }
 
 export default {
-  myGroupMembers,
+  myGroup,
   getQuestionAnswersByActiveCatalogAndUser,
   getLatestAnswerTimestamp,
 }

@@ -156,8 +156,8 @@ async function getUser(username: UsernameType) {
 }
 
 async function listUsers(
-  Limit: QueryLimitType,
-  PaginationToken: SearchPaginationTokenType
+  Limit?: QueryLimitType,
+  PaginationToken?: SearchPaginationTokenType
 ) {
   const params = {
     UserPoolId: userPoolId!,
@@ -293,16 +293,77 @@ async function signUserOut(username: UsernameType) {
   }
 }
 
+// Remove group id from user attributes
+const removeGroupIdFromUserAttributes = async (username: string) => {
+  const params = {
+    UserPoolId: userPoolId!,
+    Username: username,
+    UserAttributes: [
+      {
+        Name: 'custom:groupId',
+        Value: '',
+      },
+    ],
+  }
+  try {
+    const result = await cognitoIdentityServiceProvider
+      .adminUpdateUserAttributes(params)
+      .promise()
+    return {
+      status: 'ok',
+      message: 'Removed user from group',
+      data: null,
+    }
+  } catch (err) {
+    console.log(err)
+    throw err
+  }
+}
+
+const addGroupIdToUserAttributes = async ({
+  username,
+  groupId,
+}: {
+  username: string
+  groupId: string
+}) => {
+  const params = {
+    UserPoolId: userPoolId!,
+    Username: username,
+    UserAttributes: [
+      {
+        Name: 'custom:groupId',
+        Value: groupId,
+      },
+    ],
+  }
+  try {
+    const result = await cognitoIdentityServiceProvider
+      .adminUpdateUserAttributes(params)
+      .promise()
+    return {
+      status: 'ok',
+      message: `Added user to group with id ${groupId}`,
+      data: null,
+    }
+  } catch (err) {
+    console.log(err)
+    throw err
+  }
+}
+
 export {
+  addGroupIdToUserAttributes,
   addUserToGroup,
-  removeUserFromGroup,
   confirmUserSignUp,
   disableUser,
   enableUser,
   getUser,
-  listUsers,
   listGroups,
   listGroupsForUser,
+  listUsers,
   listUsersInGroup,
+  removeGroupIdFromUserAttributes,
+  removeUserFromGroup,
   signUserOut,
 }

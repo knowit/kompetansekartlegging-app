@@ -6,6 +6,7 @@ from os import environ
 
 import boto3
 import pandas as pd
+from botocore.exceptions import ClientError
 
 s3Resource = boto3.resource("s3")
 s3BucketFrom = environ.get("TRANSFORMED_DATA_BUCKET")
@@ -16,6 +17,9 @@ secretARN = environ.get("SECRET_ARN")
 dbName = environ.get("DATABASE_NAME")
 env = environ.get("ENV")
 sourceName = environ.get("SOURCE_NAME")
+
+cognitoClient = boto3.client('cognito-idp')
+userPoolId = environ.get("USERPOOL")
 
 
 def getFileName(name):
@@ -30,8 +34,8 @@ def handler(event, context):
     excuteInsert(formDefinitionSQL, getFileName("FormDefinition"))
     excuteInsert(categorySQL, getFileName("Category"))
     excuteInsert(userSQL, getFileName("User"))
+    add_groupId_to_cognito_user(getFileName("User"))
     excuteInsert(groupSQL, getFileName("Group"))
-
     excuteInsert(questionSQL, getFileName("Question"))
     excuteInsert(questionAnswerSQL, getFileName("QuestionAnswer"))
 
@@ -133,7 +137,8 @@ def organizationSQL(file, start, end):
             f"NULL),"
         )
     sqlInsertStatment = (
-        sqlInsertStatment.rstrip(sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
+        sqlInsertStatment.rstrip(
+            sqlInsertStatment[-1]) + " ON CONFLICT (organization_name) DO UPDATE SET temp_org_id=" + getValueOnSqlFormat(row.id)+";"
     )
     print(sqlInsertStatment)
     return sqlInsertStatment
@@ -149,7 +154,8 @@ def apiKeyPermissionSQL(file, start, end):
             f"{getValueOnSqlFormat(row.APIKeyHashed)},(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)})),"
         )
     sqlInsertStatment = (
-        sqlInsertStatment.rstrip(sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
+        sqlInsertStatment.rstrip(
+            sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
     )
     print(sqlInsertStatment)
     return sqlInsertStatment
@@ -165,7 +171,8 @@ def formDefinitionSQL(file, start, end):
             f"(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)})),"
         )
     sqlInsertStatment = (
-        sqlInsertStatment.rstrip(sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
+        sqlInsertStatment.rstrip(
+            sqlInsertStatment[-1]) + " ON CONFLICT DO NOTHING;"
     )
     print(sqlInsertStatment)
     return sqlInsertStatment
@@ -225,7 +232,7 @@ def userSQL(file, start, end):
     )
     for row in file.loc[start:end].itertuples():
         sqlInsertStatment += (
-            f"\n({getValueOnSqlFormat(row.id)},{getValueOnSqlFormat(row.groupID)},"
+            f"\n({getValueOnSqlFormat(row.id)},NULL,"
             f"(SELECT o.id FROM organization o WHERE o.temp_org_id = {getValueOnSqlFormat(row.organizationID)})),"
         )
     sqlInsertStatment = (
@@ -265,7 +272,7 @@ def add_active_catalog_to_organization():
 
 
 def create_temp_column():
-    return "ALTER TABLE organization ADD COLUMN IF NOT EXISTS temp_org_id VARCHAR(255) NOT NULL;"
+    return "ALTER TABLE organization ADD COLUMN IF NOT EXISTS temp_org_id VARCHAR(255);"
 
 
 def remove_temp_column():
@@ -282,3 +289,21 @@ def camel_to_snake_case(s):
     snake_case_string = "_".join(words).lower()
 
     return snake_case_string
+
+
+def add_groupId_to_cognito_user(fileName):
+    file = getPandasCSVFile(fileName)
+    for row in file.loc[0:len(file)-1].itertuples():
+        try:
+            response = cognitoClient.admin_update_user_attributes(
+                UserPoolId=userPoolId,
+                Username=row.id,
+                UserAttributes=[{
+                    'Name': 'custom:groupId',
+                    'Value': row.groupID
+                }
+                ]
+            )
+            print("HELO", response)
+        except ClientError as e:
+            print("Failed to update custom attributes: ", e)
