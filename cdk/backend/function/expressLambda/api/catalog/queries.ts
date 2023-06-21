@@ -1,6 +1,7 @@
-import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
+import { SqlParameter } from '@aws-sdk/client-rds-data'
 import { v4 as uuidv4 } from 'uuid'
 import { sqlQuery } from '../../utils/sql'
+import { GetOrganizationInput } from '../organizations/types'
 import { createTimestampNow } from '../utils'
 import { catalogColumns, kindToParam } from './helpers'
 import {
@@ -10,7 +11,6 @@ import {
   GetCatalogInput,
   UpdateCatalogInput,
 } from './types'
-import { GetOrganizationInput } from '../organizations/types'
 
 const listCatalogs = async () => {
   const query = `SELECT * FROM "catalog"`
@@ -23,22 +23,22 @@ const listCatalogs = async () => {
 }
 
 const findActiveCatalogByOrganization = async ({
-  id,
+  identifier_attribute,
 }: GetOrganizationInput) => {
   const parameters: SqlParameter[] = [
     {
-      name: 'id',
+      name: 'identifier_attribute',
       value: {
-        stringValue: id,
+        stringValue: identifier_attribute,
       },
-      typeHint: TypeHint.UUID,
     },
   ]
 
-  const query = 'SELECT * FROM catalog c WHERE c.id = (SELECT o.active_catalog_id FROM organization o WHERE o.id =:id)'
+  const query =
+    'SELECT * FROM catalog c WHERE c.id = (SELECT o.active_catalog_id FROM organization o WHERE o.identifier_attribute =:identifier_attribute)'
 
   return await sqlQuery({
-    message: `🚀 ~ > Active catalog of organization with id ${id}`,
+    message: `🚀 ~ > Active catalog of organization with identifier: ${identifier_attribute}`,
     query,
     parameters,
   })

@@ -5,6 +5,7 @@ import { sqlQuery } from '../../utils/sql'
 import {
   CategoryInput,
   DeleteCategoryInput,
+  GetCategoryInCatalogInput,
   GetCategoryInput,
   ICategory,
 } from './types'
@@ -35,6 +36,29 @@ const getCategory = async ({ id }: GetCategoryInput) => {
     message: `🚀 ~ > Category with id ${id}`,
     query,
     parameters,
+  })
+}
+
+const getCategoryInCatalog = async ({
+  catalog_id,
+}: GetCategoryInCatalogInput) => {
+  const parameters: SqlParameter[] = [
+    {
+      name: 'catalog_id',
+      value: {
+        stringValue: catalog_id,
+      },
+      typeHint: TypeHint.UUID,
+    },
+  ]
+
+  const query = 'SELECT * FROM "category" WHERE catalog_id = :catalog_id'
+
+  return await sqlQuery<ICategory[]>({
+    message: `🚀 ~ > Categories in catalog with id ${catalog_id}`,
+    query,
+    parameters,
+    isArray: true,
   })
 }
 
@@ -174,6 +198,7 @@ const deleteCategory = async ({ id }: DeleteCategoryInput) => {
 export default {
   listCategories,
   getCategory,
+  getCategoryInCatalog,
   createCategory,
   updateCategory,
   deleteCategory,
