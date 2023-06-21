@@ -15,7 +15,10 @@ const router = express.Router()
 
 router.use(requireRoles([Roles.GROUP_LEADER]))
 
-router.get('/mygroup', async (req, res, next) => {
+/**
+ * Get all group members for the group leader
+ */
+router.get('/my-group', async (req, res, next) => {
   try {
     const { username } = getUserOnRequest(req)
 
@@ -26,45 +29,20 @@ router.get('/mygroup', async (req, res, next) => {
     const myGroupId = await GroupLeader.myGroup({ username })
 
     if (myGroupId.status !== 'ok' && !myGroupId.data?.id) {
-      throw new Error('Could not fetch group members')
+      throw new Error('Could not fetch group members.')
     }
 
-    console.log('My group id: ', myGroupId.data?.id)
-
     const allUsers = await listUsers()
-    console.log('All users: ', allUsers)
     const members = allUsers.Users?.filter(
       user =>
         user.Attributes?.find(attribute => attribute.Name === 'custom:groupId')
           ?.Value == myGroupId!.data!.id
     )
 
-    console.log('Members: ', members)
-
     const annotatedMembers = members?.map(member => {
       const { Username, Attributes, ...rest } = member
       return { ...rest, username: Username, cognitoAttributes: Attributes }
     })
-
-    // .then(response =>
-    //   response.Users?.filter(
-    //     user =>
-    //       user.Attributes?.find(
-    //         attribute =>
-    //           attribute.Name === 'custom:groupId' &&
-    //           attribute.Value === myGroupId.data
-    //       ) !== undefined
-    //   )
-    // )
-    // .then(groupMembers =>
-    //   groupMembers?.map(member => {
-    //     const username = member.Username
-    //     const cognitoAttributes = member.Attributes
-    //     return { ...member, username, cognitoAttributes }
-    //   })
-    // )
-
-    console.log('Annotated members: ', annotatedMembers)
 
     res.status(200).json({
       status: 'ok',
