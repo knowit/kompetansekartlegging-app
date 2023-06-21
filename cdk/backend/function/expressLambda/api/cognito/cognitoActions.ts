@@ -310,7 +310,9 @@ const removeGroupIdFromUserAttributes = async (username: string) => {
       .adminUpdateUserAttributes(params)
       .promise()
     return {
+      status: 'ok',
       message: 'Removed user from group',
+      data: null,
     }
   } catch (err) {
     console.log(err)
@@ -340,7 +342,9 @@ const addGroupIdToUserAttributes = async ({
       .adminUpdateUserAttributes(params)
       .promise()
     return {
+      status: 'ok',
       message: `Added user to group with id ${groupId}`,
+      data: null,
     }
   } catch (err) {
     console.log(err)
