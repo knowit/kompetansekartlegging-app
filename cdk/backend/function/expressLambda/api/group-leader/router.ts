@@ -13,7 +13,7 @@ import { GetByUsername, IUsername } from './types'
 
 const router = express.Router()
 
-router.use(requireRoles([Roles.GROUP_LEADER]))
+router.use(requireRoles([Roles.GROUP_LEADER, Roles.ADMIN]))
 
 /**
  * Get all group members for the group leader

@@ -1,6 +1,6 @@
 import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
 
-type Kinds = 'string' | 'int' | 'uuid' | 'timestamp'
+type Kinds = 'string' | 'int' | 'uuid' | 'timestamp' | 'boolean'
 type Field = {
   kind: Kinds
 }
@@ -13,6 +13,7 @@ export const catalogColumns: Table = {
   created_at: { kind: 'timestamp' },
   updated_at: { kind: 'timestamp' },
   organization_id: { kind: 'uuid' },
+  active: { kind: 'boolean' },
 }
 
 export function kindToParam(paramValue: any, kind: Kinds): SqlParameter {
@@ -28,5 +29,7 @@ export function kindToParam(paramValue: any, kind: Kinds): SqlParameter {
         value: { stringValue: paramValue },
         typeHint: TypeHint.TIMESTAMP,
       }
+    case 'boolean':
+      return { value: { booleanValue: paramValue } }
   }
 }

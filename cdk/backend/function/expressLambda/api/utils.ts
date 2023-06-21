@@ -52,6 +52,8 @@ export const getOrganizations = (req: Request): string[] => {
       if (o.includes('0')) {
         const org = o.split('0')
         organizations.push(org[0])
+      } else {
+        organizations.push(o)
       }
     })
   return [...new Set<string>(organizations)]
