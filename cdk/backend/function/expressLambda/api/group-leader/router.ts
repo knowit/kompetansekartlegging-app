@@ -55,6 +55,9 @@ router.get('/my-group', async (req, res, next) => {
   }
 })
 
+/**
+ * Get the timestamp for a user's last answer
+ */
 router.get<unknown, unknown, unknown, GetByUsername>(
   '/last-answer-at',
   async (req, res, next) => {
@@ -71,6 +74,9 @@ router.get<unknown, unknown, unknown, GetByUsername>(
   }
 )
 
+/**
+ * Remove a user from the group
+ */
 router.post<unknown, unknown, unknown, IUsername>(
   '/group/remove-user',
   async (req, res, next) => {
@@ -103,6 +109,9 @@ router.post<unknown, unknown, unknown, IUsername>(
   }
 )
 
+/**
+ * Add a user to the group
+ */
 router.post<unknown, unknown, unknown, IUsername>(
   '/group/add-user',
   async (req, res, next) => {
