@@ -8,6 +8,7 @@ import { GetGroupQuery, UserAnnotated } from './types'
 
 import { adminCatalogsRouter } from './catalog/router'
 import { adminCategoriesRouter } from './categories/router'
+import { adminGroupLeadersRouter } from './group-leaders/router'
 import { adminGroupsRouter } from './groups/router'
 import { adminQuestionsRouter } from './questions/router'
 
@@ -19,6 +20,7 @@ router.use('/catalogs', adminCatalogsRouter)
 router.use('/categories', adminCategoriesRouter)
 router.use('/questions', adminQuestionsRouter)
 router.use('/groups', adminGroupsRouter)
+router.use('/group-leaders', adminGroupLeadersRouter)
 
 router.get<unknown, unknown, unknown, GetGroupQuery>(
   '/get-group',

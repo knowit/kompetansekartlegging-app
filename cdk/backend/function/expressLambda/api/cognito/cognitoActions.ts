@@ -247,8 +247,8 @@ async function listGroupsForUser(
 
 async function listUsersInGroup(
   groupname: GroupNameType,
-  Limit: QueryLimitType,
-  NextToken: PaginationKey
+  Limit?: QueryLimitType,
+  NextToken?: PaginationKey
 ) {
   const params = {
     GroupName: groupname,

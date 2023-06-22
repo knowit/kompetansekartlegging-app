@@ -1,3 +1,0 @@
-1. Add group leader
-2. Remove Group leader
-(Cognito group)
