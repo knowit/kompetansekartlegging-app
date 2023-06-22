@@ -17,6 +17,8 @@ import {
 
 import { adminCatalogsRouter } from './catalog/router'
 import { adminCategoriesRouter } from './categories/router'
+import { adminGroupsRouter } from './groups/router'
+import { adminQuestionsRouter } from './questions/router'
 
 const router = express.Router()
 
@@ -24,6 +26,8 @@ router.use(requireRoles([Roles.ADMIN]))
 
 router.use('/catalogs', adminCatalogsRouter)
 router.use('/categories', adminCategoriesRouter)
+router.use('/questions', adminQuestionsRouter)
+router.use('/groups', adminGroupsRouter)
 
 router.get<unknown, unknown, unknown, GetGroupQuery>(
   '/get-group',
