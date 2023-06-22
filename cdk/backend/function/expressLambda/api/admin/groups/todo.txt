@@ -1,5 +1,0 @@
-1. Add new group (lag gruppe og assign en gruppeleder)
-2. Delete group
-3. Edit group (endre hvem som er gruppeleder)
-4. Legg til medlem i vilkårlig gruppe
-5. Fjern medlem i vilkårlig gruppe
