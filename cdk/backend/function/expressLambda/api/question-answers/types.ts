@@ -1,6 +1,6 @@
 export interface QuestionAnswer {
   id: string
-  user_username: string
+  username: string
   question_id: string
   knowledge: number | null
   motivation: number | null
@@ -23,7 +23,7 @@ export type QuestionAnswerInput = Omit<QuestionAnswer, 'id'>
 export type GetQuestionAnswerInput = Pick<QuestionAnswer, 'id'>
 export type GetQuestionAnswerByUserAndQuestionInput = Pick<
   QuestionAnswer,
-  'user_username' | 'question_id'
+  'username' | 'question_id'
 >
 export type DeleteQuestionAnswerInput = Pick<QuestionAnswer, 'id'>
 

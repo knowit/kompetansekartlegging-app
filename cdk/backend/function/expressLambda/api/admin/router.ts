@@ -6,12 +6,15 @@ import {
   removeUserFromGroup,
 } from '../cognito/cognitoActions'
 
+import Admin from './queries'
+
 import { getOrganizations } from '../utils'
 import { adminCatalogsRouter } from './catalog/router'
 import { adminCategoriesRouter } from './categories/router'
 import { adminGroupLeadersRouter } from './group-leaders/router'
 import { adminGroupsRouter } from './groups/router'
 import { adminQuestionsRouter } from './questions/router'
+import { IUsername } from './types'
 
 const router = express.Router()
 
@@ -71,8 +74,21 @@ router.post('/remove', async (req, res, next) => {
   }
 })
 
-/*
-1. Anonymiser bruker (slett cognito bruker og sett question answer id til en unik, men konsekvent streng)
-*/
+// Anonymize user
+router.patch<unknown, unknown, unknown, IUsername>(
+  '/anonymize',
+  async (req, res, next) => {
+    try {
+      const anonymizeResponse = await Admin.unlinkUserFromQuestionAnswer(
+        req.query
+      )
+
+      res.status(200).json(anonymizeResponse)
+    } catch (error) {
+      console.error(error)
+      next(error)
+    }
+  }
+)
 
 export { router as adminRouter }
