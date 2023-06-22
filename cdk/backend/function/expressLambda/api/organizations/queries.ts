@@ -4,6 +4,7 @@ import { sqlQuery } from '../../utils/sql'
 import { createTimestampNow } from '../utils'
 import {
   DeleteOrganizationInput,
+  GetOrganizationByIdentifierInput,
   GetOrganizationInput,
   Organization,
   OrganizationInput,
@@ -39,8 +40,30 @@ const getOrganization = async ({ id }: GetOrganizationInput) => {
   })
 }
 
+const getOrganizationByIdentifier = async ({
+  identifier_attribute,
+}: GetOrganizationByIdentifierInput) => {
+  const parameters: SqlParameter[] = [
+    {
+      name: 'identifier_attribute',
+      value: {
+        stringValue: identifier_attribute,
+      },
+    },
+  ]
+
+  const query =
+    'SELECT * FROM organization WHERE identifier_attribute = :identifier_attribute'
+
+  return await sqlQuery<Organization>({
+    message: `🚀 ~ > Organization ${identifier_attribute}`,
+    query,
+    parameters,
+  })
+}
+
 const createOrganization = async ({
-  orgname,
+  organization_name,
   identifier_attribute,
 }: OrganizationInput) => {
   const id = uuidv4()
@@ -63,7 +86,7 @@ const createOrganization = async ({
     {
       name: 'orgname',
       value: {
-        stringValue: orgname,
+        stringValue: organization_name,
       },
     },
     {
@@ -79,7 +102,7 @@ const createOrganization = async ({
   RETURNING *`
 
   return await sqlQuery<Organization>({
-    message: `🚀 ~ > Organization '${orgname}' with the id '${id}' inserted.`,
+    message: `🚀 ~ > Organization '${organization_name}' with the id '${id}' inserted.`,
     query,
     parameters,
   })
@@ -110,4 +133,5 @@ export default {
   getOrganization,
   createOrganization,
   deleteOrganization,
+  getOrganizationByIdentifier,
 }

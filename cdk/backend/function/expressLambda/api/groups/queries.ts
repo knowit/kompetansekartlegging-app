@@ -5,6 +5,7 @@ import {
   DeleteGroupInput,
   DeleteUserInput,
   GetGroupInput,
+  GetGroupsInOrganizationInput,
   GetUsersInput,
   Group,
   GroupInput,
@@ -19,6 +20,29 @@ const listGroups = async () => {
   return await sqlQuery<Group[]>({
     message: '🚀 ~ > All groups.',
     query,
+    isArray: true,
+  })
+}
+
+const listGroupsInOrganization = async ({
+  organization,
+}: GetGroupsInOrganizationInput) => {
+  const parameters: SqlParameter[] = [
+    {
+      name: 'organization',
+      value: {
+        stringValue: organization,
+      },
+    },
+  ]
+
+  const query =
+    'SELECT g.id, g.organization_id, g.group_leader_username FROM "group" g JOIN organization o ON g.organization_id = o.id WHERE o.identifier_attribute = :organization'
+
+  return await sqlQuery<Group[]>({
+    message: `🚀 ~ > All groups in organization '${organization}'.`,
+    query,
+    parameters,
     isArray: true,
   })
 }
@@ -197,7 +221,6 @@ const updateGroupLeader = async (
       value: {
         stringValue: group_leader_username,
       },
-      typeHint: TypeHint.UUID,
     },
   ]
 
@@ -217,6 +240,7 @@ export default {
   upsert,
   deleteUserFromGroup,
   listGroups,
+  listGroupsInOrganization,
   listUsersInGroup,
   getGroup,
   createGroup,
