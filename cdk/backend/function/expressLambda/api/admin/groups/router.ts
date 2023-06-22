@@ -1,4 +1,8 @@
 import express from 'express'
+import {
+  addGroupIdToUserAttributes,
+  removeGroupIdFromUserAttributes,
+} from '../../cognito/cognitoActions'
 import Group from '../../groups/queries'
 import {
   DeleteGroupInput,
@@ -6,6 +10,7 @@ import {
   GroupInput,
   UpdateGroupLeaderInput,
 } from '../../groups/types'
+import { AddUserToGroupBody, IUsername } from '../types'
 
 const router = express.Router()
 
@@ -47,6 +52,38 @@ router.patch<unknown, unknown, UpdateGroupLeaderInput, GetGroupInput>(
     } catch (err) {
       console.error(err)
       next(err)
+    }
+  }
+)
+
+router.post<unknown, unknown, unknown, IUsername>(
+  '/remove-user',
+  async (req, res, next) => {
+    try {
+      const { username } = req.query
+      const response = await removeGroupIdFromUserAttributes(username)
+      res.status(200).json(response)
+    } catch (error) {
+      console.error(error)
+      next(error)
+    }
+  }
+)
+
+router.post<unknown, unknown, AddUserToGroupBody, IUsername>(
+  '/add-user',
+  async (req, res, next) => {
+    try {
+      const { username } = req.query
+      const { group_id } = req.body
+      const response = await addGroupIdToUserAttributes({
+        username,
+        groupId: group_id,
+      })
+      res.status(200).json(response)
+    } catch (error) {
+      console.error(error)
+      next(error)
     }
   }
 )
