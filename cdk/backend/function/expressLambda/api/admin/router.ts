@@ -16,10 +16,15 @@ import {
 } from './types'
 
 import Catalog from '../catalog/queries'
+import { adminCatalogsRouter } from './catalog/router'
+import { adminCategoriesRouter } from './categories/router'
 
 const router = express.Router()
 
 router.use(requireRoles([Roles.ADMIN]))
+
+router.use('/catalogs', adminCatalogsRouter)
+router.use('/categories', adminCategoriesRouter)
 
 router.get<unknown, unknown, unknown, GetGroupQuery>(
   '/get-group',
