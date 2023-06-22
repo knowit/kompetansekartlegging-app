@@ -15,7 +15,6 @@ import {
   UserAnnotated,
 } from './types'
 
-import Catalog from '../catalog/queries'
 import { adminCatalogsRouter } from './catalog/router'
 import { adminCategoriesRouter } from './categories/router'
 
@@ -94,22 +93,5 @@ router.post<unknown, unknown, AddUserToGroupBody, IUsername>(
     }
   }
 )
-
-/**
- * Todo: Endpoint for creating, edit and deleting catalogs
- */
-
-// Get all catalogs
-router.get('/catalogs', async (req, res, next) => {
-  if (req.query.id) next()
-  try {
-    const listResponse = await Catalog.listCatalogs()
-
-    res.status(200).json(listResponse)
-  } catch (err) {
-    console.error(err)
-    next(err)
-  }
-})
 
 export { router as adminRouter }
