@@ -57,4 +57,11 @@ router.get<unknown, unknown, unknown, GetGroupQuery>(
   }
 )
 
+/*
+1. Add administrator
+2. Remove administrator
+3. Get all administrators
+4. Anonymiser bruker (slett cognito bruker og sett question answer id til en unik, men konsekvent streng)
+*/
+
 export { router as adminRouter }
