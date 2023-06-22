@@ -1,110 +1,94 @@
-import { AdminGetUserResponse } from 'aws-sdk/clients/cognitoidentityserviceprovider'
 import express from 'express'
 import { Roles, requireRoles } from '../../middlewares/roles'
 import {
-  addGroupIdToUserAttributes,
-  getUser,
-  removeGroupIdFromUserAttributes,
+  addUserToGroup,
+  listUsersInGroup,
+  removeUserFromGroup,
 } from '../cognito/cognitoActions'
-import Group from '../groups/queries'
-import { User } from '../groups/types'
-import {
-  AddUserToGroupBody,
-  GetGroupQuery,
-  IUsername,
-  UserAnnotated,
-} from './types'
 
-import Catalog from '../catalog/queries'
+import Admin from './queries'
+
+import { getOrganizations } from '../utils'
+import { adminCatalogsRouter } from './catalog/router'
+import { adminCategoriesRouter } from './categories/router'
+import { adminGroupLeadersRouter } from './group-leaders/router'
+import { adminGroupsRouter } from './groups/router'
+import { adminQuestionsRouter } from './questions/router'
+import { IUsername } from './types'
 
 const router = express.Router()
 
 router.use(requireRoles([Roles.ADMIN]))
 
-router.get<unknown, unknown, unknown, GetGroupQuery>(
-  '/get-group',
-  async (req, res, next) => {
-    try {
-      const members: UserAnnotated[] = []
-      const { id } = req.query
-      const group = await Group.getGroup({ id })
-      const groupLeader = await getUser(group.data!.group_leader_username)
-      const groupMembers = await Group.listUsersInGroup({ group_id: id })
-      console.log(groupMembers.data)
-      await Promise.all(
-        groupMembers.data!.map(async (user: User) => {
-          return getUser(user.username).then((member: AdminGetUserResponse) => {
-            const { Username, ...newMember } = { ...user, ...member }
-            members.push(newMember)
-          })
-        })
-      )
-        .then(() => {
-          const result = {
-            status: 'ok',
-            message: `🚀 ~ > Admin info on group with id ${id}`,
-            data: {
-              leader: groupLeader,
-              members: members,
-            },
-          }
-          return result
-        })
-        .then(result => res.status(200).json(result))
-    } catch (err) {
-      console.error(err)
-      next(err)
-    }
-  }
-)
+router.use('/catalogs', adminCatalogsRouter)
+router.use('/categories', adminCategoriesRouter)
+router.use('/questions', adminQuestionsRouter)
+router.use('/groups', adminGroupsRouter)
+router.use('/group-leaders', adminGroupLeadersRouter)
 
-router.post<unknown, unknown, unknown, IUsername>(
-  '/group/remove-user',
-  async (req, res, next) => {
-    try {
-      const { username } = req.query
-      const response = await removeGroupIdFromUserAttributes(username)
-      res.status(200).json(response)
-    } catch (error) {
-      console.error(error)
-      next(error)
-    }
-  }
-)
-
-router.post<unknown, unknown, AddUserToGroupBody, IUsername>(
-  '/group/add-user',
-  async (req, res, next) => {
-    try {
-      const { username } = req.query
-      const { group_id } = req.body
-      const response = await addGroupIdToUserAttributes({
-        username,
-        groupId: group_id,
-      })
-      res.status(200).json(response)
-    } catch (error) {
-      console.error(error)
-      next(error)
-    }
-  }
-)
-
-/**
- * Todo: Endpoint for creating, edit and deleting catalogs
- */
-
-// Get all catalogs
-router.get('/catalogs', async (req, res, next) => {
-  if (req.query.id) next()
+// List all admins
+router.get('/', async (req, res, next) => {
   try {
-    const listResponse = await Catalog.listCatalogs()
-
-    res.status(200).json(listResponse)
+    const organization = getOrganizations(req)
+    const response = await listUsersInGroup(organization[0] + '0admin')
+    res.status(200).json(response)
   } catch (err) {
     console.error(err)
     next(err)
   }
 })
+
+// Promote user to admin
+router.post('/add', async (req, res, next) => {
+  try {
+    const organization = getOrganizations(req)
+    if (typeof req.query.username !== 'string') {
+      throw new Error('username must be a string')
+    }
+    const response = await addUserToGroup({
+      username: req.query.username,
+      groupname: organization[0] + '0admin',
+    })
+    res.status(200).json(response)
+  } catch (err) {
+    console.error(err)
+    next(err)
+  }
+})
+
+// Demote user from admin
+router.post('/remove', async (req, res, next) => {
+  try {
+    const organization = getOrganizations(req)
+    if (typeof req.query.username !== 'string') {
+      throw new Error('username must be a string')
+    }
+    const response = await removeUserFromGroup({
+      username: req.query.username,
+      groupname: organization[0] + '0admin',
+    })
+    res.status(200).json(response)
+  } catch (err) {
+    console.error(err)
+    next(err)
+  }
+})
+
+// Anonymize user
+router.patch<unknown, unknown, unknown, IUsername>(
+  '/anonymize',
+  async (req, res, next) => {
+    try {
+      const anonymizeResponse = await Admin.unlinkUserFromQuestionAnswer(
+        req.query
+      )
+
+      res.status(200).json(anonymizeResponse)
+    } catch (error) {
+      console.error(error)
+      next(error)
+    }
+  }
+)
 
 export { router as adminRouter }

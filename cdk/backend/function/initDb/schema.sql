@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS organization(
     id UUID PRIMARY KEY NOT NULL,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     organization_name VARCHAR(255) NOT NULL UNIQUE,
-    identifier_attribute VARCHAR(255) NOT NULL
+    identifier_attribute VARCHAR(255) NOT NULL UNIQUE
 );
 CREATE TABLE IF NOT EXISTS api_key_permission(
     id VARCHAR(255) PRIMARY KEY NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS question_answer(
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ,
     question_id UUID NOT NULL references question(id),
-    username VARCHAR(255) NOT NULL
+    username VARCHAR(255)
 );
 CREATE TABLE IF NOT EXISTS "group"(
     id UUID PRIMARY KEY NOT NULL,

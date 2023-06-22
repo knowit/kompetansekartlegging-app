@@ -4,7 +4,10 @@ export interface GetGroupQuery {
   id: string
 }
 
-export type UserAnnotated = User | Omit<AdminGetUserResponse, 'Username'>
+export type UserAnnotated =
+  | User
+  | Omit<AdminGetUserResponse, 'Username' | 'UserAttributes'>
+  | { cognitoAttributes: AdminGetUserResponse['UserAttributes'] }
 
 export interface AddUserToGroupBody {
   group_id: string

@@ -7,5 +7,9 @@ export interface Organization {
 
 export type OrganizationInput = Omit<Organization, 'created_at'>
 
-export type GetOrganizationInput = Pick<Organization, 'identifier_attribute'>
+export type GetOrganizationInput = Pick<Organization, 'id'>
+export type GetOrganizationByIdentifierInput = Pick<
+  Organization,
+  'identifier_attribute'
+>
 export type DeleteOrganizationInput = Pick<Organization, 'id'>
