@@ -36,15 +36,14 @@ const addUserToGroup = async ({ username, groupname }: Body) => {
     Username: username,
   }
 
-  console.log(`Attempting to add ${username} to ${groupname}`)
-
   try {
     const result = await cognitoIdentityServiceProvider
       .adminAddUserToGroup(params)
       .promise()
-    console.log(`Success adding ${username} to ${groupname}`)
     return {
+      status: 'ok',
       message: `Success adding ${username} to ${groupname}`,
+      data: null,
     }
   } catch (err) {
     console.log(err)
@@ -59,15 +58,14 @@ async function removeUserFromGroup({ username, groupname }: Body) {
     Username: username,
   }
 
-  console.log(`Attempting to remove ${username} from ${groupname}`)
-
   try {
     const result = await cognitoIdentityServiceProvider
       .adminRemoveUserFromGroup(params)
       .promise()
-    console.log(`Removed ${username} from ${groupname}`)
     return {
+      status: 'ok',
       message: `Removed ${username} from ${groupname}`,
+      data: null,
     }
   } catch (err) {
     console.log(err)
@@ -263,7 +261,11 @@ async function listUsersInGroup(
     const result = await cognitoIdentityServiceProvider
       .listUsersInGroup(params)
       .promise()
-    return result
+    return {
+      status: 'ok',
+      message: `🚀 ~ > All users in group ${groupname}`,
+      data: result,
+    }
   } catch (err) {
     console.log(err)
     throw err
@@ -285,7 +287,9 @@ async function signUserOut(username: UsernameType) {
       .promise()
     console.log(`Signed out ${username} from all devices`)
     return {
-      message: `Signed out ${username} from all devices`,
+      status: 'ok',
+      message: `🚀 ~ > Signed out ${username} from all devices`,
+      data: null,
     }
   } catch (err) {
     console.log(err)

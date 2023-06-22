@@ -1,11 +1,17 @@
 import { AdminGetUserResponse } from 'aws-sdk/clients/cognitoidentityserviceprovider'
 import express from 'express'
 import { Roles, requireRoles } from '../../middlewares/roles'
-import { getUser } from '../cognito/cognitoActions'
+import {
+  addUserToGroup,
+  getUser,
+  listUsersInGroup,
+  removeUserFromGroup,
+} from '../cognito/cognitoActions'
 import Group from '../groups/queries'
 import { User } from '../groups/types'
 import { GetGroupQuery, UserAnnotated } from './types'
 
+import { getOrganizations } from '../utils'
 import { adminCatalogsRouter } from './catalog/router'
 import { adminCategoriesRouter } from './categories/router'
 import { adminGroupLeadersRouter } from './group-leaders/router'
@@ -59,11 +65,56 @@ router.get<unknown, unknown, unknown, GetGroupQuery>(
   }
 )
 
+// List all admins
+router.get('/', async (req, res, next) => {
+  try {
+    const organization = getOrganizations(req)
+    const response = await listUsersInGroup(organization[0] + '0admin')
+    res.status(200).json(response)
+  } catch (err) {
+    console.error(err)
+    next(err)
+  }
+})
+
+// Promote user to admin
+router.post('/add', async (req, res, next) => {
+  try {
+    const organization = getOrganizations(req)
+    if (typeof req.query.username !== 'string') {
+      throw new Error('username must be a string')
+    }
+    const response = await addUserToGroup({
+      username: req.query.username,
+      groupname: organization[0] + '0admin',
+    })
+    res.status(200).json(response)
+  } catch (err) {
+    console.error(err)
+    next(err)
+  }
+})
+
+// Demote user from admin
+router.post('/remove', async (req, res, next) => {
+  try {
+    const organization = getOrganizations(req)
+    if (typeof req.query.username !== 'string') {
+      throw new Error('username must be a string')
+    }
+    const response = await removeUserFromGroup({
+      username: req.query.username,
+      groupname: organization[0] + '0admin',
+    })
+    res.status(200).json(response)
+  } catch (err) {
+    console.error(err)
+    next(err)
+  }
+})
+
 /*
-1. Add administrator
-2. Remove administrator
-3. Get all administrators
-4. Anonymiser bruker (slett cognito bruker og sett question answer id til en unik, men konsekvent streng)
+1. Anonymiser bruker (slett cognito bruker og sett question answer id til en unik, men konsekvent streng)
 */
 
 export { router as adminRouter }
