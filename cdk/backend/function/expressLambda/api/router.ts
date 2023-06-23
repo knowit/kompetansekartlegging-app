@@ -9,10 +9,12 @@ import { groupRouter } from './groups/router'
 import { organizationRouter } from './organizations/router'
 import { questionAnswersRouter } from './question-answers/router'
 import { questionsRouter } from './questions/router'
+import { superAdminRouter } from './super-admin/router'
 import { userRouter } from './user/router'
 
 const router = express.Router()
 
+router.use('/super', superAdminRouter)
 router.use('/admin', adminRouter)
 router.use('/debug', debugRouter)
 router.use('/organizations', organizationRouter)
@@ -26,4 +28,3 @@ router.use('/group-leader', groupLeaderRouter)
 router.use('/user', userRouter)
 
 export { router as apiRouter }
- 

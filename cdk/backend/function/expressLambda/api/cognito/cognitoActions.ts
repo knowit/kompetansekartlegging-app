@@ -42,7 +42,7 @@ const addUserToOrganization = async ({ username, groupname }: Body) => {
       .promise()
     return {
       status: 'ok',
-      message: `🚀 ~ > Success adding ${username} to ${groupname}`,
+      message: `🚀 ~> Success adding ${username} to ${groupname}`,
       data: null,
     }
   } catch (err) {
@@ -74,14 +74,77 @@ async function removeUserFromOrganization({ username, groupname }: Body) {
 }
 
 interface ICreateOrganizationParams {
-  GroupName: string
+  identifier_attribute: string
 }
 
 // Create an orangization
-const createOrganization = async () => {
+const createOrganization = async ({
+  identifier_attribute,
+}: ICreateOrganizationParams) => {
   const params = {
-    GroupName: 'organization',
+    GroupName: identifier_attribute,
     UserPoolId: userPoolId!,
+  }
+  const groupLeaderParams = {
+    GroupName: identifier_attribute + '0groupLeader',
+    UserPoolId: userPoolId!,
+  }
+  const adminParams = {
+    GroupName: identifier_attribute + '0admin',
+    UserPoolId: userPoolId!,
+  }
+  try {
+    await Promise.all([
+      cognitoIdentityServiceProvider.createGroup(params).promise(),
+      cognitoIdentityServiceProvider.createGroup(groupLeaderParams).promise(),
+      cognitoIdentityServiceProvider.createGroup(adminParams).promise(),
+    ])
+
+    return {
+      status: 'ok',
+      message: `🚀 ~ > Created ${identifier_attribute}`,
+      data: null,
+    }
+  } catch (err) {
+    console.log(err)
+    throw err
+  }
+}
+
+interface IDeleteOrganizationParams {
+  identifier_attribute: string
+}
+
+const deleteOrganization = async ({
+  identifier_attribute,
+}: IDeleteOrganizationParams) => {
+  const params = {
+    GroupName: identifier_attribute,
+    UserPoolId: userPoolId!,
+  }
+  const groupLeaderParams = {
+    GroupName: identifier_attribute + '0groupLeader',
+    UserPoolId: userPoolId!,
+  }
+  const adminParams = {
+    GroupName: identifier_attribute + '0admin',
+    UserPoolId: userPoolId!,
+  }
+  try {
+    await Promise.all([
+      cognitoIdentityServiceProvider.deleteGroup(params).promise(),
+      cognitoIdentityServiceProvider.deleteGroup(groupLeaderParams).promise(),
+      cognitoIdentityServiceProvider.deleteGroup(adminParams).promise(),
+    ])
+
+    return {
+      status: 'ok',
+      message: `🚀 ~ > Deleted ${identifier_attribute}`,
+      data: null,
+    }
+  } catch (err) {
+    console.log(err)
+    throw err
   }
 }
 
@@ -154,6 +217,30 @@ async function listOrganizations(
       status: 'ok',
       data: result,
       message: '🚀 ~ > All organizations in cognito user pool',
+    }
+  } catch (err) {
+    console.log(err)
+    throw err
+  }
+}
+
+const listAdmins = async (
+  Limit?: QueryLimitType,
+  PaginationToken?: SearchPaginationTokenType
+) => {
+  const params = {}
+
+  try {
+    const organizations = await listOrganizations(Limit, PaginationToken)
+    const groups = organizations.data.Groups?.filter(group =>
+      group.GroupName?.includes('0admin')
+    )
+    const allAdmins = []
+
+    for (const group of groups!) {
+      // TODO: legge til alle admins i en liste, finne ut av hvorfor det er dobbelt promise
+      const admins = await listUsersInOrganization(group.GroupName!)
+      allAdmins.push(admins)
     }
   } catch (err) {
     console.log(err)
@@ -289,6 +376,8 @@ const addGroupIdToUserAttributes = async ({
 export {
   addGroupIdToUserAttributes,
   addUserToOrganization,
+  createOrganization,
+  deleteOrganization,
   getUser,
   listOrganizations,
   listOrganizationsForUser,
