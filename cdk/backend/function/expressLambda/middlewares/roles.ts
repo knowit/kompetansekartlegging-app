@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { getRoles } from '../api/utils'
 
 export enum Roles {
+  SUPER_ADMIN = 'superadmin',
   ADMIN = 'admin',
   GROUP_LEADER = 'groupleader',
 }
