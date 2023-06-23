@@ -42,7 +42,7 @@ const addUserToOrganization = async ({ username, groupname }: Body) => {
       .promise()
     return {
       status: 'ok',
-      message: `Success adding ${username} to ${groupname}`,
+      message: `🚀 ~ > Success adding ${username} to ${groupname}`,
       data: null,
     }
   } catch (err) {
@@ -64,7 +64,7 @@ async function removeUserFromOrganization({ username, groupname }: Body) {
       .promise()
     return {
       status: 'ok',
-      message: `Removed ${username} from ${groupname}`,
+      message: `🚀 ~ > Removed ${username} from ${groupname}`,
       data: null,
     }
   } catch (err) {
@@ -73,13 +73,23 @@ async function removeUserFromOrganization({ username, groupname }: Body) {
   }
 }
 
+interface ICreateOrganizationParams {
+  GroupName: string
+}
+
+// Create an orangization
+const createOrganization = async () => {
+  const params = {
+    GroupName: 'organization',
+    UserPoolId: userPoolId!,
+  }
+}
+
 async function getUser(username: UsernameType) {
   const params = {
     UserPoolId: userPoolId!,
     Username: username,
   }
-
-  console.log(`Attempting to retrieve information for ${username}`)
 
   try {
     const result = await cognitoIdentityServiceProvider
@@ -102,8 +112,6 @@ async function listUsers(
     ...(PaginationToken && { PaginationToken }),
   }
 
-  console.log('Attempting to list users')
-
   try {
     const result = await cognitoIdentityServiceProvider
       .listUsers(params)
@@ -114,16 +122,20 @@ async function listUsers(
     response.NextToken = response.PaginationToken
     delete response.PaginationToken
 
-    return response
+    return {
+      status: 'ok',
+      data: response,
+      message: '🚀 ~ > All users in cognito user pool',
+    }
   } catch (err) {
     console.log(err)
     throw err
   }
 }
 
-async function listGroups(
-  Limit: QueryLimitType,
-  PaginationToken: SearchPaginationTokenType
+async function listOrganizations(
+  Limit?: QueryLimitType,
+  PaginationToken?: SearchPaginationTokenType
 ) {
   const params = {
     UserPoolId: userPoolId!,
@@ -138,7 +150,11 @@ async function listGroups(
       .listGroups(params)
       .promise()
 
-    return result
+    return {
+      status: 'ok',
+      data: result,
+      message: '🚀 ~ > All organizations in cognito user pool',
+    }
   } catch (err) {
     console.log(err)
     throw err
@@ -274,7 +290,7 @@ export {
   addGroupIdToUserAttributes,
   addUserToOrganization,
   getUser,
-  listGroups,
+  listOrganizations,
   listOrganizationsForUser,
   listUsers,
   listUsersInOrganization,
