@@ -109,9 +109,7 @@ router.post<unknown, unknown, unknown, IUsername>(
   }
 )
 
-/**
- * Add a user to the group
- */
+// Add a user to the group
 router.post<unknown, unknown, unknown, IUsername>(
   '/group/add-user',
   async (req, res, next) => {
