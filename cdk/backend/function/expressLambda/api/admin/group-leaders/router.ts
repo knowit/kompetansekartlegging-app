@@ -1,8 +1,8 @@
 import express from 'express'
 import {
-  addUserToGroup,
-  listUsersInGroup,
-  removeUserFromGroup,
+  addUserToOrganization,
+  listUsersInOrganization,
+  removeUserFromOrganization,
 } from '../../cognito/cognitoActions'
 import { getOrganizations } from '../../utils'
 
@@ -12,7 +12,9 @@ const router = express.Router()
 router.get('/', async (req, res, next) => {
   try {
     const organization = getOrganizations(req)
-    const response = await listUsersInGroup(organization[0] + '0groupLeader')
+    const response = await listUsersInOrganization(
+      organization[0] + '0groupLeader'
+    )
     res.status(200).json(response)
   } catch (err) {
     console.error(err)
@@ -27,7 +29,7 @@ router.post('/add', async (req, res, next) => {
     if (typeof req.query.username !== 'string') {
       throw new Error('username must be a string')
     }
-    const response = await addUserToGroup({
+    const response = await addUserToOrganization({
       username: req.query.username,
       groupname: organization[0] + '0groupLeader',
     })
@@ -45,7 +47,7 @@ router.post('/remove', async (req, res, next) => {
     if (typeof req.query.username !== 'string') {
       throw new Error('username must be a string')
     }
-    const response = await removeUserFromGroup({
+    const response = await removeUserFromOrganization({
       username: req.query.username,
       groupname: organization[0] + '0groupLeader',
     })

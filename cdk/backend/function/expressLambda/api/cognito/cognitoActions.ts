@@ -29,7 +29,7 @@ const userPoolId = process.env.USERPOOL
 //   username: UsernameType,
 //   groupname: GroupNameType
 // )
-const addUserToGroup = async ({ username, groupname }: Body) => {
+const addUserToOrganization = async ({ username, groupname }: Body) => {
   const params = {
     GroupName: groupname,
     UserPoolId: userPoolId!,
@@ -51,7 +51,7 @@ const addUserToGroup = async ({ username, groupname }: Body) => {
   }
 }
 
-async function removeUserFromGroup({ username, groupname }: Body) {
+async function removeUserFromOrganization({ username, groupname }: Body) {
   const params = {
     GroupName: groupname,
     UserPoolId: userPoolId!,
@@ -66,67 +66,6 @@ async function removeUserFromGroup({ username, groupname }: Body) {
       status: 'ok',
       message: `Removed ${username} from ${groupname}`,
       data: null,
-    }
-  } catch (err) {
-    console.log(err)
-    throw err
-  }
-}
-
-// Confirms as an admin without using a confirmation code.
-async function confirmUserSignUp(username: UsernameType) {
-  const params = {
-    UserPoolId: userPoolId!,
-    Username: username,
-  }
-
-  try {
-    const result = await cognitoIdentityServiceProvider
-      .adminConfirmSignUp(params)
-      .promise()
-    console.log(`Confirmed ${username} registration`)
-    return {
-      message: `Confirmed ${username} registration`,
-    }
-  } catch (err) {
-    console.log(err)
-    throw err
-  }
-}
-
-async function disableUser(username: UsernameType) {
-  const params = {
-    UserPoolId: userPoolId!,
-    Username: username,
-  }
-
-  try {
-    const result = await cognitoIdentityServiceProvider
-      .adminDisableUser(params)
-      .promise()
-    console.log(`Disabled ${username}`)
-    return {
-      message: `Disabled ${username}`,
-    }
-  } catch (err) {
-    console.log(err)
-    throw err
-  }
-}
-
-async function enableUser(username: UsernameType) {
-  const params = {
-    UserPoolId: userPoolId!,
-    Username: username,
-  }
-
-  try {
-    const result = await cognitoIdentityServiceProvider
-      .adminEnableUser(params)
-      .promise()
-    console.log(`Enabled ${username}`)
-    return {
-      message: `Enabled ${username}`,
     }
   } catch (err) {
     console.log(err)
@@ -206,7 +145,7 @@ async function listGroups(
   }
 }
 
-async function listGroupsForUser(
+async function listOrganizationsForUser(
   username: UsernameType,
   Limit: QueryLimitType,
   NextToken: PaginationKey
@@ -243,7 +182,7 @@ async function listGroupsForUser(
   }
 }
 
-async function listUsersInGroup(
+async function listUsersInOrganization(
   groupname: GroupNameType,
   Limit?: QueryLimitType,
   NextToken?: PaginationKey
@@ -265,31 +204,6 @@ async function listUsersInGroup(
       status: 'ok',
       message: `🚀 ~ > All users in group ${groupname}`,
       data: result,
-    }
-  } catch (err) {
-    console.log(err)
-    throw err
-  }
-}
-
-// Signs out from all devices, as an administrator.
-async function signUserOut(username: UsernameType) {
-  const params = {
-    UserPoolId: userPoolId!,
-    Username: username,
-  }
-
-  console.log(`Attempting to signout ${username}`)
-
-  try {
-    const result = await cognitoIdentityServiceProvider
-      .adminUserGlobalSignOut(params)
-      .promise()
-    console.log(`Signed out ${username} from all devices`)
-    return {
-      status: 'ok',
-      message: `🚀 ~ > Signed out ${username} from all devices`,
-      data: null,
     }
   } catch (err) {
     console.log(err)
@@ -358,16 +272,12 @@ const addGroupIdToUserAttributes = async ({
 
 export {
   addGroupIdToUserAttributes,
-  addUserToGroup,
-  confirmUserSignUp,
-  disableUser,
-  enableUser,
+  addUserToOrganization,
   getUser,
   listGroups,
-  listGroupsForUser,
+  listOrganizationsForUser,
   listUsers,
-  listUsersInGroup,
+  listUsersInOrganization,
   removeGroupIdFromUserAttributes,
-  removeUserFromGroup,
-  signUserOut,
+  removeUserFromOrganization,
 }
