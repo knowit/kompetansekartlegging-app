@@ -25,7 +25,7 @@ export type CategoryInput = Omit<ICategory, 'id'>
 export type CategoryCatalogId = Pick<ICategory, 'catalog_id'>
 export type CategoryId = Pick<ICategory, 'id'>
 
-//Cognito
+// Cognito
 
 export interface ICognitoBody {
   username: string
@@ -40,7 +40,7 @@ export interface IListQuery {
 export type ListGroupsForUserQuery = IListQuery & IUsername
 export type ListUsersInGroupQuery = IListQuery & Pick<ICognitoBody, 'groupname'>
 
-//group-leader
+// Group leader
 
 export interface GetByUsernameAndOrganizationId extends IUsername {
   organizationId: string
@@ -66,6 +66,7 @@ export type UpdateGroupLeaderInput = Pick<IGroup, 'group_leader_username'>
 export interface IUserGroupId {
   group_id: string
 }
+
 // Organization
 
 export interface IOrganization {
