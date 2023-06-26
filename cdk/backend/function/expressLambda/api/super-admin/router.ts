@@ -27,6 +27,7 @@ router.get('/users', async (req, res, next) => {
   }
 })
 
+// List all super admins
 router.get('/', async (req, res, next) => {
   try {
     const users = await listUsersInOrganization('admin')
@@ -37,6 +38,7 @@ router.get('/', async (req, res, next) => {
   }
 })
 
+// List all admins across organizations
 router.get('/admins', async (req, res, next) => {
   try {
     const users = await listAdminsInAllOrganizations()
@@ -54,7 +56,7 @@ interface IAddUserToAdminOrganization {
 
 // Promote user to admin
 router.post<unknown, unknown, IAddUserToAdminOrganization>(
-  '/users/add',
+  '/admins/add',
   async (req, res, next) => {
     try {
       const response = await addUserToOrganization({
@@ -76,7 +78,7 @@ interface IRemoveUserFromAdminOrganization {
 
 // Demote user from admin
 router.post<unknown, unknown, IRemoveUserFromAdminOrganization>(
-  '/users/remove',
+  '/admins/remove',
   async (req, res, next) => {
     try {
       const response = await removeUserFromOrganization({
@@ -144,12 +146,6 @@ router.get('/organizations', async (req, res, next) => {
   }
 })
 
-/*
-  1. Opprette tre grupper i Cognito org, org0groupLeader og org0admin
-  2. Opprette database entry for org med attributter
-  3. Legge admin hvis valgt inn i org0admin i Cognito
-*/
-
 interface ICreateOrganizationBody {
   organization_name: string
   identifier_attribute: string
@@ -187,11 +183,6 @@ router.post<unknown, unknown, ICreateOrganizationBody>(
     }
   }
 )
-
-/*
-  1. Slette tre grupper i Cognito org, org0groupLeader og org0admin
-  2. Slette database entry for org med attributter
-*/
 
 interface IDeleteOrganizationBody {
   organization_name: string
