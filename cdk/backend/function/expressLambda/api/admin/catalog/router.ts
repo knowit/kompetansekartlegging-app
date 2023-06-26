@@ -1,13 +1,28 @@
 import express from 'express'
-import Catalog from '../../catalog/queries'
 import {
+  CatalogId,
   CatalogInput,
-  DeleteCatalogInput,
-  GetCatalogInput,
   UpdateCatalogInput,
-} from '../../catalog/types'
+} from '../../../utils/types'
+import Catalog from '../../catalog/queries'
+import { getOrganizations } from '../../utils'
 
 const router = express.Router()
+
+// Get all catalogs in organization
+router.get('/', async (req, res, next) => {
+  try {
+    const organization = getOrganizations(req)
+    const listCatalogsInOrganizationResponse = await Catalog.listCatalgosInOrganization(
+      { identifier_attribute: organization[0] }
+    )
+
+    res.status(200).json(listCatalogsInOrganizationResponse)
+  } catch (err) {
+    console.error(err)
+    next(err)
+  }
+})
 
 // Create
 router.post<unknown, unknown, CatalogInput>('/', async (req, res, next) => {
@@ -22,22 +37,19 @@ router.post<unknown, unknown, CatalogInput>('/', async (req, res, next) => {
 })
 
 // Delete
-router.delete<unknown, unknown, DeleteCatalogInput>(
-  '/',
-  async (req, res, next) => {
-    try {
-      const deleteResponse = await Catalog.deleteCatalog(req.body)
+router.delete<unknown, unknown, CatalogId>('/', async (req, res, next) => {
+  try {
+    const deleteResponse = await Catalog.deleteCatalog(req.body)
 
-      res.status(200).json(deleteResponse)
-    } catch (err) {
-      console.error(err)
-      next(err)
-    }
+    res.status(200).json(deleteResponse)
+  } catch (err) {
+    console.error(err)
+    next(err)
   }
-)
+})
 
 // Update
-router.patch<unknown, unknown, UpdateCatalogInput, GetCatalogInput>(
+router.patch<unknown, unknown, UpdateCatalogInput, CatalogId>(
   '/',
   async (req, res, next) => {
     try {

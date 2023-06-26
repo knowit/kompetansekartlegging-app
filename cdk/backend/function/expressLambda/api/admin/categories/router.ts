@@ -1,11 +1,6 @@
 import express from 'express'
+import { CategoryId, CategoryInput } from '../../../utils/types'
 import Category from '../../categories/queries'
-import {
-  CategoryInput,
-  DeleteCategoryInput,
-  GetCategoryInput,
-} from '../../categories/types'
-
 const router = express.Router()
 
 // Create category
@@ -21,7 +16,7 @@ router.post<unknown, unknown, CategoryInput>('/', async (req, res, next) => {
 })
 
 // Update category with given id
-router.patch<unknown, unknown, CategoryInput, GetCategoryInput>(
+router.patch<unknown, unknown, CategoryInput, CategoryId>(
   '/',
   async (req, res, next) => {
     const { id } = req.query
@@ -37,18 +32,15 @@ router.patch<unknown, unknown, CategoryInput, GetCategoryInput>(
 )
 
 // Delete category with given id
-router.delete<unknown, unknown, DeleteCategoryInput>(
-  '/',
-  async (req, res, next) => {
-    try {
-      const deleteCategoryResponse = await Category.deleteCategory(req.body)
+router.delete<unknown, unknown, CategoryId>('/', async (req, res, next) => {
+  try {
+    const deleteCategoryResponse = await Category.deleteCategory(req.body)
 
-      res.status(200).json(deleteCategoryResponse)
-    } catch (err) {
-      console.error(err)
-      next(err)
-    }
+    res.status(200).json(deleteCategoryResponse)
+  } catch (err) {
+    console.error(err)
+    next(err)
   }
-)
+})
 
 export { router as adminCategoriesRouter }

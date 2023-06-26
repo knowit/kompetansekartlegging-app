@@ -26,7 +26,7 @@ router.use('/questions', adminQuestionsRouter)
 router.use('/groups', adminGroupsRouter)
 router.use('/group-leaders', adminGroupLeadersRouter)
 
-// List all admins
+// List all admins in requesters organization
 router.get('/', async (req, res, next) => {
   try {
     const organization = getOrganizations(req)

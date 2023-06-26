@@ -21,6 +21,28 @@ const listCatalogs = async () => {
   })
 }
 
+const listCatalgosInOrganization = async ({
+  identifier_attribute,
+}: OrganizationIdentifierAttribute) => {
+  const parameters: SqlParameter[] = [
+    {
+      name: 'identifier_attribute',
+      value: {
+        stringValue: identifier_attribute,
+      },
+    },
+  ]
+
+  const query = `SELECT * FROM "catalog" WHERE organization_id = (SELECT id FROM organization WHERE identifier_attribute = :identifier_attribute)`
+
+  return await sqlQuery<ICatalog[]>({
+    message: `🚀 ~ > All Catalogs in organization: ${identifier_attribute}`,
+    query,
+    parameters,
+    isArray: true,
+  })
+}
+
 const findActiveCatalogByOrganization = async ({
   identifier_attribute,
 }: OrganizationIdentifierAttribute) => {
@@ -138,6 +160,7 @@ export default {
   createCatalog,
   deleteCatalog,
   listCatalogs,
+  listCatalgosInOrganization,
   updateCatalog,
   findActiveCatalogByOrganization,
 }
