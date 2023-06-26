@@ -245,9 +245,8 @@ const listAdminsInAllOrganizations = async (
       console.log(JSON.stringify(admins, null, 2))
 
       allAdmins.push(admins.data.Users)
-
-      return allAdmins
     }
+    return allAdmins
   } catch (err) {
     console.log(err)
     throw err
