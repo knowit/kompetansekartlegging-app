@@ -4,7 +4,7 @@ import { getRoles } from '../utils'
 import {
   addUserToOrganization,
   getUser,
-  listGroups,
+  listOrganizations,
   listOrganizationsForUser,
   listUsers,
   listUsersInOrganization,
@@ -21,17 +21,21 @@ import {
 const router = express.Router()
 
 router.use((req, res, next) => {
-  if (req.path == '/listUsersInOrganization') {
-    const roles = getRoles(req)
+  const roles = getRoles(req)
+  if (req.path == '/list-users-in-organization') {
     if (roles.includes(Roles.GROUP_LEADER) || roles.includes(Roles.ADMIN)) {
-      return next()
+      return requireRoles([Roles.GROUP_LEADER, Roles.ADMIN])(req, res, next)
+    }
+  } else if (req.path == '/list-users' || req.path == '/list-organizations') {
+    if (roles.includes(Roles.SUPER_ADMIN)) {
+      return requireRoles([Roles.SUPER_ADMIN])(req, res, next)
     }
   }
   return requireRoles([Roles.ADMIN])(req, res, next)
 })
 
 router.post<unknown, unknown, Body, unknown>(
-  '/addUserToOrganization',
+  '/add-user-to-organization',
   async (req, res, next) => {
     try {
       const response = await addUserToOrganization(req.body)
@@ -43,7 +47,7 @@ router.post<unknown, unknown, Body, unknown>(
 )
 
 router.post<unknown, unknown, Body, unknown>(
-  '/removeUserFromOrganizatino',
+  '/remove-user-from-organization',
   async (req, res, next) => {
     try {
       const response = await removeUserFromOrganization(req.body)
@@ -55,7 +59,7 @@ router.post<unknown, unknown, Body, unknown>(
 )
 
 router.get<unknown, unknown, unknown, UserBody>(
-  '/getUser',
+  '/get-user',
   async (req, res, next) => {
     try {
       const response = await getUser(req.query.username)
@@ -66,8 +70,9 @@ router.get<unknown, unknown, unknown, UserBody>(
   }
 )
 
+// List all users in the cognito user pool
 router.get<unknown, unknown, unknown, ListQuery>(
-  '/listUsers',
+  '/list-users',
   async (req, res, next) => {
     try {
       const response = await listUsers(req.query.limit || 25, req.query.token)
@@ -78,11 +83,15 @@ router.get<unknown, unknown, unknown, ListQuery>(
   }
 )
 
+// List all organizations in the cognito user pool
 router.get<unknown, unknown, unknown, ListQuery>(
-  '/listOrganizations',
+  '/list-organizations',
   async (req, res, next) => {
     try {
-      const response = await listGroups(req.query.limit || 25, req.query.token)
+      const response = await listOrganizations(
+        req.query.limit || 25,
+        req.query.token
+      )
       res.status(200).json(response)
     } catch (err) {
       next(err)
@@ -90,8 +99,9 @@ router.get<unknown, unknown, unknown, ListQuery>(
   }
 )
 
+// List all organizations for a user in the cognito user pool
 router.get<unknown, unknown, unknown, ListGroupsForUserQuery>(
-  '/listOrganizationsForUser',
+  '/list-organizations-for-user',
   async (req, res, next) => {
     try {
       const response = await listOrganizationsForUser(
@@ -106,8 +116,9 @@ router.get<unknown, unknown, unknown, ListGroupsForUserQuery>(
   }
 )
 
+// List all users in an organization in the cognito user pool
 router.get<unknown, unknown, unknown, ListUsersInGroupQuery>(
-  '/listUsersInOrganization',
+  '/list-users-in-organization',
   async (req, res, next) => {
     try {
       const response = await listUsersInOrganization(

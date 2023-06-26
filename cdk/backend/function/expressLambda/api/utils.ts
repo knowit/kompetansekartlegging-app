@@ -1,4 +1,5 @@
 import { Request } from 'express'
+import { Roles } from '../middlewares/roles'
 
 // Denne tar ikke hensyn til norsk tid.
 // Kan evt. gjøre new Date(Date.now() + 60 * 60 * 1000).toISO....
@@ -35,6 +36,8 @@ export const getRoles = (req: Request): string[] =>
       const role = r.split('0')
       if (role.length > 1) {
         return role[1].toLocaleLowerCase()
+      } else if (r === 'admin') {
+        return Roles.SUPER_ADMIN
       }
     })
     .filter((r: string | undefined) => r !== undefined)

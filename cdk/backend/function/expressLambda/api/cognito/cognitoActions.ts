@@ -19,6 +19,7 @@ import {
   QueryLimitType,
   SearchPaginationTokenType,
   UsernameType,
+  UsersListType,
 } from 'aws-sdk/clients/cognitoidentityserviceprovider'
 import { Body } from './types'
 
@@ -42,7 +43,7 @@ const addUserToOrganization = async ({ username, groupname }: Body) => {
       .promise()
     return {
       status: 'ok',
-      message: `Success adding ${username} to ${groupname}`,
+      message: `🚀 ~> Success adding ${username} to ${groupname}`,
       data: null,
     }
   } catch (err) {
@@ -64,7 +65,82 @@ async function removeUserFromOrganization({ username, groupname }: Body) {
       .promise()
     return {
       status: 'ok',
-      message: `Removed ${username} from ${groupname}`,
+      message: `🚀 ~ > Removed ${username} from ${groupname}`,
+      data: null,
+    }
+  } catch (err) {
+    console.log(err)
+    throw err
+  }
+}
+
+interface ICreateOrganizationParams {
+  identifier_attribute: string
+}
+
+// Create an orangization
+const createOrganization = async ({
+  identifier_attribute,
+}: ICreateOrganizationParams) => {
+  const params = {
+    GroupName: identifier_attribute,
+    UserPoolId: userPoolId!,
+  }
+  const groupLeaderParams = {
+    GroupName: identifier_attribute + '0groupLeader',
+    UserPoolId: userPoolId!,
+  }
+  const adminParams = {
+    GroupName: identifier_attribute + '0admin',
+    UserPoolId: userPoolId!,
+  }
+  try {
+    await Promise.all([
+      cognitoIdentityServiceProvider.createGroup(params).promise(),
+      cognitoIdentityServiceProvider.createGroup(groupLeaderParams).promise(),
+      cognitoIdentityServiceProvider.createGroup(adminParams).promise(),
+    ])
+
+    return {
+      status: 'ok',
+      message: `🚀 ~ > Created ${identifier_attribute}`,
+      data: null,
+    }
+  } catch (err) {
+    console.log(err)
+    throw err
+  }
+}
+
+interface IDeleteOrganizationParams {
+  identifier_attribute: string
+}
+
+const deleteOrganization = async ({
+  identifier_attribute,
+}: IDeleteOrganizationParams) => {
+  const params = {
+    GroupName: identifier_attribute,
+    UserPoolId: userPoolId!,
+  }
+  const groupLeaderParams = {
+    GroupName: identifier_attribute + '0groupLeader',
+    UserPoolId: userPoolId!,
+  }
+  const adminParams = {
+    GroupName: identifier_attribute + '0admin',
+    UserPoolId: userPoolId!,
+  }
+  try {
+    await Promise.all([
+      cognitoIdentityServiceProvider.deleteGroup(params).promise(),
+      cognitoIdentityServiceProvider.deleteGroup(groupLeaderParams).promise(),
+      cognitoIdentityServiceProvider.deleteGroup(adminParams).promise(),
+    ])
+
+    return {
+      status: 'ok',
+      message: `🚀 ~ > Deleted ${identifier_attribute}`,
       data: null,
     }
   } catch (err) {
@@ -78,8 +154,6 @@ async function getUser(username: UsernameType) {
     UserPoolId: userPoolId!,
     Username: username,
   }
-
-  console.log(`Attempting to retrieve information for ${username}`)
 
   try {
     const result = await cognitoIdentityServiceProvider
@@ -102,8 +176,6 @@ async function listUsers(
     ...(PaginationToken && { PaginationToken }),
   }
 
-  console.log('Attempting to list users')
-
   try {
     const result = await cognitoIdentityServiceProvider
       .listUsers(params)
@@ -114,16 +186,20 @@ async function listUsers(
     response.NextToken = response.PaginationToken
     delete response.PaginationToken
 
-    return response
+    return {
+      status: 'ok',
+      data: response,
+      message: '🚀 ~ > All users in cognito user pool',
+    }
   } catch (err) {
     console.log(err)
     throw err
   }
 }
 
-async function listGroups(
-  Limit: QueryLimitType,
-  PaginationToken: SearchPaginationTokenType
+async function listOrganizations(
+  Limit?: QueryLimitType,
+  PaginationToken?: SearchPaginationTokenType
 ) {
   const params = {
     UserPoolId: userPoolId!,
@@ -138,7 +214,49 @@ async function listGroups(
       .listGroups(params)
       .promise()
 
-    return result
+    return {
+      status: 'ok',
+      data: result,
+      message: '🚀 ~ > All organizations in cognito user pool',
+    }
+  } catch (err) {
+    console.log(err)
+    throw err
+  }
+}
+
+const listAdminsInAllOrganizations = async (
+  Limit?: QueryLimitType,
+  PaginationToken?: SearchPaginationTokenType
+) => {
+  try {
+    const organizations = await listOrganizations(Limit, PaginationToken)
+    const groups = organizations.data.Groups?.filter(group =>
+      group.GroupName?.includes('0admin')
+    )
+    const allAdmins: Record<string, UsersListType> = {}
+
+    for (const group of groups!) {
+      const admins = await listUsersInOrganization(group.GroupName!)
+
+      if (!admins.data.Users) {
+        continue
+      }
+
+      if (!allAdmins[group.GroupName!]) {
+        allAdmins[group.GroupName!] = [...admins.data.Users]
+      } else {
+        allAdmins[group.GroupName!] = [
+          ...allAdmins[group.GroupName!],
+          ...admins.data.Users,
+        ]
+      }
+    }
+    return {
+      status: 'ok',
+      message: '🚀 ~ > All admins in all organizations',
+      data: allAdmins,
+    }
   } catch (err) {
     console.log(err)
     throw err
@@ -200,6 +318,7 @@ async function listUsersInOrganization(
     const result = await cognitoIdentityServiceProvider
       .listUsersInGroup(params)
       .promise()
+
     return {
       status: 'ok',
       message: `🚀 ~ > All users in group ${groupname}`,
@@ -273,8 +392,11 @@ const addGroupIdToUserAttributes = async ({
 export {
   addGroupIdToUserAttributes,
   addUserToOrganization,
+  createOrganization,
+  deleteOrganization,
   getUser,
-  listGroups,
+  listAdminsInAllOrganizations,
+  listOrganizations,
   listOrganizationsForUser,
   listUsers,
   listUsersInOrganization,

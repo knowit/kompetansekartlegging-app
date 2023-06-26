@@ -407,6 +407,8 @@ export class KompetanseStack extends Stack {
         'cognito-idp:AdminUpdateUserAttributes',
         'cognito-idp:ListUsers',
         'cognito-idp:ListGroups',
+        'cognito-idp:CreateGroup',
+        'cognito-idp:DeleteGroup',
       ],
       effect: iam.Effect.ALLOW,
       resources: [

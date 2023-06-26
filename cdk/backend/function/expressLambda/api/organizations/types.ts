@@ -5,11 +5,11 @@ export interface Organization {
   identifier_attribute: string
 }
 
-export type OrganizationInput = Omit<Organization, 'created_at'>
+export type OrganizationInput = Omit<Organization, 'created_at' | 'id'>
 
 export type GetOrganizationInput = Pick<Organization, 'id'>
 export type GetOrganizationByIdentifierInput = Pick<
   Organization,
   'identifier_attribute'
 >
-export type DeleteOrganizationInput = Pick<Organization, 'id'>
+export type DeleteOrganizationInput = Pick<Organization, 'identifier_attribute'>

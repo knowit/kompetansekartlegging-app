@@ -108,21 +108,23 @@ const createOrganization = async ({
   })
 }
 
-const deleteOrganization = async ({ id }: DeleteOrganizationInput) => {
+const deleteOrganization = async ({
+  identifier_attribute,
+}: DeleteOrganizationInput) => {
   const parameters: SqlParameter[] = [
     {
-      name: 'id',
+      name: 'identifier_attribute',
       value: {
-        stringValue: id,
+        stringValue: identifier_attribute,
       },
-      typeHint: TypeHint.UUID,
     },
   ]
 
-  const query = 'DELETE FROM organization WHERE id=:id RETURNING *;'
+  const query =
+    'DELETE FROM organization WHERE identifier_attribute=:identifier_attribute RETURNING *;'
 
   return await sqlQuery<Organization>({
-    message: `🚀 ~ > Organization '${id}' is now deleted.`,
+    message: `🚀 ~ > Organization '${identifier_attribute}' is now deleted.`,
     query,
     parameters,
   })

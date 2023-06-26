@@ -125,7 +125,7 @@ def organizationSQL(file, start, end):
         sqlInsertStatment += (
             f"\n({getValueOnSqlFormat(str(uuid.uuid4()))},"
             f"{getValueOnSqlFormat(row.createdAt, isUTC=True)},"
-            f"{getValueOnSqlFormat(row.orgname)},{getValueOnSqlFormat(row.identifierAttribute)},"
+            f"{getValueOnSqlFormat(row.orgname)},{getValueOnSqlFormat(row.id)},"
             f"{getValueOnSqlFormat(row.id)},"
             f"NULL),"
         )

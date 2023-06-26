@@ -33,7 +33,7 @@ router.get('/my-group', async (req, res, next) => {
     }
 
     const allUsers = await listUsers()
-    const members = allUsers.Users?.filter(
+    const members = allUsers.data.Users?.filter(
       user =>
         user.Attributes?.find(attribute => attribute.Name === 'custom:groupId')
           ?.Value == myGroupId!.data!.id
