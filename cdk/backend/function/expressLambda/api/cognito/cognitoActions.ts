@@ -252,7 +252,11 @@ const listAdminsInAllOrganizations = async (
         ]
       }
     }
-    return allAdmins
+    return {
+      status: 'ok',
+      message: '🚀 ~ > All admins in all organizations',
+      data: allAdmins,
+    }
   } catch (err) {
     console.log(err)
     throw err
