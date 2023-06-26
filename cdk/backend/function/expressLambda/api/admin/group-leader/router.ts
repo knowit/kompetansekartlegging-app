@@ -58,4 +58,4 @@ router.post('/remove', async (req, res, next) => {
   }
 })
 
-export { router as adminGroupLeadersRouter }
+export { router as adminGroupLeaderRouter }

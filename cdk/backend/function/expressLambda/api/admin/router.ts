@@ -11,7 +11,7 @@ import Admin from './queries'
 import { getOrganizations } from '../utils'
 import { adminCatalogsRouter } from './catalog/router'
 import { adminCategoriesRouter } from './categories/router'
-import { adminGroupLeadersRouter } from './group-leaders/router'
+import { adminGroupLeaderRouter } from './group-leader/router'
 import { adminGroupsRouter } from './groups/router'
 import { adminQuestionsRouter } from './questions/router'
 import { IUsername } from './types'
@@ -24,7 +24,7 @@ router.use('/catalogs', adminCatalogsRouter)
 router.use('/categories', adminCategoriesRouter)
 router.use('/questions', adminQuestionsRouter)
 router.use('/groups', adminGroupsRouter)
-router.use('/group-leaders', adminGroupLeadersRouter)
+router.use('/group-leader', adminGroupLeaderRouter)
 
 // List all admins in requesters organization
 router.get('/', async (req, res, next) => {
