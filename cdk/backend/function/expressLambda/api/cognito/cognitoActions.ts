@@ -19,6 +19,7 @@ import {
   QueryLimitType,
   SearchPaginationTokenType,
   UsernameType,
+  UsersListType,
 } from 'aws-sdk/clients/cognitoidentityserviceprovider'
 import { Body } from './types'
 
@@ -233,18 +234,23 @@ const listAdminsInAllOrganizations = async (
     const groups = organizations.data.Groups?.filter(group =>
       group.GroupName?.includes('0admin')
     )
-    const allAdmins = []
+    const allAdmins: Record<string, UsersListType> = {}
 
     for (const group of groups!) {
-      // TODO: legge til alle admins i en liste, finne ut av hvorfor det er dobbelt promise
-      console.log(`Henter admins for ${group.GroupName}`)
-
       const admins = await listUsersInOrganization(group.GroupName!)
-      console.log(`Admins var ${admins.data.Users?.join(', ')}`)
 
-      console.log(JSON.stringify(admins, null, 2))
+      if (!admins.data.Users) {
+        continue
+      }
 
-      allAdmins.push(admins.data.Users)
+      if (!allAdmins[group.GroupName!]) {
+        allAdmins[group.GroupName!] = [...admins.data.Users]
+      } else {
+        allAdmins[group.GroupName!] = [
+          ...allAdmins[group.GroupName!],
+          ...admins.data.Users,
+        ]
+      }
     }
     return allAdmins
   } catch (err) {
