@@ -1,26 +1,25 @@
 import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
 import { v4 as uuidv4 } from 'uuid'
 import { sqlQuery } from '../../utils/sql'
-import { createTimestampNow } from '../utils'
 import {
-  DeleteQuestionAnswerInput,
   GetQuestionAnswerByUserAndQuestionInput,
-  GetQuestionAnswerInput,
-  QuestionAnswer,
+  IQuestionAnswer,
+  QuestionAnswerId,
   QuestionAnswerInput,
-} from './types'
+} from '../../utils/types'
+import { createTimestampNow } from '../utils'
 
 const listQuestionAnswers = async () => {
   const query = 'SELECT id FROM question_answer'
 
-  return await sqlQuery<QuestionAnswer[]>({
+  return await sqlQuery<IQuestionAnswer[]>({
     message: '🚀 ~ > All question_answers',
     query,
     isArray: true,
   })
 }
 
-const getQuestionAnswer = async ({ id }: GetQuestionAnswerInput) => {
+const getQuestionAnswer = async ({ id }: QuestionAnswerId) => {
   const parameters: SqlParameter[] = [
     {
       name: 'id',
@@ -32,7 +31,7 @@ const getQuestionAnswer = async ({ id }: GetQuestionAnswerInput) => {
   ]
   const query = 'SELECT * FROM question_answer WHERE id = :id'
 
-  return await sqlQuery<QuestionAnswer>({
+  return await sqlQuery<IQuestionAnswer>({
     message: `🚀 ~ > Question Answer with id: ${id}`,
     query,
     parameters,
@@ -40,14 +39,14 @@ const getQuestionAnswer = async ({ id }: GetQuestionAnswerInput) => {
 }
 
 const getQuestionAnswerByUserAndQuestion = async ({
-  user_username,
+  username,
   question_id,
 }: GetQuestionAnswerByUserAndQuestionInput) => {
   const parameters: SqlParameter[] = [
     {
-      name: 'user_username',
+      name: 'username',
       value: {
-        stringValue: user_username,
+        stringValue: username,
       },
     },
     {
@@ -59,17 +58,17 @@ const getQuestionAnswerByUserAndQuestion = async ({
     },
   ]
   console.log('🚀 ~ parameters:', parameters)
-  const query = `SELECT * FROM question_answer WHERE user_username = :user_username AND question_id = :questionid`
+  const query = `SELECT * FROM question_answer WHERE username = :username AND question_id = :questionid`
 
-  return await sqlQuery<QuestionAnswer>({
-    message: `🚀 ~ > Question Answer with user_username: ${user_username} and question_id: ${question_id}`,
+  return await sqlQuery<IQuestionAnswer>({
+    message: `🚀 ~ > Question Answer with user_username: ${username} and question_id: ${question_id}`,
     query,
     parameters,
   })
 }
 
 const createQuestionAnswer = async ({
-  user_username,
+  username,
   question_id,
   knowledge,
   motivation,
@@ -87,9 +86,9 @@ const createQuestionAnswer = async ({
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'user_username',
+      name: 'username',
       value: {
-        stringValue: user_username,
+        stringValue: username,
       },
       typeHint: TypeHint.UUID,
     },
@@ -130,11 +129,11 @@ const createQuestionAnswer = async ({
     },
   ]
 
-  const query = `INSERT INTO question_answer (id, user_username, question_id, knowledge, motivation, custom_scale_value, text_value)
-    VALUES(:id, :user_username, :questionid, :knowledge, :motivation, :customscalevalue, :textvalue)
+  const query = `INSERT INTO question_answer (id, username, question_id, knowledge, motivation, custom_scale_value, text_value)
+    VALUES(:id, :username, :questionid, :knowledge, :motivation, :customscalevalue, :textvalue)
     RETURNING *`
 
-  return await sqlQuery<QuestionAnswer>({
+  return await sqlQuery<IQuestionAnswer>({
     message: `🚀 ~ > Question Answer with id: ${id} was successfully created`,
     query,
     parameters,
@@ -142,9 +141,9 @@ const createQuestionAnswer = async ({
 }
 
 const updateQuestionAnswer = async (
-  { id }: GetQuestionAnswerInput,
+  { id }: QuestionAnswerId,
   {
-    user_username,
+    username,
     question_id,
     knowledge,
     motivation,
@@ -168,9 +167,9 @@ const updateQuestionAnswer = async (
       typeHint: TypeHint.TIMESTAMP,
     },
     {
-      name: 'user_username',
+      name: 'username',
       value: {
-        stringValue: user_username,
+        stringValue: username,
       },
     },
     {
@@ -212,19 +211,19 @@ const updateQuestionAnswer = async (
 
   // TODO: Se kommentar fra @Lekesoldat
   const query = `UPDATE question_answer
-        SET user_username=:user_username, question_id=:questionid, knowledge=:knowledge, motivation=:motivation,
+        SET username=:username, question_id=:questionid, knowledge=:knowledge, motivation=:motivation,
         custom_scale_value=:customscalevalue, text_value=:textvalue, updated_at=:updated_at
         WHERE id=:id
         RETURNING *`
 
-  return await sqlQuery<QuestionAnswer>({
+  return await sqlQuery<IQuestionAnswer>({
     message: `🚀 ~ > questionAnswer with id: ${id} was updated`,
     query,
     parameters,
   })
 }
 
-const deleteQuestionAnswer = async ({ id }: DeleteQuestionAnswerInput) => {
+const deleteQuestionAnswer = async ({ id }: QuestionAnswerId) => {
   const parameters: SqlParameter[] = [
     {
       name: 'id',
@@ -237,7 +236,7 @@ const deleteQuestionAnswer = async ({ id }: DeleteQuestionAnswerInput) => {
 
   const query = `DELETE FROM question_answer WHERE id=:id RETURNING *`
 
-  return await sqlQuery<QuestionAnswer>({
+  return await sqlQuery<IQuestionAnswer>({
     message: `🚀 ~ > QuestionAnswer with id: ${id} was deleted`,
     query,
     parameters,
@@ -245,7 +244,7 @@ const deleteQuestionAnswer = async ({ id }: DeleteQuestionAnswerInput) => {
 }
 
 const createQuestionAnswerFromBatch = async ({
-  user_username,
+  username,
   question_id,
   knowledge,
   motivation,
@@ -263,9 +262,9 @@ const createQuestionAnswerFromBatch = async ({
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'user_username',
+      name: 'username',
       value: {
-        stringValue: user_username,
+        stringValue: username,
       },
       typeHint: TypeHint.UUID,
     },
@@ -306,11 +305,11 @@ const createQuestionAnswerFromBatch = async ({
     },
   ]
 
-  const query = `INSERT INTO question_answer (id, user_username, question_id knowledge, motivation, custom_scale_value, text_value)
-  VALUES(:id, :user_username, :questionid, :knowledge, :motivation, :customscalevalue, :textvalue)
+  const query = `INSERT INTO question_answer (id, username, question_id knowledge, motivation, custom_scale_value, text_value)
+  VALUES(:id, :username, :questionid, :knowledge, :motivation, :customscalevalue, :textvalue)
   RETURNING *`
 
-  return await sqlQuery<QuestionAnswer>({
+  return await sqlQuery<IQuestionAnswer>({
     message: `🚀 ~ > QuestionAnswer with id: ${id} has been added or updated`,
     query,
     parameters,

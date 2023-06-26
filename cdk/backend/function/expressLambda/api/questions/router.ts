@@ -1,6 +1,6 @@
 import express from 'express'
+import { QuestionCategoryId, QuestionId } from '../../utils/types'
 import Question from './queries'
-import { GetQuestionInput, GetQuestionsByCategoryInput } from './types'
 
 const router = express.Router()
 
@@ -8,12 +8,12 @@ router.get('/', async (req, res, next) => {
   try {
     if (req.query.id) {
       const getQuestionResponse = await Question.getQuestion(
-        req.query as GetQuestionInput
+        req.query as QuestionId
       )
       res.status(200).json(getQuestionResponse)
     } else if (req.query.categoryid) {
       const listQuestionsInCategoryResponse = await Question.getQuestionsInCategory(
-        req.query as GetQuestionsByCategoryInput
+        req.query as QuestionCategoryId
       )
       res.status(200).json(listQuestionsInCategoryResponse)
     } else {

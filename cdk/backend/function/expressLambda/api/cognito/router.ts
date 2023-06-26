@@ -1,5 +1,12 @@
 import express from 'express'
 import { Roles, requireRoles } from '../../middlewares/roles'
+import {
+  ICognitoBody,
+  IListQuery,
+  IUsername,
+  ListGroupsForUserQuery,
+  ListUsersInGroupQuery,
+} from '../../utils/types'
 import { getRoles } from '../utils'
 import {
   addUserToOrganization,
@@ -10,13 +17,6 @@ import {
   listUsersInOrganization,
   removeUserFromOrganization,
 } from './cognitoActions'
-import {
-  Body,
-  ListGroupsForUserQuery,
-  ListQuery,
-  ListUsersInGroupQuery,
-  UserBody,
-} from './types'
 
 const router = express.Router()
 
@@ -34,7 +34,7 @@ router.use((req, res, next) => {
   return requireRoles([Roles.ADMIN])(req, res, next)
 })
 
-router.post<unknown, unknown, Body, unknown>(
+router.post<unknown, unknown, ICognitoBody, unknown>(
   '/add-user-to-organization',
   async (req, res, next) => {
     try {
@@ -46,7 +46,7 @@ router.post<unknown, unknown, Body, unknown>(
   }
 )
 
-router.post<unknown, unknown, Body, unknown>(
+router.post<unknown, unknown, ICognitoBody, unknown>(
   '/remove-user-from-organization',
   async (req, res, next) => {
     try {
@@ -58,7 +58,7 @@ router.post<unknown, unknown, Body, unknown>(
   }
 )
 
-router.get<unknown, unknown, unknown, UserBody>(
+router.get<unknown, unknown, unknown, IUsername>(
   '/get-user',
   async (req, res, next) => {
     try {
@@ -71,7 +71,7 @@ router.get<unknown, unknown, unknown, UserBody>(
 )
 
 // List all users in the cognito user pool
-router.get<unknown, unknown, unknown, ListQuery>(
+router.get<unknown, unknown, unknown, IListQuery>(
   '/list-users',
   async (req, res, next) => {
     try {
@@ -84,7 +84,7 @@ router.get<unknown, unknown, unknown, ListQuery>(
 )
 
 // List all organizations in the cognito user pool
-router.get<unknown, unknown, unknown, ListQuery>(
+router.get<unknown, unknown, unknown, IListQuery>(
   '/list-organizations',
   async (req, res, next) => {
     try {

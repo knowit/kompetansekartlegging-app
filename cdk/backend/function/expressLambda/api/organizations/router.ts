@@ -1,10 +1,10 @@
 import express from 'express'
-import Organization from './queries'
 import {
-  DeleteOrganizationInput,
-  GetOrganizationInput,
+  OrganizationId,
+  OrganizationIdentifierAttribute,
   OrganizationInput,
-} from './types'
+} from '../../utils/types'
+import Organization from './queries'
 
 const router = express.Router()
 
@@ -13,7 +13,7 @@ router.get('/', async (req, res, next) => {
   try {
     if (req.query.id) {
       const getOrganizationResponse = await Organization.getOrganization(
-        req.query as GetOrganizationInput
+        req.query as OrganizationId
       )
       res.status(200).json(getOrganizationResponse)
     } else {
@@ -45,7 +45,7 @@ router.post<unknown, unknown, OrganizationInput>(
 )
 
 // Delete organization
-router.delete<unknown, unknown, DeleteOrganizationInput>(
+router.delete<unknown, unknown, OrganizationIdentifierAttribute>(
   '/',
   async (req, res, next) => {
     try {

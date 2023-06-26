@@ -3,12 +3,11 @@ import { sqlQuery } from '../../utils/sql'
 
 import { v4 as uuidv4 } from 'uuid'
 import {
-  DeleteQuestionInput,
-  GetQuestionInput,
-  GetQuestionsByCategoryInput,
   IQuestion,
+  QuestionCategoryId,
+  QuestionId,
   QuestionInput,
-} from './types'
+} from '../../utils/types'
 
 const listQuestions = async () => {
   const query = `SELECT * FROM question`
@@ -20,7 +19,7 @@ const listQuestions = async () => {
   })
 }
 
-const getQuestion = async ({ id }: GetQuestionInput) => {
+const getQuestion = async ({ id }: QuestionId) => {
   const parameters: SqlParameter[] = [
     {
       name: 'id',
@@ -40,9 +39,7 @@ const getQuestion = async ({ id }: GetQuestionInput) => {
   })
 }
 
-const getQuestionsInCategory = async ({
-  category_id,
-}: GetQuestionsByCategoryInput) => {
+const getQuestionsInCategory = async ({ category_id }: QuestionCategoryId) => {
   const parameters: SqlParameter[] = [
     {
       name: 'categoryid',
@@ -120,7 +117,7 @@ const createQuestion = async ({
 }
 
 const updateQuestion = async (
-  { id }: GetQuestionInput,
+  { id }: QuestionId,
   {
     text,
     topic,
@@ -178,7 +175,7 @@ const updateQuestion = async (
   })
 }
 
-const deleteQuestion = async ({ id }: DeleteQuestionInput) => {
+const deleteQuestion = async ({ id }: QuestionId) => {
   const parameters: SqlParameter[] = [
     {
       name: 'id',

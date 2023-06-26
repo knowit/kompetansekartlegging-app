@@ -1,9 +1,7 @@
+import { ICategory, IQuestion, IQuestionAnswer } from '../../utils/types'
 import Category from '../categories/queries'
-import { ICategory } from '../categories/types'
 import QuestionAnswer from '../question-answers/queries'
-import { IQuestionAnswer } from '../question-answers/types'
 import Question from '../questions/queries'
-import { IQuestion } from '../questions/types'
 
 export const getAnswersByCategories = async (username: string) => {
   const output = []
@@ -35,7 +33,7 @@ export const getAnswersByCategories = async (username: string) => {
       const questionAnswer = await QuestionAnswer.getQuestionAnswerByUserAndQuestion(
         {
           question_id: question.id,
-          user_username: username,
+          username: username,
         }
       )
 

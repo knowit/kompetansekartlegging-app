@@ -1,5 +1,6 @@
 import express from 'express'
 import { Roles, requireRoles } from '../../middlewares/roles'
+import { IUsername } from '../../utils/types'
 import {
   addGroupIdToUserAttributes,
   getUser,
@@ -9,7 +10,6 @@ import {
 import Group from '../groups/queries'
 import { getUserOnRequest } from '../utils'
 import GroupLeader from './queries'
-import { GetByUsername, IUsername } from './types'
 
 const router = express.Router()
 
@@ -58,7 +58,7 @@ router.get('/my-group', async (req, res, next) => {
 /**
  * Get the timestamp for a user's last answer
  */
-router.get<unknown, unknown, unknown, GetByUsername>(
+router.get<unknown, unknown, unknown, IUsername>(
   '/last-answer-at',
   async (req, res, next) => {
     try {

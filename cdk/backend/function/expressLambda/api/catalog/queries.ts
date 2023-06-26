@@ -1,21 +1,20 @@
 import { SqlParameter } from '@aws-sdk/client-rds-data'
 import { v4 as uuidv4 } from 'uuid'
 import { sqlQuery } from '../../utils/sql'
-import { GetOrganizationInput } from '../organizations/types'
+import {
+  CatalogId,
+  CatalogInput,
+  ICatalog,
+  OrganizationIdentifierAttribute,
+  UpdateCatalogInput,
+} from '../../utils/types'
 import { createTimestampNow } from '../utils'
 import { catalogColumns, kindToParam } from './helpers'
-import {
-  Catalog,
-  CatalogInput,
-  DeleteCatalogInput,
-  GetCatalogInput,
-  UpdateCatalogInput,
-} from './types'
 
 const listCatalogs = async () => {
   const query = `SELECT * FROM "catalog"`
 
-  return await sqlQuery<Catalog[]>({
+  return await sqlQuery<ICatalog[]>({
     message: `🚀 ~ > All Catalogs:`,
     query,
     isArray: true,
@@ -24,7 +23,7 @@ const listCatalogs = async () => {
 
 const findActiveCatalogByOrganization = async ({
   identifier_attribute,
-}: GetOrganizationInput) => {
+}: OrganizationIdentifierAttribute) => {
   const parameters: SqlParameter[] = [
     {
       name: 'identifier_attribute',
@@ -68,14 +67,14 @@ const createCatalog = async ({ label, organization_id }: CatalogInput) => {
         VALUES (:id, :label, :created_at, :organization_id) 
         RETURNING *`
 
-  return await sqlQuery<Catalog>({
+  return await sqlQuery<ICatalog>({
     message: `🚀 ~ > Catalog '${label}' created.`,
     query,
     parameters,
   })
 }
 
-const deleteCatalog = async ({ id }: DeleteCatalogInput) => {
+const deleteCatalog = async ({ id }: CatalogId) => {
   const parameters: SqlParameter[] = [
     {
       name: 'id',
@@ -84,17 +83,14 @@ const deleteCatalog = async ({ id }: DeleteCatalogInput) => {
   ]
 
   const query = `DELETE FROM Catalog WHERE id = :id RETURNING *`
-  return await sqlQuery<Catalog>({
+  return await sqlQuery<ICatalog>({
     message: `🚀 ~ > Catalog with id '${id}' deleted.`,
     query,
     parameters,
   })
 }
 
-const updateCatalog = async (
-  { id }: GetCatalogInput,
-  values: UpdateCatalogInput
-) => {
+const updateCatalog = async ({ id }: CatalogId, values: UpdateCatalogInput) => {
   if (!values.updated_at) {
     values.updated_at = createTimestampNow()
   }
@@ -131,7 +127,7 @@ const updateCatalog = async (
 
   const query = `UPDATE "catalog" SET ${columnString} WHERE id=:id RETURNING *`
 
-  return await sqlQuery<Catalog>({
+  return await sqlQuery<ICatalog>({
     message: `🚀 ~ > Catalog with id '${id}' is now updated.`,
     query,
     parameters,

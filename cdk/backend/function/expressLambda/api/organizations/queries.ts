@@ -1,26 +1,25 @@
 import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
 import { v4 as uuidv4 } from 'uuid'
 import { sqlQuery } from '../../utils/sql'
-import { createTimestampNow } from '../utils'
 import {
-  DeleteOrganizationInput,
-  GetOrganizationByIdentifierInput,
-  GetOrganizationInput,
-  Organization,
+  IOrganization,
+  OrganizationId,
+  OrganizationIdentifierAttribute,
   OrganizationInput,
-} from './types'
+} from '../../utils/types'
+import { createTimestampNow } from '../utils'
 
 const listOrganizations = async () => {
   const query = 'SELECT * FROM organization'
 
-  return await sqlQuery<Organization[]>({
+  return await sqlQuery<IOrganization[]>({
     message: '🚀 ~ > All organizations.',
     query,
     isArray: true,
   })
 }
 
-const getOrganization = async ({ id }: GetOrganizationInput) => {
+const getOrganization = async ({ id }: OrganizationId) => {
   const parameters: SqlParameter[] = [
     {
       name: 'id',
@@ -33,7 +32,7 @@ const getOrganization = async ({ id }: GetOrganizationInput) => {
 
   const query = 'SELECT * FROM organization WHERE id = :id'
 
-  return await sqlQuery<Organization>({
+  return await sqlQuery<IOrganization>({
     message: `🚀 ~ > Organization with id ${id}`,
     query,
     parameters,
@@ -42,7 +41,7 @@ const getOrganization = async ({ id }: GetOrganizationInput) => {
 
 const getOrganizationByIdentifier = async ({
   identifier_attribute,
-}: GetOrganizationByIdentifierInput) => {
+}: OrganizationIdentifierAttribute) => {
   const parameters: SqlParameter[] = [
     {
       name: 'identifier_attribute',
@@ -55,7 +54,7 @@ const getOrganizationByIdentifier = async ({
   const query =
     'SELECT * FROM organization WHERE identifier_attribute = :identifier_attribute'
 
-  return await sqlQuery<Organization>({
+  return await sqlQuery<IOrganization>({
     message: `🚀 ~ > Organization ${identifier_attribute}`,
     query,
     parameters,
@@ -101,7 +100,7 @@ const createOrganization = async ({
   VALUES (:id, to_timestamp(:createdat, 'YYYY-MM-DD HH24:MI:SS'), :orgname, :identifierattribute)
   RETURNING *`
 
-  return await sqlQuery<Organization>({
+  return await sqlQuery<IOrganization>({
     message: `🚀 ~ > Organization '${organization_name}' with the id '${id}' inserted.`,
     query,
     parameters,
@@ -110,7 +109,7 @@ const createOrganization = async ({
 
 const deleteOrganization = async ({
   identifier_attribute,
-}: DeleteOrganizationInput) => {
+}: OrganizationIdentifierAttribute) => {
   const parameters: SqlParameter[] = [
     {
       name: 'identifier_attribute',
@@ -123,7 +122,7 @@ const deleteOrganization = async ({
   const query =
     'DELETE FROM organization WHERE identifier_attribute=:identifier_attribute RETURNING *;'
 
-  return await sqlQuery<Organization>({
+  return await sqlQuery<IOrganization>({
     message: `🚀 ~ > Organization '${identifier_attribute}' is now deleted.`,
     query,
     parameters,

@@ -21,7 +21,7 @@ import {
   UsernameType,
   UsersListType,
 } from 'aws-sdk/clients/cognitoidentityserviceprovider'
-import { Body } from './types'
+import { ICognitoBody } from '../../utils/types'
 
 const cognitoIdentityServiceProvider = new CognitoIdentityServiceProvider()
 const userPoolId = process.env.USERPOOL
@@ -30,7 +30,7 @@ const userPoolId = process.env.USERPOOL
 //   username: UsernameType,
 //   groupname: GroupNameType
 // )
-const addUserToOrganization = async ({ username, groupname }: Body) => {
+const addUserToOrganization = async ({ username, groupname }: ICognitoBody) => {
   const params = {
     GroupName: groupname,
     UserPoolId: userPoolId!,
@@ -52,7 +52,10 @@ const addUserToOrganization = async ({ username, groupname }: Body) => {
   }
 }
 
-async function removeUserFromOrganization({ username, groupname }: Body) {
+async function removeUserFromOrganization({
+  username,
+  groupname,
+}: ICognitoBody) {
   const params = {
     GroupName: groupname,
     UserPoolId: userPoolId!,
