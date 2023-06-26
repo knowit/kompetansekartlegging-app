@@ -50,7 +50,7 @@ router.get('/admins', async (req, res, next) => {
 })
 
 interface IAddUserToAdminOrganization {
-  identifier_attribute: string
+  organization_identifier_attribute: string
   username: string
 }
 
@@ -61,7 +61,7 @@ router.post<unknown, unknown, IAddUserToAdminOrganization>(
     try {
       const response = await addUserToOrganization({
         username: req.body.username,
-        groupname: req.body.identifier_attribute + '0admin',
+        groupname: req.body.organization_identifier_attribute + '0admin',
       })
       res.status(200).json(response)
     } catch (err) {
@@ -72,7 +72,7 @@ router.post<unknown, unknown, IAddUserToAdminOrganization>(
 )
 
 interface IRemoveUserFromAdminOrganization {
-  identifier_attribute: string
+  organization_identifier_attribute: string
   username: string
 }
 
@@ -83,7 +83,7 @@ router.post<unknown, unknown, IRemoveUserFromAdminOrganization>(
     try {
       const response = await removeUserFromOrganization({
         username: req.body.username,
-        groupname: req.body.identifier_attribute + '0admin',
+        groupname: req.body.organization_identifier_attribute + '0admin',
       })
       res.status(200).json(response)
     } catch (err) {

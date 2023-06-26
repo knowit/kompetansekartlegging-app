@@ -53,7 +53,7 @@ const getQuestionAnswersByActiveCatalogAndUser = async ({
         JOIN organization o ON o.id = c.organization_id
     WHERE c.active = TRUE
         AND o.id = :organizationId
-        AND qa.user_username = :username
+        AND qa.username = :username
   `
 
   return await sqlQuery({
@@ -76,7 +76,7 @@ const getLatestAnswerTimestamp = async ({ username }: IUsername) => {
   const query = `
     SELECT MAX(qa.updated_at) AS latest_answer_timestamp
     FROM question_answer qa
-    WHERE qa.user_username = :username
+    WHERE qa.username = :username
   `
 
   return await sqlQuery({

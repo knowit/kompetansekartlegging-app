@@ -2,8 +2,9 @@ export interface GetGroupQuery {
   id: string
 }
 
-export interface AddUserToGroupBody {
+export interface AddUserToGroupQuery {
   group_id: string
+  username: string
 }
 
 export interface IUsername {

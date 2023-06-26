@@ -14,7 +14,7 @@ import Group from '../../groups/queries'
 import Organization from '../../organizations/queries'
 import { getOrganizations } from '../../utils'
 import { getUsersInGroup } from '../helpers'
-import { AddUserToGroupBody, GetGroupQuery, IUsername } from '../types'
+import { AddUserToGroupQuery, GetGroupQuery, IUsername } from '../types'
 
 const router = express.Router()
 
@@ -138,12 +138,11 @@ router.post<unknown, unknown, unknown, IUsername>(
   }
 )
 
-router.post<unknown, unknown, AddUserToGroupBody, IUsername>(
+router.post<unknown, unknown, unknown, AddUserToGroupQuery>(
   '/add-user',
   async (req, res, next) => {
     try {
-      const { username } = req.query
-      const { group_id } = req.body
+      const { username, group_id } = req.query
       const response = await addGroupIdToUserAttributes({
         username,
         groupId: group_id,

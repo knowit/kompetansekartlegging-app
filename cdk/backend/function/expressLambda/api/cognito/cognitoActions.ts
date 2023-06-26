@@ -217,9 +217,13 @@ async function listOrganizations(
       .listGroups(params)
       .promise()
 
+    const data = result.Groups?.filter(
+      group => !group.GroupName?.includes('0') && group.GroupName !== 'admin'
+    )
+
     return {
       status: 'ok',
-      data: result,
+      data: data,
       message: '🚀 ~ > All organizations in cognito user pool',
     }
   } catch (err) {
@@ -234,23 +238,24 @@ const listAdminsInAllOrganizations = async (
 ) => {
   try {
     const organizations = await listOrganizations(Limit, PaginationToken)
-    const groups = organizations.data.Groups?.filter(group =>
-      group.GroupName?.includes('0admin')
+
+    const groupAdminNames = organizations.data?.map(
+      org => org.GroupName + '0admin'
     )
     const allAdmins: Record<string, UsersListType> = {}
 
-    for (const group of groups!) {
-      const admins = await listUsersInOrganization(group.GroupName!)
+    for (const groupAdminName of groupAdminNames!) {
+      const admins = await listUsersInOrganization(groupAdminName)
 
       if (!admins.data.Users) {
         continue
       }
 
-      if (!allAdmins[group.GroupName!]) {
-        allAdmins[group.GroupName!] = [...admins.data.Users]
+      if (!allAdmins[groupAdminName]) {
+        allAdmins[groupAdminName] = [...admins.data.Users]
       } else {
-        allAdmins[group.GroupName!] = [
-          ...allAdmins[group.GroupName!],
+        allAdmins[groupAdminName] = [
+          ...allAdmins[groupAdminName],
           ...admins.data.Users,
         ]
       }

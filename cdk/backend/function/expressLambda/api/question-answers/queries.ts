@@ -61,7 +61,7 @@ const getQuestionAnswerByUserAndQuestion = async ({
   const query = `SELECT * FROM question_answer WHERE username = :username AND question_id = :questionid`
 
   return await sqlQuery<IQuestionAnswer>({
-    message: `🚀 ~ > Question Answer with user_username: ${username} and question_id: ${question_id}`,
+    message: `🚀 ~ > Question Answer with username: ${username} and question_id: ${question_id}`,
     query,
     parameters,
   })
