@@ -4,6 +4,7 @@ import {
   addUserToOrganization,
   createOrganization,
   deleteOrganization,
+  listAdminsInAllOrganizations,
   listOrganizations,
   listUsers,
   listUsersInOrganization,
@@ -38,7 +39,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/admins', async (req, res, next) => {
   try {
-    const users = await listUsers()
+    const users = await listAdminsInAllOrganizations()
     res.status(200).json(users)
   } catch (err) {
     console.error(err)

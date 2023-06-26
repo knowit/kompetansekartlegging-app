@@ -224,12 +224,10 @@ async function listOrganizations(
   }
 }
 
-const listAdmins = async (
+const listAdminsInAllOrganizations = async (
   Limit?: QueryLimitType,
   PaginationToken?: SearchPaginationTokenType
 ) => {
-  const params = {}
-
   try {
     const organizations = await listOrganizations(Limit, PaginationToken)
     const groups = organizations.data.Groups?.filter(group =>
@@ -239,8 +237,16 @@ const listAdmins = async (
 
     for (const group of groups!) {
       // TODO: legge til alle admins i en liste, finne ut av hvorfor det er dobbelt promise
+      console.log(`Henter admins for ${group.GroupName}`)
+
       const admins = await listUsersInOrganization(group.GroupName!)
-      allAdmins.push(admins)
+      console.log(`Admins var ${admins.data.Users?.join(', ')}`)
+
+      console.log(JSON.stringify(admins, null, 2))
+
+      allAdmins.push(admins.data.Users)
+
+      return allAdmins
     }
   } catch (err) {
     console.log(err)
@@ -303,6 +309,7 @@ async function listUsersInOrganization(
     const result = await cognitoIdentityServiceProvider
       .listUsersInGroup(params)
       .promise()
+
     return {
       status: 'ok',
       message: `🚀 ~ > All users in group ${groupname}`,
@@ -379,6 +386,7 @@ export {
   createOrganization,
   deleteOrganization,
   getUser,
+  listAdminsInAllOrganizations,
   listOrganizations,
   listOrganizationsForUser,
   listUsers,
