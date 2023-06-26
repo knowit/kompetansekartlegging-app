@@ -1,13 +1,12 @@
 import express from 'express'
+import {
+  IQuestionAnswer,
+  IQuestionAnswerResponses,
+  QuestionAnswerId,
+  QuestionAnswerInput,
+} from '../../utils/types'
 import { getUserOnRequest } from '../utils'
 import QuestionAnswer from './queries'
-import {
-  DeleteQuestionAnswerInput,
-  GetQuestionAnswerInput,
-  IQuestionAnswer,
-  QuestionAnswerInput,
-  QuestionAnswerResponses,
-} from './types'
 
 const router = express.Router()
 
@@ -17,7 +16,7 @@ router.get('/', async (req, res, next) => {
     // Get by id
     if (req.query.id) {
       const getQuestionAnswerResponse = await QuestionAnswer.getQuestionAnswer(
-        req.query as GetQuestionAnswerInput
+        req.query as QuestionAnswerId
       )
       res.status(200).json(getQuestionAnswerResponse)
 
@@ -32,7 +31,7 @@ router.get('/', async (req, res, next) => {
       const getQuestionAnswerResponse = await QuestionAnswer.getQuestionAnswerByUserAndQuestion(
         {
           question_id: req.query.question_id as IQuestionAnswer['question_id'],
-          user_username: username,
+          username: username,
         }
       )
 
@@ -66,7 +65,7 @@ router.post<unknown, unknown, QuestionAnswerInput>(
 )
 
 // Update questionAnswer with given id
-router.patch<unknown, unknown, QuestionAnswerInput, GetQuestionAnswerInput>(
+router.patch<unknown, unknown, QuestionAnswerInput, QuestionAnswerId>(
   '/',
   async (req, res, next) => {
     try {
@@ -83,7 +82,7 @@ router.patch<unknown, unknown, QuestionAnswerInput, GetQuestionAnswerInput>(
 )
 
 // Delete questionAnswer with given id
-router.delete<unknown, unknown, DeleteQuestionAnswerInput>(
+router.delete<unknown, unknown, QuestionAnswerId>(
   '/',
   async (req, res, next) => {
     try {
@@ -103,7 +102,7 @@ router.post<unknown, unknown, QuestionAnswerInput[]>(
   '/batch',
   async (req, res, next) => {
     try {
-      let responses: QuestionAnswerResponses = {
+      let responses: IQuestionAnswerResponses = {
         status: 'ok',
         message: '🚀 ~ > Created questionAnswers from batch',
         data: [],

@@ -1,8 +1,9 @@
 import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
 import { sqlQuery } from '../../utils/sql'
-import { GetByUsername, GetByUsernameAndOrganizationId } from './types'
+import { GetByUsernameAndOrganizationId } from '../../utils/types'
+import { IUsername } from '../admin/types'
 
-const myGroup = async ({ username }: GetByUsername) => {
+const myGroup = async ({ username }: IUsername) => {
   const parameters: SqlParameter[] = [
     {
       name: 'username',
@@ -62,7 +63,7 @@ const getQuestionAnswersByActiveCatalogAndUser = async ({
   })
 }
 
-const getLatestAnswerTimestamp = async ({ username }: GetByUsername) => {
+const getLatestAnswerTimestamp = async ({ username }: IUsername) => {
   const parameters: SqlParameter[] = [
     {
       name: 'username',

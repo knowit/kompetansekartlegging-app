@@ -3,12 +3,11 @@ import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
 import { v4 as uuidv4 } from 'uuid'
 import { sqlQuery } from '../../utils/sql'
 import {
+  CategoryCatalogId,
+  CategoryId,
   CategoryInput,
-  DeleteCategoryInput,
-  GetCategoryInCatalogInput,
-  GetCategoryInput,
   ICategory,
-} from './types'
+} from '../../utils/types'
 
 const listCategories = async () => {
   const query = 'SELECT * FROM "category"'
@@ -19,7 +18,7 @@ const listCategories = async () => {
   })
 }
 
-const getCategory = async ({ id }: GetCategoryInput) => {
+const getCategory = async ({ id }: CategoryId) => {
   const parameters: SqlParameter[] = [
     {
       name: 'id',
@@ -39,9 +38,7 @@ const getCategory = async ({ id }: GetCategoryInput) => {
   })
 }
 
-const getCategoryInCatalog = async ({
-  catalog_id,
-}: GetCategoryInCatalogInput) => {
+const getCategoryInCatalog = async ({ catalog_id }: CategoryCatalogId) => {
   const parameters: SqlParameter[] = [
     {
       name: 'catalog_id',
@@ -175,7 +172,7 @@ const updateCategory = async (
   })
 }
 
-const deleteCategory = async ({ id }: DeleteCategoryInput) => {
+const deleteCategory = async ({ id }: CategoryId) => {
   const parameters: SqlParameter[] = [
     {
       name: 'id',
