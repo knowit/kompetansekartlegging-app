@@ -35,7 +35,7 @@ router.use((req, res, next) => {
 })
 
 router.post<unknown, unknown, ICognitoBody, unknown>(
-  '/add-user-to-organization',
+  '/add-user-to-group',
   async (req, res, next) => {
     try {
       const response = await addUserToOrganization(req.body)
@@ -47,7 +47,7 @@ router.post<unknown, unknown, ICognitoBody, unknown>(
 )
 
 router.post<unknown, unknown, ICognitoBody, unknown>(
-  '/remove-user-from-organization',
+  '/remove-user-from-group',
   async (req, res, next) => {
     try {
       const response = await removeUserFromOrganization(req.body)

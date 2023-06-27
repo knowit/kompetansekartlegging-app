@@ -357,7 +357,7 @@ const removeGroupIdFromUserAttributes = async (username: string) => {
     return {
       status: 'ok',
       message: 'Removed user from group',
-      data: null,
+      data: result,
     }
   } catch (err) {
     console.log(err)

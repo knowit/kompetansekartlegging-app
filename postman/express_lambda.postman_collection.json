@@ -1,0 +1,2061 @@
+{
+	"info": {
+		"_postman_id": "ba901ff5-5214-4aa8-9241-9eca6542d8f2",
+		"name": "Express Lambda",
+		"description": "## Setup environment variables\n\n1. Set up your own environment in the **Environments** tab in Postman\n2. Add the following variables\n    1. `env-app-client-id`\n    2. `env-sanbox-name`\n    3. `env-gateway-id`\n\nThe `env-app-client-id` can be found in the AWS management console under\n\n`Cognito -> User pools -> [name of user pool you use for the application] -> App integration`\n\nAt the bottom you will see the App client list where the Client ID will be listed.\n\nFor the sandbox name, that is the one created when setting up the project locally. This should have been stored as an env variable in `cdk/cdk.context.json`\n\nThe `env-gateway-id` can be found under API Gateway in the AWS Management Console. It is the id of the `ExpressLambda` API.\n\n### NB! Remember to use the environment you just created\n\n## Enable Identity Providers\n\nTo use this postman collection you need to enable **Cognito user pool** as an identity provider. To enable this go to through the following path in the AWS management console:\n\n`Cognito -> User pools -> [the user pool for this project] -> App integration`\n\nOn this page you will see a section called **App clients and analytics.** Click on the app client for this project and go to the section called **Hosted UI**. Click edit on this and scroll down til you see **Identity providers.** Here you add **Cognito user pool** from the list. Then you can save the changes and you should be ready to go!",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11785626",
+		"_collection_link": "https://kompetansekartlegging.postman.co/workspace/Kompetansekartlegging~147981e0-5ac7-4981-91fc-71ed34058db8/collection/11785626-ba901ff5-5214-4aa8-9241-9eca6542d8f2?action=share&creator=11785626&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "super-admin",
+			"item": [
+				{
+					"name": "get users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/super/users",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"super",
+								"users"
+							]
+						},
+						"description": "Get all users across organizations."
+					},
+					"response": []
+				},
+				{
+					"name": "get all super admins",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/super",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"super"
+							]
+						},
+						"description": "Get all super admins across organizations."
+					},
+					"response": []
+				},
+				{
+					"name": "get all admins",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/super/admins",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"super",
+								"admins"
+							]
+						},
+						"description": "Get all admins across organizations."
+					},
+					"response": []
+				},
+				{
+					"name": "get organizations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/super/organizations",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"super",
+								"organizations"
+							]
+						},
+						"description": "Get all organizations."
+					},
+					"response": []
+				},
+				{
+					"name": "create organization",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"organization_name\": \"123\",\n    \"identifier_attribute\": \"123\",\n    \"admin_username\": \"tester3@test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/super/organizations",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"super",
+								"organizations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"organization_identifier_attribute\": \"123\",\n    \"username\": \"tester2@test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/super/admins/add",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"super",
+								"admins",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"organization_identifier_attribute\": \"123\",\n    \"username\": \"tester2@test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/super/admins/remove",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"super",
+								"admins",
+								"remove"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete organization",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identifier_attribute\": \"hei\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/super/organizations",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"super",
+								"organizations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add super admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"tester2@test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/super/add",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"super",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove super admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"tester2@test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/super/remove",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"super",
+								"remove"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "All endpoints prefixed `/super` are restricted to users with the `admin`\\-role. This is the highest role and has access across organizations."
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "catalogs",
+					"item": [
+						{
+							"name": "get all catalogs",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base-url}}/admin/catalogs",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"admin",
+										"catalogs"
+									]
+								},
+								"description": "Returns all catalogs for the requester's organization."
+							},
+							"response": []
+						},
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"label\": \"testCreate1211113\",\n    \"organization_id\": \"b413713f-6dcc-49d1-bbbd-437f2bd090bb\",\n    \"active\": \"true\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/admin/catalogs",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"admin",
+										"catalogs"
+									]
+								},
+								"description": "Create a catalog for the provided organization."
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"active\": true,\n    \"label\": \"HEIIIIIIIII\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/admin/catalogs/?id=8c1c2eda-d07d-48b9-b758-22a1a41e61ca",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"admin",
+										"catalogs",
+										""
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "8c1c2eda-d07d-48b9-b758-22a1a41e61ca"
+										}
+									]
+								},
+								"description": "Update the catalog. If one catalog is set to active, the others, in the organization, is set to inactive."
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"ac2e04fb-0805-4de3-bee4-f21692ebeabe\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/admin/catalogs",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"admin",
+										"catalogs"
+									]
+								},
+								"description": "Delete a catalog."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "categories",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"text\": \"todele\",\n    \"description\": \" \",\n    \"index\": 6,\n    \"catalog_id\": \"14fed0ae-aa69-431f-8fe4-5d408df286d8\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/admin/categories",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"admin",
+										"categories"
+									]
+								},
+								"description": "Create a category in a catalog."
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"text\": \"Test-category-updated\",\n    \"description\": \"hei på deg titten tei hihi\",\n    \"index\": 6,\n    \"catalog_id\": \"14fed0ae-aa69-431f-8fe4-5d408df286d8\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/admin/categories?id=ae36e9d7-461a-4096-bff4-bca7c24c0f30",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"admin",
+										"categories"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "ae36e9d7-461a-4096-bff4-bca7c24c0f30"
+										}
+									]
+								},
+								"description": "Update a category."
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"ae36e9d7-461a-4096-bff4-bca7c24c0f30\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/admin/categories",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"admin",
+										"categories"
+									]
+								},
+								"description": "Delete a category in a catalog."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "group-leader",
+					"item": [
+						{
+							"name": "all group leaders",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base-url}}/admin/group-leader/",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"admin",
+										"group-leader",
+										""
+									]
+								},
+								"description": "Lists all group leaders in requester's organization."
+							},
+							"response": []
+						},
+						{
+							"name": "add group leader",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base-url}}/admin/group-leader/add?username=tester1@test",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"admin",
+										"group-leader",
+										"add"
+									],
+									"query": [
+										{
+											"key": "username",
+											"value": "tester1@test"
+										}
+									]
+								},
+								"description": "Promotes a user to a group leader in the requester's organization."
+							},
+							"response": []
+						},
+						{
+							"name": "remove group leader",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base-url}}/admin/group-leaders/remove?username=tester2@test",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"admin",
+										"group-leaders",
+										"remove"
+									],
+									"query": [
+										{
+											"key": "username",
+											"value": "tester2@test"
+										}
+									]
+								},
+								"description": "Demotes a user from a group leader in the requester's organization."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "groups",
+					"item": [
+						{
+							"name": "get all groups",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base-url}}/admin/groups",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"admin",
+										"groups"
+									]
+								},
+								"description": "Get all groups in the requester's organization."
+							},
+							"response": []
+						},
+						{
+							"name": "get group",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base-url}}/admin/get-group?id=722682fc-64d0-4370-9673-a9a3e7903f50",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"admin",
+										"get-group"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "722682fc-64d0-4370-9673-a9a3e7903f50"
+										}
+									]
+								},
+								"description": "Get a specific group in the requester's organization."
+							},
+							"response": []
+						},
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"group_leader_username\": \"tester3@test\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/admin/groups",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"admin",
+										"groups"
+									]
+								},
+								"description": "Create a group in the requester's organization."
+							},
+							"response": []
+						},
+						{
+							"name": "add user to group",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/admin/groups/add-user?username=tester3@test&group_id=0467c90c-ab6e-4ccf-a6af-bd666a7b04f6",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"admin",
+										"groups",
+										"add-user"
+									],
+									"query": [
+										{
+											"key": "username",
+											"value": "tester3@test"
+										},
+										{
+											"key": "group_id",
+											"value": "0467c90c-ab6e-4ccf-a6af-bd666a7b04f6"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "remove user from group",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base-url}}/admin/groups/remove-user?username=tester3@test",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"admin",
+										"groups",
+										"remove-user"
+									],
+									"query": [
+										{
+											"key": "username",
+											"value": "tester3@test"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update groupleader",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"group_leader_username\": \"tester2@test\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/admin/groups?id=d9e28d77-34e7-487e-ac33-743d178f0a30",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"admin",
+										"groups"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "d9e28d77-34e7-487e-ac33-743d178f0a30"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete group",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"0467c90c-ab6e-4ccf-a6af-bd666a7b04f6\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/admin/groups",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"admin",
+										"groups"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "questions",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"text\": \" \",\n    \"topic\": \"GoGoTest\",\n    \"index\": 11,\n    \"category_id\": \"680a7e64-8027-4999-a547-732feb152e47\",\n    \"type\": \"knowledge_motivation\",\n    \"scale_start\": null,\n    \"scale_middle\": null,\n    \"scale_end\": null\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/admin/questions",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"admin",
+										"questions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update question",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"text\": \" \",\n    \"topic\": \"GoGoTest123\",\n    \"index\": 11,\n    \"category_id\": \"680a7e64-8027-4999-a547-732feb152e47\",\n    \"type\": \"knowledge_motivation\",\n    \"scale_start\": null,\n    \"scale_middle\": null,\n    \"scale_end\": null\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/admin/questions?id=8ff87a5c-561f-4628-8ac6-2d5d0d7f2d82",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"admin",
+										"questions"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "8ff87a5c-561f-4628-8ac6-2d5d0d7f2d82"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"8ff87a5c-561f-4628-8ac6-2d5d0d7f2d82\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/admin/questions",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"admin",
+										"questions"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "all admins",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/admin",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"admin"
+							]
+						},
+						"description": "List all admins in requester's organization."
+					},
+					"response": []
+				},
+				{
+					"name": "add administrator",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/admin/add?username=tester2@test",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"admin",
+								"add"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "tester2@test"
+								}
+							]
+						},
+						"description": "Promote user to admin in the requester's organization."
+					},
+					"response": []
+				},
+				{
+					"name": "remove administrator",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/admin/remove?username=tester2@test",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"admin",
+								"remove"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "tester2@test"
+								}
+							]
+						},
+						"description": "Demote user from admin in the requester's organization."
+					},
+					"response": []
+				},
+				{
+					"name": "anonymize question answers",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"group_leader_username\": \"tester2@test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/admin/anonymize?username=tester2@test",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"admin",
+								"anonymize"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "tester2@test"
+								}
+							]
+						},
+						"description": "Unlinks all question answers from the provided user. The answers are given a random, but consistent anonymized user ID to maintain coherence."
+					},
+					"response": []
+				}
+			],
+			"description": "All endpoints prefixed `/admin` are restricted to users with the `0admin`\\-role."
+		},
+		{
+			"name": "catalogs",
+			"item": [
+				{
+					"name": "get active catalog by organization",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/catalogs",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"catalogs"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "categories",
+			"item": [
+				{
+					"name": "get all categories in an organization",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/categories?identifier_attribute=testorg",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"categories"
+							],
+							"query": [
+								{
+									"key": "identifier_attribute",
+									"value": "testorg"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get category with id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{base-url}}/categories?id=4ae17cd8-22d1-4905-aee9-6d2786662e85",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"categories"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "4ae17cd8-22d1-4905-aee9-6d2786662e85"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all categories in catalog",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/categories/?catalog_id=20cedb7a-a72b-4c2a-868e-265001b401d6",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"categories",
+								""
+							],
+							"query": [
+								{
+									"key": "catalog_id",
+									"value": "20cedb7a-a72b-4c2a-868e-265001b401d6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "cognito",
+			"item": [
+				{
+					"name": "get user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/cognito/get-user?username=tester2@test",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"cognito",
+								"get-user"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "tester2@test"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove user from cognito group",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\":  \"tester2@test\",\n    \"groupname\": \"testorg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/cognito/remove-user-from-group",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"cognito",
+								"remove-user-from-group"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add user to cognito group",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\":  \"tester2@test\",\n    \"groupname\": \"testorg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/cognito/add-user-to-group",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"cognito",
+								"add-user-to-group"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/cognito/list-users?limit=20&token=",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"cognito",
+								"list-users"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "token",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list organizations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/cognito/list-organizations?limit=20&token",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"cognito",
+								"list-organizations"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "token",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list organizations for user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/cognito/list-organizations?username=tester1@test&limit=10&token",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"cognito",
+								"list-organizations"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "tester1@test"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "token",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list users in organization",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/cognito/list-users-in-organization?groupname=testorg",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"cognito",
+								"list-users-in-organization"
+							],
+							"query": [
+								{
+									"key": "groupname",
+									"value": "testorg"
+								},
+								{
+									"key": "limit",
+									"value": "20",
+									"disabled": true
+								},
+								{
+									"key": "token",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "group-leader",
+			"item": [
+				{
+					"name": "my group",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/group-leader/my-group",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"group-leader",
+								"my-group"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get timestamp for last answer",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/group-leader/last-answer-at?username=tester1@test",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"group-leader",
+								"last-answer-at"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "tester1@test"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add user to group",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/group-leader/group/add-user?username=tester3@test",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"group-leader",
+								"group",
+								"add-user"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "tester3@test"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove user from group",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/group-leader/group/remove-user?username=tester2@test",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"group-leader",
+								"group",
+								"remove-user"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "tester2@test"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "All endpoints prefixed `/group-leader` are restricted to users with the `0groupleader`\\-role."
+		},
+		{
+			"name": "groups",
+			"item": [
+				{
+					"name": "add user to group",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"4e43024f-7c3c-489b-b78d-599382f317dd\",\n    \"mail\": \"tester2@test\",\n    \"organization_id\": \"f292d36a-66b7-4a81-8d3b-e93f4339d56a\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/groups/user?id=f1d87f8b-c5af-4507-8435-3dd8dcf93f7e",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"groups",
+								"user"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "f1d87f8b-c5af-4507-8435-3dd8dcf93f7e"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all users in group",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/groups/users?group_id=722682fc-64d0-4370-9673-a9a3e7903f50",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"groups",
+								"users"
+							],
+							"query": [
+								{
+									"key": "group_id",
+									"value": "722682fc-64d0-4370-9673-a9a3e7903f50"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user from group",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"tester3@test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/groups/user",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"groups",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"group_id\": \"deae536c-f3e3-4ad7-8a9d-2acf4e0f309e\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/groups",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add multiple users to group",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"username\": \"tester2@test\",\n        \"organization_id\": \"b3f4043e-d071-4322-83bc-23038daf71d8\"\n    },\n    {\n        \"username\": \"tester3@test\",\n        \"organization_id\": \"b3f4043e-d071-4322-83bc-23038daf71d8\"\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/groups/users?id=b0b84dac-d8bc-4551-810f-0bd05d2988d5",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"groups",
+								"users"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "b0b84dac-d8bc-4551-810f-0bd05d2988d5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all groups",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "organizations",
+			"item": [
+				{
+					"name": "get all organizations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/organizations",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"organizations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get organization with id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/organizations/?id=f8ef8502-ac55-4cd9-82a1-e4a820bf6296",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"organizations",
+								""
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "f8ef8502-ac55-4cd9-82a1-e4a820bf6296"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"testing123\",\r\n    \"orgname\": \"TestOrg\",\r\n    \"identifierattribute\": \"TestIdAttr\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/organizations",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"organizations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"testing123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/organizations",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"organizations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users (må nok flyttes eller endres på)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/organizations/users?id=aa70b65a-af59-47b2-8f1b-98fbe31ca352",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"organizations",
+								"users"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "aa70b65a-af59-47b2-8f1b-98fbe31ca352"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "question-answers",
+			"item": [
+				{
+					"name": "get all question answers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/question-answers",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"question-answers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get question answer by question id and username",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/question-answers?question_id=55697cc0-be8d-491d-8ea0-665d23cbb566",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"question-answers"
+							],
+							"query": [
+								{
+									"key": "question_id",
+									"value": "55697cc0-be8d-491d-8ea0-665d23cbb566"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userid\": \"d83aa04a-b598-45fa-8edb-3e7bce7ff89f\",\n    \"questionid\": \"2e823c78-d48b-4189-986c-b7815d78807c\",\n    \"knowledge\": 0,\n    \"motivation\": 3,\n    \"customscalevalue\": null,\n    \"textvalue\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/question-answers",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"question-answers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_username\": \"tester1@test\",\n    \"question_id\": \"239dbafb-503e-4c4b-bd00-848810faa1f3\",\n    \"knowledge\": 222,\n    \"motivation\": 500,\n    \"customs_cale_value\": null,\n    \"text_value\": null\n} ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/question-answers?id=82ee5198-44cf-45ff-a1ec-94852a4655b3",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"question-answers"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "82ee5198-44cf-45ff-a1ec-94852a4655b3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "batch create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"userid\": \"d83aa04a-b598-45fa-8edb-3e7bce7ff89f\",\n        \"questionid\": \"2e823c78-d48b-4189-986c-b7815d78807c\",\n        \"knowledge\": 0,\n        \"motivation\": 3,\n        \"customscalevalue\": null,\n        \"textvalue\": null\n    },\n    {\n        \"userid\": \"d83aa04a-b598-45fa-8edb-3e7bce7ff89f\",\n        \"questionid\": \"2e823c78-d48b-4189-986c-b7815d78807c\",\n        \"knowledge\": 5,\n        \"motivation\": 3,\n        \"customscalevalue\": null,\n        \"textvalue\": \"Hello\"\n    },\n    {\n        \"userid\": \"d83aa04a-b598-45fa-8edb-3e7bce7ff89f\",\n        \"questionid\": \"2e823c78-d48b-4189-986c-b7815d78807c\",\n        \"knowledge\": 10,\n        \"motivation\": 3,\n        \"customscalevalue\": 4,\n        \"textvalue\": null\n    }\n]\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/question-answers/batch",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"question-answers",
+								"batch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"4b1a362b-9151-4f09-8d9d-42f1b5823676\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/question-answers",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"question-answers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get question answers for user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/question-answers/user?username=tester1@test",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"question-answers",
+								"user"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "tester1@test"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "questions",
+			"item": [
+				{
+					"name": "all questions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/questions",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"questions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get question with id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/questions?id=199f751e-ab27-4120-975f-52b0d0054f6f",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"questions"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "199f751e-ab27-4120-975f-52b0d0054f6f"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "questions in category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/questions?category_id=a01b484d-aa38-4bce-82a1-76489a4b0901",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"questions"
+							],
+							"query": [
+								{
+									"key": "category_id",
+									"value": "a01b484d-aa38-4bce-82a1-76489a4b0901"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "question answers by categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/user/answers-by-categories?username=tester1@test&identifier_attribute=testorg",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"user",
+								"answers-by-categories"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "tester1@test"
+								},
+								{
+									"key": "identifier_attribute",
+									"value": "testorg"
+								}
+							]
+						},
+						"description": "Returns all question answers by each question in each category for a user in the provided organization."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "useBrowser",
+				"value": false,
+				"type": "boolean"
+			},
+			{
+				"key": "client_authentication",
+				"value": "body",
+				"type": "string"
+			},
+			{
+				"key": "tokenType",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "accessToken",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "{{access-token-url}}",
+				"type": "string"
+			},
+			{
+				"key": "redirect_uri",
+				"value": "{{callback-url}}",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "{{auth-url}}",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "authorization_code",
+				"type": "string"
+			},
+			{
+				"key": "state",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "tokenName",
+				"value": "AccessToken",
+				"type": "string"
+			},
+			{
+				"key": "headerPrefix",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "challengeAlgorithm",
+				"value": "S256",
+				"type": "string"
+			},
+			{
+				"key": "scope",
+				"value": "{{scope}}",
+				"type": "string"
+			},
+			{
+				"key": "clientId",
+				"value": "{{client-id}}",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base-url",
+			"value": "https://{{env-gateway-id}}.execute-api.eu-central-1.amazonaws.com/dev/api",
+			"type": "string"
+		},
+		{
+			"key": "callback-url",
+			"value": "http://localhost:3000/",
+			"type": "string"
+		},
+		{
+			"key": "auth-url",
+			"value": "https://komptest-{{env-sandbox-name}}.auth.eu-central-1.amazoncognito.com/login?client_id={{client-id}}&response_type=code&scope={{scope}}&redirect_uri={{callback-url}}",
+			"type": "string"
+		},
+		{
+			"key": "client-id",
+			"value": "{{env-app-client-id}}",
+			"type": "string"
+		},
+		{
+			"key": "scope",
+			"value": "aws.cognito.signin.user.admin+email+openid+phone+profile",
+			"type": "string"
+		},
+		{
+			"key": "access-token-url",
+			"value": "https://komptest-{{env-sandbox-name}}.auth.eu-central-1.amazoncognito.com/oauth2/token",
+			"type": "string"
+		}
+	]
+}
