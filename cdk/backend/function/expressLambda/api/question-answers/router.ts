@@ -13,15 +13,8 @@ const router = express.Router()
 // GET QuestionAnswer
 router.get('/', async (req, res, next) => {
   try {
-    // Get by id
-    if (req.query.id) {
-      const getQuestionAnswerResponse = await QuestionAnswer.getQuestionAnswer(
-        req.query as QuestionAnswerId
-      )
-      res.status(200).json(getQuestionAnswerResponse)
-
-      // Get by user and question
-    } else if (req.query.question_id) {
+    // Get by user and question
+    if (req.query.question_id) {
       const { username } = getUserOnRequest(req)
 
       if (!username) {

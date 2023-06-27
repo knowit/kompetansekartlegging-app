@@ -7,7 +7,7 @@ import {
   listUsers,
   removeGroupIdFromUserAttributes,
 } from '../cognito/cognitoActions'
-import Group from '../groups/queries'
+import { Group } from '../index'
 import { getUserOnRequest } from '../utils'
 import GroupLeader from './queries'
 
@@ -109,27 +109,26 @@ router.post<unknown, unknown, unknown, IUsername>(
   }
 )
 
-// Add a user to the group
+// Add a user to my group
 router.post<unknown, unknown, unknown, IUsername>(
   '/group/add-user',
   async (req, res, next) => {
     try {
       const { username } = req.query
       const requestingUser = getUserOnRequest(req)
-      const requestingUserGroupId = requestingUser.username
-        ? await getUser(requestingUser.username).then(
-            response =>
-              response.UserAttributes?.find(
-                attribute => attribute.Name === 'custom:groupId'
-              )?.Value
-          )
-        : undefined
-      if (requestingUserGroupId === undefined) {
+      if (!requestingUser.username) {
+        throw new Error('No username found on request')
+      }
+      const group = await GroupLeader.myGroup({
+        username: requestingUser.username,
+      })
+
+      if (group.data?.id === undefined) {
         throw new Error('Not authorized to add user to group')
       }
       const response = await addGroupIdToUserAttributes({
         username,
-        groupId: requestingUserGroupId,
+        groupId: group.data.id,
       })
       res.status(200).json(response)
     } catch (error) {
