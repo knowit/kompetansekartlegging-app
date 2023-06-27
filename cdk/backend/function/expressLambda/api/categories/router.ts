@@ -10,16 +10,40 @@ router.get('/', async (req, res, next) => {
       const getCategoryResponse = await Category.getCategory(
         req.query as CategoryId
       )
-      res.status(200).json(getCategoryResponse)
-    } else if (req.query.catalog_id) {
+      return res.status(200).json(getCategoryResponse)
+    }
+    next()
+  } catch (err) {
+    console.error(err)
+    next(err)
+  }
+})
+
+router.get('/', async (req, res, next) => {
+  try {
+    if (req.query.catalog_id) {
       const getCategoryInCatalogResponse = await Category.getCategoryInCatalog(
         req.query as CategoryCatalogId
       )
-      res.status(200).json(getCategoryInCatalogResponse)
-    } else {
-      const listCategoriesResponse = await Category.listCategories()
-      res.status(200).json(listCategoriesResponse)
+      return res.status(200).json(getCategoryInCatalogResponse)
     }
+    next()
+  } catch (err) {
+    console.error(err)
+    next(err)
+  }
+})
+
+router.get('/', async (req, res, next) => {
+  try {
+    if (!req.query.identifier_attribute) {
+      throw new Error('Missing identifier_attribute on request')
+    }
+
+    const listCategoriesResponse = await Category.listCategoriesInOrganization(
+      req.query.identifier_attribute as string
+    )
+    return res.status(200).json(listCategoriesResponse)
   } catch (err) {
     console.error(err)
     next(err)

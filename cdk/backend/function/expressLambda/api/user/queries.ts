@@ -3,11 +3,16 @@ import Category from '../categories/queries'
 import QuestionAnswer from '../question-answers/queries'
 import Question from '../questions/queries'
 
-export const getAnswersByCategories = async (username: string) => {
+export const getAnswersByCategories = async (
+  username: string,
+  identifier_attribute: string
+) => {
   const output = []
 
-  // Get all categories
-  const categories = await Category.listCategories()
+  // Get all categories in the organization
+  const categories = await Category.listCategoriesInOrganization(
+    identifier_attribute
+  )
   if (!categories.data) {
     throw new Error('No categories found')
   }
