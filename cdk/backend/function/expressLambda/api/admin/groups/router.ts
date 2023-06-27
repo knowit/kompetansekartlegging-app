@@ -1,7 +1,9 @@
 import express from 'express'
 import {
+  AddUserToGroupQuery,
   CategoryId,
   GroupId,
+  IUsername,
   UpdateGroupLeaderInput,
 } from '../../../utils/types'
 import {
@@ -14,7 +16,6 @@ import Group from '../../groups/queries'
 import Organization from '../../organizations/queries'
 import { getOrganizations } from '../../utils'
 import { getUsersInGroup } from '../helpers'
-import { AddUserToGroupQuery, GetGroupQuery, IUsername } from '../types'
 
 const router = express.Router()
 
@@ -36,30 +37,27 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.get<unknown, unknown, unknown, GetGroupQuery>(
-  '/',
-  async (req, res, next) => {
-    try {
-      const { id } = req.query
-      const group = await Group.getGroup({ id })
-      const groupLeader = await getUser(group.data!.group_leader_username)
-      const groupMembers = await getUsersInGroup(id)
+router.get<unknown, unknown, unknown, GroupId>('/', async (req, res, next) => {
+  try {
+    const { id } = req.query
+    const group = await Group.getGroup({ id })
+    const groupLeader = await getUser(group.data!.group_leader_username)
+    const groupMembers = await getUsersInGroup(id)
 
-      const result = {
-        status: 'ok',
-        message: `🚀 ~ > Admin info on group with id ${id}`,
-        data: {
-          leader: groupLeader,
-          members: groupMembers,
-        },
-      }
-      res.status(200).json(result)
-    } catch (err) {
-      console.error(err)
-      next(err)
+    const result = {
+      status: 'ok',
+      message: `🚀 ~ > Admin info on group with id ${id}`,
+      data: {
+        leader: groupLeader,
+        members: groupMembers,
+      },
     }
+    res.status(200).json(result)
+  } catch (err) {
+    console.error(err)
+    next(err)
   }
-)
+})
 
 // Create a group
 router.post('/', async (req, res, next) => {
