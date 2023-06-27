@@ -14,10 +14,10 @@ CREATE TABLE IF NOT EXISTS api_key_permission(
 CREATE TABLE IF NOT EXISTS "catalog"(
     id UUID PRIMARY KEY NOT NULL,
     label VARCHAR(255),
-    active BOOLEAN UNIQUE,
+    active BOOLEAN,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ,
-    organization_id UUID NOT NULL references organization(id)
+    organization_id UUID NOT NULL references organization(id) UNIQUE (active, organization_id)
 );
 CREATE TABLE IF NOT EXISTS category(
     id UUID PRIMARY KEY NOT NULL,
@@ -70,6 +70,7 @@ CREATE OR REPLACE FUNCTION update_active() RETURNS TRIGGER AS $$ BEGIN IF NEW.ac
 UPDATE "catalog"
 SET active = NULL
 WHERE id != NEW.id
+    AND organization_id = NEW.organization_id
     AND active IS TRUE;
 UPDATE organization
 SET active_catalog_id = NEW.id
