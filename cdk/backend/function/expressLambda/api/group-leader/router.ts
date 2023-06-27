@@ -7,10 +7,9 @@ import {
   listUsers,
   removeGroupIdFromUserAttributes,
 } from '../cognito/cognitoActions'
-import { Group } from '../index'
+import Group from '../groups/queries'
 import { getUserOnRequest } from '../utils'
 import GroupLeader from './queries'
-
 const router = express.Router()
 
 router.use(requireRoles([Roles.GROUP_LEADER, Roles.ADMIN]))
