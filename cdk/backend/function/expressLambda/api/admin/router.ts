@@ -8,7 +8,7 @@ import {
 
 import Admin from './queries'
 
-import { getOrganizations } from '../utils'
+import { getOrganization } from '../utils'
 import { adminCatalogsRouter } from './catalog/router'
 import { adminCategoriesRouter } from './categories/router'
 import { adminGroupLeaderRouter } from './group-leader/router'
@@ -29,8 +29,8 @@ router.use('/group-leader', adminGroupLeaderRouter)
 // List all admins in requesters organization
 router.get('/', async (req, res, next) => {
   try {
-    const organization = getOrganizations(req)
-    const response = await listUsersInOrganization(organization[0] + '0admin')
+    const organization = getOrganization(req)
+    const response = await listUsersInOrganization(organization + '0admin')
     res.status(200).json(response)
   } catch (err) {
     console.error(err)
@@ -41,13 +41,13 @@ router.get('/', async (req, res, next) => {
 // Promote user to admin
 router.post('/add', async (req, res, next) => {
   try {
-    const organization = getOrganizations(req)
+    const organization = getOrganization(req)
     if (typeof req.query.username !== 'string') {
       throw new Error('username must be a string')
     }
     const response = await addUserToOrganization({
       username: req.query.username,
-      groupname: organization[0] + '0admin',
+      groupname: organization + '0admin',
     })
     res.status(200).json(response)
   } catch (err) {
@@ -59,13 +59,13 @@ router.post('/add', async (req, res, next) => {
 // Demote user from admin
 router.post('/remove', async (req, res, next) => {
   try {
-    const organization = getOrganizations(req)
+    const organization = getOrganization(req)
     if (typeof req.query.username !== 'string') {
       throw new Error('username must be a string')
     }
     const response = await removeUserFromOrganization({
       username: req.query.username,
-      groupname: organization[0] + '0admin',
+      groupname: organization + '0admin',
     })
     res.status(200).json(response)
   } catch (err) {

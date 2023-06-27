@@ -4,16 +4,16 @@ import {
   listUsersInOrganization,
   removeUserFromOrganization,
 } from '../../cognito/cognitoActions'
-import { getOrganizations } from '../../utils'
+import { getOrganization } from '../../utils'
 
 const router = express.Router()
 
 // List all group leaders
 router.get('/', async (req, res, next) => {
   try {
-    const organization = getOrganizations(req)
+    const organization = getOrganization(req)
     const response = await listUsersInOrganization(
-      organization[0] + '0groupLeader'
+      organization + '0groupLeader'
     )
     res.status(200).json(response)
   } catch (err) {
@@ -25,13 +25,13 @@ router.get('/', async (req, res, next) => {
 // Promote user to group leader
 router.post('/add', async (req, res, next) => {
   try {
-    const organization = getOrganizations(req)
+    const organization = getOrganization(req)
     if (typeof req.query.username !== 'string') {
       throw new Error('username must be a string')
     }
     const response = await addUserToOrganization({
       username: req.query.username,
-      groupname: organization[0] + '0groupLeader',
+      groupname: organization + '0groupLeader',
     })
     res.status(200).json(response)
   } catch (err) {
@@ -43,13 +43,13 @@ router.post('/add', async (req, res, next) => {
 // Demote user from group leader
 router.post('/remove', async (req, res, next) => {
   try {
-    const organization = getOrganizations(req)
+    const organization = getOrganization(req)
     if (typeof req.query.username !== 'string') {
       throw new Error('username must be a string')
     }
     const response = await removeUserFromOrganization({
       username: req.query.username,
-      groupname: organization[0] + '0groupLeader',
+      groupname: organization + '0groupLeader',
     })
     res.status(200).json(response)
   } catch (err) {

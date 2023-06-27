@@ -1,6 +1,7 @@
 export interface ICatalog {
   id: string
   label: string | null
+  active: boolean
   created_at: string
   updated_at: string | null
   organization_id: string

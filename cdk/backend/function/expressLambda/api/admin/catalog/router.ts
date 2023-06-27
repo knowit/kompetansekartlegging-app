@@ -5,16 +5,16 @@ import {
   UpdateCatalogInput,
 } from '../../../utils/types'
 import Catalog from '../../catalog/queries'
-import { getOrganizations } from '../../utils'
+import { getOrganization } from '../../utils'
 
 const router = express.Router()
 
 // Get all catalogs in organization
 router.get('/', async (req, res, next) => {
   try {
-    const organization = getOrganizations(req)
+    const organization = getOrganization(req)
     const listCatalogsInOrganizationResponse = await Catalog.listCatalgosInOrganization(
-      { identifier_attribute: organization[0] }
+      { identifier_attribute: organization }
     )
 
     res.status(200).json(listCatalogsInOrganizationResponse)

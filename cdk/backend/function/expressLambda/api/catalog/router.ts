@@ -1,5 +1,5 @@
 import express from 'express'
-import { getOrganizations } from '../utils'
+import { getOrganization } from '../utils'
 import Catalog from './queries'
 
 const router = express.Router()
@@ -7,9 +7,9 @@ const router = express.Router()
 // Get active catalog by organization
 router.get('/', async (req, res, next) => {
   try {
-    const organization = getOrganizations(req)
+    const organization = getOrganization(req)
     const getCatalogResponse = await Catalog.findActiveCatalogByOrganization({
-      identifier_attribute: organization[0],
+      identifier_attribute: organization,
     })
 
     res.status(200).json(getCatalogResponse)

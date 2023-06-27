@@ -14,7 +14,7 @@ import {
 } from '../../cognito/cognitoActions'
 import Group from '../../groups/queries'
 import Organization from '../../organizations/queries'
-import { getOrganizations } from '../../utils'
+import { getOrganization } from '../../utils'
 import { getUsersInGroup } from '../helpers'
 
 const router = express.Router()
@@ -25,9 +25,9 @@ router.get('/', async (req, res, next) => {
     next()
   } else {
     try {
-      const organization = getOrganizations(req)
+      const organization = getOrganization(req)
       const listGroupsResponse = await Group.listGroupsInOrganization({
-        identifier_attribute: organization[0],
+        identifier_attribute: organization,
       })
       res.status(200).json(listGroupsResponse)
     } catch (err) {
@@ -65,10 +65,10 @@ router.post('/', async (req, res, next) => {
     if (!req.body.group_leader_username) {
       throw new Error('group leader username is required')
     }
-    const organization = getOrganizations(req)
+    const organization = getOrganization(req)
 
     const organization_id = await Organization.getOrganizationByIdentifier({
-      identifier_attribute: organization[0],
+      identifier_attribute: organization,
     })
     const addGroupResponse = await Group.createGroup({
       ...req.body,

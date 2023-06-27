@@ -45,9 +45,9 @@ export const getRoles = (req: Request): string[] =>
 /**
  * Returns the organization for the user based on the request object provided.
  * @param {import('express').Request} req - The express request object.
- * @returns {string[]} - An array of the organizations for the user, or undefined if the user has no organizations.
+ * @returns {string} - A string of the organization for the user, or undefined if the user has no organization.
  */
-export const getOrganizations = (req: Request): string[] => {
+export const getOrganization = (req: Request): string => {
   const organizations: string[] = []
   req.apiGateway.event.requestContext.authorizer.claims['cognito:groups']
     .split(',')
@@ -55,9 +55,9 @@ export const getOrganizations = (req: Request): string[] => {
       if (o.includes('0')) {
         const org = o.split('0')
         organizations.push(org[0])
-      } else {
+      } else if (o !== 'admin') {
         organizations.push(o)
       }
     })
-  return [...new Set<string>(organizations)]
+  return organizations[0]
 }
