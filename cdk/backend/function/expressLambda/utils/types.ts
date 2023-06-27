@@ -67,6 +67,11 @@ export interface IUserGroupId {
   group_id: string
 }
 
+export interface AddUserToGroupQuery {
+  group_id: string
+  username: string
+}
+
 // Organization
 
 export interface IOrganization {

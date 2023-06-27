@@ -1,8 +1,7 @@
 import { SqlParameter } from '@aws-sdk/client-rds-data'
 import { v4 as uuidv4 } from 'uuid'
 import { sqlQuery } from '../../utils/sql'
-import { IQuestionAnswer } from '../../utils/types'
-import { IUsername } from './types'
+import { IQuestionAnswer, IUsername } from '../../utils/types'
 
 const unlinkUserFromQuestionAnswer = async ({ username }: IUsername) => {
   const anonId = `anynomous-${uuidv4()}`
