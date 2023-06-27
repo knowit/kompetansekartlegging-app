@@ -8,13 +8,13 @@ import {
 
 import Admin from './queries'
 
+import { IUsername } from '../../utils/types'
 import { getOrganization } from '../utils'
 import { adminCatalogsRouter } from './catalog/router'
 import { adminCategoriesRouter } from './categories/router'
 import { adminGroupLeaderRouter } from './group-leader/router'
 import { adminGroupsRouter } from './groups/router'
 import { adminQuestionsRouter } from './questions/router'
-import { IUsername } from './types'
 
 const router = express.Router()
 
