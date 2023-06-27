@@ -9,12 +9,14 @@ import {
   ICategory,
 } from '../../utils/types'
 
-const listCategoriesInOrganization = async (identifier_attribute: string) => {
+const listCategoriesInOrganization = async (
+  org_identifier_attribute: string
+) => {
   const parameters: SqlParameter[] = [
     {
       name: 'identifier_attribute',
       value: {
-        stringValue: identifier_attribute,
+        stringValue: org_identifier_attribute,
       },
     },
   ]
@@ -23,7 +25,7 @@ const listCategoriesInOrganization = async (identifier_attribute: string) => {
     'SELECT * FROM category WHERE catalog_id = (SELECT id FROM "catalog" WHERE active = TRUE AND organization_id = (SELECT id FROM organization WHERE identifier_attribute = :identifier_attribute))'
 
   return await sqlQuery<ICategory[]>({
-    message: `🚀 ~ > All categories in organization with identifier attribute = ${identifier_attribute}`,
+    message: `🚀 ~ > All categories in organization with identifier attribute = ${org_identifier_attribute}`,
     parameters,
     query,
     isArray: true,
