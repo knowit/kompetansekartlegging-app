@@ -1,4 +1,5 @@
 import { Request } from 'express'
+import { ParsedQs } from 'qs'
 import { Roles } from '../middlewares/roles'
 
 // Denne tar ikke hensyn til norsk tid.
@@ -47,7 +48,9 @@ export const getRoles = (req: Request): string[] =>
  * @param {import('express').Request} req - The express request object.
  * @returns {string} - A string of the organization for the user, or undefined if the user has no organization.
  */
-export const getOrganization = (req: Request): string => {
+export const getOrganization = <TBody>(
+  req: Request<unknown, unknown, TBody, ParsedQs>
+): string => {
   const organizations: string[] = []
   req.apiGateway.event.requestContext.authorizer.claims['cognito:groups']
     .split(',')

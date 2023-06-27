@@ -12,7 +12,6 @@ export const catalogColumns: Table = {
   label: { kind: 'string' },
   created_at: { kind: 'timestamp' },
   updated_at: { kind: 'timestamp' },
-  organization_id: { kind: 'uuid' },
   active: { kind: 'boolean' },
 }
 
