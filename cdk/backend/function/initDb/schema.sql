@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS "catalog"(
     active BOOLEAN,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ,
-    organization_id UUID NOT NULL references organization(id) UNIQUE (active, organization_id)
+    organization_id UUID NOT NULL references organization(id),
+    UNIQUE (active, organization_id)
 );
 CREATE TABLE IF NOT EXISTS category(
     id UUID PRIMARY KEY NOT NULL,
