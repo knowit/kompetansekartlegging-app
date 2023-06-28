@@ -4,8 +4,6 @@ import { catalogRouter } from './catalog/router'
 import { categoryRouter } from './categories/router'
 import { cognitoRouter } from './cognito/router'
 import { groupLeaderRouter } from './group-leader/router'
-import { groupRouter } from './groups/router'
-import { organizationRouter } from './organizations/router'
 import { questionAnswersRouter } from './question-answers/router'
 import { questionsRouter } from './questions/router'
 import { superAdminRouter } from './super-admin/router'
@@ -15,8 +13,6 @@ const router = express.Router()
 
 router.use('/super', superAdminRouter)
 router.use('/admin', adminRouter)
-router.use('/organizations', organizationRouter)
-router.use('/groups', groupRouter)
 router.use('/categories', categoryRouter)
 router.use('/question-answers', questionAnswersRouter)
 router.use('/questions', questionsRouter)
