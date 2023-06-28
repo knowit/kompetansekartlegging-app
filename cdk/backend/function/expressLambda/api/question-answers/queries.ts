@@ -8,7 +8,6 @@ import {
   QuestionAnswerInput,
   UpdateQuestionAnswerInput,
 } from '../../utils/types'
-import { createTimestampNow } from '../utils'
 
 const listQuestionAnswers = async () => {
   const query = 'SELECT id FROM question_answer'
@@ -159,13 +158,6 @@ const updateQuestionAnswer = async (
       typeHint: TypeHint.UUID,
     },
     {
-      name: 'updated_at',
-      value: {
-        stringValue: createTimestampNow(),
-      },
-      typeHint: TypeHint.TIMESTAMP,
-    },
-    {
       name: 'username',
       value: {
         stringValue: username,
@@ -203,7 +195,7 @@ const updateQuestionAnswer = async (
 
   const query = `UPDATE question_answer
         SET username=:username, knowledge=:knowledge, motivation=:motivation,
-        custom_scale_value=:customscalevalue, text_value=:textvalue, updated_at=:updated_at
+        custom_scale_value=:customscalevalue, text_value=:textvalue
         WHERE id=:id AND username=:username
         RETURNING *`
 

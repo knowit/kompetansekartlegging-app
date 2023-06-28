@@ -84,3 +84,9 @@ END;
 $$ LANGUAGE plpgsql;
 CREATE TRIGGER catalogBeforeUpdate BEFORE
 UPDATE ON "catalog" FOR EACH ROW EXECUTE FUNCTION update_active();
+CREATE OR REPLACE FUNCTION update_timestamp() RETURNS TRIGGER AS $$ BEGIN NEW.updated_at = CURRENT_TIMESTAMP;
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+CREATE TRIGGER questionAnswerBeforeUpdate BEFORE
+UPDATE ON "question_answer" FOR EACH ROW EXECUTE FUNCTION update_timestamp();
