@@ -7,7 +7,7 @@ export interface ICatalog {
   organization_id: string
 }
 
-export type CatalogInput = Pick<ICatalog, 'label' | 'organization_id'>
+export type CatalogInput = Pick<ICatalog, 'label'>
 export type CatalogId = Pick<ICatalog, 'id'>
 export type UpdateCatalogInput = Omit<ICatalog, 'id'>
 

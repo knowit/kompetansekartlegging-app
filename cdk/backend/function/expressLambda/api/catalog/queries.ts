@@ -65,7 +65,10 @@ const findActiveCatalogByOrganization = async ({
   })
 }
 
-const createCatalog = async ({ label, organization_id }: CatalogInput) => {
+const createCatalog = async ({
+  label,
+  identifier_attribute,
+}: CatalogInput & OrganizationIdentifierAttribute) => {
   const parameters: SqlParameter[] = [
     {
       name: 'id',
@@ -76,8 +79,8 @@ const createCatalog = async ({ label, organization_id }: CatalogInput) => {
       ...kindToParam(label, 'string'),
     },
     {
-      name: 'organization_id',
-      ...kindToParam(organization_id, 'uuid'),
+      name: 'identifier_attribute',
+      ...kindToParam(identifier_attribute, 'string'),
     },
     {
       name: 'created_at',
@@ -86,7 +89,7 @@ const createCatalog = async ({ label, organization_id }: CatalogInput) => {
   ]
 
   const query = `INSERT INTO "catalog" (id, label, created_at, organization_id) 
-        VALUES (:id, :label, :created_at, :organization_id) 
+        VALUES (:id, :label, :created_at, (SELECT id FROM organization WHERE identifier_attribute = :identifier_attribute)) 
         RETURNING *`
 
   return await sqlQuery<ICatalog>({

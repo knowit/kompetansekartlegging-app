@@ -27,7 +27,11 @@ router.get('/', async (req, res, next) => {
 // Create
 router.post<unknown, unknown, CatalogInput>('/', async (req, res, next) => {
   try {
-    const createResponse = await Catalog.createCatalog(req.body)
+    const organization = getOrganization<CatalogInput>(req)
+    const createResponse = await Catalog.createCatalog({
+      identifier_attribute: organization,
+      ...req.body,
+    })
 
     res.status(200).json(createResponse)
   } catch (err) {
