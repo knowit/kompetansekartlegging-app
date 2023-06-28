@@ -90,7 +90,6 @@ const createQuestionAnswer = async ({
       value: {
         stringValue: username,
       },
-      typeHint: TypeHint.UUID,
     },
     {
       name: 'questionid',
@@ -209,7 +208,6 @@ const updateQuestionAnswer = async (
     },
   ]
 
-  // TODO: Se kommentar fra @Lekesoldat
   const query = `UPDATE question_answer
         SET username=:username, question_id=:questionid, knowledge=:knowledge, motivation=:motivation,
         custom_scale_value=:customscalevalue, text_value=:textvalue, updated_at=:updated_at
@@ -266,7 +264,6 @@ const createQuestionAnswerFromBatch = async ({
       value: {
         stringValue: username,
       },
-      typeHint: TypeHint.UUID,
     },
     {
       name: 'questionid',
