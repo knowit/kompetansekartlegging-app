@@ -4,8 +4,8 @@
 		"name": "Express Lambda",
 		"description": "## Setup environment variables\n\n1. Set up your own environment in the **Environments** tab in Postman\n2. Add the following variables\n    1. `env-app-client-id`\n    2. `env-sanbox-name`\n    3. `env-gateway-id`\n\nThe `env-app-client-id` can be found in the AWS management console under\n\n`Cognito -> User pools -> [name of user pool you use for the application] -> App integration`\n\nAt the bottom you will see the App client list where the Client ID will be listed.\n\nFor the sandbox name, that is the one created when setting up the project locally. This should have been stored as an env variable in `cdk/cdk.context.json`\n\nThe `env-gateway-id` can be found under API Gateway in the AWS Management Console. It is the id of the `ExpressLambda` API.\n\n### NB! Remember to use the environment you just created\n\n## Enable Identity Providers\n\nTo use this postman collection you need to enable **Cognito user pool** as an identity provider. To enable this go to through the following path in the AWS management console:\n\n`Cognito -> User pools -> [the user pool for this project] -> App integration`\n\nOn this page you will see a section called **App clients and analytics.** Click on the app client for this project and go to the section called **Hosted UI**. Click edit on this and scroll down til you see **Identity providers.** Here you add **Cognito user pool** from the list. Then you can save the changes and you should be ready to go!",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "11785626",
-		"_collection_link": "https://kompetansekartlegging.postman.co/workspace/Kompetansekartlegging~147981e0-5ac7-4981-91fc-71ed34058db8/collection/11785626-ba901ff5-5214-4aa8-9241-9eca6542d8f2?action=share&creator=11785626&source=collection_link"
+		"_exporter_id": "24454672",
+		"_collection_link": "https://kompetansekartlegging.postman.co/workspace/147981e0-5ac7-4981-91fc-71ed34058db8/collection/11785626-ba901ff5-5214-4aa8-9241-9eca6542d8f2?action=share&creator=24454672&source=collection_link"
 	},
 	"item": [
 		{
@@ -93,7 +93,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"organization_name\": \"123\",\n    \"identifier_attribute\": \"123\",\n    \"admin_username\": \"tester3@test\"\n}",
+							"raw": "{\n    \"organization_name\": \"hei\",\n    \"identifier_attribute\": \"hei\",\n    \"admin_username\": \"tester3@test\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -120,7 +120,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"organization_identifier_attribute\": \"123\",\n    \"username\": \"tester2@test\"\n}",
+							"raw": "{\n    \"organization_identifier_attribute\": \"testorg\",\n    \"username\": \"tester2@test\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -148,7 +148,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"organization_identifier_attribute\": \"123\",\n    \"username\": \"tester2@test\"\n}",
+							"raw": "{\n    \"organization_identifier_attribute\": \"hei\",\n    \"username\": \"tester2@test\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -285,7 +285,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"label\": \"testCreate1211113\",\n    \"organization_id\": \"b413713f-6dcc-49d1-bbbd-437f2bd090bb\",\n    \"active\": \"true\"\n}",
+									"raw": "{\n    \"label\": \"Hei\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -313,7 +313,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"active\": true,\n    \"label\": \"HEIIIIIIIII\"\n}",
+									"raw": "{\n    \"active\": true\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -321,7 +321,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{base-url}}/admin/catalogs/?id=8c1c2eda-d07d-48b9-b758-22a1a41e61ca",
+									"raw": "{{base-url}}/admin/catalogs/?id=27376e5a-e23b-4cb7-8d9d-0370266cefba",
 									"host": [
 										"{{base-url}}"
 									],
@@ -333,7 +333,7 @@
 									"query": [
 										{
 											"key": "id",
-											"value": "8c1c2eda-d07d-48b9-b758-22a1a41e61ca"
+											"value": "27376e5a-e23b-4cb7-8d9d-0370266cefba"
 										}
 									]
 								},
@@ -348,7 +348,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"id\": \"ac2e04fb-0805-4de3-bee4-f21692ebeabe\"\n}",
+									"raw": "{\n    \"id\": \"8b5a322d-6a49-45c8-a061-4ef22bededfa\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -381,7 +381,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"text\": \"todele\",\n    \"description\": \" \",\n    \"index\": 6,\n    \"catalog_id\": \"14fed0ae-aa69-431f-8fe4-5d408df286d8\"\n}",
+									"raw": "{\n    \"text\": \"todele\",\n    \"description\": \" \",\n    \"index\": 1,\n    \"catalog_id\": \"d4af4215-0550-4c9f-acd0-02c72d6d4deb\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -409,7 +409,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"text\": \"Test-category-updated\",\n    \"description\": \"hei på deg titten tei hihi\",\n    \"index\": 6,\n    \"catalog_id\": \"14fed0ae-aa69-431f-8fe4-5d408df286d8\"\n}",
+									"raw": "{\n    \"text\": \"Test-category-updated\",\n    \"description\": \"hei på deg titten tei hihi\",\n    \"index\": 6,\n    \"catalog_id\": \"8c1c2eda-d07d-48b9-b758-22a1a41e61ca\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -417,7 +417,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{base-url}}/admin/categories?id=ae36e9d7-461a-4096-bff4-bca7c24c0f30",
+									"raw": "{{base-url}}/admin/categories?id=f9d60158-4e2f-4dc1-8274-ee6e734953a2",
 									"host": [
 										"{{base-url}}"
 									],
@@ -428,7 +428,7 @@
 									"query": [
 										{
 											"key": "id",
-											"value": "ae36e9d7-461a-4096-bff4-bca7c24c0f30"
+											"value": "f9d60158-4e2f-4dc1-8274-ee6e734953a2"
 										}
 									]
 								},
@@ -443,7 +443,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"id\": \"ae36e9d7-461a-4096-bff4-bca7c24c0f30\"\n}",
+									"raw": "{\n    \"id\": \"f9d60158-4e2f-4dc1-8274-ee6e734953a2\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -495,7 +495,7 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{base-url}}/admin/group-leader/add?username=tester1@test",
+									"raw": "{{base-url}}/admin/group-leader/add?username=tester2@test",
 									"host": [
 										"{{base-url}}"
 									],
@@ -507,7 +507,7 @@
 									"query": [
 										{
 											"key": "username",
-											"value": "tester1@test"
+											"value": "tester2@test"
 										}
 									]
 								},
@@ -521,19 +521,19 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{base-url}}/admin/group-leaders/remove?username=tester2@test",
+									"raw": "{{base-url}}/admin/group-leader/remove?username=tester3@test",
 									"host": [
 										"{{base-url}}"
 									],
 									"path": [
 										"admin",
-										"group-leaders",
+										"group-leader",
 										"remove"
 									],
 									"query": [
 										{
 											"key": "username",
-											"value": "tester2@test"
+											"value": "tester3@test"
 										}
 									]
 								},
@@ -571,18 +571,18 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base-url}}/admin/get-group?id=722682fc-64d0-4370-9673-a9a3e7903f50",
+									"raw": "{{base-url}}/admin/groups?id=fbb044de-fe06-401a-ac58-2714003192fb",
 									"host": [
 										"{{base-url}}"
 									],
 									"path": [
 										"admin",
-										"get-group"
+										"groups"
 									],
 									"query": [
 										{
 											"key": "id",
-											"value": "722682fc-64d0-4370-9673-a9a3e7903f50"
+											"value": "fbb044de-fe06-401a-ac58-2714003192fb"
 										}
 									]
 								},
@@ -597,7 +597,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"group_leader_username\": \"tester3@test\"\n}",
+									"raw": "{\n    \"group_leader_username\": \"tester1@test\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -633,7 +633,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{base-url}}/admin/groups/add-user?username=tester3@test&group_id=0467c90c-ab6e-4ccf-a6af-bd666a7b04f6",
+									"raw": "{{base-url}}/admin/groups/add-user?username=tester3@test&group_id=fbb044de-fe06-401a-ac58-2714003192fb",
 									"host": [
 										"{{base-url}}"
 									],
@@ -649,7 +649,7 @@
 										},
 										{
 											"key": "group_id",
-											"value": "0467c90c-ab6e-4ccf-a6af-bd666a7b04f6"
+											"value": "fbb044de-fe06-401a-ac58-2714003192fb"
 										}
 									]
 								}
@@ -696,7 +696,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{base-url}}/admin/groups?id=d9e28d77-34e7-487e-ac33-743d178f0a30",
+									"raw": "{{base-url}}/admin/groups?id=0467c90c-ab6e-4ccf-a6af-bd666a7b04f6",
 									"host": [
 										"{{base-url}}"
 									],
@@ -707,7 +707,7 @@
 									"query": [
 										{
 											"key": "id",
-											"value": "d9e28d77-34e7-487e-ac33-743d178f0a30"
+											"value": "0467c90c-ab6e-4ccf-a6af-bd666a7b04f6"
 										}
 									]
 								}
@@ -721,7 +721,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"id\": \"0467c90c-ab6e-4ccf-a6af-bd666a7b04f6\"\n}",
+									"raw": "{\n    \"id\": \"d2fbdcbe-c1c3-4b7c-bb16-15fdf0787bde\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -753,7 +753,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"text\": \" \",\n    \"topic\": \"GoGoTest\",\n    \"index\": 11,\n    \"category_id\": \"680a7e64-8027-4999-a547-732feb152e47\",\n    \"type\": \"knowledge_motivation\",\n    \"scale_start\": null,\n    \"scale_middle\": null,\n    \"scale_end\": null\n}",
+									"raw": "{\n    \"text\": \" \",\n    \"topic\": \"GoGoTest\",\n    \"index\": 11,\n    \"category_id\": \"095203db-f96e-432d-9d06-2976daffdca1\",\n    \"type\": \"knowledge_motivation\",\n    \"scale_start\": null,\n    \"scale_middle\": null,\n    \"scale_end\": null\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -941,6 +941,140 @@
 			"description": "All endpoints prefixed `/admin` are restricted to users with the `0admin`\\-role."
 		},
 		{
+			"name": "group-leader",
+			"item": [
+				{
+					"name": "my group",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/group-leader/my-group",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"group-leader",
+								"my-group"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get timestamp for last answer",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/group-leader/last-answer-at?username=tester1@test",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"group-leader",
+								"last-answer-at"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "tester1@test"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add user to group",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/group-leader/group/add-user?username=tester3@test",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"group-leader",
+								"group",
+								"add-user"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "tester3@test"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove user from group",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/group-leader/group/remove-user?username=tester3@test",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"group-leader",
+								"group",
+								"remove-user"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "tester3@test"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get question answers for given user in organization's active catalog",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/group-leader/question-answers?username=tester1@test",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"group-leader",
+								"question-answers"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "tester1@test"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "All endpoints prefixed `/group-leader` are restricted to users with the `0groupleader`\\-role."
+		},
+		{
 			"name": "catalogs",
 			"item": [
 				{
@@ -966,23 +1100,17 @@
 			"name": "categories",
 			"item": [
 				{
-					"name": "get all categories in an organization",
+					"name": "get all categories in requester's organization (active catalog)",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base-url}}/categories?identifier_attribute=testorg",
+							"raw": "{{base-url}}/categories",
 							"host": [
 								"{{base-url}}"
 							],
 							"path": [
 								"categories"
-							],
-							"query": [
-								{
-									"key": "identifier_attribute",
-									"value": "testorg"
-								}
 							]
 						}
 					},
@@ -1024,7 +1152,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base-url}}/categories/?catalog_id=20cedb7a-a72b-4c2a-868e-265001b401d6",
+							"raw": "{{base-url}}/categories/?catalog_id=27376e5a-e23b-4cb7-8d9d-0370266cefba",
 							"host": [
 								"{{base-url}}"
 							],
@@ -1035,7 +1163,7 @@
 							"query": [
 								{
 									"key": "catalog_id",
-									"value": "20cedb7a-a72b-4c2a-868e-265001b401d6"
+									"value": "27376e5a-e23b-4cb7-8d9d-0370266cefba"
 								}
 							]
 						}
@@ -1250,394 +1378,6 @@
 			]
 		},
 		{
-			"name": "group-leader",
-			"item": [
-				{
-					"name": "my group",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base-url}}/group-leader/my-group",
-							"host": [
-								"{{base-url}}"
-							],
-							"path": [
-								"group-leader",
-								"my-group"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get timestamp for last answer",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base-url}}/group-leader/last-answer-at?username=tester1@test",
-							"host": [
-								"{{base-url}}"
-							],
-							"path": [
-								"group-leader",
-								"last-answer-at"
-							],
-							"query": [
-								{
-									"key": "username",
-									"value": "tester1@test"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Add user to group",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base-url}}/group-leader/group/add-user?username=tester3@test",
-							"host": [
-								"{{base-url}}"
-							],
-							"path": [
-								"group-leader",
-								"group",
-								"add-user"
-							],
-							"query": [
-								{
-									"key": "username",
-									"value": "tester3@test"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Remove user from group",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base-url}}/group-leader/group/remove-user?username=tester2@test",
-							"host": [
-								"{{base-url}}"
-							],
-							"path": [
-								"group-leader",
-								"group",
-								"remove-user"
-							],
-							"query": [
-								{
-									"key": "username",
-									"value": "tester2@test"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"description": "All endpoints prefixed `/group-leader` are restricted to users with the `0groupleader`\\-role."
-		},
-		{
-			"name": "groups",
-			"item": [
-				{
-					"name": "add user to group",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"id\": \"4e43024f-7c3c-489b-b78d-599382f317dd\",\n    \"mail\": \"tester2@test\",\n    \"organization_id\": \"f292d36a-66b7-4a81-8d3b-e93f4339d56a\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base-url}}/groups/user?id=f1d87f8b-c5af-4507-8435-3dd8dcf93f7e",
-							"host": [
-								"{{base-url}}"
-							],
-							"path": [
-								"groups",
-								"user"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "f1d87f8b-c5af-4507-8435-3dd8dcf93f7e"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get all users in group",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base-url}}/groups/users?group_id=722682fc-64d0-4370-9673-a9a3e7903f50",
-							"host": [
-								"{{base-url}}"
-							],
-							"path": [
-								"groups",
-								"users"
-							],
-							"query": [
-								{
-									"key": "group_id",
-									"value": "722682fc-64d0-4370-9673-a9a3e7903f50"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "delete user from group",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"username\": \"tester3@test\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base-url}}/groups/user",
-							"host": [
-								"{{base-url}}"
-							],
-							"path": [
-								"groups",
-								"user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "delete",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"group_id\": \"deae536c-f3e3-4ad7-8a9d-2acf4e0f309e\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base-url}}/groups",
-							"host": [
-								"{{base-url}}"
-							],
-							"path": [
-								"groups"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Add multiple users to group",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "[\n    {\n        \"username\": \"tester2@test\",\n        \"organization_id\": \"b3f4043e-d071-4322-83bc-23038daf71d8\"\n    },\n    {\n        \"username\": \"tester3@test\",\n        \"organization_id\": \"b3f4043e-d071-4322-83bc-23038daf71d8\"\n    }\n]",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base-url}}/groups/users?id=b0b84dac-d8bc-4551-810f-0bd05d2988d5",
-							"host": [
-								"{{base-url}}"
-							],
-							"path": [
-								"groups",
-								"users"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "b0b84dac-d8bc-4551-810f-0bd05d2988d5"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "all groups",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "organizations",
-			"item": [
-				{
-					"name": "get all organizations",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base-url}}/organizations",
-							"host": [
-								"{{base-url}}"
-							],
-							"path": [
-								"organizations"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get organization with id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base-url}}/organizations/?id=f8ef8502-ac55-4cd9-82a1-e4a820bf6296",
-							"host": [
-								"{{base-url}}"
-							],
-							"path": [
-								"organizations",
-								""
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "f8ef8502-ac55-4cd9-82a1-e4a820bf6296"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "create",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"id\": \"testing123\",\r\n    \"orgname\": \"TestOrg\",\r\n    \"identifierattribute\": \"TestIdAttr\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base-url}}/organizations",
-							"host": [
-								"{{base-url}}"
-							],
-							"path": [
-								"organizations"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "delete",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"id\": \"testing123\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base-url}}/organizations",
-							"host": [
-								"{{base-url}}"
-							],
-							"path": [
-								"organizations"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get all users (må nok flyttes eller endres på)",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base-url}}/organizations/users?id=aa70b65a-af59-47b2-8f1b-98fbe31ca352",
-							"host": [
-								"{{base-url}}"
-							],
-							"path": [
-								"organizations",
-								"users"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "aa70b65a-af59-47b2-8f1b-98fbe31ca352"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "question-answers",
 			"item": [
 				{
@@ -1663,7 +1403,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base-url}}/question-answers?question_id=55697cc0-be8d-491d-8ea0-665d23cbb566",
+							"raw": "{{base-url}}/question-answers?question_id=9ea56586-adef-4f29-b499-3c4e3bac527a&username=tester1@test",
 							"host": [
 								"{{base-url}}"
 							],
@@ -1673,7 +1413,11 @@
 							"query": [
 								{
 									"key": "question_id",
-									"value": "55697cc0-be8d-491d-8ea0-665d23cbb566"
+									"value": "9ea56586-adef-4f29-b499-3c4e3bac527a"
+								},
+								{
+									"key": "username",
+									"value": "tester1@test"
 								}
 							]
 						}
@@ -1687,7 +1431,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"userid\": \"d83aa04a-b598-45fa-8edb-3e7bce7ff89f\",\n    \"questionid\": \"2e823c78-d48b-4189-986c-b7815d78807c\",\n    \"knowledge\": 0,\n    \"motivation\": 3,\n    \"customscalevalue\": null,\n    \"textvalue\": null\n}",
+							"raw": "{\n    \"question_id\": \"0e3d73bf-60a0-4e67-b837-cb0015c95691\",\n    \"knowledge\": 0,\n    \"motivation\": 3,\n    \"custom_scale_value\": null,\n    \"text_value\": null\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1713,7 +1457,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"user_username\": \"tester1@test\",\n    \"question_id\": \"239dbafb-503e-4c4b-bd00-848810faa1f3\",\n    \"knowledge\": 222,\n    \"motivation\": 500,\n    \"customs_cale_value\": null,\n    \"text_value\": null\n} ",
+							"raw": "{\n    \"knowledge\": 223,\n    \"motivation\": 500,\n    \"customs_cale_value\": null,\n    \"text_value\": null\n} ",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1721,7 +1465,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{base-url}}/question-answers?id=82ee5198-44cf-45ff-a1ec-94852a4655b3",
+							"raw": "{{base-url}}/question-answers?id=46c977cd-51fb-4aeb-9650-2a1049d5d3ff",
 							"host": [
 								"{{base-url}}"
 							],
@@ -1731,7 +1475,7 @@
 							"query": [
 								{
 									"key": "id",
-									"value": "82ee5198-44cf-45ff-a1ec-94852a4655b3"
+									"value": "46c977cd-51fb-4aeb-9650-2a1049d5d3ff"
 								}
 							]
 						}
@@ -1745,7 +1489,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    {\n        \"userid\": \"d83aa04a-b598-45fa-8edb-3e7bce7ff89f\",\n        \"questionid\": \"2e823c78-d48b-4189-986c-b7815d78807c\",\n        \"knowledge\": 0,\n        \"motivation\": 3,\n        \"customscalevalue\": null,\n        \"textvalue\": null\n    },\n    {\n        \"userid\": \"d83aa04a-b598-45fa-8edb-3e7bce7ff89f\",\n        \"questionid\": \"2e823c78-d48b-4189-986c-b7815d78807c\",\n        \"knowledge\": 5,\n        \"motivation\": 3,\n        \"customscalevalue\": null,\n        \"textvalue\": \"Hello\"\n    },\n    {\n        \"userid\": \"d83aa04a-b598-45fa-8edb-3e7bce7ff89f\",\n        \"questionid\": \"2e823c78-d48b-4189-986c-b7815d78807c\",\n        \"knowledge\": 10,\n        \"motivation\": 3,\n        \"customscalevalue\": 4,\n        \"textvalue\": null\n    }\n]\n",
+							"raw": "[\n    {\n    \"username\": \"tester1@test\",\n    \"question_id\": \"d5492412-82ab-45b2-af19-b824cc455b23\",\n    \"knowledge\": 0,\n    \"motivation\": 3,\n    \"custom_scale_value\": null,\n    \"text_value\": null\n}\n]\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1872,7 +1616,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base-url}}/questions?category_id=a01b484d-aa38-4bce-82a1-76489a4b0901",
+							"raw": "{{base-url}}/questions?category_id=254055d4-8edd-4130-a7ad-e45fbd7c2c0e",
 							"host": [
 								"{{base-url}}"
 							],
@@ -1882,7 +1626,7 @@
 							"query": [
 								{
 									"key": "category_id",
-									"value": "a01b484d-aa38-4bce-82a1-76489a4b0901"
+									"value": "254055d4-8edd-4130-a7ad-e45fbd7c2c0e"
 								}
 							]
 						}
@@ -1900,23 +1644,32 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base-url}}/user/answers-by-categories?username=tester1@test&identifier_attribute=testorg",
+							"raw": "{{base-url}}/user/answers-by-categories",
 							"host": [
 								"{{base-url}}"
 							],
 							"path": [
 								"user",
 								"answers-by-categories"
+							]
+						},
+						"description": "Returns all question answers by each question in each category for a user in the provided organization."
+					},
+					"response": []
+				},
+				{
+					"name": "question answers by categories for active catalog",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/user/answers",
+							"host": [
+								"{{base-url}}"
 							],
-							"query": [
-								{
-									"key": "username",
-									"value": "tester1@test"
-								},
-								{
-									"key": "identifier_attribute",
-									"value": "testorg"
-								}
+							"path": [
+								"user",
+								"answers"
 							]
 						},
 						"description": "Returns all question answers by each question in each category for a user in the provided organization."
