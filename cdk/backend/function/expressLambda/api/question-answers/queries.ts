@@ -6,6 +6,7 @@ import {
   IQuestionAnswer,
   QuestionAnswerId,
   QuestionAnswerInput,
+  UpdateQuestionAnswerInput,
 } from '../../utils/types'
 import { createTimestampNow } from '../utils'
 
@@ -143,12 +144,11 @@ const updateQuestionAnswer = async (
   { id }: QuestionAnswerId,
   {
     username,
-    question_id,
     knowledge,
     motivation,
     custom_scale_value,
     text_value,
-  }: QuestionAnswerInput
+  }: UpdateQuestionAnswerInput
 ) => {
   const parameters: SqlParameter[] = [
     {
@@ -170,13 +170,6 @@ const updateQuestionAnswer = async (
       value: {
         stringValue: username,
       },
-    },
-    {
-      name: 'questionid',
-      value: {
-        stringValue: question_id,
-      },
-      typeHint: TypeHint.UUID,
     },
     {
       name: 'knowledge',
@@ -209,9 +202,9 @@ const updateQuestionAnswer = async (
   ]
 
   const query = `UPDATE question_answer
-        SET username=:username, question_id=:questionid, knowledge=:knowledge, motivation=:motivation,
+        SET username=:username, knowledge=:knowledge, motivation=:motivation,
         custom_scale_value=:customscalevalue, text_value=:textvalue, updated_at=:updated_at
-        WHERE id=:id
+        WHERE id=:id AND username=:username
         RETURNING *`
 
   return await sqlQuery<IQuestionAnswer>({

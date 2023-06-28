@@ -4,6 +4,7 @@ import {
   IQuestionAnswerResponses,
   QuestionAnswerId,
   QuestionAnswerInput,
+  UpdateQuestionAnswerBody,
 } from '../../utils/types'
 import { getUserOnRequest } from '../utils'
 import QuestionAnswer from './queries'
@@ -46,8 +47,13 @@ router.post<unknown, unknown, QuestionAnswerInput>(
   '/',
   async (req, res, next) => {
     try {
+      const { username, ...body } = { ...req.body }
+      const usernameOnRequest = getUserOnRequest(req).username
+      if (!usernameOnRequest) {
+        throw new Error('No username found on request')
+      }
       const createQuestionAnswerResponse = await QuestionAnswer.createQuestionAnswer(
-        req.body
+        { username: usernameOnRequest, ...body }
       )
       res.status(201).json(createQuestionAnswerResponse)
     } catch (err) {
@@ -58,13 +64,17 @@ router.post<unknown, unknown, QuestionAnswerInput>(
 )
 
 // Update questionAnswer with given id
-router.patch<unknown, unknown, QuestionAnswerInput, QuestionAnswerId>(
+router.patch<unknown, unknown, UpdateQuestionAnswerBody, QuestionAnswerId>(
   '/',
   async (req, res, next) => {
     try {
+      const usernameOnRequest = getUserOnRequest(req).username
+      if (!usernameOnRequest) {
+        throw new Error('No username found on request')
+      }
       const updateQuestionAnswerResponse = await QuestionAnswer.updateQuestionAnswer(
         req.query,
-        req.body
+        { username: usernameOnRequest, ...req.body }
       )
       res.status(200).json(updateQuestionAnswerResponse)
     } catch (err) {
@@ -95,6 +105,10 @@ router.post<unknown, unknown, QuestionAnswerInput[]>(
   '/batch',
   async (req, res, next) => {
     try {
+      const usernameOnRequest = getUserOnRequest(req).username
+      if (!usernameOnRequest) {
+        throw new Error('No username found on request')
+      }
       let responses: IQuestionAnswerResponses = {
         status: 'ok',
         message: '🚀 ~ > Created questionAnswers from batch',
@@ -103,7 +117,11 @@ router.post<unknown, unknown, QuestionAnswerInput[]>(
       const data: (IQuestionAnswer | null)[] = []
       await Promise.all(
         req.body.map(async qa => {
-          await QuestionAnswer.createQuestionAnswer(qa).then(response => {
+          const { username, ...body } = { ...qa }
+          await QuestionAnswer.createQuestionAnswer({
+            username: usernameOnRequest,
+            ...body,
+          }).then(response => {
             data.push(response.data)
             responses = {
               ...responses,

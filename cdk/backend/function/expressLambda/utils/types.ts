@@ -109,6 +109,14 @@ export type GetQuestionAnswerByUserAndQuestionInput = Pick<
   IQuestionAnswer,
   'username' | 'question_id'
 >
+export type UpdateQuestionAnswerBody = Omit<
+  IQuestionAnswer,
+  'id' | 'question_id' | 'username'
+>
+export type UpdateQuestionAnswerInput = Omit<
+  IQuestionAnswer,
+  'id' | 'question_id'
+>
 
 export interface IQuestionAnswerResponse {
   message: string
