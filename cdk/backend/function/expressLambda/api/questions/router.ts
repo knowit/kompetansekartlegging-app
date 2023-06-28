@@ -11,7 +11,7 @@ router.get('/', async (req, res, next) => {
         req.query as QuestionId
       )
       res.status(200).json(getQuestionResponse)
-    } else if (req.query.categoryid) {
+    } else if (req.query.category_id) {
       const listQuestionsInCategoryResponse = await Question.getQuestionsInCategory(
         req.query as QuestionCategoryId
       )

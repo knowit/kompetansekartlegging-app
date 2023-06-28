@@ -22,7 +22,7 @@ const listCategoriesInOrganization = async (
   ]
 
   const query =
-    'SELECT * FROM category WHERE catalog_id = (SELECT id FROM "catalog" WHERE active = TRUE AND organization_id = (SELECT id FROM organization WHERE identifier_attribute = :identifier_attribute))'
+    'SELECT * FROM category WHERE catalog_id = (SELECT id FROM "catalog" WHERE active = TRUE AND organization_id = (SELECT id FROM organization WHERE identifier_attribute = :identifier_attribute)) ORDER BY catalog_id, index'
 
   return await sqlQuery<ICategory[]>({
     message: `🚀 ~ > All categories in organization ${org_identifier_attribute}`,
@@ -63,7 +63,8 @@ const getCategoryInCatalog = async ({ catalog_id }: CategoryCatalogId) => {
     },
   ]
 
-  const query = 'SELECT * FROM "category" WHERE catalog_id = :catalog_id'
+  const query =
+    'SELECT * FROM "category" WHERE catalog_id = :catalog_id ORDER BY catalog_id, index'
 
   return await sqlQuery<ICategory[]>({
     message: `🚀 ~ > Categories in catalog with id ${catalog_id}`,

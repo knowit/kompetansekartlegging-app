@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS category(
     text VARCHAR(255) NOT NULL,
     description TEXT,
     index INTEGER,
-    catalog_id UUID NOT NULL references "catalog"(id)
+    catalog_id UUID NOT NULL references "catalog"(id),
+    UNIQUE (catalog_id, index)
 );
 DO $$ BEGIN CREATE TYPE question_type AS ENUM (
     'knowledge_motivation',
@@ -46,7 +47,8 @@ CREATE TABLE IF NOT EXISTS question(
     scale_start VARCHAR(255),
     scale_middle VARCHAR(255),
     scale_end VARCHAR(255),
-    category_id UUID NOT NULL references category(id)
+    category_id UUID NOT NULL references category(id),
+    UNIQUE (category_id, index)
 );
 CREATE TABLE IF NOT EXISTS question_answer(
     id UUID PRIMARY KEY NOT NULL,

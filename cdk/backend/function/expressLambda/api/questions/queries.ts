@@ -10,7 +10,7 @@ import {
 } from '../../utils/types'
 
 const listQuestions = async () => {
-  const query = `SELECT * FROM question`
+  const query = `SELECT * FROM question ORDER BY category_id, index`
 
   return await sqlQuery<IQuestion[]>({
     message: '🚀 ~ > All questions',
@@ -50,7 +50,7 @@ const getQuestionsInCategory = async ({ category_id }: QuestionCategoryId) => {
     },
   ]
 
-  const query = `SELECT * FROM question WHERE category_id = :categoryid`
+  const query = `SELECT * FROM question WHERE category_id = :categoryid ORDER BY index`
 
   return await sqlQuery<IQuestion[]>({
     message: `🚀 ~ > All questions with categoryid: ${category_id}`,
