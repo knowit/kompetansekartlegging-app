@@ -1,5 +1,6 @@
 import express from 'express'
 import { CategoryCatalogId, CategoryId } from '../../utils/types'
+import { getOrganization } from '../utils'
 import Category from './queries'
 
 const router = express.Router()
@@ -36,12 +37,10 @@ router.get('/', async (req, res, next) => {
 
 router.get('/', async (req, res, next) => {
   try {
-    if (!req.query.identifier_attribute) {
-      throw new Error('Missing identifier_attribute on request')
-    }
+    const organization = getOrganization(req)
 
     const listCategoriesResponse = await Category.listCategoriesInOrganization(
-      req.query.identifier_attribute as string
+      organization
     )
     return res.status(200).json(listCategoriesResponse)
   } catch (err) {

@@ -1,4 +1,4 @@
-import { SqlParameter, TypeHint } from '@aws-sdk/client-rds-data'
+import { SqlParameter } from '@aws-sdk/client-rds-data'
 import { sqlQuery } from '../../utils/sql'
 import { GetByUsernameAndOrganizationId, IUsername } from '../../utils/types'
 
@@ -25,7 +25,7 @@ const myGroup = async ({ username }: IUsername) => {
 
 const getQuestionAnswersByActiveCatalogAndUser = async ({
   username,
-  organizationId,
+  identifier_attribute,
 }: GetByUsernameAndOrganizationId) => {
   const parameters: SqlParameter[] = [
     {
@@ -35,11 +35,10 @@ const getQuestionAnswersByActiveCatalogAndUser = async ({
       },
     },
     {
-      name: 'organizationId',
+      name: 'identifier_attribute',
       value: {
-        stringValue: organizationId,
+        stringValue: identifier_attribute,
       },
-      typeHint: TypeHint.UUID,
     },
   ]
 
@@ -51,12 +50,12 @@ const getQuestionAnswersByActiveCatalogAndUser = async ({
         JOIN question_answer qa ON q.id = qa.question_id
         JOIN organization o ON o.id = c.organization_id
     WHERE c.active = TRUE
-        AND o.id = :organizationId
+        AND o.id = (SELECT id FROM organization WHERE identifier_attribute = :identifier_attribute)
         AND qa.username = :username
   `
 
   return await sqlQuery({
-    message: `🚀 ~ > Question answers for '${username}' in organization with id '${organizationId}'`,
+    message: `🚀 ~ > Question answers for '${username}' in organization ${identifier_attribute}'`,
     query,
     parameters,
   })

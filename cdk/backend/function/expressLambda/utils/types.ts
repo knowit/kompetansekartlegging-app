@@ -44,7 +44,7 @@ export type ListUsersInGroupQuery = IListQuery & Pick<ICognitoBody, 'groupname'>
 // Group leader
 
 export interface GetByUsernameAndOrganizationId extends IUsername {
-  organizationId: string
+  identifier_attribute: string
 }
 
 export interface IUsername {

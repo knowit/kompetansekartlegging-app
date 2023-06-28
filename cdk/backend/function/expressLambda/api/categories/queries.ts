@@ -25,7 +25,7 @@ const listCategoriesInOrganization = async (
     'SELECT * FROM category WHERE catalog_id = (SELECT id FROM "catalog" WHERE active = TRUE AND organization_id = (SELECT id FROM organization WHERE identifier_attribute = :identifier_attribute))'
 
   return await sqlQuery<ICategory[]>({
-    message: `🚀 ~ > All categories in organization with identifier attribute = ${org_identifier_attribute}`,
+    message: `🚀 ~ > All categories in organization ${org_identifier_attribute}`,
     parameters,
     query,
     isArray: true,
