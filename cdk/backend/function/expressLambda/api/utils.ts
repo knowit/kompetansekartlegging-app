@@ -48,8 +48,8 @@ export const getRoles = (req: Request): string[] =>
  * @param {import('express').Request} req - The express request object.
  * @returns {string} - A string of the organization for the user, or undefined if the user has no organization.
  */
-export const getOrganization = <TBody>(
-  req: Request<unknown, unknown, TBody, ParsedQs>
+export const getOrganization = <TBody = any, TQs = any>(
+  req: Request<any, any, TBody, TQs | ParsedQs>
 ): string => {
   const organizations: string[] = []
   req.apiGateway.event.requestContext.authorizer.claims['cognito:groups']

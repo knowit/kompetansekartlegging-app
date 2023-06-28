@@ -62,7 +62,7 @@ export type GetGroupsInOrganizationInput = { organization: string }
 
 export type GroupInput = Omit<IGroup, 'id'>
 export type GroupId = Pick<IGroup, 'id'>
-export type UpdateGroupLeaderInput = Pick<IGroup, 'group_leader_username'>
+export type GroupLeaderInput = Pick<IGroup, 'group_leader_username'>
 
 export interface IUserGroupId {
   group_id: string

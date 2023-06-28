@@ -3,8 +3,8 @@ import {
   AddUserToGroupQuery,
   CategoryId,
   GroupId,
+  GroupLeaderInput,
   IUsername,
-  UpdateGroupLeaderInput,
 } from '../../../utils/types'
 import {
   addGroupIdToUserAttributes,
@@ -60,19 +60,19 @@ router.get<unknown, unknown, unknown, GroupId>('/', async (req, res, next) => {
 })
 
 // Create a group
-router.post('/', async (req, res, next) => {
+router.post<unknown, unknown, GroupLeaderInput>('/', async (req, res, next) => {
   try {
-    if (!req.body.group_leader_username) {
-      throw new Error('group leader username is required')
-    }
-    const organization = getOrganization(req)
+    const organization = getOrganization<GroupLeaderInput>(req)
 
     const organization_id = await Organization.getOrganizationByIdentifier({
       identifier_attribute: organization,
     })
+    if (organization_id.data?.id === undefined) {
+      throw new Error('Organization not found')
+    }
     const addGroupResponse = await Group.createGroup({
       ...req.body,
-      organization_id: organization_id.data?.id,
+      organization_id: organization_id.data.id,
     })
 
     res.status(200).json(addGroupResponse)
@@ -108,7 +108,7 @@ router.delete<unknown, unknown, CategoryId>('/', async (req, res, next) => {
 })
 
 // Update group leader
-router.patch<unknown, unknown, UpdateGroupLeaderInput, GroupId>(
+router.patch<unknown, unknown, GroupLeaderInput, GroupId>(
   '/',
   async (req, res, next) => {
     try {

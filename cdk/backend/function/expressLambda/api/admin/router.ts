@@ -39,40 +39,40 @@ router.get('/', async (req, res, next) => {
 })
 
 // Promote user to admin
-router.post('/add', async (req, res, next) => {
-  try {
-    const organization = getOrganization(req)
-    if (typeof req.query.username !== 'string') {
-      throw new Error('username must be a string')
+router.post<unknown, unknown, unknown, IUsername>(
+  '/add',
+  async (req, res, next) => {
+    try {
+      const organization = getOrganization<any, IUsername>(req)
+      const response = await addUserToOrganization({
+        username: req.query.username,
+        groupname: organization + '0admin',
+      })
+      res.status(200).json(response)
+    } catch (err) {
+      console.error(err)
+      next(err)
     }
-    const response = await addUserToOrganization({
-      username: req.query.username,
-      groupname: organization + '0admin',
-    })
-    res.status(200).json(response)
-  } catch (err) {
-    console.error(err)
-    next(err)
   }
-})
+)
 
 // Demote user from admin
-router.post('/remove', async (req, res, next) => {
-  try {
-    const organization = getOrganization(req)
-    if (typeof req.query.username !== 'string') {
-      throw new Error('username must be a string')
+router.post<unknown, unknown, unknown, IUsername>(
+  '/remove',
+  async (req, res, next) => {
+    try {
+      const organization = getOrganization<unknown, IUsername>(req)
+      const response = await removeUserFromOrganization({
+        username: req.query.username,
+        groupname: organization + '0admin',
+      })
+      res.status(200).json(response)
+    } catch (err) {
+      console.error(err)
+      next(err)
     }
-    const response = await removeUserFromOrganization({
-      username: req.query.username,
-      groupname: organization + '0admin',
-    })
-    res.status(200).json(response)
-  } catch (err) {
-    console.error(err)
-    next(err)
   }
-})
+)
 
 // Anonymize user
 router.patch<unknown, unknown, unknown, IUsername>(

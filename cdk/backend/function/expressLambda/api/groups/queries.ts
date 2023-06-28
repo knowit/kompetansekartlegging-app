@@ -4,9 +4,9 @@ import { sqlQuery } from '../../utils/sql'
 import {
   GroupId,
   GroupInput,
+  GroupLeaderInput,
   IGroup,
   OrganizationIdentifierAttribute,
-  UpdateGroupLeaderInput,
 } from '../../utils/types'
 
 const listGroups = async () => {
@@ -123,7 +123,7 @@ const deleteGroup = async ({ id }: GroupId) => {
 
 const updateGroupLeader = async (
   { id }: GroupId,
-  { group_leader_username }: UpdateGroupLeaderInput
+  { group_leader_username }: GroupLeaderInput
 ) => {
   const parameters: SqlParameter[] = [
     {
