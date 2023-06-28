@@ -8,7 +8,7 @@ import {
   removeGroupIdFromUserAttributes,
 } from '../cognito/cognitoActions'
 import Group from '../groups/queries'
-import { getUserOnRequest } from '../utils'
+import { getOrganization, getUserOnRequest } from '../utils'
 import GroupLeader from './queries'
 const router = express.Router()
 
@@ -133,6 +133,24 @@ router.post<unknown, unknown, unknown, IUsername>(
     } catch (error) {
       console.error(error)
       next(error)
+    }
+  }
+)
+
+// Get question answers in the active catalog for a user
+router.get<unknown, unknown, unknown, IUsername>(
+  '/question-answers',
+  async (req, res, next) => {
+    try {
+      const { username } = req.query
+      const organization = getOrganization(req)
+      const response = await GroupLeader.getQuestionAnswersByActiveCatalogAndUser(
+        { username: username, identifier_attribute: organization }
+      )
+      res.status(200).json(response)
+    } catch (err) {
+      console.error(err)
+      next(err)
     }
   }
 )

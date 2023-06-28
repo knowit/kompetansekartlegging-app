@@ -55,9 +55,10 @@ const getQuestionAnswersByActiveCatalogAndUser = async ({
   `
 
   return await sqlQuery({
-    message: `🚀 ~ > Question answers for '${username}' in organization ${identifier_attribute}'`,
+    message: `🚀 ~ > Question answers for '${username}' in organization ${identifier_attribute} in active catalog'`,
     query,
     parameters,
+    isArray: true,
   })
 }
 

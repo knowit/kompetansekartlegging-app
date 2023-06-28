@@ -1,31 +1,45 @@
 import express from 'express'
+import { getOrganization, getUserOnRequest } from '../utils'
 import { getAnswersByCategories } from './queries'
+
+import GroupLeader from '../group-leader/queries'
 
 const router = express.Router()
 
-router.get<
-  unknown,
-  unknown,
-  unknown,
-  { username: string; identifier_attribute: string }
->('/answers-by-categories', async (req, res, next) => {
+router.get('/answers-by-categories', async (req, res, next) => {
   try {
-    const { username, identifier_attribute } = req.query
+    const organization = getOrganization(req)
+    const user = getUserOnRequest(req)
 
-    if (!(username && identifier_attribute)) {
+    if (!user.username) {
       throw new Error('Missing parameters')
     }
 
-    const response = await getAnswersByCategories(
-      username,
-      identifier_attribute
-    )
+    const response = await getAnswersByCategories(user.username, organization)
 
     res.status(200).json({
       status: 'ok',
-      message: `🚀 ~ > All question answers by categories for '${username}' in organization '${identifier_attribute}'.`,
+      message: `🚀 ~ > All question answers by categories for '${user.username}' in organization '${organization}'.`,
       data: response,
     })
+  } catch (err) {
+    console.error(err)
+    next(err)
+  }
+})
+
+router.get('/answers', async (req, res, next) => {
+  try {
+    const organization = getOrganization(req)
+    const user = getUserOnRequest(req)
+    if (!user.username) {
+      throw new Error('Missing parameters')
+    }
+
+    const response = await GroupLeader.getQuestionAnswersByActiveCatalogAndUser(
+      { username: user.username, identifier_attribute: organization }
+    )
+    res.status(200).json(response)
   } catch (err) {
     console.error(err)
     next(err)
