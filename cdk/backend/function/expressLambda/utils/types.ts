@@ -34,8 +34,8 @@ export interface ICognitoBody {
 }
 
 export interface IListQuery {
-  token: string
-  limit: number
+  token?: string
+  limit?: number
 }
 
 export type ListGroupsForUserQuery = IListQuery & IUsername

@@ -273,8 +273,8 @@ const listAdminsInAllOrganizations = async (
 
 async function listOrganizationsForUser(
   username: UsernameType,
-  Limit: QueryLimitType,
-  NextToken: PaginationKey
+  Limit?: QueryLimitType,
+  NextToken?: PaginationKey
 ) {
   const params = {
     UserPoolId: userPoolId!,
