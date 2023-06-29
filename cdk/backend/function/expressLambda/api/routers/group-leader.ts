@@ -2,14 +2,7 @@ import express from 'express'
 import { Roles, requireRoles } from '../../middlewares/roles'
 import { IUsername } from '../../utils/types'
 import { getOrganization, getUserOnRequest } from '../../utils/utils'
-import {
-  addGroupIdToUserAttributes,
-  getUser,
-  listUsers,
-  removeGroupIdFromUserAttributes,
-} from '../queries/cognitoActions'
-import GroupLeader from '../queries/group-leader'
-import Group from '../queries/groups'
+import { CognitoActions, GroupLeader, Groups } from '../queries'
 const router = express.Router()
 
 router.use(requireRoles([Roles.GROUP_LEADER, Roles.ADMIN]))
@@ -31,7 +24,7 @@ router.get('/my-group', async (req, res, next) => {
       throw new Error('Could not fetch group members.')
     }
 
-    const allUsers = await listUsers()
+    const allUsers = await CognitoActions.listUsers()
     const members = allUsers.data.Users?.filter(
       user =>
         user.Attributes?.find(attribute => attribute.Name === 'custom:groupId')
@@ -82,7 +75,7 @@ router.post<unknown, unknown, unknown, IUsername>(
     try {
       const { username } = req.query
       const requestingUser = getUserOnRequest(req)
-      const cognitoUserGroupId = await getUser(username).then(
+      const cognitoUserGroupId = await CognitoActions.getUser(username).then(
         response =>
           response.UserAttributes?.find(
             attribute => attribute.Name === 'custom:groupId'
@@ -90,7 +83,7 @@ router.post<unknown, unknown, unknown, IUsername>(
       )
       let groupLeader
       if (cognitoUserGroupId) {
-        const groupData = await Group.getGroup({ id: cognitoUserGroupId })
+        const groupData = await Groups.getGroup({ id: cognitoUserGroupId })
         groupLeader = groupData.data?.group_leader_username
       }
 
@@ -99,7 +92,9 @@ router.post<unknown, unknown, unknown, IUsername>(
           'Cannot remove user from group, user is not in your group'
         )
       }
-      const response = await removeGroupIdFromUserAttributes(username)
+      const response = await CognitoActions.removeGroupIdFromUserAttributes(
+        username
+      )
       res.status(200).json(response)
     } catch (error) {
       console.error(error)
@@ -125,7 +120,7 @@ router.post<unknown, unknown, unknown, IUsername>(
       if (group.data?.id === undefined) {
         throw new Error('Not authorized to add user to group')
       }
-      const response = await addGroupIdToUserAttributes({
+      const response = await CognitoActions.addGroupIdToUserAttributes({
         username,
         groupId: group.data.id,
       })
@@ -155,4 +150,4 @@ router.get<unknown, unknown, unknown, IUsername>(
   }
 )
 
-export { router as groupLeaderRouter }
+export default router

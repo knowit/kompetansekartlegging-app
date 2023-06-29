@@ -1,6 +1,6 @@
 import express from 'express'
 import { getOrganization } from '../../utils/utils'
-import Catalog from '../queries/catalog'
+import { Catalogs } from '../queries'
 
 const router = express.Router()
 
@@ -8,7 +8,7 @@ const router = express.Router()
 router.get('/', async (req, res, next) => {
   try {
     const organization = getOrganization(req)
-    const getCatalogResponse = await Catalog.findActiveCatalogByOrganization({
+    const getCatalogResponse = await Catalogs.findActiveCatalogByOrganization({
       identifier_attribute: organization,
     })
 
@@ -19,4 +19,4 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-export { router as catalogRouter }
+export default router

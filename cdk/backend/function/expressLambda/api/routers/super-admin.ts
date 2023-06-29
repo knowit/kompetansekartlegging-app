@@ -1,16 +1,6 @@
 import express from 'express'
 import { Roles, requireRoles } from '../../middlewares/roles'
-import {
-  addUserToOrganization,
-  createOrganization,
-  deleteOrganization,
-  listAdminsInAllOrganizations,
-  listOrganizations,
-  listUsers,
-  listUsersInOrganization,
-  removeUserFromOrganization,
-} from '../queries/cognitoActions'
-import Organization from '../queries/organizations'
+import { CognitoActions, Organizations } from '../queries'
 
 const router = express.Router()
 
@@ -19,7 +9,7 @@ router.use(requireRoles([Roles.SUPER_ADMIN]))
 // Get all users across organizations
 router.get('/users', async (req, res, next) => {
   try {
-    const users = await listUsers()
+    const users = await CognitoActions.listUsers()
     res.status(200).json(users)
   } catch (err) {
     console.error(err)
@@ -30,7 +20,7 @@ router.get('/users', async (req, res, next) => {
 // List all super admins
 router.get('/', async (req, res, next) => {
   try {
-    const users = await listUsersInOrganization('admin')
+    const users = await CognitoActions.listUsersInOrganization('admin')
     res.status(200).json(users)
   } catch (err) {
     console.error(err)
@@ -41,7 +31,7 @@ router.get('/', async (req, res, next) => {
 // List all admins across organizations
 router.get('/admins', async (req, res, next) => {
   try {
-    const users = await listAdminsInAllOrganizations()
+    const users = await CognitoActions.listAdminsInAllOrganizations()
     res.status(200).json(users)
   } catch (err) {
     console.error(err)
@@ -59,7 +49,7 @@ router.post<unknown, unknown, IAddUserToAdminOrganization>(
   '/admins/add',
   async (req, res, next) => {
     try {
-      const response = await addUserToOrganization({
+      const response = await CognitoActions.addUserToOrganization({
         username: req.body.username,
         groupname: req.body.organization_identifier_attribute + '0admin',
       })
@@ -81,7 +71,7 @@ router.post<unknown, unknown, IRemoveUserFromAdminOrganization>(
   '/admins/remove',
   async (req, res, next) => {
     try {
-      const response = await removeUserFromOrganization({
+      const response = await CognitoActions.removeUserFromOrganization({
         username: req.body.username,
         groupname: req.body.organization_identifier_attribute + '0admin',
       })
@@ -102,7 +92,7 @@ router.post<unknown, unknown, IAddSuperAdminBody>(
   '/add',
   async (req, res, next) => {
     try {
-      const response = await addUserToOrganization({
+      const response = await CognitoActions.addUserToOrganization({
         username: req.body.username,
         groupname: 'admin',
       })
@@ -123,7 +113,7 @@ router.post<unknown, unknown, IRemoveSuperAdminBody>(
   '/remove',
   async (req, res, next) => {
     try {
-      const response = await removeUserFromOrganization({
+      const response = await CognitoActions.removeUserFromOrganization({
         username: req.body.username,
         groupname: 'admin',
       })
@@ -138,7 +128,7 @@ router.post<unknown, unknown, IRemoveSuperAdminBody>(
 // List all organizations
 router.get('/organizations', async (req, res, next) => {
   try {
-    const organizations = await listOrganizations()
+    const organizations = await CognitoActions.listOrganizations()
     res.status(200).json(organizations)
   } catch (err) {
     console.error(err)
@@ -157,15 +147,15 @@ router.post<unknown, unknown, ICreateOrganizationBody>(
   '/organizations',
   async (req, res, next) => {
     try {
-      const cognitoResponse = await createOrganization(req.body)
-      const sqlResponse = await Organization.createOrganization(req.body)
+      const cognitoResponse = await CognitoActions.createOrganization(req.body)
+      const sqlResponse = await Organizations.createOrganization(req.body)
       if (req.body.admin_username) {
         Promise.all([
-          addUserToOrganization({
+          CognitoActions.addUserToOrganization({
             username: req.body.admin_username,
             groupname: req.body.identifier_attribute + '0admin',
           }),
-          addUserToOrganization({
+          CognitoActions.addUserToOrganization({
             username: req.body.admin_username,
             groupname: req.body.identifier_attribute,
           }),
@@ -194,8 +184,8 @@ router.delete<unknown, unknown, IDeleteOrganizationBody>(
   '/organizations',
   async (req, res, next) => {
     try {
-      const cognitoResponse = await deleteOrganization(req.body)
-      const sqlResponse = await Organization.deleteOrganization(req.body)
+      const cognitoResponse = await CognitoActions.deleteOrganization(req.body)
+      const sqlResponse = await Organizations.deleteOrganization(req.body)
       res.status(200).json({
         status: 'ok',
         message: '🚀 ~ > organization deleted',
@@ -208,4 +198,4 @@ router.delete<unknown, unknown, IDeleteOrganizationBody>(
   }
 )
 
-export { router as superAdminRouter }
+export default router

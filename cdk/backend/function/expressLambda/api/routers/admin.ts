@@ -1,20 +1,16 @@
 import express from 'express'
 import { Roles, requireRoles } from '../../middlewares/roles'
-import {
-  addUserToOrganization,
-  listUsersInOrganization,
-  removeUserFromOrganization,
-} from '../queries/cognitoActions'
-
-import Admin from '../queries/admin'
+import { Admin, CognitoActions } from '../queries'
 
 import { IUsername } from '../../utils/types'
 import { getOrganization } from '../../utils/utils'
-import { adminCatalogsRouter } from './admin/catalog'
-import { adminCategoriesRouter } from './admin/categories'
-import { adminGroupLeaderRouter } from './admin/group-leader'
-import { adminGroupsRouter } from './admin/groups'
-import { adminQuestionsRouter } from './admin/questions'
+import {
+  adminCatalogsRouter,
+  adminCategoriesRouter,
+  adminGroupLeaderRouter,
+  adminGroupsRouter,
+  adminQuestionsRouter,
+} from './adminRouters'
 
 const router = express.Router()
 
@@ -30,7 +26,9 @@ router.use('/group-leader', adminGroupLeaderRouter)
 router.get('/', async (req, res, next) => {
   try {
     const organization = getOrganization(req)
-    const response = await listUsersInOrganization(organization + '0admin')
+    const response = await CognitoActions.listUsersInOrganization(
+      organization + '0admin'
+    )
     res.status(200).json(response)
   } catch (err) {
     console.error(err)
@@ -44,7 +42,7 @@ router.post<unknown, unknown, unknown, IUsername>(
   async (req, res, next) => {
     try {
       const organization = getOrganization<any, IUsername>(req)
-      const response = await addUserToOrganization({
+      const response = await CognitoActions.addUserToOrganization({
         username: req.query.username,
         groupname: organization + '0admin',
       })
@@ -62,7 +60,7 @@ router.post<unknown, unknown, unknown, IUsername>(
   async (req, res, next) => {
     try {
       const organization = getOrganization<unknown, IUsername>(req)
-      const response = await removeUserFromOrganization({
+      const response = await CognitoActions.removeUserFromOrganization({
         username: req.query.username,
         groupname: organization + '0admin',
       })
@@ -91,4 +89,4 @@ router.patch<unknown, unknown, unknown, IUsername>(
   }
 )
 
-export { router as adminRouter }
+export default router

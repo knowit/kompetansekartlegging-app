@@ -1,14 +1,14 @@
 import express from 'express'
 import { CategoryCatalogId, CategoryId } from '../../utils/types'
 import { getOrganization } from '../../utils/utils'
-import Category from '../queries/categories'
+import { Categories } from '../queries'
 
 const router = express.Router()
 
 router.get('/', async (req, res, next) => {
   try {
     if (req.query.id) {
-      const getCategoryResponse = await Category.getCategory(
+      const getCategoryResponse = await Categories.getCategory(
         req.query as CategoryId
       )
       return res.status(200).json(getCategoryResponse)
@@ -23,7 +23,7 @@ router.get('/', async (req, res, next) => {
 router.get('/', async (req, res, next) => {
   try {
     if (req.query.catalog_id) {
-      const getCategoryInCatalogResponse = await Category.getCategoryInCatalog(
+      const getCategoryInCatalogResponse = await Categories.getCategoryInCatalog(
         req.query as CategoryCatalogId
       )
       return res.status(200).json(getCategoryInCatalogResponse)
@@ -39,7 +39,7 @@ router.get('/', async (req, res, next) => {
   try {
     const organization = getOrganization(req)
 
-    const listCategoriesResponse = await Category.listCategoriesInOrganization(
+    const listCategoriesResponse = await Categories.listCategoriesInOrganization(
       organization
     )
     return res.status(200).json(listCategoriesResponse)
@@ -49,4 +49,4 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-export { router as categoryRouter }
+export default router

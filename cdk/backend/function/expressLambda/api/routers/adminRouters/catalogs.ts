@@ -5,7 +5,7 @@ import {
   UpdateCatalogInput,
 } from '../../../utils/types'
 import { getOrganization } from '../../../utils/utils'
-import Catalog from '../../queries/catalog'
+import { Catalogs } from '../../queries'
 
 const router = express.Router()
 
@@ -13,7 +13,7 @@ const router = express.Router()
 router.get('/', async (req, res, next) => {
   try {
     const organization = getOrganization(req)
-    const listCatalogsInOrganizationResponse = await Catalog.listCatalgosInOrganization(
+    const listCatalogsInOrganizationResponse = await Catalogs.listCatalgosInOrganization(
       { identifier_attribute: organization }
     )
 
@@ -28,7 +28,7 @@ router.get('/', async (req, res, next) => {
 router.post<unknown, unknown, CatalogInput>('/', async (req, res, next) => {
   try {
     const organization = getOrganization<CatalogInput>(req)
-    const createResponse = await Catalog.createCatalog({
+    const createResponse = await Catalogs.createCatalog({
       identifier_attribute: organization,
       ...req.body,
     })
@@ -43,7 +43,7 @@ router.post<unknown, unknown, CatalogInput>('/', async (req, res, next) => {
 // Delete
 router.delete<unknown, unknown, CatalogId>('/', async (req, res, next) => {
   try {
-    const deleteResponse = await Catalog.deleteCatalog(req.body)
+    const deleteResponse = await Catalogs.deleteCatalog(req.body)
 
     res.status(200).json(deleteResponse)
   } catch (err) {
@@ -57,7 +57,7 @@ router.patch<unknown, unknown, UpdateCatalogInput, CatalogId>(
   '/',
   async (req, res, next) => {
     try {
-      const updateResponse = await Catalog.updateCatalog(req.query, req.body)
+      const updateResponse = await Catalogs.updateCatalog(req.query, req.body)
 
       res.status(200).json(updateResponse)
     } catch (error) {
@@ -67,4 +67,4 @@ router.patch<unknown, unknown, UpdateCatalogInput, CatalogId>(
   }
 )
 
-export { router as adminCatalogsRouter }
+export default router

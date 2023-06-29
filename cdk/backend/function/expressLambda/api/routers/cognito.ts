@@ -8,15 +8,7 @@ import {
   ListUsersInGroupQuery,
 } from '../../utils/types'
 import { getRoles } from '../../utils/utils'
-import {
-  addUserToOrganization,
-  getUser,
-  listOrganizations,
-  listOrganizationsForUser,
-  listUsers,
-  listUsersInOrganization,
-  removeUserFromOrganization,
-} from '../queries/cognitoActions'
+import { CognitoActions } from '../queries'
 
 const router = express.Router()
 
@@ -38,7 +30,7 @@ router.post<unknown, unknown, ICognitoBody, unknown>(
   '/add-user-to-group',
   async (req, res, next) => {
     try {
-      const response = await addUserToOrganization(req.body)
+      const response = await CognitoActions.addUserToOrganization(req.body)
       res.status(200).json(response)
     } catch (err) {
       next(err)
@@ -50,7 +42,7 @@ router.post<unknown, unknown, ICognitoBody, unknown>(
   '/remove-user-from-group',
   async (req, res, next) => {
     try {
-      const response = await removeUserFromOrganization(req.body)
+      const response = await CognitoActions.removeUserFromOrganization(req.body)
       res.status(200).json(response)
     } catch (err) {
       next(err)
@@ -62,7 +54,7 @@ router.get<unknown, unknown, unknown, IUsername>(
   '/get-user',
   async (req, res, next) => {
     try {
-      const response = await getUser(req.query.username)
+      const response = await CognitoActions.getUser(req.query.username)
       res.status(200).json(response)
     } catch (err) {
       next(err)
@@ -75,7 +67,10 @@ router.get<unknown, unknown, unknown, IListQuery>(
   '/list-users',
   async (req, res, next) => {
     try {
-      const response = await listUsers(req.query.limit || 25, req.query.token)
+      const response = await CognitoActions.listUsers(
+        req.query.limit || 25,
+        req.query.token
+      )
       res.status(200).json(response)
     } catch (err) {
       next(err)
@@ -88,7 +83,7 @@ router.get<unknown, unknown, unknown, IListQuery>(
   '/list-organizations',
   async (req, res, next) => {
     try {
-      const response = await listOrganizations(
+      const response = await CognitoActions.listOrganizations(
         req.query.limit || 25,
         req.query.token
       )
@@ -104,7 +99,7 @@ router.get<unknown, unknown, unknown, ListGroupsForUserQuery>(
   '/list-organizations-for-user',
   async (req, res, next) => {
     try {
-      const response = await listOrganizationsForUser(
+      const response = await CognitoActions.listOrganizationsForUser(
         req.query.username,
         req.query.limit || 25,
         req.query.token
@@ -121,7 +116,7 @@ router.get<unknown, unknown, unknown, ListUsersInGroupQuery>(
   '/list-users-in-organization',
   async (req, res, next) => {
     try {
-      const response = await listUsersInOrganization(
+      const response = await CognitoActions.listUsersInOrganization(
         req.query.groupname,
         req.query.limit || 25,
         req.query.token
@@ -133,4 +128,4 @@ router.get<unknown, unknown, unknown, ListUsersInGroupQuery>(
   }
 )
 
-export { router as cognitoRouter }
+export default router

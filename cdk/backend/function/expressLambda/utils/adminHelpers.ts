@@ -1,7 +1,7 @@
-import { listUsers } from '../api/queries/cognitoActions'
+import { CognitoActions } from '../api/queries'
 
 export const getUsersInGroup = async (groupId: string) => {
-  const groupMembers = await listUsers().then(users =>
+  const groupMembers = await CognitoActions.listUsers().then(users =>
     users.data.Users?.filter(
       user =>
         user.Attributes?.find(attribute => attribute.Name === 'custom:groupId')

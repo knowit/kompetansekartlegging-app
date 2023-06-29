@@ -397,7 +397,7 @@ const addGroupIdToUserAttributes = async ({
   }
 }
 
-export {
+export default {
   addGroupIdToUserAttributes,
   addUserToOrganization,
   createOrganization,

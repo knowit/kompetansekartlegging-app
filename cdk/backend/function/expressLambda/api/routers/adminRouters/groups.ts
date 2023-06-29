@@ -8,14 +8,7 @@ import {
   IUsername,
 } from '../../../utils/types'
 import { getOrganization } from '../../../utils/utils'
-import {
-  addGroupIdToUserAttributes,
-  getUser,
-  listUsers,
-  removeGroupIdFromUserAttributes,
-} from '../../queries/cognitoActions'
-import Group from '../../queries/groups'
-import Organization from '../../queries/organizations'
+import { CognitoActions, Groups, Organizations } from '../../queries'
 
 const router = express.Router()
 
@@ -26,7 +19,7 @@ router.get('/', async (req, res, next) => {
   } else {
     try {
       const organization = getOrganization(req)
-      const listGroupsResponse = await Group.listGroupsInOrganization({
+      const listGroupsResponse = await Groups.listGroupsInOrganization({
         identifier_attribute: organization,
       })
       res.status(200).json(listGroupsResponse)
@@ -40,8 +33,10 @@ router.get('/', async (req, res, next) => {
 router.get<unknown, unknown, unknown, GroupId>('/', async (req, res, next) => {
   try {
     const { id } = req.query
-    const group = await Group.getGroup({ id })
-    const groupLeader = await getUser(group.data!.group_leader_username)
+    const group = await Groups.getGroup({ id })
+    const groupLeader = await CognitoActions.getUser(
+      group.data!.group_leader_username
+    )
     const groupMembers = await getUsersInGroup(id)
 
     const result = {
@@ -64,13 +59,13 @@ router.post<unknown, unknown, GroupLeaderInput>('/', async (req, res, next) => {
   try {
     const organization = getOrganization<GroupLeaderInput>(req)
 
-    const organization_id = await Organization.getOrganizationByIdentifier({
+    const organization_id = await Organizations.getOrganizationByIdentifier({
       identifier_attribute: organization,
     })
     if (organization_id.data?.id === undefined) {
       throw new Error('Organization not found')
     }
-    const addGroupResponse = await Group.createGroup({
+    const addGroupResponse = await Groups.createGroup({
       ...req.body,
       organization_id: organization_id.data.id,
     })
@@ -85,8 +80,8 @@ router.post<unknown, unknown, GroupLeaderInput>('/', async (req, res, next) => {
 // Delete a group and remove group id from cognito users in group
 router.delete<unknown, unknown, CategoryId>('/', async (req, res, next) => {
   try {
-    const deleteResponse = await Group.deleteGroup(req.body)
-    const groupMembers = await listUsers().then(users =>
+    const deleteResponse = await Groups.deleteGroup(req.body)
+    const groupMembers = await CognitoActions.listUsers().then(users =>
       users.data.Users?.filter(
         user =>
           user.Attributes?.find(
@@ -96,7 +91,7 @@ router.delete<unknown, unknown, CategoryId>('/', async (req, res, next) => {
     )
     groupMembers?.forEach(async member => {
       if (member.Username) {
-        await removeGroupIdFromUserAttributes(member.Username)
+        await CognitoActions.removeGroupIdFromUserAttributes(member.Username)
       }
     })
 
@@ -112,7 +107,7 @@ router.patch<unknown, unknown, GroupLeaderInput, GroupId>(
   '/',
   async (req, res, next) => {
     try {
-      const updateResponse = await Group.updateGroupLeader(req.query, req.body)
+      const updateResponse = await Groups.updateGroupLeader(req.query, req.body)
 
       res.status(200).json(updateResponse)
     } catch (err) {
@@ -127,7 +122,9 @@ router.post<unknown, unknown, unknown, IUsername>(
   async (req, res, next) => {
     try {
       const { username } = req.query
-      const response = await removeGroupIdFromUserAttributes(username)
+      const response = await CognitoActions.removeGroupIdFromUserAttributes(
+        username
+      )
       res.status(200).json(response)
     } catch (error) {
       console.error(error)
@@ -141,7 +138,7 @@ router.post<unknown, unknown, unknown, AddUserToGroupQuery>(
   async (req, res, next) => {
     try {
       const { username, group_id } = req.query
-      const response = await addGroupIdToUserAttributes({
+      const response = await CognitoActions.addGroupIdToUserAttributes({
         username,
         groupId: group_id,
       })
@@ -153,4 +150,4 @@ router.post<unknown, unknown, unknown, AddUserToGroupQuery>(
   }
 )
 
-export { router as adminGroupsRouter }
+export default router

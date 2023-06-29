@@ -1,12 +1,12 @@
 import express from 'express'
 import { QuestionId, QuestionInput } from '../../../utils/types'
-import Question from '../../queries/questions'
+import { Questions } from '../../queries'
 
 const router = express.Router()
 
 router.post<unknown, unknown, QuestionInput>('/', async (req, res, next) => {
   try {
-    const createQuestionResponse = await Question.createQuestion(req.body)
+    const createQuestionResponse = await Questions.createQuestion(req.body)
     res.status(201).json(createQuestionResponse)
   } catch (err) {
     console.error(err)
@@ -18,7 +18,7 @@ router.patch<unknown, unknown, QuestionInput, QuestionId>(
   '/',
   async (req, res, next) => {
     try {
-      const updateQuestionResponse = await Question.updateQuestion(
+      const updateQuestionResponse = await Questions.updateQuestion(
         req.query,
         req.body
       )
@@ -32,7 +32,7 @@ router.patch<unknown, unknown, QuestionInput, QuestionId>(
 
 router.delete<unknown, unknown, QuestionId>('/', async (req, res, next) => {
   try {
-    const deleteQuestionResponse = await Question.deleteQuestion(req.body)
+    const deleteQuestionResponse = await Questions.deleteQuestion(req.body)
     res.status(200).json(deleteQuestionResponse)
   } catch (err) {
     console.error(err)
@@ -40,4 +40,4 @@ router.delete<unknown, unknown, QuestionId>('/', async (req, res, next) => {
   }
 })
 
-export { router as adminQuestionsRouter }
+export default router

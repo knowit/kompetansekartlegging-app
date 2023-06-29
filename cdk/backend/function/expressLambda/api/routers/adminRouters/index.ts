@@ -1,0 +1,5 @@
+export { default as adminCatalogsRouter } from './catalogs'
+export { default as adminCategoriesRouter } from './categories'
+export { default as adminGroupLeaderRouter } from './group-leader'
+export { default as adminGroupsRouter } from './groups'
+export { default as adminQuestionsRouter } from './questions'

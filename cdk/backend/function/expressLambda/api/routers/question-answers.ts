@@ -7,7 +7,7 @@ import {
   UpdateQuestionAnswerBody,
 } from '../../utils/types'
 import { getUserOnRequest } from '../../utils/utils'
-import QuestionAnswer from '../queries/question-answers'
+import { QuestionAnswers } from '../queries'
 
 const router = express.Router()
 
@@ -22,7 +22,7 @@ router.get('/', async (req, res, next) => {
         throw new Error('No username found on request')
       }
 
-      const getQuestionAnswerResponse = await QuestionAnswer.getQuestionAnswerByUserAndQuestion(
+      const getQuestionAnswerResponse = await QuestionAnswers.getQuestionAnswerByUserAndQuestion(
         {
           question_id: req.query.question_id as IQuestionAnswer['question_id'],
           username: username,
@@ -33,7 +33,7 @@ router.get('/', async (req, res, next) => {
 
       // Get all
     } else {
-      const listQuestionAnswerResponse = await QuestionAnswer.listQuestionAnswers()
+      const listQuestionAnswerResponse = await QuestionAnswers.listQuestionAnswers()
       res.status(200).json(listQuestionAnswerResponse)
     }
   } catch (err) {
@@ -52,7 +52,7 @@ router.post<unknown, unknown, QuestionAnswerInput>(
       if (!usernameOnRequest) {
         throw new Error('No username found on request')
       }
-      const createQuestionAnswerResponse = await QuestionAnswer.createQuestionAnswer(
+      const createQuestionAnswerResponse = await QuestionAnswers.createQuestionAnswer(
         { username: usernameOnRequest, ...body }
       )
       res.status(201).json(createQuestionAnswerResponse)
@@ -72,7 +72,7 @@ router.patch<unknown, unknown, UpdateQuestionAnswerBody, QuestionAnswerId>(
       if (!usernameOnRequest) {
         throw new Error('No username found on request')
       }
-      const updateQuestionAnswerResponse = await QuestionAnswer.updateQuestionAnswer(
+      const updateQuestionAnswerResponse = await QuestionAnswers.updateQuestionAnswer(
         req.query,
         { username: usernameOnRequest, ...req.body }
       )
@@ -89,7 +89,7 @@ router.delete<unknown, unknown, QuestionAnswerId>(
   '/',
   async (req, res, next) => {
     try {
-      const deleteQuestionAnswerResponse = await QuestionAnswer.deleteQuestionAnswer(
+      const deleteQuestionAnswerResponse = await QuestionAnswers.deleteQuestionAnswer(
         req.body
       )
       res.status(200).json(deleteQuestionAnswerResponse)
@@ -118,7 +118,7 @@ router.post<unknown, unknown, QuestionAnswerInput[]>(
       await Promise.all(
         req.body.map(async qa => {
           const { username, ...body } = { ...qa }
-          await QuestionAnswer.createQuestionAnswer({
+          await QuestionAnswers.createQuestionAnswer({
             username: usernameOnRequest,
             ...body,
           }).then(response => {
@@ -140,4 +140,4 @@ router.post<unknown, unknown, QuestionAnswerInput[]>(
   }
 )
 
-export { router as questionAnswersRouter }
+export default router
