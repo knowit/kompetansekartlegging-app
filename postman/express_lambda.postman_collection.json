@@ -148,7 +148,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"organization_identifier_attribute\": \"hei\",\n    \"username\": \"tester2@test\"\n}",
+							"raw": "{\n    \"organization_identifier_attribute\": \"testorg\",\n    \"username\": \"tester2@test\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -321,7 +321,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{base-url}}/admin/catalogs/?id=27376e5a-e23b-4cb7-8d9d-0370266cefba",
+									"raw": "{{base-url}}/admin/catalogs/?id=3883bddd-d1f0-49ab-937b-2648a547aefb",
 									"host": [
 										"{{base-url}}"
 									],
@@ -333,7 +333,7 @@
 									"query": [
 										{
 											"key": "id",
-											"value": "27376e5a-e23b-4cb7-8d9d-0370266cefba"
+											"value": "3883bddd-d1f0-49ab-937b-2648a547aefb"
 										}
 									]
 								},
@@ -348,7 +348,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"id\": \"8b5a322d-6a49-45c8-a061-4ef22bededfa\"\n}",
+									"raw": "{\n    \"id\": \"a42117dc-956e-4fea-860b-cbabb5c9bdf4\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -381,7 +381,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"text\": \"todele\",\n    \"description\": \" \",\n    \"index\": 1,\n    \"catalog_id\": \"d4af4215-0550-4c9f-acd0-02c72d6d4deb\"\n}",
+									"raw": "{\n    \"text\": \"todele\",\n    \"description\": \" \",\n    \"index\": 15,\n    \"catalog_id\": \"3883bddd-d1f0-49ab-937b-2648a547aefb\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -409,7 +409,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"text\": \"Test-category-updated\",\n    \"description\": \"hei på deg titten tei hihi\",\n    \"index\": 6,\n    \"catalog_id\": \"8c1c2eda-d07d-48b9-b758-22a1a41e61ca\"\n}",
+									"raw": "{\n    \"text\": \"Test-category-updated\",\n    \"description\": \"hei på deg titten tei hihi\",\n    \"index\": 6,\n    \"catalog_id\": \"3883bddd-d1f0-49ab-937b-2648a547aefb\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -417,7 +417,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{base-url}}/admin/categories?id=f9d60158-4e2f-4dc1-8274-ee6e734953a2",
+									"raw": "{{base-url}}/admin/categories?id=db1f61fa-42c4-4b7e-b547-208e7f6f3469",
 									"host": [
 										"{{base-url}}"
 									],
@@ -428,7 +428,7 @@
 									"query": [
 										{
 											"key": "id",
-											"value": "f9d60158-4e2f-4dc1-8274-ee6e734953a2"
+											"value": "db1f61fa-42c4-4b7e-b547-208e7f6f3469"
 										}
 									]
 								},
@@ -443,7 +443,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"id\": \"f9d60158-4e2f-4dc1-8274-ee6e734953a2\"\n}",
+									"raw": "{\n    \"id\": \"db1f61fa-42c4-4b7e-b547-208e7f6f3469\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -521,7 +521,7 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{base-url}}/admin/group-leader/remove?username=tester3@test",
+									"raw": "{{base-url}}/admin/group-leader/remove?username=tester2@test",
 									"host": [
 										"{{base-url}}"
 									],
@@ -533,7 +533,7 @@
 									"query": [
 										{
 											"key": "username",
-											"value": "tester3@test"
+											"value": "tester2@test"
 										}
 									]
 								},
@@ -571,7 +571,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base-url}}/admin/groups?id=fbb044de-fe06-401a-ac58-2714003192fb",
+									"raw": "{{base-url}}/admin/groups?id=e7e449b5-84fa-42d0-b4c9-4ece7416589d",
 									"host": [
 										"{{base-url}}"
 									],
@@ -582,11 +582,11 @@
 									"query": [
 										{
 											"key": "id",
-											"value": "fbb044de-fe06-401a-ac58-2714003192fb"
+											"value": "e7e449b5-84fa-42d0-b4c9-4ece7416589d"
 										}
 									]
 								},
-								"description": "Get a specific group in the requester's organization."
+								"description": "Get a specific group in the requester's organization.\n\nLists out the info of the group including the group leader and the members. This info is retrieved from cognito"
 							},
 							"response": []
 						},
@@ -597,7 +597,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"group_leader_username\": \"tester1@test\"\n}",
+									"raw": "{\n    \"group_leader_username\": \"tester2@test\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -633,7 +633,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{base-url}}/admin/groups/add-user?username=tester3@test&group_id=fbb044de-fe06-401a-ac58-2714003192fb",
+									"raw": "{{base-url}}/admin/groups/add-user?username=tester3@test&group_id=e7e449b5-84fa-42d0-b4c9-4ece7416589d",
 									"host": [
 										"{{base-url}}"
 									],
@@ -649,7 +649,7 @@
 										},
 										{
 											"key": "group_id",
-											"value": "fbb044de-fe06-401a-ac58-2714003192fb"
+											"value": "e7e449b5-84fa-42d0-b4c9-4ece7416589d"
 										}
 									]
 								}
@@ -696,7 +696,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{base-url}}/admin/groups?id=0467c90c-ab6e-4ccf-a6af-bd666a7b04f6",
+									"raw": "{{base-url}}/admin/groups?id=e7e449b5-84fa-42d0-b4c9-4ece7416589d",
 									"host": [
 										"{{base-url}}"
 									],
@@ -707,7 +707,7 @@
 									"query": [
 										{
 											"key": "id",
-											"value": "0467c90c-ab6e-4ccf-a6af-bd666a7b04f6"
+											"value": "e7e449b5-84fa-42d0-b4c9-4ece7416589d"
 										}
 									]
 								}
@@ -721,7 +721,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"id\": \"d2fbdcbe-c1c3-4b7c-bb16-15fdf0787bde\"\n}",
+									"raw": "{\n    \"id\": \"e7e449b5-84fa-42d0-b4c9-4ece7416589d\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -753,7 +753,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"text\": \" \",\n    \"topic\": \"GoGoTest\",\n    \"index\": 11,\n    \"category_id\": \"095203db-f96e-432d-9d06-2976daffdca1\",\n    \"type\": \"knowledge_motivation\",\n    \"scale_start\": null,\n    \"scale_middle\": null,\n    \"scale_end\": null\n}",
+									"raw": "{\n    \"text\": \" \",\n    \"topic\": \"GoGoTest\",\n    \"index\": 11,\n    \"category_id\": \"64c32cfe-3313-4548-ad43-0b16d6694e32\",\n    \"type\": \"knowledge_motivation\",\n    \"scale_start\": null,\n    \"scale_middle\": null,\n    \"scale_end\": null\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -780,7 +780,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"text\": \" \",\n    \"topic\": \"GoGoTest123\",\n    \"index\": 11,\n    \"category_id\": \"680a7e64-8027-4999-a547-732feb152e47\",\n    \"type\": \"knowledge_motivation\",\n    \"scale_start\": null,\n    \"scale_middle\": null,\n    \"scale_end\": null\n}",
+									"raw": "{\n    \"text\": \" \",\n    \"topic\": \"GoGoTest123\",\n    \"index\": 11,\n    \"category_id\": \"64c32cfe-3313-4548-ad43-0b16d6694e32\",\n    \"type\": \"knowledge_motivation\",\n    \"scale_start\": null,\n    \"scale_middle\": null,\n    \"scale_end\": null\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -788,7 +788,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{base-url}}/admin/questions?id=8ff87a5c-561f-4628-8ac6-2d5d0d7f2d82",
+									"raw": "{{base-url}}/admin/questions?id=4a452433-bd9f-484a-afc0-d0ef9e388c40",
 									"host": [
 										"{{base-url}}"
 									],
@@ -799,7 +799,7 @@
 									"query": [
 										{
 											"key": "id",
-											"value": "8ff87a5c-561f-4628-8ac6-2d5d0d7f2d82"
+											"value": "4a452433-bd9f-484a-afc0-d0ef9e388c40"
 										}
 									]
 								}
@@ -813,7 +813,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"id\": \"8ff87a5c-561f-4628-8ac6-2d5d0d7f2d82\"\n}",
+									"raw": "{\n    \"id\": \"4a452433-bd9f-484a-afc0-d0ef9e388c40\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1129,7 +1129,7 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "{{base-url}}/categories?id=4ae17cd8-22d1-4905-aee9-6d2786662e85",
+							"raw": "{{base-url}}/categories?id=64c32cfe-3313-4548-ad43-0b16d6694e32",
 							"host": [
 								"{{base-url}}"
 							],
@@ -1139,7 +1139,7 @@
 							"query": [
 								{
 									"key": "id",
-									"value": "4ae17cd8-22d1-4905-aee9-6d2786662e85"
+									"value": "64c32cfe-3313-4548-ad43-0b16d6694e32"
 								}
 							]
 						}
@@ -1152,7 +1152,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base-url}}/categories/?catalog_id=27376e5a-e23b-4cb7-8d9d-0370266cefba",
+							"raw": "{{base-url}}/categories/?catalog_id=3883bddd-d1f0-49ab-937b-2648a547aefb",
 							"host": [
 								"{{base-url}}"
 							],
@@ -1163,7 +1163,7 @@
 							"query": [
 								{
 									"key": "catalog_id",
-									"value": "27376e5a-e23b-4cb7-8d9d-0370266cefba"
+									"value": "3883bddd-d1f0-49ab-937b-2648a547aefb"
 								}
 							]
 						}
@@ -1259,7 +1259,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base-url}}/cognito/list-users?limit=20&token=",
+							"raw": "{{base-url}}/cognito/list-users?limit=10",
 							"host": [
 								"{{base-url}}"
 							],
@@ -1270,11 +1270,12 @@
 							"query": [
 								{
 									"key": "limit",
-									"value": "20"
+									"value": "10"
 								},
 								{
 									"key": "token",
-									"value": ""
+									"value": "",
+									"disabled": true
 								}
 							]
 						}
@@ -1403,7 +1404,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base-url}}/question-answers?question_id=9ea56586-adef-4f29-b499-3c4e3bac527a&username=tester1@test",
+							"raw": "{{base-url}}/question-answers?question_id=2a7d02da-4bfd-4dc9-a982-c34b0622008e&username=tester1@test",
 							"host": [
 								"{{base-url}}"
 							],
@@ -1413,7 +1414,7 @@
 							"query": [
 								{
 									"key": "question_id",
-									"value": "9ea56586-adef-4f29-b499-3c4e3bac527a"
+									"value": "2a7d02da-4bfd-4dc9-a982-c34b0622008e"
 								},
 								{
 									"key": "username",
@@ -1431,7 +1432,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"question_id\": \"0e3d73bf-60a0-4e67-b837-cb0015c95691\",\n    \"knowledge\": 0,\n    \"motivation\": 3,\n    \"custom_scale_value\": null,\n    \"text_value\": null\n}",
+							"raw": "{\n    \"question_id\": \"2a7d02da-4bfd-4dc9-a982-c34b0622008e\",\n    \"knowledge\": 0,\n    \"motivation\": 3,\n    \"custom_scale_value\": null,\n    \"text_value\": null\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1465,7 +1466,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{base-url}}/question-answers?id=46c977cd-51fb-4aeb-9650-2a1049d5d3ff",
+							"raw": "{{base-url}}/question-answers?id=82d9ee92-bbb5-4000-9ddd-54a0c60f746d",
 							"host": [
 								"{{base-url}}"
 							],
@@ -1475,7 +1476,7 @@
 							"query": [
 								{
 									"key": "id",
-									"value": "46c977cd-51fb-4aeb-9650-2a1049d5d3ff"
+									"value": "82d9ee92-bbb5-4000-9ddd-54a0c60f746d"
 								}
 							]
 						}
@@ -1516,7 +1517,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": \"4b1a362b-9151-4f09-8d9d-42f1b5823676\"\n}",
+							"raw": "{\n    \"id\": \"82d9ee92-bbb5-4000-9ddd-54a0c60f746d\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1530,30 +1531,6 @@
 							],
 							"path": [
 								"question-answers"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get question answers for user",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base-url}}/question-answers/user?username=tester1@test",
-							"host": [
-								"{{base-url}}"
-							],
-							"path": [
-								"question-answers",
-								"user"
-							],
-							"query": [
-								{
-									"key": "username",
-									"value": "tester1@test"
-								}
 							]
 						}
 					},
@@ -1587,7 +1564,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base-url}}/questions?id=199f751e-ab27-4120-975f-52b0d0054f6f",
+							"raw": "{{base-url}}/questions?id=2a7d02da-4bfd-4dc9-a982-c34b0622008e",
 							"host": [
 								"{{base-url}}"
 							],
@@ -1597,13 +1574,7 @@
 							"query": [
 								{
 									"key": "id",
-									"value": "199f751e-ab27-4120-975f-52b0d0054f6f"
-								}
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": null
+									"value": "2a7d02da-4bfd-4dc9-a982-c34b0622008e"
 								}
 							]
 						}
@@ -1616,7 +1587,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base-url}}/questions?category_id=254055d4-8edd-4130-a7ad-e45fbd7c2c0e",
+							"raw": "{{base-url}}/questions?category_id=64c32cfe-3313-4548-ad43-0b16d6694e32",
 							"host": [
 								"{{base-url}}"
 							],
@@ -1626,7 +1597,7 @@
 							"query": [
 								{
 									"key": "category_id",
-									"value": "254055d4-8edd-4130-a7ad-e45fbd7c2c0e"
+									"value": "64c32cfe-3313-4548-ad43-0b16d6694e32"
 								}
 							]
 						}
