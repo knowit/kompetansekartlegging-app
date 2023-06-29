@@ -1,7 +1,7 @@
 import { ICategory, IQuestion, IQuestionAnswer } from '../../utils/types'
-import Category from '../categories/queries'
-import QuestionAnswer from '../question-answers/queries'
-import Question from '../questions/queries'
+import Category from './categories'
+import QuestionAnswer from './question-answers'
+import Question from './questions'
 
 export const getAnswersByCategories = async (
   username: string,

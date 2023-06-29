@@ -1,4 +1,4 @@
-import { listUsers } from '../cognito/cognitoActions'
+import { listUsers } from '../api/queries/cognitoActions'
 
 export const getUsersInGroup = async (groupId: string) => {
   const groupMembers = await listUsers().then(users =>

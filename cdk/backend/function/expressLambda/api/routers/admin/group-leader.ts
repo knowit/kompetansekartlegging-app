@@ -1,11 +1,11 @@
 import express from 'express'
 import { IUsername } from '../../../utils/types'
+import { getOrganization } from '../../../utils/utils'
 import {
   addUserToOrganization,
   listUsersInOrganization,
   removeUserFromOrganization,
-} from '../../cognito/cognitoActions'
-import { getOrganization } from '../../utils'
+} from '../../queries/cognitoActions'
 
 const router = express.Router()
 

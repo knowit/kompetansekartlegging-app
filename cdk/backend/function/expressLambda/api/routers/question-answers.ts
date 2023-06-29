@@ -6,8 +6,8 @@ import {
   QuestionAnswerInput,
   UpdateQuestionAnswerBody,
 } from '../../utils/types'
-import { getUserOnRequest } from '../utils'
-import QuestionAnswer from './queries'
+import { getUserOnRequest } from '../../utils/utils'
+import QuestionAnswer from '../queries/question-answers'
 
 const router = express.Router()
 

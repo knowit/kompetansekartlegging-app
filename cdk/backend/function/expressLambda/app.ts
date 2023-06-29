@@ -1,5 +1,5 @@
 import express from 'express'
-import { apiRouter } from './api/router'
+import { apiRouter } from './api/routers/router'
 
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 const bodyParser = require('body-parser')

@@ -1,6 +1,6 @@
 import express from 'express'
 import { QuestionId, QuestionInput } from '../../../utils/types'
-import Question from '../../questions/queries'
+import Question from '../../queries/questions'
 
 const router = express.Router()
 

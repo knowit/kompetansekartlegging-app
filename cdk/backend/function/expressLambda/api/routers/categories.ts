@@ -1,7 +1,7 @@
 import express from 'express'
 import { CategoryCatalogId, CategoryId } from '../../utils/types'
-import { getOrganization } from '../utils'
-import Category from './queries'
+import { getOrganization } from '../../utils/utils'
+import Category from '../queries/categories'
 
 const router = express.Router()
 

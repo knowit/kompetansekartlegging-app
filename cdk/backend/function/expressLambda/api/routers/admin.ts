@@ -4,17 +4,17 @@ import {
   addUserToOrganization,
   listUsersInOrganization,
   removeUserFromOrganization,
-} from '../cognito/cognitoActions'
+} from '../queries/cognitoActions'
 
-import Admin from './queries'
+import Admin from '../queries/admin'
 
 import { IUsername } from '../../utils/types'
-import { getOrganization } from '../utils'
-import { adminCatalogsRouter } from './catalog/router'
-import { adminCategoriesRouter } from './categories/router'
-import { adminGroupLeaderRouter } from './group-leader/router'
-import { adminGroupsRouter } from './groups/router'
-import { adminQuestionsRouter } from './questions/router'
+import { getOrganization } from '../../utils/utils'
+import { adminCatalogsRouter } from './admin/catalog'
+import { adminCategoriesRouter } from './admin/categories'
+import { adminGroupLeaderRouter } from './admin/group-leader'
+import { adminGroupsRouter } from './admin/groups'
+import { adminQuestionsRouter } from './admin/questions'
 
 const router = express.Router()
 

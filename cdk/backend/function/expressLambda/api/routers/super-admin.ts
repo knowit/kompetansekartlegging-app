@@ -9,8 +9,8 @@ import {
   listUsers,
   listUsersInOrganization,
   removeUserFromOrganization,
-} from '../cognito/cognitoActions'
-import Organization from '../organizations/queries'
+} from '../queries/cognitoActions'
+import Organization from '../queries/organizations'
 
 const router = express.Router()
 

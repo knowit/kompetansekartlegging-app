@@ -1,5 +1,6 @@
 import { SqlParameter } from '@aws-sdk/client-rds-data'
 import { v4 as uuidv4 } from 'uuid'
+import { catalogColumns, kindToParam } from '../../utils/catalogHelpers'
 import { sqlQuery } from '../../utils/sql'
 import {
   CatalogId,
@@ -8,8 +9,7 @@ import {
   OrganizationIdentifierAttribute,
   UpdateCatalogInput,
 } from '../../utils/types'
-import { createTimestampNow } from '../utils'
-import { catalogColumns, kindToParam } from './helpers'
+import { createTimestampNow } from '../../utils/utils'
 
 const listCatalogs = async () => {
   const query = `SELECT * FROM "catalog"`

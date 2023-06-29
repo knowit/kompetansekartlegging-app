@@ -1,8 +1,8 @@
 import express from 'express'
-import { getOrganization, getUserOnRequest } from '../utils'
-import { getAnswersByCategories } from './queries'
+import { getOrganization, getUserOnRequest } from '../../utils/utils'
+import { getAnswersByCategories } from '../queries/user'
 
-import GroupLeader from '../group-leader/queries'
+import GroupLeader from '../queries/group-leader'
 
 const router = express.Router()
 

@@ -1,6 +1,6 @@
 import express from 'express'
-import { getOrganization } from '../utils'
-import Catalog from './queries'
+import { getOrganization } from '../../utils/utils'
+import Catalog from '../queries/catalog'
 
 const router = express.Router()
 

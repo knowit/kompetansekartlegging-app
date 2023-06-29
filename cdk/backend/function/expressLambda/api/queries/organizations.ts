@@ -7,7 +7,7 @@ import {
   OrganizationIdentifierAttribute,
   OrganizationInput,
 } from '../../utils/types'
-import { createTimestampNow } from '../utils'
+import { createTimestampNow } from '../../utils/utils'
 
 const listOrganizations = async () => {
   const query = 'SELECT * FROM organization'

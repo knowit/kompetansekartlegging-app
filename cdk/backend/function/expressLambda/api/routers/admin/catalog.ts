@@ -4,8 +4,8 @@ import {
   CatalogInput,
   UpdateCatalogInput,
 } from '../../../utils/types'
-import Catalog from '../../catalog/queries'
-import { getOrganization } from '../../utils'
+import { getOrganization } from '../../../utils/utils'
+import Catalog from '../../queries/catalog'
 
 const router = express.Router()
 

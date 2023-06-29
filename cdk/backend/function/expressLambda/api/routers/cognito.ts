@@ -7,7 +7,7 @@ import {
   ListGroupsForUserQuery,
   ListUsersInGroupQuery,
 } from '../../utils/types'
-import { getRoles } from '../utils'
+import { getRoles } from '../../utils/utils'
 import {
   addUserToOrganization,
   getUser,
@@ -16,7 +16,7 @@ import {
   listUsers,
   listUsersInOrganization,
   removeUserFromOrganization,
-} from './cognitoActions'
+} from '../queries/cognitoActions'
 
 const router = express.Router()
 

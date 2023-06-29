@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { getRoles } from '../api/utils'
+import { getRoles } from '../utils/utils'
 
 export enum Roles {
   SUPER_ADMIN = 'superadmin',

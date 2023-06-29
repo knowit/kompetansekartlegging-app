@@ -1,6 +1,6 @@
 import express from 'express'
 import { CategoryId, CategoryInput } from '../../../utils/types'
-import Category from '../../categories/queries'
+import Category from '../../queries/categories'
 const router = express.Router()
 
 // Create category

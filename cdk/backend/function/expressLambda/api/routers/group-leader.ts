@@ -1,15 +1,15 @@
 import express from 'express'
 import { Roles, requireRoles } from '../../middlewares/roles'
 import { IUsername } from '../../utils/types'
+import { getOrganization, getUserOnRequest } from '../../utils/utils'
 import {
   addGroupIdToUserAttributes,
   getUser,
   listUsers,
   removeGroupIdFromUserAttributes,
-} from '../cognito/cognitoActions'
-import Group from '../groups/queries'
-import { getOrganization, getUserOnRequest } from '../utils'
-import GroupLeader from './queries'
+} from '../queries/cognitoActions'
+import GroupLeader from '../queries/group-leader'
+import Group from '../queries/groups'
 const router = express.Router()
 
 router.use(requireRoles([Roles.GROUP_LEADER, Roles.ADMIN]))

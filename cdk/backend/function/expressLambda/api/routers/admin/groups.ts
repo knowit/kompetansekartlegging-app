@@ -1,4 +1,5 @@
 import express from 'express'
+import { getUsersInGroup } from '../../../utils/adminHelpers'
 import {
   AddUserToGroupQuery,
   CategoryId,
@@ -6,16 +7,15 @@ import {
   GroupLeaderInput,
   IUsername,
 } from '../../../utils/types'
+import { getOrganization } from '../../../utils/utils'
 import {
   addGroupIdToUserAttributes,
   getUser,
   listUsers,
   removeGroupIdFromUserAttributes,
-} from '../../cognito/cognitoActions'
-import Group from '../../groups/queries'
-import Organization from '../../organizations/queries'
-import { getOrganization } from '../../utils'
-import { getUsersInGroup } from '../helpers'
+} from '../../queries/cognitoActions'
+import Group from '../../queries/groups'
+import Organization from '../../queries/organizations'
 
 const router = express.Router()
 
