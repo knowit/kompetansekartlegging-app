@@ -58,7 +58,7 @@ const getQuestionAnswerByUserAndQuestion = async ({
     },
   ]
   console.log('🚀 ~ parameters:', parameters)
-  const query = `SELECT * FROM question_answer WHERE username = :username AND question_id = :questionid`
+  const query = `SELECT * FROM question_answer WHERE username = :username AND question_id = :questionid ORDER BY created_at DESC LIMIT 1`
 
   return await sqlQuery<IQuestionAnswer>({
     message: `🚀 ~ > Question Answer with username: ${username} and question_id: ${question_id}`,
