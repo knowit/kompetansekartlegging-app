@@ -20,6 +20,10 @@ fi
 
 echo "Running python tests..."
 pytest
+if [ $? != 0 ]
+then
+    exit $?
+fi
 
 dynamo_container_name="dynamodb-local-container"
 cognito_container_name="cognito-local-container"
