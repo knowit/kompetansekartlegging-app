@@ -72,6 +72,9 @@ Additionally, deployment can be triggered through the dispatchable workflow "`De
 ### Linting & Code formatting
 ESLint and Prettier is configured for the frontend code using recommended rules. GitHub Actions analyzes the code when PRs towards the main branch are opened.
 
+### Test
+Tests run on every pull request towards the main branch.
+
 ### Slack Notifications
 When deploying to both the dev and production environments, a bot will post to a channel using [Slack Apps](https://api.slack.com/) and the [Slack Notify](https://github.com/rtCamp/action-slack-notify) action.
 

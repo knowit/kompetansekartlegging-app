@@ -1,4 +1,30 @@
 #!/bin/bash
+if [[ "$1" == "install-dependencies" ]]
+then
+    echo "Installing cdk dependencies..."
+    npm install -s
+
+    echo "Installing cdk/backend/function/AdminQueries dependencies..."
+    cd backend/function/AdminQueries && npm install -s
+    cd ../../..
+
+    echo "Installing python dependencies..."
+    requirement_files=$(find . -name 'requirements.txt')
+    for requirement_file in $requirement_files;
+    do
+        if [[ $requirement_file != *'node_modules'* && $requirement_file != *'cdk.out'* ]]; then
+            pip install -q -r $requirement_file
+        fi
+    done
+fi
+
+echo "Running python tests..."
+pytest
+if [ $? != 0 ]
+then
+    exit $?
+fi
+
 dynamo_container_name="dynamodb-local-container"
 cognito_container_name="cognito-local-container"
 
