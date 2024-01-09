@@ -29,7 +29,7 @@ jobs:
 
         - name: Check changed files
           id: check
-          uses: tj-actions/changed-files@v35
+          uses: tj-actions/changed-files@v41
           with:
             since_last_remote_commit: true
             files_ignore: |
